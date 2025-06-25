@@ -1,0 +1,276 @@
+/*
+https://github.com/hikariatama/hypershelf
+Copyright (C) 2025  Daniil Gazizullin
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+.cm-editor {
+  background: transparent !important;
+  color: rgb(218, 218, 218) !important;
+  outline: none !important;
+  font-size: 1rem;
+  border: none !important;
+}
+
+.cm-content {
+  caret-color: var(--foreground) !important;
+}
+
+.cm-cursor {
+  border-color: var(--foreground) !important;
+}
+
+.cm-markdoc-renderBlock blockquote {
+  border-color: var(--color-brand) !important;
+}
+
+.cm-editor,
+.cm-scroller,
+.cm-content,
+.cm-editor p {
+  font-family:
+    "Inter",
+    ui-sans-serif,
+    -apple-system,
+    "system-ui",
+    "Segoe UI",
+    Roboto,
+    Inter,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    sans-serif !important;
+}
+
+.cm-code,
+.cm-inline-code,
+.cm-markdoc-code {
+  font-family:
+    "Source Code Pro", ui-monospace, SFMono-Regular, "Cascadia Mono",
+    "Roboto Mono", "DejaVu Sans Mono", "Liberation Mono", Menlo, Monaco,
+    Consolas, "Source Code Pro", monospace;
+}
+
+.ͼx {
+  color: #666 !important;
+}
+
+.cm-selectionBackground {
+  background: oklch(85% 0.22 130 / 0.2) !important;
+  padding-top: 0.2em !important;
+}
+
+.cm-markdoc-bullet::after {
+  color: var(--color-brand) !important;
+}
+
+.cm-markdoc-hidden {
+  display: none;
+}
+
+.cm-markdoc-bullet * {
+  display: none;
+}
+
+.cm-markdoc-bullet::after {
+  display: inline !important;
+  color: darkgray;
+  content: "•";
+}
+
+.cm-markdoc-renderBlock {
+  font-family: sans-serif;
+}
+
+.cm-markdoc-renderBlock table {
+  border-collapse: collapse;
+  margin-left: 5px;
+}
+
+.cm-markdoc-renderBlock th,
+.cm-markdoc-renderBlock td {
+  border: 1px solid lightgray;
+  padding: 5px 10px;
+}
+
+.cm-markdoc-renderBlock blockquote {
+  border-left: 3px solid lightgray;
+  padding-left: 10px;
+  margin: 0 0 0 15px;
+}
+
+.cm-markdoc-renderBlock p {
+  margin: 3px;
+}
+
+.cm-markdoc-tag {
+  color: darkgray;
+}
+
+.cm-markdoc-fallbackTag {
+  border: 2px solid rgb(97, 70, 155);
+  border-radius: 3px;
+  margin: 0 5px;
+}
+
+.cm-markdoc-fallbackTag--name {
+  background-color: rgb(97, 70, 155);
+  color: white;
+  padding: 5px;
+}
+
+.cm-markdoc-fallbackTag--inner {
+  padding: 10px;
+}
+
+.cm-markdoc-callout {
+  border: 1px solid rgb(227, 232, 238);
+  background: rgb(247, 250, 252);
+  border-radius: 3px;
+  display: flex;
+  padding: 10px;
+  margin: 0 5px;
+}
+
+.cm-markdoc-callout .icon {
+  font-size: 24px;
+  margin-right: 10px;
+  color: rgb(164, 205, 254);
+}
+
+.cm-markdoc-callout--warning {
+  background-color: rgb(252, 249, 233);
+  border-color: rgb(249, 229, 185);
+}
+
+.cm-markdoc-callout--warning .icon {
+  color: rgb(229, 153, 62);
+}
+
+.cm-markdoc-imageWidget {
+  display: block;
+  margin-top: 0.25rem;
+  max-width: 100%;
+  height: auto;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 0.5rem;
+}
+
+.cm-markdoc-imageRaw-meta {
+  color: #666;
+}
+
+.cm-markdoc-imageRaw-link {
+  color: rgb(166, 138, 249);
+}
+
+.cm-markdoc-imageRaw-link:hover {
+  color: rgb(180, 160, 255);
+  text-decoration: underline;
+}
+
+.cm-editor th,
+.cm-editor td {
+  min-width: 6ch;
+  padding: 4px 8px;
+}
+
+.cm-editor tr {
+  height: 3ch;
+}
+
+.cm-markdoc-callout {
+  border: 2px solid transparent !important;
+  padding: 12px 12px 12px 24px !important;
+  cursor: text !important;
+}
+
+.cm-markdoc-callout:hover {
+  border-color: rgb(255, 255, 255, 0.1) !important;
+}
+
+.cm-markdoc-callout--info {
+  background: rgba(2, 122, 255, 0.1) !important;
+}
+
+.cm-markdoc-callout--error {
+  background: rgba(251, 70, 76, 0.1) !important;
+}
+
+.cm-markdoc-callout--warning {
+  background: rgba(233, 151, 63, 0.1) !important;
+}
+
+.cm-markdoc-callout .icon {
+  height: 28px;
+}
+
+.cm-markdoc-callout .icon-info {
+  width: 18px;
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgb(2, 122, 255)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-info-icon lucide-info'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4'/%3E%3Cpath d='M12 8h.01'/%3E%3C/svg%3E");
+}
+
+.cm-markdoc-callout .icon-warning {
+  width: 18px;
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgb(233, 151, 63)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-triangle-alert-icon lucide-triangle-alert'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E");
+}
+
+.cm-markdoc-callout .icon-error {
+  width: 18px;
+  content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgb(251, 70, 76)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-circle-slash-icon lucide-circle-slash'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='9' x2='15' y1='15' y2='9'/%3E%3C/svg%3E");
+}
+
+.cm-markdoc-fileWidget {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--color-muted-foreground);
+  cursor: pointer;
+  font-size: 14px;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.cm-markdoc-fileWidget-meta {
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.cm-markdoc-fileWidget:not(.cm-markdoc-fileWidget-meta)
+  .cm-markdoc-fileWidgetTooltip {
+  display: none;
+}
+
+.cm-markdoc-fileWidgetTooltip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 0.15rem 1rem;
+  border-radius: calc(0.5rem - 2px);
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+  font-size: 12px;
+  z-index: 1000;
+}
+
+.cm-markdoc-fileWidgetIcon {
+  width: 18px;
+  height: 18px;
+}

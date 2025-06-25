@@ -1,5 +1,20 @@
-// TODO: Convex auth token support
+/*
+https://github.com/hikariatama/hypershelf
+Copyright (C) 2025  Daniil Gazizullin
 
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 function getFieldValue(selector) {
   const el = document.querySelector(selector);
   return el?.textContent?.trim() || "";
@@ -60,7 +75,7 @@ function injectStylesheet() {
 }
 
 function injectButton(src) {
-  const target = document.querySelector('vsc-object-titlebar');
+  const target = document.querySelector("vsc-object-titlebar");
   if (!target) return;
   const existingButton = document.querySelector("#hypershelf-vsphere-button");
   if (existingButton) existingButton.remove();
@@ -75,34 +90,45 @@ function injectButton(src) {
   return button;
 }
 
+function onMessage(event) {
+  if (event.data.type === "HYPERSHELF") {
+    const { action, data } = event.data;
+    if (action === "UPDATE_HEIGHT") {
+      iframe.style.height = `${data.height}px`;
+    } else if (action === "ASSET_FOUND") {
+      injectButton(data.href);
+    } else if (action === "AUTH") {
+      const a = document.createElement("a");
+      a.href = `$HYPERSHELF_HOST$/signin/?close=true`;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.click();
+    }
+  }
+}
+
 function createIframe(dns) {
   const iframe = document.createElement("iframe");
   iframe.src = `$HYPERSHELF_HOST$/integrations/vsphere/?dns=${encodeURIComponent(dns)}`;
   iframe.id = "hypershelf-vsphere-iframe";
-  window.addEventListener("message", (event) => {
-    if (event.data.type === "HYPERSHELF") {
-      const { action, data } = event.data;
-      if (action === "UPDATE_HEIGHT") {
-        iframe.style.height = `${data.height}px`;
-      } else if (action === "ASSET_FOUND") {
-        injectButton(data.href);
-      }
-    }
-  });
+  window.removeEventListener("message", onMessage);
+  window.addEventListener("message", onMessage);
   return iframe;
 }
 
 function injectIframe() {
-  const target = document.querySelector('div[portlet-id="vsphere.core.vm.summary.annotationsNotesView"]');
+  const target = document.querySelector(
+    'div[portlet-id="vsphere.core.vm.summary.annotationsNotesView"]'
+  );
   if (!target) return;
 
-  const existing = document.querySelector('#hypershelf-vsphere-iframe');
+  const existing = document.querySelector("#hypershelf-vsphere-iframe");
   if (existing) return;
 
   const dns = getFieldValue('span[data-test-id="DNS Name:"]');
 
   const iframe = createIframe(dns);
-  target.insertAdjacentElement('beforebegin', iframe);
+  target.insertAdjacentElement("beforebegin", iframe);
 
   const observer = new MutationObserver(() => {
     const newDns = getFieldValue('span[data-test-id="DNS Name:"]');
@@ -118,11 +144,13 @@ function injectIframe() {
 
 injectStylesheet();
 
-const interval = setInterval(() => {
+setInterval(() => {
   if (
-    document.querySelector('div[portlet-id="vsphere.core.vm.summary.annotationsNotesView"]') &&
+    document.querySelector(
+      'div[portlet-id="vsphere.core.vm.summary.annotationsNotesView"]'
+    ) &&
     document.querySelector('span[data-test-id="DNS Name:"]') &&
-    !document.querySelector('#hypershelf-vsphere-iframe')
+    !document.querySelector("#hypershelf-vsphere-iframe")
   ) {
     injectIframe();
   }

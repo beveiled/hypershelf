@@ -1,6 +1,3 @@
 {
-  "recommendations": [
-    "aaron-bond.better-comments",
-    "Gruntfuggly.todo-tree"
-  ]
+  "recommendations": ["aaron-bond.better-comments", "Gruntfuggly.todo-tree"]
 }

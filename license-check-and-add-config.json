@@ -1,0 +1,47 @@
+{
+  "ignore": [
+    ".github/**",
+    ".git/**",
+    "e2e/**",
+    "*",
+    "*.yml",
+    "**/*.md",
+    "**/*.svg",
+    "**/*.spec.ts",
+    "**/*.html",
+    "**/*.woff2",
+    "**/.DS_Store",
+    "**/.gitkeep",
+    "patches/*",
+    "**/*.xml",
+    "**/*.csv",
+    ".next/**",
+    "convex/_generated/**",
+    "public/meta/site.webmanifest",
+    ".dockerignore",
+    ".env.local",
+    ".env.local.sample",
+    ".prettierignore",
+    ".prettierrc",
+    "bun.lock",
+    "next-env.d.ts",
+    "Dockerfile"
+  ],
+  "license": "./.assets/license-header.txt",
+  "licenseFormats": {
+    "gitignore|npmignore|eslintignore|dockerignore|sh": {
+      "eachLine": {
+        "prepend": "# "
+      }
+    },
+    "html|xml|svg": {
+      "prepend": "<!--",
+      "append": "-->"
+    },
+    "js|ts|mjs|tsx|css|scss|less|php|as|c|java|cpp|go|cto|acl": {
+      "prepend": "/*",
+      "append": "*/"
+    },
+    "txt": {}
+  }
+}

@@ -4,10 +4,10 @@
   "version": "1.0",
   "description": "Hypershelf integration with VMWare vSphere",
   "permissions": ["scripting"],
-  "host_permissions": ["https://$VSPHERE_HOSTNAME$/ui/app/vm*"],
+  "host_permissions": ["https://$VSPHERE_HOSTNAME$/ui/*"],
   "content_scripts": [
     {
-      "matches": ["https://$VSPHERE_HOSTNAME$/ui/app/vm*"],
+      "matches": ["https://$VSPHERE_HOSTNAME$/ui/*"],
       "js": ["content.js"],
       "run_at": "document_idle"
     }
