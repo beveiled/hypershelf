@@ -15,20 +15,14 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-import { convexAuth, getAuthUserId } from "@convex-dev/auth/server";
-import { query } from "./_generated/server";
-import Password from "./authProviders/customPassword";
+"use client";
 
-export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-  providers: [Password]
-});
+import { ViewsInventory } from "@/components/inventories/views/ViewsInventory";
 
-export const getCurrentUser = query({
-  handler: async ctx => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) {
-      return null;
-    }
-    return ctx.db.get(userId);
-  }
-});
+export default function Content() {
+  return (
+    <div className="flex flex-col gap-4">
+      <ViewsInventory />
+    </div>
+  );
+}

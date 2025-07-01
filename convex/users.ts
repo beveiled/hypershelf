@@ -22,14 +22,16 @@ export const getAll = query({
   handler: async ctx => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
-      return [];
+      return { users: [] };
     }
 
     const users = await ctx.db.query("users").order("asc").collect();
-    return users.map(user => ({
-      id: user._id,
-      name: user.name,
-      email: user.email
-    }));
+    return {
+      users: users.map(user => ({
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }))
+    };
   }
 });

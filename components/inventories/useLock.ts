@@ -106,7 +106,6 @@ export function useLock<T extends TableNames>(
       ingestLogs(res);
 
       if (res.success) {
-        // TODO: Show warning when leaving the page with edited form
         setLockedId(id);
         startRenewInterval(id);
         return true;
@@ -129,6 +128,20 @@ export function useLock<T extends TableNames>(
       clearRenewInterval();
     };
   }, [maxRenewals, clearRenewInterval]);
+
+  useEffect(() => {
+    if (!lockedId) return;
+    const beforeunload = (e: BeforeUnloadEvent) => {
+      const confirmationMessage =
+        "You have unsaved changes. Do you really want to leave?";
+      (e || window.event).returnValue = confirmationMessage;
+      return confirmationMessage;
+    };
+    window.addEventListener("beforeunload", beforeunload);
+    return () => {
+      window.removeEventListener("beforeunload", beforeunload);
+    };
+  }, [lockedId]);
 
   return { lockedId, acquireLock: acquire, releaseLock: release };
 }

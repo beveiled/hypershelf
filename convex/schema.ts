@@ -101,11 +101,29 @@ export const fileSchema = {
   fileName: v.string()
 };
 
+export const viewSchema = {
+  name: v.string(),
+  fields: v.array(v.id("fields")),
+  sortBy: v.optional(
+    v.array(
+      v.object({
+        fieldId: v.id("fields"),
+        direction: v.union(v.literal("asc"), v.literal("desc"))
+      })
+    )
+  )
+};
+
 export default defineSchema({
   ...authTables,
   assets: defineTable(assetSchemaInternal),
   fields: defineTable(fieldSchemaInternal),
-  files: defineTable(fileSchema)
+  files: defineTable(fileSchema),
+  views: defineTable(viewSchema),
+  views2users: defineTable({
+    userId: v.id("users"),
+    viewId: v.id("views")
+  })
 });
 
 export type AssetType = Doc<"assets">;

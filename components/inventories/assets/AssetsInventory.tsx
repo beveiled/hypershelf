@@ -100,7 +100,7 @@ function Unset({ required }: { required?: boolean }) {
 export function renderField(
   field: WithoutSystemFields<Omit<FieldType, "slug">>,
   value: ValueType,
-  users: FunctionReturnType<typeof api.users.getAll>,
+  users: FunctionReturnType<typeof api.users.getAll>["users"],
   setMarkdownPreview: (content: string | null) => void,
   checkmarkClassname?: string
 ) {
@@ -163,13 +163,53 @@ export function AssetsInventory() {
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [isDebug, setIsDebug] = useState(false);
   const [markdownPreview, setMarkdownPreview] = useState<string | null>(null);
+  const [activeViewId, setActiveViewId] = useState<Id<"views"> | null>(null);
+  const [columnOrder, setColumnOrder] = useState<string[]>([]);
 
   const headerRef = useRef<HTMLTableRowElement>(null);
 
   const ingestLogs = useLog();
   const { viewer, assets } = useQuery(api.assets.getAll) ?? {};
   const { fields } = useQuery(api.fields.getAll) ?? {};
-  const users = useQuery(api.users.getAll) ?? [];
+  const { users } = useQuery(api.users.getAll) ?? { users: [] };
+  const { views } = useQuery(api.views.getAll) ?? { views: [] };
+
+  useEffect(() => {
+    if (activeViewId || !views) return;
+    const preferredView = localStorage.getItem("activeViewId");
+    let view;
+    if (preferredView) {
+      view = views.find(v => v._id === preferredView);
+    }
+    view ??= views[0];
+    if (!view) return;
+
+    setActiveViewId(view._id);
+    setColumnOrder([
+      "edit",
+      ...view.fields.map(
+        f => fields!.find(ff => ff.field._id === f)!.field.slug
+      ),
+      "createdAt",
+      "updatedAt",
+      "actions"
+    ]);
+    setColumnVisibility(
+      Object.fromEntries([
+        ...fields!.map(f => [f.field.slug, view.fields.includes(f.field._id)]),
+        ["edit", true],
+        ["createdAt", true],
+        ["updatedAt", true],
+        ["actions", true]
+      ])
+    );
+    setSorting(
+      view.sortBy?.map(s => ({
+        id: fields!.find(f => f.field._id === s.fieldId)?.field.slug || "",
+        desc: s.direction === "desc"
+      })) ?? []
+    );
+  }, [activeViewId, fields, views]);
 
   const formFields = useMemo(() => fields?.map(f => f.field) ?? [], [fields]);
 
@@ -250,7 +290,7 @@ export function AssetsInventory() {
                           setShowSearchInput(false);
                         }
                       }}
-                      className="!border-border !h-8 max-w-sm !bg-black/40 !text-xs !ring-0 backdrop-blur-2xl"
+                      className="!border-border !h-8 max-w-sm !bg-black/60 !ring-0 backdrop-blur-2xl"
                       autoComplete="off"
                       autoFocus={true}
                     />
@@ -358,7 +398,7 @@ export function AssetsInventory() {
         cell: ({ row }) => (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button variant="ghost" className="size-7 p-0">
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal />
               </Button>
@@ -450,17 +490,18 @@ export function AssetsInventory() {
       onColumnVisibilityChange: setColumnVisibility,
       onRowSelectionChange: setRowSelection,
       manualPagination: true,
+      enableMultiSort: true,
       state: {
         sorting,
         columnVisibility,
         rowSelection,
-        globalFilter
+        globalFilter,
+        columnOrder
       }
     }
   );
 
   useEffect(() => {
-    // TODO: Views Logic
     setHeaderContent(
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -468,14 +509,67 @@ export function AssetsInventory() {
             variant="ghost"
             className="!h-auto py-0 text-xs !ring-0 hover:!bg-transparent"
           >
-            Developers <ChevronDown />
+            {views?.find(v => v._id === activeViewId)?.name || "Select View"}
+            <ChevronDown />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent></DropdownMenuContent>
+        <DropdownMenuContent>
+          <div className="flex flex-col gap-1">
+            {views?.map(view => (
+              <Button
+                key={view._id}
+                variant="ghost"
+                className={cn(
+                  "w-48 text-left",
+                  activeViewId === view._id
+                    ? "pointer-events-none bg-white/10"
+                    : "hover:bg-white/5"
+                )}
+                onClick={() => {
+                  setColumnOrder([
+                    "edit",
+                    ...view.fields.map(
+                      f => fields!.find(ff => ff.field._id === f)!.field.slug
+                    ),
+                    "createdAt",
+                    "updatedAt",
+                    "actions"
+                  ]);
+                  if (fields) {
+                    setColumnVisibility(
+                      Object.fromEntries([
+                        ...fields.map(f => [
+                          f.field.slug,
+                          view.fields.includes(f.field._id)
+                        ]),
+                        ["edit", true],
+                        ["createdAt", true],
+                        ["updatedAt", true],
+                        ["actions", true]
+                      ])
+                    );
+                  }
+                  setSorting(
+                    view.sortBy?.map(s => ({
+                      id:
+                        fields!.find(f => f.field._id === s.fieldId)?.field
+                          .slug || "",
+                      desc: s.direction === "desc"
+                    })) ?? []
+                  );
+                  setActiveViewId(view._id);
+                  localStorage.setItem("activeViewId", view._id);
+                }}
+              >
+                {view.name}
+              </Button>
+            ))}
+          </div>
+        </DropdownMenuContent>
       </DropdownMenu>
     );
     return () => setHeaderContent(null);
-  }, [setHeaderContent]);
+  }, [activeViewId, setHeaderContent, views, fields]);
 
   if (viewer === undefined || assets === undefined) {
     return (
@@ -491,7 +585,7 @@ export function AssetsInventory() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.from({ length: 10 }).map((_, rowIndex) => (
+            {Array.from({ length: 30 }).map((_, rowIndex) => (
               <TableRow key={rowIndex}>
                 {Array.from({ length: 10 }).map((_, cellIndex) => (
                   <TableCell key={cellIndex}>

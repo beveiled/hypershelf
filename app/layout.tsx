@@ -66,7 +66,7 @@ const sourceCodePro = Source_Code_Pro({
 export const metadata: Metadata = {
   title: "Hypershelf",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://hypershelf.dgazizullin.dev"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://hypershelf.app"
   ),
   description: "Hypershelf - digital assets inventory",
   openGraph: {

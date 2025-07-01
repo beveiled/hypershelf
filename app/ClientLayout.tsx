@@ -40,7 +40,7 @@ export default function ClientLayout({
           <main
             className={cn(
               "px-2",
-              pathname.startsWith("/integrations") ? "py-8" : "py-12"
+              pathname.startsWith("/integrations") ? "py-8" : "pt-12"
             )}
           >
             {children}

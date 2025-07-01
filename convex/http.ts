@@ -31,11 +31,6 @@ http.route({
     const { searchParams } = new URL(request.url);
     const fileId = searchParams.get("fileId")! as Id<"files">;
     const file = await ctx.runQuery(api.files.getMetadata, { fileId });
-    if (!file) {
-      return new Response("File not found", {
-        status: 404
-      });
-    }
     const blob = await ctx.storage.get(file.storageId);
     if (blob === null) {
       return new Response("File not found", {
@@ -58,14 +53,15 @@ http.route({
   method: "OPTIONS",
   handler: httpAction(async (_, request) => {
     const headers = request.headers;
+    const origin = headers.get("Origin");
     if (
-      headers.get("Origin") !== null &&
+      origin !== null &&
       headers.get("Access-Control-Request-Method") !== null &&
       headers.get("Access-Control-Request-Headers") !== null
     ) {
       return new Response(null, {
         headers: new Headers({
-          "Access-Control-Allow-Origin": headers.get("Origin") || "*",
+          "Access-Control-Allow-Origin": origin,
           "Access-Control-Allow-Methods": "GET",
           "Access-Control-Allow-Headers": "Content-Type, Digest",
           "Access-Control-Max-Age": "86400"

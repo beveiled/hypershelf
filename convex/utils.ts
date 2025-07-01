@@ -69,7 +69,11 @@ export const buildValuesSchema = (
 const ipInSubnet = (ip: string, subnet: string): boolean => {
   const ipToInt = (ip: string): number => {
     const parts = ip.split(".").map(Number);
-    if (parts.length !== 4 || parts.some(p => p < 0 || p > 255))
+    if (
+      parts.length !== 4 ||
+      parts.some(p => p < 0 || p > 255) ||
+      parts.some(isNaN)
+    )
       throw new Error("Invalid IP");
     return parts.reduce((acc, part) => (acc << 8) + part, 0);
   };
@@ -79,11 +83,15 @@ const ipInSubnet = (ip: string, subnet: string): boolean => {
   const prefix = parseInt(prefixStr, 10);
   if (prefix < 0 || prefix > 32) throw new Error("Invalid subnet prefix");
 
-  const ipInt = ipToInt(ip);
-  const subnetInt = ipToInt(subnetIp);
-  const mask = prefix === 0 ? 0 : 0xffffffff << (32 - prefix);
+  try {
+    const ipInt = ipToInt(ip);
+    const subnetInt = ipToInt(subnetIp);
+    const mask = prefix === 0 ? 0 : 0xffffffff << (32 - prefix);
 
-  return (ipInt & mask) === (subnetInt & mask);
+    return (ipInt & mask) === (subnetInt & mask);
+  } catch {
+    return false;
+  }
 };
 
 const buildPrimitiveSchema = (
@@ -97,7 +105,10 @@ const buildPrimitiveSchema = (
 
   switch (kind) {
     case "number":
-      schema = z.number();
+      schema = z.number({
+        invalid_type_error: "Value must be a number",
+        coerce: true
+      });
       break;
     case "boolean":
       schema = z.boolean();
@@ -167,7 +178,7 @@ export const validateFields = (
   } catch (err) {
     if (err instanceof ZodError) {
       for (const issue of err.issues) {
-        if (issue.path.length === 1 && typeof issue.path[0] === "string") {
+        if (issue.path.length >= 1 && typeof issue.path[0] === "string") {
           const fieldId = issue.path[0];
           errors[fieldId] = issue.message;
         }

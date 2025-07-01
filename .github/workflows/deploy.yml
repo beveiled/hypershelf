@@ -1,0 +1,100 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo 'export BUN_INSTALL="$HOME/.bun"' >> $GITHUB_ENV
+          echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: ~/.bun/bin/bun install
+
+      - name: Run tests
+        run: ~/.bun/bin/bun run test:once
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Prepare remote directory
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            'mkdir -p /opt/hypershelf'
+
+      - name: Create GitHub Deployment
+        uses: actions/github-script@v7
+        id: create_deployment
+        with:
+          script: |
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.ref,
+              required_contexts: [],
+              environment: "production",
+              auto_merge: false
+            });
+            return deployment.data.id;
+
+      - name: Update Deployment Status (in_progress)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: ${{ steps.create_deployment.outputs.result }},
+              state: "in_progress",
+              environment: "production"
+            });
+
+      - name: Deploy with Git
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            set -euo pipefail
+
+            if [ ! -d /opt/hypershelf/.git ]; then
+              echo "Please initialize `/opt/hypershelf` first."
+              exit 1
+            else
+              cd /opt/hypershelf
+              git fetch --all
+              git reset --hard origin/master
+            fi
+
+            cd /opt/hypershelf
+            docker compose pull --ignore-pull-failures
+            docker compose up -d --build --remove-orphans
+            bunx convex deploy
+          EOF
+
+      - name: Update Deployment Status (success)
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: ${{ steps.create_deployment.outputs.result }},
+              state: "success",
+              environment: "production",
+              environment_url: "${{ secrets.DEPLOYMENT_URL }}"
+            });

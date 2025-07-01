@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 import { Doc } from "./_generated/dataModel";
-import { internalMutation, mutation, query } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { fieldSchema } from "./schema";
 
 export type FieldType = Doc<"fields">;
@@ -296,24 +296,5 @@ export const makePersistent = mutation({
     }
     await ctx.db.patch(args.fieldId, { persistent: true });
     return { success: true, _logs: [`Field ${field.name} made persistent`] };
-  }
-});
-
-export const releaseExpiredLocks = internalMutation({
-  handler: async ctx => {
-    const now = Date.now();
-    const fields = await ctx.db
-      .query("fields")
-      .filter(f => f.gt(f.field("editingLockExpires"), now))
-      .collect();
-    await Promise.all(
-      fields.map(f =>
-        ctx.db.patch(f._id, {
-          editing: false,
-          editingBy: undefined,
-          editingLockExpires: undefined
-        })
-      )
-    );
   }
 });

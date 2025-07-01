@@ -27,7 +27,7 @@ import { convex } from "./ConvexClientProvider";
 import { useHeaderContent } from "./util/HeaderContext";
 import { motion } from "framer-motion";
 import { useLoading } from "./util/LoadingContext";
-import { GitBranch, LogIn, LogOut, Settings2, Table2 } from "lucide-react";
+import { Cog, GitBranch, LogIn, LogOut, Settings2, Table2 } from "lucide-react";
 
 function NavLink({
   href,
@@ -179,6 +179,10 @@ export default function Header() {
                 <NavLink href="/schemas">
                   <span className="hidden lg:inline">Schemas</span>
                   <GitBranch className="inline size-4 lg:hidden" />
+                </NavLink>
+                <NavLink href="/views">
+                  <span className="hidden lg:inline">Views</span>
+                  <Cog className="inline size-4 lg:hidden" />
                 </NavLink>
               </>
             )}

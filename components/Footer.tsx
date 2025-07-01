@@ -48,21 +48,33 @@ export function Footer() {
     <footer className="w-full p-2">
       <div className="border-border flex flex-col gap-1 rounded-md border bg-black/40 px-8 py-4 text-sm backdrop-blur-xl">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <a
-              href="https://github.com/hikariatama/hypershelf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SiGithub className="size-4 text-white" />
-            </a>
-            <a
-              href="https://t.me/dgazizullin"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SiTelegram className="size-4 rounded-full bg-white text-[#26A5E4]" />
-            </a>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <a
+                href="https://github.com/hikariatama/hypershelf"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SiGithub className="size-4 text-white" />
+              </a>
+              <a
+                href="https://t.me/dgazizullin"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SiTelegram className="size-4 rounded-full bg-white text-[#26A5E4]" />
+              </a>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="text-foreground font-title relative text-xs font-extrabold">
+                Hypershelf
+                <div className="bg-brand absolute bottom-0 left-0 h-0.5 w-4" />
+              </div>
+              <span className="text-muted-foreground text-xs">
+                v{process.env.NEXT_PUBLIC_VERSION}{" "}
+                {process.env.NEXT_PUBLIC_VERSION_MOD}
+              </span>
+            </div>
           </div>
 
           <Button

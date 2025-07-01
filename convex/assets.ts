@@ -241,7 +241,7 @@ export const updateAsset = mutation({
       return {
         success: false,
         errors: { _: "Asset not found" },
-        _logs: ["Failed to update asset: not found"]
+        _logs: ["Failed to update asset: asset not found"]
       };
     }
     if (asset.editing && asset.editingBy !== userId) {
@@ -251,7 +251,7 @@ export const updateAsset = mutation({
         _logs: [`Failed to update asset: not being edited by you`]
       };
     }
-    const metadata = asset.metadata || {};
+    const metadata = asset.metadata!;
     let fields: FieldType[];
     try {
       fields = await Promise.all(
@@ -295,5 +295,31 @@ export const updateAsset = mutation({
         ...(!asset.editing ? ["Warning: lock missing"] : [])
       ]
     };
+  }
+});
+
+export const deleteAsset = mutation({
+  args: { id: v.id("assets") },
+  handler: async (ctx, { id }) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return {
+        success: false,
+        error: "Not authenticated",
+        _logs: ["Failed to delete asset: not authenticated"]
+      };
+    }
+
+    const asset = await ctx.db.get(id);
+    if (!asset) {
+      return {
+        success: false,
+        error: "Asset not found",
+        _logs: ["Failed to delete asset: asset not found"]
+      };
+    }
+
+    await ctx.db.delete(id);
+    return { success: true, _logs: ["Asset deleted successfully"] };
   }
 });

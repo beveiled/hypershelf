@@ -191,7 +191,7 @@ export default function VSphereIntegrationPage() {
                       typeof asset.asset.metadata
                     >
                   )[field._id],
-                  users!,
+                  users.users!,
                   // TODO: Markdown preview
                   () => {},
                   "size-4"

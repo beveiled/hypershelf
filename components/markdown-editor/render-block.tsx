@@ -32,13 +32,19 @@ import { flushSync } from "react-dom";
 const mimeCache = new Map<string, string>();
 const fileNameCache = new Map<string, string>();
 let metaPressed = false;
+let listenersInitialized = false;
 
-window.addEventListener("keydown", e => {
-  if (e.metaKey || e.ctrlKey) metaPressed = true;
-});
-window.addEventListener("keyup", e => {
-  if (!e.metaKey && !e.ctrlKey) metaPressed = false;
-});
+function initializeKeyListeners() {
+  if (listenersInitialized) return;
+  listenersInitialized = true;
+
+  window.addEventListener("keydown", e => {
+    if (e.metaKey || e.ctrlKey) metaPressed = true;
+  });
+  window.addEventListener("keyup", e => {
+    if (!e.metaKey && !e.ctrlKey) metaPressed = false;
+  });
+}
 
 const patternTag =
   /{%\s*(?<closing>\/)?(?<tag>[a-zA-Z0-9-_]+)(?<attrs>\s+[^]+)?\s*(?<self>\/)?%}\s*$/m;
@@ -358,10 +364,16 @@ function replaceBlocks(
 export default function renderBlock(config: Config) {
   return StateField.define<DecorationSet>({
     create(state) {
+      if (!listenersInitialized && typeof window !== "undefined") {
+        initializeKeyListeners();
+      }
       return RangeSet.of(replaceBlocks(state, config), true);
     },
 
     update(_, transaction) {
+      if (!listenersInitialized && typeof window !== "undefined") {
+        initializeKeyListeners();
+      }
       return RangeSet.of(replaceBlocks(transaction.state, config), true);
     },
 

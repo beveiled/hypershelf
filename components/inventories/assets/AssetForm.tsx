@@ -99,7 +99,7 @@ export function AssetForm({
     Record<Id<"fields">, boolean>
   >({});
 
-  const users = useQuery(api.users.getAll) ?? [];
+  const { users } = useQuery(api.users.getAll) ?? { users: [] };
 
   useEffect(() => {
     if (asset)
