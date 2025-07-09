@@ -17,8 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 "use client";
 
-import { useHeaderContent } from "@/components/util/HeaderContext";
-import { useLog } from "@/components/util/Log";
+import { MarkdownEditorPopup } from "@/components/markdown-editor/markdown-popup";
+import { useQueryPredicate } from "@/components/query-builder";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -29,6 +29,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -42,9 +43,14 @@ import {
   TooltipContent,
   TooltipTrigger
 } from "@/components/ui/tooltip";
+import { GlobalKeySequenceListener } from "@/components/util/GlobalKeySequenceListener";
+import { useHeaderContent } from "@/components/util/HeaderContext";
+import { useLog } from "@/components/util/Log";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 import { FieldType } from "@/convex/fields";
 import { AssetType, UserType, ValueType } from "@/convex/schema";
+import { validateFields } from "@/convex/utils";
 import { cn } from "@/lib/utils";
 import {
   ColumnDef,
@@ -58,6 +64,7 @@ import {
   VisibilityState
 } from "@tanstack/react-table";
 import { useQuery } from "convex/react";
+import { FunctionReturnType, WithoutSystemFields } from "convex/server";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -74,15 +81,10 @@ import {
   TriangleAlert
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Debugger } from "../Debugger";
 import { useLock } from "../useLock";
 import { AssetForm } from "./AssetForm";
-import { Debugger } from "../Debugger";
-import { GlobalKeySequenceListener } from "@/components/util/GlobalKeySequenceListener";
-import { FunctionReturnType, WithoutSystemFields } from "convex/server";
-import { Skeleton } from "@/components/ui/skeleton";
-import { validateFields } from "@/convex/utils";
-import { Id } from "@/convex/_generated/dataModel";
-import { MarkdownEditorPopup } from "@/components/markdown-editor/markdown-popup";
+import { RuleGroupType } from "react-querybuilder";
 
 function Unset({ required }: { required?: boolean }) {
   return (
@@ -100,7 +102,7 @@ function Unset({ required }: { required?: boolean }) {
 export function renderField(
   field: WithoutSystemFields<Omit<FieldType, "slug">>,
   value: ValueType,
-  users: FunctionReturnType<typeof api.users.getAll>["users"],
+  users: FunctionReturnType<typeof api.users.get>["users"],
   setMarkdownPreview: (content: string | null) => void,
   checkmarkClassname?: string
 ) {
@@ -165,14 +167,16 @@ export function AssetsInventory() {
   const [markdownPreview, setMarkdownPreview] = useState<string | null>(null);
   const [activeViewId, setActiveViewId] = useState<Id<"views"> | null>(null);
   const [columnOrder, setColumnOrder] = useState<string[]>([]);
+  const [filters, setFilters] = useState<RuleGroupType | undefined>(undefined);
 
   const headerRef = useRef<HTMLTableRowElement>(null);
 
   const ingestLogs = useLog();
-  const { viewer, assets } = useQuery(api.assets.getAll) ?? {};
-  const { fields } = useQuery(api.fields.getAll) ?? {};
-  const { users } = useQuery(api.users.getAll) ?? { users: [] };
-  const { views } = useQuery(api.views.getAll) ?? { views: [] };
+  const { viewer } = useQuery(api.users.me) ?? {};
+  const { assets } = useQuery(api.assets.get) ?? {};
+  const { fields } = useQuery(api.fields.get) ?? {};
+  const { users } = useQuery(api.users.get) ?? {};
+  const { views } = useQuery(api.views.get) ?? {};
 
   useEffect(() => {
     if (activeViewId || !views) return;
@@ -190,16 +194,12 @@ export function AssetsInventory() {
       ...view.fields.map(
         f => fields!.find(ff => ff.field._id === f)!.field.slug
       ),
-      "createdAt",
-      "updatedAt",
       "actions"
     ]);
     setColumnVisibility(
       Object.fromEntries([
         ...fields!.map(f => [f.field.slug, view.fields.includes(f.field._id)]),
         ["edit", true],
-        ["createdAt", true],
-        ["updatedAt", true],
         ["actions", true]
       ])
     );
@@ -209,6 +209,7 @@ export function AssetsInventory() {
         desc: s.direction === "desc"
       })) ?? []
     );
+    setFilters(view.filters || undefined);
   }, [activeViewId, fields, views]);
 
   const formFields = useMemo(() => fields?.map(f => f.field) ?? [], [fields]);
@@ -231,10 +232,7 @@ export function AssetsInventory() {
     return errors;
   }, [assets, fields]);
 
-  const { acquireLock, releaseLock } = useLock<"assets">(
-    api.assets.acquireLock,
-    api.assets.renewLock,
-    api.assets.releaseLock,
+  const { acquireLock, releaseLock } = useLock<Id<"assets">>(
     ingestLogs,
     30000,
     30
@@ -337,62 +335,6 @@ export function AssetsInventory() {
         enableHiding: false
       },
       {
-        id: "createdAt",
-        accessorFn: ({ asset }) => asset.createdAt,
-        header: ({ column }) => (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => column.toggleSorting()}
-          >
-            Created At
-            {column.getIsSorted() ? (
-              <ArrowDown
-                className={cn(
-                  "ml-2 h-4 w-4 transition-transform duration-200 ease-in-out",
-                  column.getIsSorted() === "desc" ? "rotate-180" : ""
-                )}
-              />
-            ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />
-            )}
-          </Button>
-        ),
-        cell: ({ row }) => {
-          const v = row.getValue("createdAt") as number | undefined;
-          return v ? new Date(v).toLocaleString() : <Unset />;
-        },
-        enableSorting: true
-      },
-      {
-        id: "updatedAt",
-        accessorFn: ({ asset }) => asset.updatedAt,
-        header: ({ column }) => (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => column.toggleSorting()}
-          >
-            Updated At
-            {column.getIsSorted() ? (
-              <ArrowDown
-                className={cn(
-                  "ml-2 h-4 w-4 transition-transform duration-200 ease-in-out",
-                  column.getIsSorted() === "desc" ? "rotate-180" : ""
-                )}
-              />
-            ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />
-            )}
-          </Button>
-        ),
-        cell: ({ row }) => {
-          const v = row.getValue("updatedAt") as number | undefined;
-          return v ? new Date(v).toLocaleString() : <Unset />;
-        },
-        enableSorting: true
-      },
-      {
         id: "actions",
         enableHiding: false,
         cell: ({ row }) => (
@@ -424,28 +366,33 @@ export function AssetsInventory() {
           accessorFn: ({ asset }) => asset.metadata?.[f._id] ?? null,
           header: ({ column }) =>
             typeof f.name === "string" ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => column.toggleSorting()}
-                className={cn(
-                  "!h-auto py-0.5",
-                  !column.getCanSort() ? "cursor-default !bg-transparent" : ""
-                )}
-              >
+              <div className="flex items-center gap-1">
                 {f.name}
-                {column.getCanSort() &&
-                  (column.getIsSorted() ? (
-                    <ArrowDown
-                      className={cn(
-                        "ml-2 h-4 w-4 transition-transform duration-200 ease-in-out",
-                        column.getIsSorted() === "desc" ? "rotate-180" : ""
-                      )}
-                    />
-                  ) : (
-                    <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />
-                  ))}
-              </Button>
+                {column.getCanSort() && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => column.toggleSorting()}
+                    className={cn(
+                      "!size-auto !p-1",
+                      !column.getCanSort()
+                        ? "cursor-default !bg-transparent"
+                        : ""
+                    )}
+                  >
+                    {column.getIsSorted() ? (
+                      <ArrowDown
+                        className={cn(
+                          "size-4 transition-transform duration-200 ease-in-out",
+                          column.getIsSorted() === "desc" ? "rotate-180" : ""
+                        )}
+                      />
+                    ) : (
+                      <ArrowUpDown className="size-4 opacity-50" />
+                    )}
+                  </Button>
+                )}
+              </div>
             ) : (
               f.slug
             ),
@@ -457,14 +404,14 @@ export function AssetsInventory() {
                 <Tooltip>
                   <TooltipTrigger>
                     <div className="rounded-md bg-red-500/30 px-2 py-1">
-                      {renderField(f, val, users, setMarkdownPreview)}
+                      {renderField(f, val, users ?? [], setMarkdownPreview)}
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>{fieldError}</TooltipContent>
                 </Tooltip>
               );
             } else {
-              return renderField(f, val, users, setMarkdownPreview);
+              return renderField(f, val, users ?? [], setMarkdownPreview);
             }
           },
           enableHiding: !isHidden,
@@ -478,6 +425,7 @@ export function AssetsInventory() {
     return columns;
   }
 
+  const predicate = useQueryPredicate(filters);
   const table = useReactTable<{ asset: AssetType; editingBy: UserType | null }>(
     {
       data: assets ?? [],
@@ -489,13 +437,14 @@ export function AssetsInventory() {
       getFilteredRowModel: getFilteredRowModel(),
       onColumnVisibilityChange: setColumnVisibility,
       onRowSelectionChange: setRowSelection,
+      globalFilterFn: row => predicate(row.original),
       manualPagination: true,
       enableMultiSort: true,
       state: {
         sorting,
         columnVisibility,
         rowSelection,
-        globalFilter,
+        globalFilter: filters,
         columnOrder
       }
     }
@@ -528,11 +477,10 @@ export function AssetsInventory() {
                 onClick={() => {
                   setColumnOrder([
                     "edit",
+                    "event",
                     ...view.fields.map(
                       f => fields!.find(ff => ff.field._id === f)!.field.slug
                     ),
-                    "createdAt",
-                    "updatedAt",
                     "actions"
                   ]);
                   if (fields) {
@@ -543,8 +491,7 @@ export function AssetsInventory() {
                           view.fields.includes(f.field._id)
                         ]),
                         ["edit", true],
-                        ["createdAt", true],
-                        ["updatedAt", true],
+                        ["event", true],
                         ["actions", true]
                       ])
                     );
@@ -557,6 +504,7 @@ export function AssetsInventory() {
                       desc: s.direction === "desc"
                     })) ?? []
                   );
+                  setFilters(view.filters || undefined);
                   setActiveViewId(view._id);
                   localStorage.setItem("activeViewId", view._id);
                 }}
@@ -609,7 +557,7 @@ export function AssetsInventory() {
               {table.getHeaderGroups().map(headerGroup => (
                 <TableRow
                   key={headerGroup.id}
-                  className="sticky top-0 z-50 h-8"
+                  className="sticky top-0 z-40 h-8"
                   ref={headerRef}
                 >
                   {headerGroup.headers.map(header => (
@@ -701,4 +649,5 @@ export function AssetsInventory() {
   );
 
   // TODO: Create new asset UI
+  // TODO: Query builder
 }

@@ -27,11 +27,14 @@ test("users", async () => {
   });
 
   const asBob = t.withIdentity({ name: "Bob", subject: bob });
-  const users = await asBob.query(api.users.getAll);
+  const users = await asBob.query(api.users.get);
   expect(users.users).toHaveLength(1);
   expect(users.users[0].id).toEqual(bob);
   expect(users.users[0].name).toEqual("Bob");
 
-  const usersNoAuth = await t.query(api.users.getAll);
+  const me = await asBob.query(api.users.me);
+  expect(me.viewer).toEqual(bob);
+
+  const usersNoAuth = await t.query(api.users.get);
   expect(usersNoAuth.users).toHaveLength(0);
 });

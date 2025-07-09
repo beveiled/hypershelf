@@ -23,14 +23,11 @@ import { fieldSchema } from "./schema";
 
 export type FieldType = Doc<"fields">;
 
-export const getAll = query({
+export const get = query({
   handler: async ctx => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
-      return {
-        viewer: null,
-        fields: []
-      };
+      return { fields: [] };
     }
 
     const fields = await ctx.db.query("fields").order("asc").collect();
@@ -41,7 +38,6 @@ export const getAll = query({
     );
 
     return {
-      viewer: userId,
       fields: fields.map((field, i) => ({
         field,
         editingBy: editors[i]
@@ -50,121 +46,7 @@ export const getAll = query({
   }
 });
 
-export const acquireLock = mutation({
-  args: { id: v.id("fields") },
-  handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      return {
-        success: false,
-        error: "Not authenticated",
-        _logs: ["Failed to acquire lock: not authenticated"]
-      };
-    }
-    const field = await ctx.db.get(args.id);
-    if (!field) {
-      return {
-        success: false,
-        error: "Field not found",
-        _logs: ["Failed to acquire lock: field not found"]
-      };
-    }
-    if (field.editing && field.editingBy !== userId) {
-      return {
-        success: false,
-        error: "Field is already being edited by another user",
-        _logs: [
-          `Failed to acquire lock for ${field.name}: already being edited by another user`
-        ]
-      };
-    }
-
-    const now = Date.now();
-    const expiresAt = now + 60 * 1000;
-    await ctx.db.patch(args.id, {
-      editing: true,
-      editingBy: userId,
-      editingLockExpires: expiresAt
-    });
-    return { success: true, _logs: [`Lock acquired for ${field.name}`] };
-  }
-});
-
-export const releaseLock = mutation({
-  args: { id: v.id("fields") },
-  handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      return {
-        success: false,
-        error: "Not authenticated",
-        _logs: ["Failed to release lock: not authenticated"]
-      };
-    }
-    const field = await ctx.db.get(args.id);
-    if (!field) {
-      return {
-        success: false,
-        error: "Field not found",
-        _logs: ["Failed to release lock: field not found"]
-      };
-    }
-    if (!field.editing || field.editingBy !== userId) {
-      return {
-        success: false,
-        error: "Field is not being edited by you",
-        _logs: [
-          `Failed to release lock for ${field.name}: not being edited by you`
-        ]
-      };
-    }
-    await ctx.db.patch(args.id, {
-      editing: false,
-      editingBy: undefined,
-      editingLockExpires: undefined
-    });
-    return { success: true, _logs: [`Lock released for ${field.name}`] };
-  }
-});
-
-export const renewLock = mutation({
-  args: { id: v.id("fields") },
-  handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      return {
-        success: false,
-        error: "Not authenticated",
-        _logs: ["Failed to renew lock: not authenticated"]
-      };
-    }
-    const field = await ctx.db.get(args.id);
-    if (!field) {
-      return {
-        success: false,
-        error: "Field not found",
-        _logs: ["Failed to renew lock: field not found"]
-      };
-    }
-    if (!field.editing || field.editingBy !== userId) {
-      return {
-        success: false,
-        error: "Field is not being edited by you",
-        _logs: [
-          `Failed to renew lock for ${field.name}: not being edited by you`
-        ]
-      };
-    }
-    const now = Date.now();
-    const expiresAt = now + 60 * 1000;
-    await ctx.db.patch(args.id, {
-      editingLockExpires: expiresAt
-    });
-    return { success: true, _logs: [`Lock renewed for ${field.name}`] };
-  }
-});
-
-export const createField = mutation({
+export const create = mutation({
   args: fieldSchema,
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -188,7 +70,7 @@ export const createField = mutation({
   }
 });
 
-export const deleteField = mutation({
+export const remove = mutation({
   args: { fieldId: v.id("fields") },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -221,7 +103,7 @@ export const deleteField = mutation({
   }
 });
 
-export const updateField = mutation({
+export const update = mutation({
   args: {
     fieldId: v.id("fields"),
     ...fieldSchema

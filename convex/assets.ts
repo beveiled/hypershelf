@@ -22,14 +22,11 @@ import { mutation, query } from "./_generated/server";
 import { assetSchema, FieldType, ValueType } from "./schema";
 import { validateFields } from "./utils";
 
-export const getAll = query({
+export const get = query({
   handler: async ctx => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
-      return {
-        viewer: null,
-        assets: []
-      };
+      return { assets: [] };
     }
 
     const assets = await ctx.db.query("assets").order("asc").collect();
@@ -40,7 +37,6 @@ export const getAll = query({
     );
 
     return {
-      viewer: userId,
       assets: assets.map((asset, i) => ({
         asset,
         editingBy: editors[i]
@@ -49,117 +45,7 @@ export const getAll = query({
   }
 });
 
-export const acquireLock = mutation({
-  args: { id: v.id("assets") },
-  handler: async (ctx, { id }) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null)
-      return {
-        success: false,
-        error: "Not authenticated",
-        _logs: ["Failed to acquire asset lock: not authenticated"]
-      };
-
-    const asset = await ctx.db.get(id);
-    if (!asset)
-      return {
-        success: false,
-        error: "Asset not found",
-        _logs: ["Failed to acquire asset lock: asset not found"]
-      };
-
-    if (asset.editing && asset.editingBy !== userId) {
-      return {
-        success: false,
-        error: "Asset is already being edited by another user",
-        _logs: [`Failed to acquire asset lock: already being edited`]
-      };
-    }
-
-    const now = Date.now();
-    const expiresAt = now + 60 * 1000;
-
-    await ctx.db.patch(id, {
-      editing: true,
-      editingBy: userId,
-      editingLockExpires: expiresAt
-    });
-
-    return { success: true, _logs: ["Asset lock acquired"] };
-  }
-});
-
-export const releaseLock = mutation({
-  args: { id: v.id("assets") },
-  handler: async (ctx, { id }) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null)
-      return {
-        success: false,
-        error: "Not authenticated",
-        _logs: ["Failed to release asset lock: not authenticated"]
-      };
-
-    const asset = await ctx.db.get(id);
-    if (!asset)
-      return {
-        success: false,
-        error: "Asset not found",
-        _logs: ["Failed to release asset lock: asset not found"]
-      };
-
-    if (!asset.editing || asset.editingBy !== userId) {
-      return {
-        success: false,
-        error: "Asset is not being edited by you",
-        _logs: [`Failed to release asset lock: not owned by caller`]
-      };
-    }
-
-    await ctx.db.patch(id, {
-      editing: false,
-      editingBy: undefined,
-      editingLockExpires: undefined
-    });
-
-    return { success: true, _logs: ["Asset lock released"] };
-  }
-});
-
-export const renewLock = mutation({
-  args: { id: v.id("assets") },
-  handler: async (ctx, { id }) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null)
-      return {
-        success: false,
-        error: "Not authenticated",
-        _logs: ["Failed to renew asset lock: not authenticated"]
-      };
-    const asset = await ctx.db.get(id);
-    if (!asset)
-      return {
-        success: false,
-        error: "Asset not found",
-        _logs: ["Failed to renew asset lock: asset not found"]
-      };
-    if (!asset.editing || asset.editingBy !== userId) {
-      return {
-        success: false,
-        error: "Asset is not being edited by you",
-        _logs: [`Failed to renew asset lock: not owned by caller`]
-      };
-    }
-    const now = Date.now();
-    const expiresAt = now + 60 * 1000;
-    await ctx.db.patch(id, {
-      editingLockExpires: expiresAt
-    });
-    return { success: true, _logs: ["Asset lock renewed"] };
-  }
-});
-
-export const createAsset = mutation({
+export const create = mutation({
   args: assetSchema,
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -222,7 +108,7 @@ export const createAsset = mutation({
   }
 });
 
-export const updateAsset = mutation({
+export const update = mutation({
   args: {
     assetId: v.id("assets"),
     values: v.record(v.id("fields"), v.any())
@@ -298,7 +184,7 @@ export const updateAsset = mutation({
   }
 });
 
-export const deleteAsset = mutation({
+export const remove = mutation({
   args: { id: v.id("assets") },
   handler: async (ctx, { id }) => {
     const userId = await getAuthUserId(ctx);

@@ -15,27 +15,24 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-import { useEffect, useRef, useState, useCallback } from "react";
-import { Id, TableNames } from "@/convex/_generated/dataModel";
-import { FunctionReference } from "convex/server";
+import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
+import { FunctionArgs } from "convex/server";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-export function useLock<T extends TableNames>(
-  acquireLock: FunctionReference<"mutation">,
-  renewLock: FunctionReference<"mutation">,
-  releaseLock: FunctionReference<"mutation">,
+export function useLock<T extends FunctionArgs<typeof api.locks.acquire>["id"]>(
   ingestLogs: (response: unknown, isError?: boolean) => void,
   renewIntervalMs = 30000,
   maxRenewals = 30
 ): {
-  lockedId: Id<T> | null;
-  acquireLock: (id: Id<T>) => Promise<boolean>;
-  releaseLock: (id?: Id<T>) => Promise<void>;
+  lockedId: T | null;
+  acquireLock: (id: T) => Promise<boolean>;
+  releaseLock: (id?: T) => Promise<void>;
 } {
-  const [lockedId, setLockedId] = useState<Id<T> | null>(null);
-  const acquireLockFn = useMutation(acquireLock);
-  const renewLockFn = useMutation(renewLock);
-  const releaseLockFn = useMutation(releaseLock);
+  const [lockedId, setLockedId] = useState<T | null>(null);
+  const acquireLockFn = useMutation(api.locks.acquire);
+  const renewLockFn = useMutation(api.locks.renew);
+  const releaseLockFn = useMutation(api.locks.release);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const renewsLeftRef = useRef(0);
 
@@ -47,7 +44,7 @@ export function useLock<T extends TableNames>(
   }, []);
 
   const release = useCallback(
-    async (id?: Id<T>) => {
+    async (id?: T) => {
       const targetId = id ?? lockedId;
       if (!targetId) return;
 
@@ -67,7 +64,7 @@ export function useLock<T extends TableNames>(
   );
 
   const startRenewInterval = useCallback(
-    (id: Id<T>) => {
+    (id: T) => {
       clearRenewInterval();
       renewsLeftRef.current = maxRenewals;
       intervalRef.current = setInterval(async () => {
@@ -90,7 +87,7 @@ export function useLock<T extends TableNames>(
   );
 
   const acquire = useCallback(
-    async (id: Id<T>) => {
+    async (id: T) => {
       if (lockedId === id) return true;
       if (lockedId) await release(lockedId);
 

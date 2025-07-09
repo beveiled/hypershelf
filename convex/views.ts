@@ -23,7 +23,7 @@ import { v } from "convex/values";
 
 export type ViewType = Doc<"views">;
 
-export const getAll = query({
+export const get = query({
   handler: async ctx => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
@@ -41,7 +41,7 @@ export const getAll = query({
   }
 });
 
-export const createView = mutation({
+export const create = mutation({
   args: {
     name: viewSchema.name
   },
@@ -67,11 +67,12 @@ export const createView = mutation({
   }
 });
 
-export const updateView = mutation({
+export const update = mutation({
   args: {
     viewId: v.id("views"),
     fields: viewSchema.fields,
-    sortBy: viewSchema.sortBy
+    sortBy: viewSchema.sortBy,
+    filters: viewSchema.filters
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -86,14 +87,15 @@ export const updateView = mutation({
 
     await ctx.db.patch(args.viewId, {
       fields: args.fields,
-      sortBy: args.sortBy
+      sortBy: args.sortBy,
+      filters: args.filters
     });
 
     return view;
   }
 });
 
-export const deleteView = mutation({
+export const remove = mutation({
   args: {
     viewId: v.id("views")
   },

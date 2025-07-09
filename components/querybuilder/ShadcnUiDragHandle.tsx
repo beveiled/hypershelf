@@ -15,32 +15,21 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-import { getAuthUserId } from "@convex-dev/auth/server";
-import { query } from "./_generated/server";
+import { GripVertical } from "lucide-react";
+import type { ComponentPropsWithRef } from "react";
+import { forwardRef } from "react";
+import type { DragHandleProps } from "react-querybuilder";
 
-export const get = query({
-  handler: async ctx => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      return { users: [] };
-    }
+export type ShadcnUiDragHandleProps = DragHandleProps &
+  ComponentPropsWithRef<"span">;
 
-    const users = await ctx.db.query("users").order("asc").collect();
-    return {
-      users: users.map(user => ({
-        id: user._id,
-        name: user.name,
-        email: user.email
-      }))
-    };
-  }
-});
+export const ShadcnUiDragHandle = forwardRef<
+  HTMLSpanElement,
+  ShadcnUiDragHandleProps
+>(({ className, title }, dragRef) => (
+  <span ref={dragRef} className={className} title={title}>
+    <GripVertical className="text-input h-5 w-5" />
+  </span>
+));
 
-export const me = query({
-  handler: async ctx => {
-    const userId = await getAuthUserId(ctx);
-    return {
-      viewer: userId
-    };
-  }
-});
+ShadcnUiDragHandle.displayName = "ShadcnUiDragHandle";

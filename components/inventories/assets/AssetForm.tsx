@@ -88,8 +88,11 @@ export function AssetForm({
   isLockedBySomeoneElse
 }: AssetFormProps) {
   const ingestLogs = useLog();
-  const updateAsset = useMutation(api.assets.updateAsset);
-  const createAsset = useMutation(api.assets.createAsset);
+
+  const updateAsset = useMutation(api.assets.update);
+  const createAsset = useMutation(api.assets.create);
+  const { users } = useQuery(api.users.get) ?? {};
+
   const [editedValues, setEditedValues] = useState<Record<string, ValueType>>(
     {}
   );
@@ -98,8 +101,6 @@ export function AssetForm({
   const [openPopovers, setOpenPopovers] = useState<
     Record<Id<"fields">, boolean>
   >({});
-
-  const { users } = useQuery(api.users.getAll) ?? { users: [] };
 
   useEffect(() => {
     if (asset)

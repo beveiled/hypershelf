@@ -17,7 +17,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 "use client";
 
+import {
+  HyperQueryBuilder,
+  RowData,
+  useQueryPredicate
+} from "@/components/query-builder";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -27,9 +43,11 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import { useHeaderContent } from "@/components/util/HeaderContext";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { AssetType, ValueType } from "@/convex/schema";
+import { ValueType } from "@/convex/schema";
+import { ViewType } from "@/convex/views";
 import { cn } from "@/lib/utils";
 import {
   DndContext,
@@ -56,38 +74,33 @@ import {
   SortingState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   useReactTable
 } from "@tanstack/react-table";
 import { useMutation, useQuery } from "convex/react";
+import { FunctionReturnType } from "convex/server";
 import {
   ArrowDown,
   ArrowUpDown,
   ChevronDown,
   Eye,
   EyeOff,
+  Filter,
   GripVertical,
   Plus,
   Trash2
 } from "lucide-react";
-import { CSSProperties, useEffect, useMemo, useState } from "react";
+import {
+  CSSProperties,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState
+} from "react";
+import { RuleGroupType } from "react-querybuilder";
 import { renderField } from "../assets/AssetsInventory";
-import { useHeaderContent } from "@/components/util/HeaderContext";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from "@/components/ui/popover";
-import { FunctionReturnType } from "convex/server";
-import { ViewType } from "@/convex/views";
-
-type RowData = { asset: AssetType };
 
 function DraggableHeader({
   header,
@@ -122,7 +135,7 @@ function DraggableHeader({
             variant="ghost"
             size="icon"
             onClick={() => toggleVisibility(header.column.id as Id<"fields">)}
-            className="size-5"
+            className="!size-auto !p-1"
           >
             {hidden ? (
               <EyeOff className="size-4" />
@@ -135,7 +148,7 @@ function DraggableHeader({
             variant="ghost"
             size="icon"
             onClick={() => header.column.toggleSorting(undefined, true)}
-            className="size-5"
+            className="!size-auto !p-1"
           >
             {header.column.getIsSorted() ? (
               <ArrowDown
@@ -154,7 +167,7 @@ function DraggableHeader({
             size="icon"
             {...attributes}
             {...listeners}
-            className="size-5 cursor-grab"
+            className="!size-auto cursor-grab !p-1"
           >
             <GripVertical className="size-4" />
           </Button>
@@ -171,8 +184,10 @@ function ViewHeaderButton({
   setColumnOrder,
   setHiddenFields,
   setSorting,
+  setFilters,
   fields,
-  parentOpen
+  parentOpen,
+  setParentOpen
 }: {
   view: ViewType;
   activeViewId: Id<"views"> | null;
@@ -180,11 +195,13 @@ function ViewHeaderButton({
   setColumnOrder: (order: Id<"fields">[]) => void;
   setHiddenFields: (fields: Set<Id<"fields">>) => void;
   setSorting: (sorting: SortingState) => void;
-  fields: FunctionReturnType<typeof api.fields.getAll>["fields"];
+  setFilters: Dispatch<SetStateAction<RuleGroupType | undefined>>;
+  fields: FunctionReturnType<typeof api.fields.get>["fields"];
   parentOpen: boolean;
+  setParentOpen: (open: boolean) => void;
 }) {
   const [openViewDeletePopover, setOpenViewDeletePopover] = useState(false);
-  const deleteView = useMutation(api.views.deleteView);
+  const deleteView = useMutation(api.views.remove);
 
   useEffect(() => {
     if (!parentOpen) {
@@ -222,7 +239,9 @@ function ViewHeaderButton({
               desc: s.direction === "desc"
             })) ?? []
           );
+          setFilters(view.filters ?? undefined);
           setActiveViewId(view._id);
+          setParentOpen(false);
         }}
       >
         {view.name}
@@ -255,6 +274,7 @@ function ViewHeaderButton({
                   setColumnOrder([]);
                   setHiddenFields(new Set<Id<"fields">>());
                   setSorting([]);
+                  setFilters(undefined);
                 }
                 setOpenViewDeletePopover(false);
               }}
@@ -276,6 +296,25 @@ function ViewHeaderButton({
   );
 }
 
+function ToggleQueryBuilderButton({
+  builderOpen,
+  setBuilderOpen
+}: {
+  builderOpen: boolean;
+  setBuilderOpen: Dispatch<SetStateAction<boolean>>;
+}) {
+  return (
+    <Button
+      variant="ghost"
+      className="!size-auto !px-2 !py-1 text-xs"
+      onClick={() => setBuilderOpen(!builderOpen)}
+    >
+      <Filter className="size-3" />
+      {builderOpen ? "Close query builder" : "Open query builder"}
+    </Button>
+  );
+}
+
 function ViewPicker({
   views,
   activeViewId,
@@ -283,6 +322,7 @@ function ViewPicker({
   setColumnOrder,
   setHiddenFields,
   setSorting,
+  setFilters,
   fields
 }: {
   views: ViewType[];
@@ -291,7 +331,8 @@ function ViewPicker({
   setColumnOrder: (order: Id<"fields">[]) => void;
   setHiddenFields: (fields: Set<Id<"fields">>) => void;
   setSorting: (sorting: SortingState) => void;
-  fields: FunctionReturnType<typeof api.fields.getAll>["fields"];
+  setFilters: Dispatch<SetStateAction<RuleGroupType | undefined>>;
+  fields: FunctionReturnType<typeof api.fields.get>["fields"];
 }) {
   const [creatingNewView, setCreatingNewView] = useState(false);
   const [newViewName, setNewViewName] = useState("");
@@ -304,7 +345,7 @@ function ViewPicker({
     }
   }, [parentOpen]);
 
-  const createView = useMutation(api.views.createView);
+  const createView = useMutation(api.views.create);
 
   return (
     <DropdownMenu open={parentOpen} onOpenChange={setParentOpen}>
@@ -327,8 +368,10 @@ function ViewPicker({
             setColumnOrder={setColumnOrder}
             setHiddenFields={setHiddenFields}
             setSorting={setSorting}
+            setFilters={setFilters}
             fields={fields}
             parentOpen={parentOpen}
+            setParentOpen={setParentOpen}
           />
         ))}
         <Popover open={creatingNewView} onOpenChange={setCreatingNewView}>
@@ -365,6 +408,7 @@ function ViewPicker({
                       fields.map(f => f.field._id as Id<"fields">)
                     );
                     setSorting([]);
+                    setFilters(undefined);
                   }}
                   className="flex-auto"
                 >
@@ -390,20 +434,22 @@ function ViewPicker({
 }
 
 export function ViewsInventory() {
-  const { assets } = useQuery(api.assets.getAll) ?? {};
-  const { fields } = useQuery(api.fields.getAll) ?? {};
-  const { users } = useQuery(api.users.getAll) ?? { users: [] };
-  const { views } = useQuery(api.views.getAll) ?? {};
+  const { assets } = useQuery(api.assets.get) ?? {};
+  const { fields } = useQuery(api.fields.get) ?? {};
+  const { users } = useQuery(api.users.get) ?? {};
+  const { views } = useQuery(api.views.get) ?? {};
 
-  const updateView = useMutation(api.views.updateView);
-  const deleteView = useMutation(api.views.deleteView);
+  const updateView = useMutation(api.views.update);
+  const deleteView = useMutation(api.views.remove);
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnOrder, setColumnOrder] = useState<Id<"fields">[]>([]);
+  const [filters, setFilters] = useState<RuleGroupType | undefined>(undefined);
   const [hiddenFields, setHiddenFields] = useState<Set<Id<"fields">>>(
     () => new Set()
   );
   const [activeViewId, setActiveViewId] = useState<Id<"views"> | null>(null);
+  const [builderOpen, setBuilderOpen] = useState(false);
 
   useEffect(() => {
     if (fields && !columnOrder.length)
@@ -429,6 +475,7 @@ export function ViewsInventory() {
             desc: s.direction === "desc"
           })) ?? []
         );
+        setFilters(defaultView.filters);
       }
     }
   }, [views, fields, activeViewId]);
@@ -449,9 +496,10 @@ export function ViewsInventory() {
       fields: columnOrder.filter(id => !hiddenFields.has(id)),
       sortBy: sortBy as
         | { fieldId: Id<"fields">; direction: "asc" | "desc" }[]
-        | undefined
+        | undefined,
+      filters: filters ?? undefined
     });
-  }, [columnOrder, sorting, hiddenFields, activeViewId, updateView]);
+  }, [columnOrder, sorting, hiddenFields, activeViewId, updateView, filters]);
 
   const buildColumns = useMemo<ColumnDef<RowData>[]>(() => {
     if (!fields) return [];
@@ -461,7 +509,7 @@ export function ViewsInventory() {
       header: f.field.name ?? f.field._id,
       cell: ({ row }) => {
         const val = row.getValue(f.field._id) as ValueType | undefined;
-        return renderField(f.field, val, users, () => {});
+        return renderField(f.field, val, users ?? [], () => {});
       },
       enableSorting: true
     }));
@@ -472,15 +520,18 @@ export function ViewsInventory() {
     [assets]
   );
 
+  const predicate = useQueryPredicate(filters);
   const table = useReactTable<RowData>({
     data,
     columns: buildColumns,
-    state: { sorting, columnOrder },
+    state: { sorting, columnOrder, globalFilter: filters },
     onSortingChange: setSorting,
     onColumnOrderChange: setColumnOrder as OnChangeFn<ColumnOrderState>,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    enableMultiSort: true
+    enableMultiSort: true,
+    getFilteredRowModel: getFilteredRowModel(),
+    globalFilterFn: row => predicate(row.original)
   });
 
   const toggleVisibility = (id: Id<"fields">) => {
@@ -517,18 +568,25 @@ export function ViewsInventory() {
       return;
     }
     setHeaderContent(
-      <ViewPicker
-        activeViewId={activeViewId}
-        setActiveViewId={setActiveViewId}
-        setHiddenFields={setHiddenFields}
-        setColumnOrder={setColumnOrder}
-        setSorting={setSorting}
-        fields={fields}
-        views={views}
-      />
+      <div className="flex items-center gap-2">
+        <ToggleQueryBuilderButton
+          builderOpen={builderOpen}
+          setBuilderOpen={setBuilderOpen}
+        />
+        <ViewPicker
+          activeViewId={activeViewId}
+          setActiveViewId={setActiveViewId}
+          setHiddenFields={setHiddenFields}
+          setColumnOrder={setColumnOrder}
+          setSorting={setSorting}
+          setFilters={setFilters}
+          fields={fields}
+          views={views}
+        />
+      </div>
     );
     return () => setHeaderContent(null);
-  }, [activeViewId, setHeaderContent, views, fields, deleteView]);
+  }, [activeViewId, setHeaderContent, views, fields, deleteView, builderOpen]);
 
   const [isActiveViewSet, setIsActiveViewSet] = useState(false);
   useEffect(() => {
@@ -574,12 +632,20 @@ export function ViewsInventory() {
           sensors={sensors}
         >
           <div className="h-[calc(100dvh-3.5rem)] overflow-scroll rounded-md border">
+            {builderOpen && users && (
+              <HyperQueryBuilder
+                fields={fields}
+                users={users}
+                filters={filters}
+                setFilters={setFilters}
+              />
+            )}
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map(hg => (
                   <TableRow
                     key={hg.id}
-                    className="bg-background hover:bg-background sticky top-0 z-50 h-10"
+                    className="bg-background hover:bg-background sticky top-0 z-40 h-10"
                   >
                     <SortableContext
                       items={columnOrder}

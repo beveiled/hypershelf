@@ -29,7 +29,7 @@ test("views editing", async () => {
 
   const asBob = t.withIdentity({ name: "Bob", subject: bob });
 
-  const createdView = await asBob.mutation(api.views.createView, {
+  const createdView = await asBob.mutation(api.views.create, {
     name: "Test View"
   });
   expect(createdView).toBeDefined();
@@ -37,17 +37,17 @@ test("views editing", async () => {
   const viewId = createdView as Id<"views">;
   expect(viewId).toBeDefined();
 
-  const emptyViews = await t.query(api.views.getAll);
+  const emptyViews = await t.query(api.views.get);
   expect(emptyViews.views).toHaveLength(0);
 
   await expect(async () => {
-    await t.mutation(api.views.createView, {
+    await t.mutation(api.views.create, {
       name: "Unauthenticated View"
     });
   }).rejects.toThrowError("Unauthorized");
 
   await expect(async () => {
-    await t.mutation(api.views.updateView, {
+    await t.mutation(api.views.update, {
       viewId: viewId,
       fields: [],
       sortBy: undefined
@@ -55,17 +55,17 @@ test("views editing", async () => {
   }).rejects.toThrowError("Unauthorized");
 
   await expect(async () => {
-    await t.mutation(api.views.deleteView, {
+    await t.mutation(api.views.remove, {
       viewId: viewId
     });
   }).rejects.toThrowError("Unauthorized");
 
-  const view = await asBob.query(api.views.getAll);
+  const view = await asBob.query(api.views.get);
   expect(view.views).toHaveLength(1);
   expect(view.views[0]._id).toEqual(viewId);
   expect(view.views[0].name).toEqual("Test View");
 
-  const updatedView = await asBob.mutation(api.views.updateView, {
+  const updatedView = await asBob.mutation(api.views.update, {
     viewId,
     fields: [],
     sortBy: undefined
@@ -73,28 +73,28 @@ test("views editing", async () => {
   expect(updatedView).toBeDefined();
   expect(updatedView._id).toEqual(viewId);
 
-  const viewAfterUpdate = await asBob.query(api.views.getAll);
+  const viewAfterUpdate = await asBob.query(api.views.get);
   expect(viewAfterUpdate.views).toHaveLength(1);
   expect(viewAfterUpdate.views[0]._id).toEqual(viewId);
   expect(viewAfterUpdate.views[0].name).toEqual("Test View");
 
-  const deleteView = await asBob.mutation(api.views.deleteView, {
+  const deleteView = await asBob.mutation(api.views.remove, {
     viewId
   });
   expect(deleteView).toBeDefined();
 
-  const viewAfterDelete = await asBob.query(api.views.getAll);
+  const viewAfterDelete = await asBob.query(api.views.get);
   expect(viewAfterDelete.views).toHaveLength(0);
   expect(viewAfterDelete.views.some(v => v._id === viewId)).toBe(false);
 
   await expect(async () => {
-    await asBob.mutation(api.views.deleteView, {
+    await asBob.mutation(api.views.remove, {
       viewId: viewId
     });
   }).rejects.toThrowError("View not found");
 
   await expect(async () => {
-    await asBob.mutation(api.views.updateView, {
+    await asBob.mutation(api.views.update, {
       viewId: viewId,
       fields: [],
       sortBy: undefined

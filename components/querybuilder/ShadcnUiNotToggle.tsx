@@ -15,32 +15,31 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-import { getAuthUserId } from "@convex-dev/auth/server";
-import { query } from "./_generated/server";
+import { Switch } from "@/components/ui/switch";
+import type { ComponentPropsWithoutRef } from "react";
+import type { NotToggleProps } from "react-querybuilder";
 
-export const get = query({
-  handler: async ctx => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      return { users: [] };
-    }
+export type ChakraNotToggleProps = NotToggleProps &
+  ComponentPropsWithoutRef<typeof Switch>;
 
-    const users = await ctx.db.query("users").order("asc").collect();
-    return {
-      users: users.map(user => ({
-        id: user._id,
-        name: user.name,
-        email: user.email
-      }))
-    };
-  }
-});
+export const ShadcnUiNotToggle = ({
+  className,
+  handleOnChange,
+  checked,
+  disabled,
+  label
+}: ChakraNotToggleProps) => {
+  return (
+    <div className="flex items-center space-x-2 text-sm">
+      <Switch
+        className={className}
+        disabled={disabled}
+        checked={checked}
+        onCheckedChange={handleOnChange}
+      />
+      <span>{label}</span>
+    </div>
+  );
+};
 
-export const me = query({
-  handler: async ctx => {
-    const userId = await getAuthUserId(ctx);
-    return {
-      viewer: userId
-    };
-  }
-});
+ShadcnUiNotToggle.displayName = "ShadcnUiNotToggle";

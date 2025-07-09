@@ -36,7 +36,7 @@ test("asset locks", async () => {
   const asBob = t.withIdentity({ name: "Bob", subject: bob });
   const asAlice = t.withIdentity({ name: "Alice", subject: alice });
 
-  const createdField = await asBob.mutation(api.fields.createField, {
+  const createdField = await asBob.mutation(api.fields.create, {
     name: "Test String",
     type: "string",
     required: true,
@@ -56,7 +56,7 @@ test("asset locks", async () => {
     _logs: ["Field Test String added"]
   });
 
-  const unauthedCreateAsset = await t.mutation(api.assets.createAsset, {
+  const unauthedCreateAsset = await t.mutation(api.assets.create, {
     metadata: {}
   });
   expect(unauthedCreateAsset).toMatchObject({
@@ -65,20 +65,19 @@ test("asset locks", async () => {
     _logs: ["Failed to create asset: not authenticated"]
   });
 
-  const unauthedGetAllAssets = await t.query(api.assets.getAll);
+  const unauthedGetAllAssets = await t.query(api.assets.get);
   expect(unauthedGetAllAssets).toMatchObject({
-    viewer: null,
     assets: []
   });
 
-  const invalidCreate = await asBob.mutation(api.assets.createAsset, {});
+  const invalidCreate = await asBob.mutation(api.assets.create, {});
   expect(invalidCreate).toMatchObject({
     success: false,
     errors: { _: "Metadata is required" },
     _logs: ["Failed to create asset: metadata is required"]
   });
 
-  const createdAsset = await asBob.mutation(api.assets.createAsset, {
+  const createdAsset = await asBob.mutation(api.assets.create, {
     metadata: {}
   });
   expect(createdAsset).toMatchObject({
@@ -87,7 +86,7 @@ test("asset locks", async () => {
     _logs: ["Asset created successfully"]
   });
 
-  const unauthedDeleteAsset = await t.mutation(api.assets.deleteAsset, {
+  const unauthedDeleteAsset = await t.mutation(api.assets.remove, {
     id: createdAsset.assetId!
   });
   expect(unauthedDeleteAsset).toMatchObject({
@@ -96,7 +95,7 @@ test("asset locks", async () => {
     _logs: ["Failed to delete asset: not authenticated"]
   });
 
-  const unauthedUpdateAsset = await t.mutation(api.assets.updateAsset, {
+  const unauthedUpdateAsset = await t.mutation(api.assets.update, {
     assetId: createdAsset.assetId!,
     values: {}
   });
@@ -106,33 +105,8 @@ test("asset locks", async () => {
     _logs: ["Failed to update asset: not authenticated"]
   });
 
-  const unauthedAcquireLock = await t.mutation(api.assets.acquireLock, {
-    id: createdAsset.assetId!
-  });
-  expect(unauthedAcquireLock).toMatchObject({
-    success: false,
-    _logs: ["Failed to acquire asset lock: not authenticated"]
-  });
-
-  const unauthedReleaseLock = await t.mutation(api.assets.releaseLock, {
-    id: createdAsset.assetId!
-  });
-  expect(unauthedReleaseLock).toMatchObject({
-    success: false,
-    _logs: ["Failed to release asset lock: not authenticated"]
-  });
-
-  const unauthedRenewLock = await t.mutation(api.assets.renewLock, {
-    id: createdAsset.assetId!
-  });
-  expect(unauthedRenewLock).toMatchObject({
-    success: false,
-    _logs: ["Failed to renew asset lock: not authenticated"]
-  });
-
-  const getAll = await asBob.query(api.assets.getAll);
+  const getAll = await asBob.query(api.assets.get);
   expect(getAll).toMatchObject({
-    viewer: bob,
     assets: [
       {
         asset: {
@@ -144,17 +118,16 @@ test("asset locks", async () => {
     ]
   });
 
-  const lockAsset = await asBob.mutation(api.assets.acquireLock, {
+  const lockAsset = await asBob.mutation(api.locks.acquire, {
     id: createdAsset.assetId!
   });
   expect(lockAsset).toMatchObject({
     success: true,
-    _logs: ["Asset lock acquired"]
+    _logs: ["Lock acquired"]
   });
 
-  const getAllWithEditing = await asBob.query(api.assets.getAll);
+  const getAllWithEditing = await asBob.query(api.assets.get);
   expect(getAllWithEditing).toMatchObject({
-    viewer: bob,
     assets: [
       {
         asset: {
@@ -168,42 +141,7 @@ test("asset locks", async () => {
     ]
   });
 
-  const lockConflict = await asAlice.mutation(api.assets.acquireLock, {
-    id: createdAsset.assetId!
-  });
-  expect(lockConflict).toMatchObject({
-    success: false,
-    error: "Asset is already being edited by another user",
-    _logs: [`Failed to acquire asset lock: already being edited`]
-  });
-
-  const releaseConflict = await asAlice.mutation(api.assets.releaseLock, {
-    id: createdAsset.assetId!
-  });
-  expect(releaseConflict).toMatchObject({
-    success: false,
-    error: "Asset is not being edited by you",
-    _logs: ["Failed to release asset lock: not owned by caller"]
-  });
-
-  const renewConflict = await asAlice.mutation(api.assets.renewLock, {
-    id: createdAsset.assetId!
-  });
-  expect(renewConflict).toMatchObject({
-    success: false,
-    error: "Asset is not being edited by you",
-    _logs: ["Failed to renew asset lock: not owned by caller"]
-  });
-
-  const renew = await asBob.mutation(api.assets.renewLock, {
-    id: createdAsset.assetId!
-  });
-  expect(renew).toMatchObject({
-    success: true,
-    _logs: ["Asset lock renewed"]
-  });
-
-  const editAttempt = await asAlice.mutation(api.assets.updateAsset, {
+  const editAttempt = await asAlice.mutation(api.assets.update, {
     assetId: createdAsset.assetId!,
     values: {
       [createdField.fieldId! as string]: "Somevalue"
@@ -215,7 +153,7 @@ test("asset locks", async () => {
     _logs: ["Failed to update asset: not being edited by you"]
   });
 
-  const validEditAttempt = await asBob.mutation(api.assets.updateAsset, {
+  const validEditAttempt = await asBob.mutation(api.assets.update, {
     assetId: createdAsset.assetId!,
     values: {
       [createdField.fieldId! as string]: "Somevalue"
@@ -226,7 +164,7 @@ test("asset locks", async () => {
     _logs: ["Asset updated successfully"]
   });
 
-  const invalidEditAttempt = await asBob.mutation(api.assets.updateAsset, {
+  const invalidEditAttempt = await asBob.mutation(api.assets.update, {
     assetId: createdAsset.assetId!,
     values: {
       [createdField.fieldId! as string]: "12345"
@@ -239,15 +177,15 @@ test("asset locks", async () => {
     }
   });
 
-  const releasedLock = await asBob.mutation(api.assets.releaseLock, {
+  const releasedLock = await asBob.mutation(api.locks.release, {
     id: createdAsset.assetId!
   });
   expect(releasedLock).toMatchObject({
     success: true,
-    _logs: ["Asset lock released"]
+    _logs: ["Lock released"]
   });
 
-  const deleteField = await asBob.mutation(api.fields.deleteField, {
+  const deleteField = await asBob.mutation(api.fields.remove, {
     fieldId: createdField.fieldId!
   });
   expect(deleteField).toMatchObject({
@@ -255,7 +193,7 @@ test("asset locks", async () => {
     _logs: ["Field Test String deleted"]
   });
 
-  const createNonExistingField = await asBob.mutation(api.assets.createAsset, {
+  const createNonExistingField = await asBob.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId!]: "Test Value"
     }
@@ -266,7 +204,7 @@ test("asset locks", async () => {
     _logs: ["Failed to fetch fields"]
   });
 
-  const updateNonExistingField = await asBob.mutation(api.assets.updateAsset, {
+  const updateNonExistingField = await asBob.mutation(api.assets.update, {
     assetId: createdAsset.assetId!,
     values: {
       [createdField.fieldId!]: "New Value"
@@ -278,7 +216,7 @@ test("asset locks", async () => {
     _logs: ["Failed to fetch fields"]
   });
 
-  const updateNoLock = await asBob.mutation(api.assets.updateAsset, {
+  const updateNoLock = await asBob.mutation(api.assets.update, {
     assetId: createdAsset.assetId!,
     values: {}
   });
@@ -287,7 +225,7 @@ test("asset locks", async () => {
     _logs: ["Asset updated successfully", "Warning: lock missing"]
   });
 
-  const deleteAsset = await asBob.mutation(api.assets.deleteAsset, {
+  const deleteAsset = await asBob.mutation(api.assets.remove, {
     id: createdAsset.assetId!
   });
   expect(deleteAsset).toMatchObject({
@@ -295,34 +233,7 @@ test("asset locks", async () => {
     _logs: ["Asset deleted successfully"]
   });
 
-  const acquireMissing = await asBob.mutation(api.assets.acquireLock, {
-    id: createdAsset.assetId!
-  });
-  expect(acquireMissing).toMatchObject({
-    success: false,
-    error: "Asset not found",
-    _logs: ["Failed to acquire asset lock: asset not found"]
-  });
-
-  const releaseMissing = await asBob.mutation(api.assets.releaseLock, {
-    id: createdAsset.assetId!
-  });
-  expect(releaseMissing).toMatchObject({
-    success: false,
-    error: "Asset not found",
-    _logs: ["Failed to release asset lock: asset not found"]
-  });
-
-  const renewMissing = await asBob.mutation(api.assets.renewLock, {
-    id: createdAsset.assetId!
-  });
-  expect(renewMissing).toMatchObject({
-    success: false,
-    error: "Asset not found",
-    _logs: ["Failed to renew asset lock: asset not found"]
-  });
-
-  const updateMissing = await asBob.mutation(api.assets.updateAsset, {
+  const updateMissing = await asBob.mutation(api.assets.update, {
     assetId: createdAsset.assetId!,
     values: {}
   });
@@ -332,7 +243,7 @@ test("asset locks", async () => {
     _logs: ["Failed to update asset: asset not found"]
   });
 
-  const deleteMissing = await asBob.mutation(api.assets.deleteAsset, {
+  const deleteMissing = await asBob.mutation(api.assets.remove, {
     id: createdAsset.assetId!
   });
   expect(deleteMissing).toMatchObject({

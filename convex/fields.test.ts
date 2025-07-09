@@ -24,7 +24,7 @@ import schema from "./schema";
 test("string field validators", async () => {
   const t = convexTest(schema);
   const authenticated = t.withIdentity({ name: "Bobby" });
-  const createdField = await authenticated.mutation(api.fields.createField, {
+  const createdField = await authenticated.mutation(api.fields.create, {
     name: "Test String",
     type: "string",
     required: true,
@@ -43,7 +43,7 @@ test("string field validators", async () => {
     fieldId: expect.any(String),
     _logs: ["Field Test String added"]
   });
-  const asset = await authenticated.mutation(api.assets.createAsset, {
+  const asset = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "HelloWorld"
     }
@@ -53,7 +53,7 @@ test("string field validators", async () => {
     assetId: expect.any(String),
     _logs: ["Asset created successfully"]
   });
-  const invalidAsset1 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset1 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "H1"
     }
@@ -62,7 +62,7 @@ test("string field validators", async () => {
     success: false,
     errors: { [createdField.fieldId as string]: "Only letters are allowed" }
   });
-  const invalidAsset2 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset2 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]:
         "A very long string that exceeds the maximum allowed length"
@@ -75,7 +75,7 @@ test("string field validators", async () => {
         "String must contain at most 50 character(s)"
     }
   });
-  const invalidAsset3 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset3 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "A"
     }
@@ -89,7 +89,7 @@ test("string field validators", async () => {
   });
 
   const createFieldNoRegexError = await authenticated.mutation(
-    api.fields.createField,
+    api.fields.create,
     {
       name: "Test String No Regex Error",
       type: "string",
@@ -108,14 +108,11 @@ test("string field validators", async () => {
     fieldId: expect.any(String),
     _logs: ["Field Test String No Regex Error added"]
   });
-  const assetNoRegexError = await authenticated.mutation(
-    api.assets.createAsset,
-    {
-      metadata: {
-        [createFieldNoRegexError.fieldId as string]: "Hello World"
-      }
+  const assetNoRegexError = await authenticated.mutation(api.assets.create, {
+    metadata: {
+      [createFieldNoRegexError.fieldId as string]: "Hello World"
     }
-  );
+  });
   expect(assetNoRegexError).toMatchObject({
     success: false,
     errors: {
@@ -128,7 +125,7 @@ test("string field validators", async () => {
 test("number field validators", async () => {
   const t = convexTest(schema);
   const authenticated = t.withIdentity({ name: "Bobby" });
-  const createdField = await authenticated.mutation(api.fields.createField, {
+  const createdField = await authenticated.mutation(api.fields.create, {
     name: "Test Number",
     type: "number",
     required: true,
@@ -144,7 +141,7 @@ test("number field validators", async () => {
     fieldId: expect.any(String),
     _logs: ["Field Test Number added"]
   });
-  const asset = await authenticated.mutation(api.assets.createAsset, {
+  const asset = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: 42
     }
@@ -154,7 +151,7 @@ test("number field validators", async () => {
     assetId: expect.any(String),
     _logs: ["Asset created successfully"]
   });
-  const invalidAsset1 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset1 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: -1
     }
@@ -166,7 +163,7 @@ test("number field validators", async () => {
         "Number must be greater than or equal to 0"
     }
   });
-  const invalidAsset2 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset2 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: 101
     }
@@ -183,7 +180,7 @@ test("number field validators", async () => {
 test("field type coerce", async () => {
   const t = convexTest(schema);
   const authenticated = t.withIdentity({ name: "Bobby" });
-  const createdField = await authenticated.mutation(api.fields.createField, {
+  const createdField = await authenticated.mutation(api.fields.create, {
     name: "Test Coerce",
     type: "number",
     required: true,
@@ -197,7 +194,7 @@ test("field type coerce", async () => {
     fieldId: expect.any(String),
     _logs: ["Field Test Coerce added"]
   });
-  const asset = await authenticated.mutation(api.assets.createAsset, {
+  const asset = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "42"
     }
@@ -207,7 +204,7 @@ test("field type coerce", async () => {
     assetId: expect.any(String),
     _logs: ["Asset created successfully"]
   });
-  const invalidAsset = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "not-a-number"
     }
@@ -223,7 +220,7 @@ test("field type coerce", async () => {
 test("boolean field validators", async () => {
   const t = convexTest(schema);
   const authenticated = t.withIdentity({ name: "Bobby" });
-  const createdField = await authenticated.mutation(api.fields.createField, {
+  const createdField = await authenticated.mutation(api.fields.create, {
     name: "Test Boolean",
     type: "boolean",
     required: true,
@@ -236,7 +233,7 @@ test("boolean field validators", async () => {
     fieldId: expect.any(String),
     _logs: ["Field Test Boolean added"]
   });
-  const assetTrue = await authenticated.mutation(api.assets.createAsset, {
+  const assetTrue = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: true
     }
@@ -246,7 +243,7 @@ test("boolean field validators", async () => {
     assetId: expect.any(String),
     _logs: ["Asset created successfully"]
   });
-  const assetFalse = await authenticated.mutation(api.assets.createAsset, {
+  const assetFalse = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: false
     }
@@ -261,7 +258,7 @@ test("boolean field validators", async () => {
 test("email field validators", async () => {
   const t = convexTest(schema);
   const authenticated = t.withIdentity({ name: "Bobby" });
-  const createdField = await authenticated.mutation(api.fields.createField, {
+  const createdField = await authenticated.mutation(api.fields.create, {
     name: "Test Email",
     type: "email",
     required: true,
@@ -275,7 +272,7 @@ test("email field validators", async () => {
     fieldId: expect.any(String),
     _logs: ["Field Test Email added"]
   });
-  const asset = await authenticated.mutation(api.assets.createAsset, {
+  const asset = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "test@localhost.com"
     }
@@ -285,7 +282,7 @@ test("email field validators", async () => {
     assetId: expect.any(String),
     _logs: ["Asset created successfully"]
   });
-  const invalidAsset1 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset1 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "invalid-email"
     }
@@ -294,7 +291,7 @@ test("email field validators", async () => {
     success: false,
     errors: { [createdField.fieldId as string]: "Invalid email" }
   });
-  const invalidAsset2 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset2 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "ઇમેઇલ"
     }
@@ -308,7 +305,7 @@ test("email field validators", async () => {
 test("url field validators", async () => {
   const t = convexTest(schema);
   const authenticated = t.withIdentity({ name: "Bobby" });
-  const createdField = await authenticated.mutation(api.fields.createField, {
+  const createdField = await authenticated.mutation(api.fields.create, {
     name: "Test URL",
     type: "url",
     required: true,
@@ -322,7 +319,7 @@ test("url field validators", async () => {
     fieldId: expect.any(String),
     _logs: ["Field Test URL added"]
   });
-  const asset = await authenticated.mutation(api.assets.createAsset, {
+  const asset = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "https://example.com"
     }
@@ -332,7 +329,7 @@ test("url field validators", async () => {
     assetId: expect.any(String),
     _logs: ["Asset created successfully"]
   });
-  const invalidAsset1 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset1 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "invalid-url"
     }
@@ -346,7 +343,7 @@ test("url field validators", async () => {
 test("select field validators", async () => {
   const t = convexTest(schema);
   const authenticated = t.withIdentity({ name: "Bobby" });
-  const createdField = await authenticated.mutation(api.fields.createField, {
+  const createdField = await authenticated.mutation(api.fields.create, {
     name: "Test Select",
     type: "select",
     required: true,
@@ -360,7 +357,7 @@ test("select field validators", async () => {
     fieldId: expect.any(String),
     _logs: ["Field Test Select added"]
   });
-  const asset = await authenticated.mutation(api.assets.createAsset, {
+  const asset = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "Option 1"
     }
@@ -370,7 +367,7 @@ test("select field validators", async () => {
     assetId: expect.any(String),
     _logs: ["Asset created successfully"]
   });
-  const invalidAsset1 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset1 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "Invalid Option"
     }
@@ -387,7 +384,7 @@ test("select field validators", async () => {
 test("date field validators", async () => {
   const t = convexTest(schema);
   const authenticated = t.withIdentity({ name: "Bobby" });
-  const createdField = await authenticated.mutation(api.fields.createField, {
+  const createdField = await authenticated.mutation(api.fields.create, {
     name: "Test Date",
     type: "date",
     required: true,
@@ -401,7 +398,7 @@ test("date field validators", async () => {
     fieldId: expect.any(String),
     _logs: ["Field Test Date added"]
   });
-  const asset = await authenticated.mutation(api.assets.createAsset, {
+  const asset = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: new Date("2023-10-01").toISOString()
     }
@@ -411,7 +408,7 @@ test("date field validators", async () => {
     assetId: expect.any(String),
     _logs: ["Asset created successfully"]
   });
-  const invalidAsset1 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset1 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "invalid-date"
     }
@@ -420,7 +417,7 @@ test("date field validators", async () => {
     success: false,
     errors: { [createdField.fieldId as string]: "Invalid date" }
   });
-  const invalidAsset2 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset2 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: 0
     }
@@ -436,7 +433,7 @@ test("date field validators", async () => {
 test("ip field validators", async () => {
   const t = convexTest(schema);
   const authenticated = t.withIdentity({ name: "Bobby" });
-  const createdField = await authenticated.mutation(api.fields.createField, {
+  const createdField = await authenticated.mutation(api.fields.create, {
     name: "Test IP",
     type: "ip",
     required: false,
@@ -451,7 +448,7 @@ test("ip field validators", async () => {
     fieldId: expect.any(String),
     _logs: ["Field Test IP added"]
   });
-  const asset = await authenticated.mutation(api.assets.createAsset, {
+  const asset = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "10.10.10.40"
     }
@@ -461,7 +458,7 @@ test("ip field validators", async () => {
     assetId: expect.any(String),
     _logs: ["Asset created successfully"]
   });
-  const invalidAsset1 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset1 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "11.11.11.11"
     }
@@ -473,7 +470,7 @@ test("ip field validators", async () => {
         "IP address must be in subnet 10.10.10.10/24"
     }
   });
-  const invalidAsset2 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset2 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "invalid-ip"
     }
@@ -485,7 +482,7 @@ test("ip field validators", async () => {
         "IP address must be in subnet 10.10.10.10/24"
     }
   });
-  const invalidAsset3 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset3 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: "10.10.10.256"
     }
@@ -502,7 +499,7 @@ test("ip field validators", async () => {
 test("array field validators", async () => {
   const t = convexTest(schema);
   const authenticated = t.withIdentity({ name: "Bobby" });
-  const createdField = await authenticated.mutation(api.fields.createField, {
+  const createdField = await authenticated.mutation(api.fields.create, {
     name: "Test Array",
     type: "array",
     required: true,
@@ -519,7 +516,7 @@ test("array field validators", async () => {
     fieldId: expect.any(String),
     _logs: ["Field Test Array added"]
   });
-  const asset = await authenticated.mutation(api.assets.createAsset, {
+  const asset = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: [1, 2]
     }
@@ -529,7 +526,7 @@ test("array field validators", async () => {
     assetId: expect.any(String),
     _logs: ["Asset created successfully"]
   });
-  const invalidAsset1 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset1 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: []
     }
@@ -541,7 +538,7 @@ test("array field validators", async () => {
         "Array must contain at least 1 element(s)"
     }
   });
-  const invalidAsset2 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset2 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: [1, 2, 3, 4, 5, 6]
     }
@@ -553,7 +550,7 @@ test("array field validators", async () => {
         "Array must contain at most 5 element(s)"
     }
   });
-  const invalidAsset3 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset3 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: ["Invalid", 1, 2]
     }
@@ -564,7 +561,7 @@ test("array field validators", async () => {
       [createdField.fieldId as string]: "Value must be a number"
     }
   });
-  const invalidAsset4 = await authenticated.mutation(api.assets.createAsset, {
+  const invalidAsset4 = await authenticated.mutation(api.assets.create, {
     metadata: {
       [createdField.fieldId as string]: [101]
     }
@@ -577,39 +574,33 @@ test("array field validators", async () => {
     }
   });
 
-  const fieldArrayNoSubtype = await authenticated.mutation(
-    api.fields.createField,
-    {
-      name: "Test Array No Subtype",
-      type: "array",
-      required: true,
-      extra: {
-        description: "A field for testing arrays without subtype",
-        minItems: 1,
-        maxItems: 5
-      }
+  const fieldArrayNoSubtype = await authenticated.mutation(api.fields.create, {
+    name: "Test Array No Subtype",
+    type: "array",
+    required: true,
+    extra: {
+      description: "A field for testing arrays without subtype",
+      minItems: 1,
+      maxItems: 5
     }
-  );
+  });
   expect(fieldArrayNoSubtype).toMatchObject({
     success: true,
     fieldId: expect.any(String),
     _logs: ["Field Test Array No Subtype added"]
   });
-  const assetArrayNoSubtype = await authenticated.mutation(
-    api.assets.createAsset,
-    {
-      metadata: {
-        [fieldArrayNoSubtype.fieldId as string]: ["Hello", "World"]
-      }
+  const assetArrayNoSubtype = await authenticated.mutation(api.assets.create, {
+    metadata: {
+      [fieldArrayNoSubtype.fieldId as string]: ["Hello", "World"]
     }
-  );
+  });
   expect(assetArrayNoSubtype).toMatchObject({
     success: true,
     assetId: expect.any(String),
     _logs: ["Asset created successfully"]
   });
   const invalidAssetArrayNoSubtype = await authenticated.mutation(
-    api.assets.createAsset,
+    api.assets.create,
     {
       metadata: {
         [fieldArrayNoSubtype.fieldId as string]: []
@@ -624,7 +615,7 @@ test("array field validators", async () => {
     }
   });
   const invalidAssetArrayNoSubtype2 = await authenticated.mutation(
-    api.assets.createAsset,
+    api.assets.create,
     {
       metadata: {
         [fieldArrayNoSubtype.fieldId as string]: [
@@ -646,7 +637,7 @@ test("array field validators", async () => {
     }
   });
   const invalidAssetArrayNoSubtype3 = await authenticated.mutation(
-    api.assets.createAsset,
+    api.assets.create,
     {
       metadata: {
         [fieldArrayNoSubtype.fieldId as string]: [1, 2, 3, 4, 5, 6]
@@ -665,7 +656,7 @@ test("array field validators", async () => {
 test("non-zod error handling", async () => {
   const t = convexTest(schema);
   const authenticated = t.withIdentity({ name: "Bobby" });
-  const createdField = await authenticated.mutation(api.fields.createField, {
+  const createdField = await authenticated.mutation(api.fields.create, {
     name: "Test Non-Zod Error",
     type: "ip",
     required: true,
@@ -681,33 +672,30 @@ test("non-zod error handling", async () => {
     _logs: ["Field Test Non-Zod Error added"]
   });
   await expect(async () => {
-    await authenticated.mutation(api.assets.createAsset, {
+    await authenticated.mutation(api.assets.create, {
       metadata: {
         [createdField.fieldId as string]: "11.11.11.11"
       }
     });
   }).rejects.toThrow("Invalid subnet prefix");
 
-  const createFieldNoSubnet = await authenticated.mutation(
-    api.fields.createField,
-    {
-      name: "Test Field No Subnet",
-      type: "ip",
-      required: true,
-      extra: {
-        description: "A field for testing IP addresses without subnet",
-        placeholder: "Enter an IP address",
-        subnet: "11.11.11.11"
-      }
+  const createFieldNoSubnet = await authenticated.mutation(api.fields.create, {
+    name: "Test Field No Subnet",
+    type: "ip",
+    required: true,
+    extra: {
+      description: "A field for testing IP addresses without subnet",
+      placeholder: "Enter an IP address",
+      subnet: "11.11.11.11"
     }
-  );
+  });
   expect(createFieldNoSubnet).toMatchObject({
     success: true,
     fieldId: expect.any(String),
     _logs: ["Field Test Field No Subnet added"]
   });
   await expect(async () => {
-    await authenticated.mutation(api.assets.createAsset, {
+    await authenticated.mutation(api.assets.create, {
       metadata: {
         [createFieldNoSubnet.fieldId as string]: "11.11.11.11"
       }
@@ -715,7 +703,7 @@ test("non-zod error handling", async () => {
   }).rejects.toThrow("Invalid subnet");
 
   const createFieldZeroSubnet = await authenticated.mutation(
-    api.fields.createField,
+    api.fields.create,
     {
       name: "Test Field Zero Subnet",
       type: "ip",
@@ -733,7 +721,7 @@ test("non-zod error handling", async () => {
     _logs: ["Field Test Field Zero Subnet added"]
   });
   const createdAssetZeroSubnet = await authenticated.mutation(
-    api.assets.createAsset,
+    api.assets.create,
     {
       metadata: {
         [createFieldZeroSubnet.fieldId as string]: "11.11.11.11"
@@ -763,7 +751,7 @@ test("field locks", async () => {
   const asBob = t.withIdentity({ name: "Bob", subject: bob });
   const asAlice = t.withIdentity({ name: "Alice", subject: alice });
 
-  const createdField = await asBob.mutation(api.fields.createField, {
+  const createdField = await asBob.mutation(api.fields.create, {
     name: "Test Lock...",
     type: "string",
     required: true,
@@ -778,7 +766,7 @@ test("field locks", async () => {
     _logs: ["Field Test Lock... added"]
   });
 
-  const editedNoLock = await asAlice.mutation(api.fields.updateField, {
+  const editedNoLock = await asAlice.mutation(api.fields.update, {
     fieldId: createdField.fieldId!,
     name: "Test Lock",
     type: "string",
@@ -793,7 +781,7 @@ test("field locks", async () => {
     _logs: ["Field Test Lock... saved", "Warning: lock missing"]
   });
 
-  const persistentField = await asBob.mutation(api.fields.createField, {
+  const persistentField = await asBob.mutation(api.fields.create, {
     name: "Test Persistent",
     type: "string",
     required: true
@@ -821,23 +809,15 @@ test("field locks", async () => {
     _logs: ["Field Test Persistent is already persistent"]
   });
 
-  const lockField = await asBob.mutation(api.fields.acquireLock, {
+  const lockField = await asBob.mutation(api.locks.acquire, {
     id: createdField.fieldId!
   });
   expect(lockField).toMatchObject({
     success: true,
-    _logs: ["Lock acquired for Test Lock"]
+    _logs: ["Lock acquired"]
   });
 
-  const renewedLock = await asBob.mutation(api.fields.renewLock, {
-    id: createdField.fieldId!
-  });
-  expect(renewedLock).toMatchObject({
-    success: true,
-    _logs: ["Lock renewed for Test Lock"]
-  });
-
-  const editAttempt = await asAlice.mutation(api.fields.updateField, {
+  const editAttempt = await asAlice.mutation(api.fields.update, {
     fieldId: createdField.fieldId!,
     name: "Test Lock v2",
     type: "string",
@@ -853,43 +833,14 @@ test("field locks", async () => {
     _logs: ["Failed to update field Test Lock: not being edited by you"]
   });
 
-  const getAllWithEditors = await asBob.query(api.fields.getAll);
+  const getAllWithEditors = await asBob.query(api.fields.get);
   expect(getAllWithEditors).toBeDefined();
   expect(getAllWithEditors.fields).toHaveLength(2);
   expect(getAllWithEditors.fields[0].field._id).toBe(createdField.fieldId!);
   expect(getAllWithEditors.fields[0].editingBy).toBeTruthy();
   expect(getAllWithEditors.fields[0].editingBy!._id).toBe(bob);
 
-  const releaseLockAttempt = await asAlice.mutation(api.fields.releaseLock, {
-    id: createdField.fieldId!
-  });
-  expect(releaseLockAttempt).toMatchObject({
-    success: false,
-    error: "Field is not being edited by you",
-    _logs: ["Failed to release lock for Test Lock: not being edited by you"]
-  });
-
-  const acquireLockAttempt = await asAlice.mutation(api.fields.acquireLock, {
-    id: createdField.fieldId!
-  });
-  expect(acquireLockAttempt).toMatchObject({
-    success: false,
-    error: "Field is already being edited by another user",
-    _logs: [
-      "Failed to acquire lock for Test Lock: already being edited by another user"
-    ]
-  });
-
-  const renewLock = await asAlice.mutation(api.fields.renewLock, {
-    id: createdField.fieldId!
-  });
-  expect(renewLock).toMatchObject({
-    success: false,
-    error: "Field is not being edited by you",
-    _logs: ["Failed to renew lock for Test Lock: not being edited by you"]
-  });
-
-  const conflict = await asAlice.mutation(api.fields.deleteField, {
+  const conflict = await asAlice.mutation(api.fields.remove, {
     fieldId: createdField.fieldId!
   });
   expect(conflict).toMatchObject({
@@ -898,7 +849,7 @@ test("field locks", async () => {
     _logs: ["Failed to delete field Test Lock: being edited by another user"]
   });
 
-  const validEditAttempt = await asBob.mutation(api.fields.updateField, {
+  const validEditAttempt = await asBob.mutation(api.fields.update, {
     fieldId: createdField.fieldId!,
     name: "Test Lock v2",
     type: "string",
@@ -913,15 +864,15 @@ test("field locks", async () => {
     _logs: ["Field Test Lock saved"]
   });
 
-  const releasedLock = await asBob.mutation(api.fields.releaseLock, {
+  const releasedLock = await asBob.mutation(api.locks.release, {
     id: createdField.fieldId!
   });
   expect(releasedLock).toMatchObject({
     success: true,
-    _logs: ["Lock released for Test Lock v2"]
+    _logs: ["Lock released"]
   });
 
-  const createField = await t.mutation(api.fields.createField, {
+  const createField = await t.mutation(api.fields.create, {
     name: "Test Non-Authenticated",
     type: "string",
     required: true,
@@ -936,7 +887,7 @@ test("field locks", async () => {
     _logs: ["Failed to add field: not authenticated"]
   });
 
-  const updateField = await t.mutation(api.fields.updateField, {
+  const updateField = await t.mutation(api.fields.update, {
     fieldId: createdField.fieldId!,
     name: "Test Update Non-Authenticated",
     type: "string",
@@ -951,42 +902,6 @@ test("field locks", async () => {
     error: "Not authenticated"
   });
 
-  const acquireLock = await t.mutation(api.fields.acquireLock, {
-    id: createdField.fieldId!
-  });
-  expect(acquireLock).toMatchObject({
-    success: false,
-    error: "Not authenticated",
-    _logs: ["Failed to acquire lock: not authenticated"]
-  });
-
-  const releaseLock = await t.mutation(api.fields.releaseLock, {
-    id: createdField.fieldId!
-  });
-  expect(releaseLock).toMatchObject({
-    success: false,
-    error: "Not authenticated",
-    _logs: ["Failed to release lock: not authenticated"]
-  });
-
-  const deleteFieldAttempt = await t.mutation(api.fields.deleteField, {
-    fieldId: createdField.fieldId!
-  });
-  expect(deleteFieldAttempt).toMatchObject({
-    success: false,
-    error: "Not authenticated",
-    _logs: ["Failed to delete field: not authenticated"]
-  });
-
-  const renewLockAttempt = await t.mutation(api.fields.renewLock, {
-    id: createdField.fieldId!
-  });
-  expect(renewLockAttempt).toMatchObject({
-    success: false,
-    error: "Not authenticated",
-    _logs: ["Failed to renew lock: not authenticated"]
-  });
-
   const persistentAttempt = await t.mutation(api.fields.makePersistent, {
     fieldId: createdField.fieldId!
   });
@@ -996,17 +911,25 @@ test("field locks", async () => {
     _logs: ["Failed to make field persistent: not authenticated"]
   });
 
-  const getAllFields = await t.query(api.fields.getAll);
+  const getAllFields = await t.query(api.fields.get);
   expect(getAllFields).toMatchObject({
-    fields: [],
-    viewer: null
+    fields: []
   });
 
-  const getAllFieldsValid = await asBob.query(api.fields.getAll);
+  const deleteFieldNotAuthenticated = await t.mutation(api.fields.remove, {
+    fieldId: createdField.fieldId!
+  });
+  expect(deleteFieldNotAuthenticated).toMatchObject({
+    success: false,
+    error: "Not authenticated",
+    _logs: ["Failed to delete field: not authenticated"]
+  });
+
+  const getAllFieldsValid = await asBob.query(api.fields.get);
   expect(getAllFieldsValid).toBeDefined();
   expect(getAllFieldsValid.fields).toHaveLength(2);
 
-  const deleteField = await asBob.mutation(api.fields.deleteField, {
+  const deleteField = await asBob.mutation(api.fields.remove, {
     fieldId: createdField.fieldId!
   });
   expect(deleteField).toMatchObject({
@@ -1014,7 +937,7 @@ test("field locks", async () => {
     _logs: ["Field Test Lock v2 deleted"]
   });
 
-  const notFoundField = await asBob.mutation(api.fields.deleteField, {
+  const notFoundField = await asBob.mutation(api.fields.remove, {
     fieldId: createdField.fieldId!
   });
   expect(notFoundField).toMatchObject({
@@ -1023,34 +946,7 @@ test("field locks", async () => {
     _logs: ["Failed to delete field: field not found"]
   });
 
-  const lockNotFound = await asBob.mutation(api.fields.acquireLock, {
-    id: createdField.fieldId!
-  });
-  expect(lockNotFound).toMatchObject({
-    success: false,
-    error: "Field not found",
-    _logs: ["Failed to acquire lock: field not found"]
-  });
-
-  const releaseNotFound = await asBob.mutation(api.fields.releaseLock, {
-    id: createdField.fieldId!
-  });
-  expect(releaseNotFound).toMatchObject({
-    success: false,
-    error: "Field not found",
-    _logs: ["Failed to release lock: field not found"]
-  });
-
-  const renewNotFound = await asBob.mutation(api.fields.renewLock, {
-    id: createdField.fieldId!
-  });
-  expect(renewNotFound).toMatchObject({
-    success: false,
-    error: "Field not found",
-    _logs: ["Failed to renew lock: field not found"]
-  });
-
-  const updateNotFound = await asBob.mutation(api.fields.updateField, {
+  const updateNotFound = await asBob.mutation(api.fields.update, {
     fieldId: createdField.fieldId!,
     name: "Test Lock v3",
     type: "string",

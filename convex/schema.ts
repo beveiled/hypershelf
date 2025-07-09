@@ -111,7 +111,8 @@ export const viewSchema = {
         direction: v.union(v.literal("asc"), v.literal("desc"))
       })
     )
-  )
+  ),
+  filters: v.optional(v.any())
 };
 
 export default defineSchema({

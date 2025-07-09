@@ -57,10 +57,11 @@ const defaultNewField: WithoutSystemFields<Omit<FieldType, "slug">> = {
 
 export function FieldsInventory() {
   const ingestLogs = useLog();
-  const { fields, viewer } = useQuery(api.fields.getAll) ?? { fields: [] };
-  const createField = useMutation(api.fields.createField);
-  const updateField = useMutation(api.fields.updateField);
-  const deleteField = useMutation(api.fields.deleteField);
+  const { viewer } = useQuery(api.users.me) ?? {};
+  const { fields } = useQuery(api.fields.get) ?? {};
+  const createField = useMutation(api.fields.create);
+  const updateField = useMutation(api.fields.update);
+  const deleteField = useMutation(api.fields.remove);
   const makePerstent = useMutation(api.fields.makePersistent);
 
   const [expandedFieldId, setExpandedFieldId] = useState<
@@ -75,10 +76,7 @@ export function FieldsInventory() {
   const [isLocking, setIsLocking] = useState(false);
   const [lockTimeout, setLockTimeout] = useState(0);
 
-  const { lockedId, acquireLock, releaseLock } = useLock<"fields">(
-    api.fields.acquireLock,
-    api.fields.renewLock,
-    api.fields.releaseLock,
+  const { lockedId, acquireLock, releaseLock } = useLock<Id<"fields">>(
     ingestLogs,
     30000,
     30

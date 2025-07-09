@@ -31,9 +31,9 @@ export default function VSphereIntegrationPage() {
   const searchParams = useSearchParams();
   const dns = searchParams.get("dns");
 
-  const assets = useQuery(api.assets.getAll);
-  const fields = useQuery(api.fields.getAll);
-  const users = useQuery(api.users.getAll);
+  const assets = useQuery(api.assets.get);
+  const fields = useQuery(api.fields.get);
+  const users = useQuery(api.users.get);
 
   const [isPermissionDenied, setIsPermissionDenied] = useState(false);
   const [authRequestSent, setAuthRequestSent] = useState(false);
@@ -105,7 +105,7 @@ export default function VSphereIntegrationPage() {
     }
   };
 
-  if ((assets && !assets.viewer) || (fields && !fields.viewer)) {
+  if ((assets && !assets.assets) || (fields && !fields.fields)) {
     if (searchParams.get("storageAccess") === "true") {
       if (!authRequestSent) {
         window.parent.postMessage(

@@ -24,7 +24,7 @@ import { Id } from "./_generated/dataModel";
 test("internal functions", async () => {
   const t = convexTest(schema);
   const authenticated = t.withIdentity({ name: "Bobby" });
-  const createdField = await authenticated.mutation(api.fields.createField, {
+  const createdField = await authenticated.mutation(api.fields.create, {
     name: "Test Number",
     type: "number",
     required: true
