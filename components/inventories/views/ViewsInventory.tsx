@@ -223,7 +223,18 @@ function ViewHeaderButton({
             : "hover:bg-white/5"
         )}
         onClick={() => {
-          setColumnOrder(view.fields);
+          const orderedFields: Id<"fields">[] = [];
+          view.fields.forEach(fieldId => {
+            if (fields.find(f => f.field._id === fieldId)) {
+              orderedFields.push(fieldId);
+            }
+          });
+          fields.forEach(f => {
+            if (!orderedFields.includes(f.field._id)) {
+              orderedFields.push(f.field._id);
+            }
+          });
+          setColumnOrder(orderedFields);
           if (fields) {
             setHiddenFields(
               new Set<Id<"fields">>(
@@ -461,7 +472,20 @@ export function ViewsInventory() {
       const defaultView = views.find(v => v.fields.length === fields?.length);
       if (defaultView) {
         setActiveViewId(defaultView._id);
-        setColumnOrder(defaultView.fields);
+        setColumnOrder(() => {
+          const orderedFields: Id<"fields">[] = [];
+          defaultView.fields.forEach(fieldId => {
+            if (fields.find(f => f.field._id === fieldId)) {
+              orderedFields.push(fieldId);
+            }
+          });
+          fields.forEach(f => {
+            if (!orderedFields.includes(f.field._id)) {
+              orderedFields.push(f.field._id);
+            }
+          });
+          return orderedFields;
+        });
         setHiddenFields(
           new Set<Id<"fields">>(
             fields
@@ -491,14 +515,16 @@ export function ViewsInventory() {
           }));
 
     if (!activeViewId) return;
-    updateView({
+    const args = {
       viewId: activeViewId,
       fields: columnOrder.filter(id => !hiddenFields.has(id)),
       sortBy: sortBy as
         | { fieldId: Id<"fields">; direction: "asc" | "desc" }[]
         | undefined,
       filters: filters ?? undefined
-    });
+    };
+    console.log(args, hiddenFields);
+    updateView(args);
   }, [columnOrder, sorting, hiddenFields, activeViewId, updateView, filters]);
 
   const buildColumns = useMemo<ColumnDef<RowData>[]>(() => {

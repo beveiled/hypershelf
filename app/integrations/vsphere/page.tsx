@@ -105,7 +105,7 @@ export default function VSphereIntegrationPage() {
     }
   };
 
-  if ((assets && !assets.assets) || (fields && !fields.fields)) {
+  if ((assets && !assets.assets.length) || (fields && !fields.fields.length)) {
     if (searchParams.get("storageAccess") === "true") {
       if (!authRequestSent) {
         window.parent.postMessage(
