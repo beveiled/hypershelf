@@ -185,6 +185,8 @@ export default function VSphereIntegrationPage() {
                 />
                 <strong>{field.name}:</strong>{" "}
                 {renderField(
+                  asset.asset._id,
+                  field._id,
                   field,
                   (
                     asset.asset.metadata as NonNullable<
@@ -193,8 +195,7 @@ export default function VSphereIntegrationPage() {
                   )[field._id],
                   users.users!,
                   // TODO: Markdown preview
-                  () => {},
-                  "size-4"
+                  () => {}
                 )}
               </div>
             );

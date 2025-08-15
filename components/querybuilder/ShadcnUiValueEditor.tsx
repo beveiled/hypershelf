@@ -91,7 +91,7 @@ export const ShadcnUiValueEditor = (allProps: ShadcnUiValueEditorProps) => {
             type={inputTypeCoerced}
             value={valueAsArray[i] ?? ""}
             disabled={disabled}
-            className={standardClassnames.valueListItem}
+            className={cn(standardClassnames.valueListItem, "text-sm")}
             placeholder={placeHolderText}
             onChange={e => multiValueHandler(e.target.value, i)}
             {...extraProps}
@@ -182,7 +182,7 @@ export const ShadcnUiValueEditor = (allProps: ShadcnUiValueEditorProps) => {
       return (
         <Checkbox
           id={props.rule.id}
-          className={className}
+          className={cn(className, "size-8 rounded-md")}
           title={title}
           disabled={disabled}
           onCheckedChange={handleOnChange}
@@ -217,7 +217,7 @@ export const ShadcnUiValueEditor = (allProps: ShadcnUiValueEditorProps) => {
       value={value}
       title={title}
       disabled={disabled}
-      className={className}
+      className={cn(className, "h-8 text-sm")}
       placeholder={placeHolderText}
       onChange={e => handleOnChange(e.target.value)}
       {...extraProps}

@@ -24,6 +24,7 @@ import { LogProvider } from "@/components/util/Log";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { Footer } from "@/components/Footer";
+import { UpdateNotifier } from "@/components/UpdateNotifier";
 
 export default function ClientLayout({
   children
@@ -46,6 +47,7 @@ export default function ClientLayout({
             {children}
           </main>
           {!pathname.startsWith("/integrations") && <Footer />}
+          <UpdateNotifier />
         </LoadingProvider>
       </HeaderContentProvider>
     </LogProvider>

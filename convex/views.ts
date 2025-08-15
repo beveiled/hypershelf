@@ -22,9 +22,16 @@ import { viewSchema } from "./schema";
 import { v } from "convex/values";
 
 export type ViewType = Doc<"views">;
+export type ExtendedViewType = ViewType & {
+  immutable: boolean;
+  global: boolean;
+};
 
 export const get = query({
-  handler: async ctx => {
+  args: {
+    ignoreImmutable: v.optional(v.boolean())
+  },
+  handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
       return {
@@ -32,12 +39,41 @@ export const get = query({
       };
     }
 
-    const viewIds = await ctx.db
-      .query("views2users")
+    const views = await ctx.db
+      .query("views")
       .filter(q => q.eq(q.field("userId"), userId))
       .collect();
-    const views = await Promise.all(viewIds.map(v => ctx.db.get(v.viewId)));
-    return { views: views.filter(v => v !== null) as ViewType[] };
+    const globalViews = await ctx.db
+      .query("views")
+      .filter(q => q.eq(q.field("global"), true))
+      .collect();
+    const fields = await ctx.db.query("fields").collect();
+    const builtin = [
+      {
+        _id: "builtin:all",
+        name: "All",
+        userId: null,
+        global: true,
+        fields: fields.map(f => f._id),
+        sortBy: [],
+        filters: [],
+        enableFiltering: false,
+        builtin: true
+      }
+    ];
+
+    return {
+      views: [...builtin, ...views, ...globalViews]
+        .filter(v => v !== null)
+        .map(v => ({
+          ...v,
+          immutable: v.userId !== userId && v.global
+        }))
+        .filter(v => {
+          if (!args.ignoreImmutable) return true;
+          return !v.immutable;
+        }) as ExtendedViewType[]
+    };
   }
 });
 
@@ -54,13 +90,9 @@ export const create = mutation({
     const fields = await ctx.db.query("fields").collect();
 
     const view = await ctx.db.insert("views", {
+      userId,
       name: args.name,
       fields: fields.map(f => f._id)
-    });
-
-    await ctx.db.insert("views2users", {
-      viewId: view,
-      userId
     });
 
     return view;
@@ -70,9 +102,7 @@ export const create = mutation({
 export const update = mutation({
   args: {
     viewId: v.id("views"),
-    fields: viewSchema.fields,
-    sortBy: viewSchema.sortBy,
-    filters: viewSchema.filters
+    ...viewSchema
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -80,15 +110,16 @@ export const update = mutation({
       throw new Error("Unauthorized");
     }
 
-    const view = await ctx.db.get(args.viewId);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { viewId, name, global, builtin, ...other } = args;
+    const view = await ctx.db.get(viewId);
     if (view === null) {
       throw new Error("View not found");
     }
 
     await ctx.db.patch(args.viewId, {
-      fields: args.fields,
-      sortBy: args.sortBy,
-      filters: args.filters
+      ...other,
+      ...(name && { name: name })
     });
 
     return view;
@@ -111,12 +142,31 @@ export const remove = mutation({
     }
 
     await ctx.db.delete(args.viewId);
-    const relatons = await ctx.db
-      .query("views2users")
-      .filter(q => q.eq(q.field("viewId"), args.viewId))
-      .collect();
 
-    await Promise.all(relatons.map(r => ctx.db.delete(r._id)));
+    return view;
+  }
+});
+
+export const makeGlobal = mutation({
+  args: {
+    viewId: v.id("views")
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      throw new Error("Unauthorized");
+    }
+
+    const view = await ctx.db.get(args.viewId);
+    if (view === null) {
+      throw new Error("View not found");
+    }
+
+    if (view.global) {
+      throw new Error("View is already global");
+    }
+
+    await ctx.db.patch(args.viewId, { global: true });
 
     return view;
   }

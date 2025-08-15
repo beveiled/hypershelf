@@ -86,8 +86,9 @@ import {
   ChevronDown,
   Eye,
   EyeOff,
-  Filter,
   GripVertical,
+  Link2,
+  Loader2,
   Plus,
   Trash2
 } from "lucide-react";
@@ -101,6 +102,17 @@ import {
 } from "react";
 import { RuleGroupType } from "react-querybuilder";
 import { renderField } from "../assets/AssetsInventory";
+import { Debugger } from "../Debugger";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
+import { GlobalKeySequenceListener } from "@/components/util/GlobalKeySequenceListener";
 
 function DraggableHeader({
   header,
@@ -187,7 +199,8 @@ function ViewHeaderButton({
   setFilters,
   fields,
   parentOpen,
-  setParentOpen
+  setParentOpen,
+  setEnableQueryBuilder
 }: {
   view: ViewType;
   activeViewId: Id<"views"> | null;
@@ -199,6 +212,7 @@ function ViewHeaderButton({
   fields: FunctionReturnType<typeof api.fields.get>["fields"];
   parentOpen: boolean;
   setParentOpen: (open: boolean) => void;
+  setEnableQueryBuilder: Dispatch<SetStateAction<boolean>>;
 }) {
   const [openViewDeletePopover, setOpenViewDeletePopover] = useState(false);
   const deleteView = useMutation(api.views.remove);
@@ -250,6 +264,7 @@ function ViewHeaderButton({
               desc: s.direction === "desc"
             })) ?? []
           );
+          setEnableQueryBuilder(!!view.enableFiltering);
           setFilters(view.filters ?? undefined);
           setActiveViewId(view._id);
           setParentOpen(false);
@@ -285,6 +300,7 @@ function ViewHeaderButton({
                   setColumnOrder([]);
                   setHiddenFields(new Set<Id<"fields">>());
                   setSorting([]);
+                  setEnableQueryBuilder(false);
                   setFilters(undefined);
                 }
                 setOpenViewDeletePopover(false);
@@ -307,25 +323,6 @@ function ViewHeaderButton({
   );
 }
 
-function ToggleQueryBuilderButton({
-  builderOpen,
-  setBuilderOpen
-}: {
-  builderOpen: boolean;
-  setBuilderOpen: Dispatch<SetStateAction<boolean>>;
-}) {
-  return (
-    <Button
-      variant="ghost"
-      className="!size-auto !px-2 !py-1 text-xs"
-      onClick={() => setBuilderOpen(!builderOpen)}
-    >
-      <Filter className="size-3" />
-      {builderOpen ? "Close query builder" : "Open query builder"}
-    </Button>
-  );
-}
-
 function ViewPicker({
   views,
   activeViewId,
@@ -334,7 +331,8 @@ function ViewPicker({
   setHiddenFields,
   setSorting,
   setFilters,
-  fields
+  fields,
+  setEnableQueryBuilder
 }: {
   views: ViewType[];
   activeViewId: Id<"views"> | null;
@@ -344,6 +342,7 @@ function ViewPicker({
   setSorting: (sorting: SortingState) => void;
   setFilters: Dispatch<SetStateAction<RuleGroupType | undefined>>;
   fields: FunctionReturnType<typeof api.fields.get>["fields"];
+  setEnableQueryBuilder: Dispatch<SetStateAction<boolean>>;
 }) {
   const [creatingNewView, setCreatingNewView] = useState(false);
   const [newViewName, setNewViewName] = useState("");
@@ -383,6 +382,7 @@ function ViewPicker({
             fields={fields}
             parentOpen={parentOpen}
             setParentOpen={setParentOpen}
+            setEnableQueryBuilder={setEnableQueryBuilder}
           />
         ))}
         <Popover open={creatingNewView} onOpenChange={setCreatingNewView}>
@@ -419,6 +419,7 @@ function ViewPicker({
                       fields.map(f => f.field._id as Id<"fields">)
                     );
                     setSorting([]);
+                    setEnableQueryBuilder(false);
                     setFilters(undefined);
                   }}
                   className="flex-auto"
@@ -444,11 +445,123 @@ function ViewPicker({
   );
 }
 
+function Debug({
+  activeViewId,
+  views
+}: {
+  activeViewId: Id<"views"> | null;
+  views: ViewType[];
+}) {
+  const makeGlobal = useMutation(api.views.makeGlobal);
+  const [isDebug, setIsDebug] = useState(false);
+  const [isConfirmPublic, setIsConfirmPublic] = useState(false);
+  const [publicTimeout, setPublicTimeout] = useState(0);
+  const [isMakingPublic, setIsMakingPublic] = useState(false);
+
+  useEffect(() => {
+    if (publicTimeout > 0) {
+      const timer = setTimeout(() => {
+        setPublicTimeout(prev => prev - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [publicTimeout]);
+
+  return (
+    <>
+      <Debugger
+        data={
+          (activeViewId && views.find(f => f._id === activeViewId)) || views
+        }
+        open={isDebug}
+        setIsOpen={setIsDebug}
+        rootName={
+          (activeViewId &&
+            `View <${views.find(f => f._id === activeViewId)?.name}>`) ||
+          "Views"
+        }
+        defaultExpanded={
+          !!(activeViewId && views.find(f => f._id === activeViewId))
+        }
+      >
+        {activeViewId &&
+          views.find(f => f._id === activeViewId) &&
+          !(
+            activeViewId && views.find(f => f._id === activeViewId)?.global
+          ) && (
+            <AlertDialog
+              open={isConfirmPublic}
+              onOpenChange={setIsConfirmPublic}
+            >
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    setPublicTimeout(10);
+                  }}
+                >
+                  <Link2 />
+                  Make public
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-2xl">
+                    Make view public
+                  </AlertDialogTitle>
+                </AlertDialogHeader>
+                <p className="text-sm">
+                  All users of Hypershelf will see this view. They will not be
+                  able to edit it.
+                </p>
+                <p className="text-destructive text-sm font-bold">
+                  This action cannot be undone. Are you sure you want to make
+                  this view public?
+                </p>
+                <AlertDialogFooter>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      setIsMakingPublic(true);
+                      makeGlobal({
+                        viewId: activeViewId
+                      });
+                      setIsMakingPublic(false);
+                      setIsConfirmPublic(false);
+                    }}
+                    disabled={isMakingPublic || publicTimeout > 0}
+                    className={cn(publicTimeout > 0 && "cursor-not-allowed")}
+                  >
+                    {publicTimeout > 0 ? (
+                      <span>
+                        {publicTimeout}
+                        &nbsp;
+                      </span>
+                    ) : isMakingPublic ? (
+                      <Loader2 className="animate-spin" />
+                    ) : (
+                      <Link2 />
+                    )}
+                    Make public
+                  </Button>
+                  <AlertDialogCancel asChild>
+                    <Button variant="secondary">Cancel</Button>
+                  </AlertDialogCancel>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+      </Debugger>
+      <GlobalKeySequenceListener onMatch={() => setIsDebug(true)} />
+    </>
+  );
+}
+
 export function ViewsInventory() {
   const { assets } = useQuery(api.assets.get) ?? {};
   const { fields } = useQuery(api.fields.get) ?? {};
   const { users } = useQuery(api.users.get) ?? {};
-  const { views } = useQuery(api.views.get) ?? {};
+  const { views } = useQuery(api.views.get, { ignoreImmutable: true }) ?? {};
 
   const updateView = useMutation(api.views.update);
   const deleteView = useMutation(api.views.remove);
@@ -460,7 +573,7 @@ export function ViewsInventory() {
     () => new Set()
   );
   const [activeViewId, setActiveViewId] = useState<Id<"views"> | null>(null);
-  const [builderOpen, setBuilderOpen] = useState(false);
+  const [enableQueryBuilder, setEnableQueryBuilder] = useState(false);
 
   useEffect(() => {
     if (fields && !columnOrder.length)
@@ -499,6 +612,7 @@ export function ViewsInventory() {
             desc: s.direction === "desc"
           })) ?? []
         );
+        setEnableQueryBuilder(!!defaultView.enableFiltering);
         setFilters(defaultView.filters);
       }
     }
@@ -521,11 +635,19 @@ export function ViewsInventory() {
       sortBy: sortBy as
         | { fieldId: Id<"fields">; direction: "asc" | "desc" }[]
         | undefined,
-      filters: filters ?? undefined
+      filters: filters ?? undefined,
+      enableFiltering: enableQueryBuilder
     };
-    console.log(args, hiddenFields);
     updateView(args);
-  }, [columnOrder, sorting, hiddenFields, activeViewId, updateView, filters]);
+  }, [
+    columnOrder,
+    sorting,
+    hiddenFields,
+    activeViewId,
+    updateView,
+    filters,
+    enableQueryBuilder
+  ]);
 
   const buildColumns = useMemo<ColumnDef<RowData>[]>(() => {
     if (!fields) return [];
@@ -535,7 +657,15 @@ export function ViewsInventory() {
       header: f.field.name ?? f.field._id,
       cell: ({ row }) => {
         const val = row.getValue(f.field._id) as ValueType | undefined;
-        return renderField(f.field, val, users ?? [], () => {});
+        return renderField(
+          row.original.asset._id,
+          f.field._id,
+          f.field,
+          val,
+          users ?? [],
+          () => {},
+          true
+        );
       },
       enableSorting: true
     }));
@@ -550,7 +680,11 @@ export function ViewsInventory() {
   const table = useReactTable<RowData>({
     data,
     columns: buildColumns,
-    state: { sorting, columnOrder, globalFilter: filters },
+    state: {
+      sorting,
+      columnOrder,
+      globalFilter: enableQueryBuilder ? filters : undefined
+    },
     onSortingChange: setSorting,
     onColumnOrderChange: setColumnOrder as OnChangeFn<ColumnOrderState>,
     getCoreRowModel: getCoreRowModel(),
@@ -595,10 +729,6 @@ export function ViewsInventory() {
     }
     setHeaderContent(
       <div className="flex items-center gap-2">
-        <ToggleQueryBuilderButton
-          builderOpen={builderOpen}
-          setBuilderOpen={setBuilderOpen}
-        />
         <ViewPicker
           activeViewId={activeViewId}
           setActiveViewId={setActiveViewId}
@@ -608,11 +738,12 @@ export function ViewsInventory() {
           setFilters={setFilters}
           fields={fields}
           views={views}
+          setEnableQueryBuilder={setEnableQueryBuilder}
         />
       </div>
     );
     return () => setHeaderContent(null);
-  }, [activeViewId, setHeaderContent, views, fields, deleteView, builderOpen]);
+  }, [activeViewId, setHeaderContent, views, fields, deleteView]);
 
   const [isActiveViewSet, setIsActiveViewSet] = useState(false);
   useEffect(() => {
@@ -657,14 +788,40 @@ export function ViewsInventory() {
           onDragEnd={handleDragEnd}
           sensors={sensors}
         >
-          <div className="h-[calc(100dvh-3.5rem)] overflow-scroll rounded-md border">
-            {builderOpen && users && (
-              <HyperQueryBuilder
-                fields={fields}
-                users={users}
-                filters={filters}
-                setFilters={setFilters}
-              />
+          <div className="h-[calc(100dvh-3.5rem)] overflow-scroll rounded-lg border">
+            {users && (
+              <div className="border-border border-b p-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setEnableQueryBuilder(!enableQueryBuilder)}
+                  className="mb-2"
+                >
+                  {enableQueryBuilder ? (
+                    <>
+                      <EyeOff className="size-4" />
+                      Disable Filtering
+                    </>
+                  ) : (
+                    <>
+                      <Eye className="size-4" />
+                      Enable Filtering
+                    </>
+                  )}
+                </Button>
+                <div
+                  className={cn(
+                    !enableQueryBuilder && "pointer-events-none opacity-30"
+                  )}
+                >
+                  <HyperQueryBuilder
+                    fields={fields}
+                    users={users}
+                    filters={filters}
+                    setFilters={setFilters}
+                  />
+                </div>
+              </div>
             )}
             <Table>
               <TableHeader>
@@ -728,6 +885,7 @@ export function ViewsInventory() {
           <span className="text-muted-foreground">Select or create a view</span>
         </div>
       )}
+      <Debug activeViewId={activeViewId} views={views} />
     </>
   );
 }

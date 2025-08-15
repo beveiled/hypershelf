@@ -43,6 +43,7 @@ export const ShadcnUiActionElement = ({
 }: ShadcnUiActionProps) => (
   <Button
     variant="ghost"
+    size="sm"
     className={className}
     title={disabledTranslation && disabled ? disabledTranslation.title : title}
     onClick={e => handleOnClick(e)}

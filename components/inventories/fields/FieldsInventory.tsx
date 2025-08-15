@@ -29,7 +29,6 @@ import { GlobalKeySequenceListener } from "@/components/util/GlobalKeySequenceLi
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { FieldType } from "@/convex/fields";
-import { ValueType } from "@/convex/schema";
 import { cn } from "@/lib/utils";
 import {
   AlertDialogCancel,
@@ -46,7 +45,6 @@ import { Debugger } from "../Debugger";
 import { useLock } from "../useLock";
 import { FieldForm } from "./FieldForm";
 import { Skeleton } from "@/components/ui/skeleton";
-import { EditableKey, ExtraRootKeys, NonSystemKeys } from "./consts";
 
 const defaultNewField: WithoutSystemFields<Omit<FieldType, "slug">> = {
   name: "",
@@ -59,8 +57,6 @@ export function FieldsInventory() {
   const ingestLogs = useLog();
   const { viewer } = useQuery(api.users.me) ?? {};
   const { fields } = useQuery(api.fields.get) ?? {};
-  const createField = useMutation(api.fields.create);
-  const updateField = useMutation(api.fields.update);
   const deleteField = useMutation(api.fields.remove);
   const makePerstent = useMutation(api.fields.makePersistent);
 
@@ -70,7 +66,6 @@ export function FieldsInventory() {
   const [editValues, setEditValues] = useState<WithoutSystemFields<
     Omit<FieldType, "slug">
   > | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
   const [isDebug, setIsDebug] = useState(false);
   const [isConfirmLock, setIsConfirmLock] = useState(false);
   const [isLocking, setIsLocking] = useState(false);
@@ -101,99 +96,9 @@ export function FieldsInventory() {
     }
   };
 
-  const handleChange = <K extends EditableKey>(key: K, value: ValueType) => {
-    setEditValues(prev => {
-      if (!prev) return prev;
-
-      const [root, child] = key.toString().split(".") as [
-        string,
-        string | undefined
-      ];
-      const isExtra = !["name", "type", "required", "hidden"].includes(root);
-
-      if (isExtra) {
-        const parent = root as ExtraRootKeys;
-
-        if (child) {
-          const current = (prev.extra?.[parent] as Record<string, ValueType>)?.[
-            child
-          ];
-          if (current === value) return prev;
-
-          return {
-            ...prev,
-            extra: {
-              ...prev.extra,
-              [parent]: {
-                ...((prev.extra?.[parent] as Record<string, ValueType>) ?? {}),
-                [child]: value
-              }
-            }
-          };
-        }
-
-        if (prev.extra?.[parent] === value) return prev;
-
-        return {
-          ...prev,
-          extra: { ...prev.extra, [parent]: value }
-        };
-      }
-
-      const field = root as NonSystemKeys;
-      if (prev[field] === value) return prev;
-
-      return { ...prev, [field]: value };
-    });
-  };
-
-  const handleSave = async (fieldId: Id<"fields">) => {
-    if (!editValues) return;
-    setIsSaving(true);
-    try {
-      const res = await updateField({
-        fieldId,
-        name: editValues.name,
-        type: editValues.type,
-        required: editValues.required,
-        extra: editValues.extra || {},
-        hidden: editValues.hidden || false
-      });
-      ingestLogs(res);
-      if (res.success) {
-        releaseLock();
-        setExpandedFieldId(null);
-        setEditValues(null);
-      }
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   const handleCreateClick = () => {
     setEditValues(defaultNewField);
     setExpandedFieldId("new");
-  };
-
-  const handleCreateSave = async () => {
-    if (!editValues) return;
-    setIsSaving(true);
-    try {
-      const res = await createField({
-        name: editValues.name,
-        type: editValues.type,
-        required: editValues.required,
-        extra: editValues.extra || {},
-        hidden: editValues.hidden || false
-      });
-      ingestLogs(res);
-      if (res.success && res.fieldId) {
-        setExpandedFieldId(null);
-        setEditValues(null);
-      }
-    } finally {
-      setIsSaving(false);
-    }
   };
 
   useEffect(() => {
@@ -252,7 +157,7 @@ export function FieldsInventory() {
                 <Button
                   variant="destructive"
                   onClick={() => {
-                    setLockTimeout(3);
+                    setLockTimeout(10);
                   }}
                 >
                   <Lock />
@@ -323,14 +228,12 @@ export function FieldsInventory() {
                 </AlertDialogTitle>
               </AlertDialogHeader>
               <FieldForm
-                idPrefix="new"
-                values={editValues!}
-                onChange={handleChange}
+                initialValues={defaultNewField}
                 lockField={() => {}}
                 locked={true}
-                onSave={handleCreateSave}
-                onCancel={() => setExpandedFieldId(null)}
-                isSaving={isSaving}
+                onCancel={() => {
+                  setExpandedFieldId(null);
+                }}
                 isLockedBySomeoneElse={false}
               />
             </AlertDialogContent>
@@ -392,18 +295,15 @@ export function FieldsInventory() {
               <AnimatePresence initial={false}>
                 {isExpanded && (
                   <FieldForm
-                    idPrefix={field._id}
-                    values={editValues!}
-                    onChange={handleChange}
+                    fieldId={field._id}
+                    initialValues={editValues!}
                     lockField={lockField}
                     locked={!!lockedId}
-                    onSave={() => handleSave(field._id)}
                     onCancel={() => {
                       releaseLock();
                       setExpandedFieldId(null);
                       setEditValues(null);
                     }}
-                    isSaving={isSaving}
                     onDelete={
                       field.persistent
                         ? undefined

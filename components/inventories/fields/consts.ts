@@ -84,6 +84,8 @@ export type SystemKeys = Exclude<
 export type ExtraRootKeys = keyof NonNullable<
   WithoutSystemFields<FieldType>["extra"]
 >;
-export type NestedExtraKey =
-  `listObjectExtra.${keyof NonNullable<NonNullable<FieldType["extra"]>["listObjectExtra"]>}`;
+export type ListObjectExtraType = NonNullable<
+  NonNullable<FieldType["extra"]>["listObjectExtra"]
+>;
+export type NestedExtraKey = `listObjectExtra.${keyof ListObjectExtraType}`;
 export type EditableKey = NonSystemKeys | ExtraRootKeys | NestedExtraKey;

@@ -29,11 +29,9 @@ import {
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { IconName, IconPicker } from "@/components/ui/icon-picker";
+import { IconName } from "@/components/ui/icon-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { OptionsInput } from "@/components/ui/options-input";
 import {
   Select,
   SelectContent,
@@ -46,758 +44,554 @@ import {
   TooltipContent,
   TooltipTrigger
 } from "@/components/ui/tooltip";
+import { useLog } from "@/components/util/Log";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 import { FieldType } from "@/convex/fields";
 import { ValueType } from "@/convex/schema";
-import { useMaskito } from "@maskito/react";
+import { useMutation } from "convex/react";
 import { WithoutSystemFields } from "convex/server";
 import { motion } from "framer-motion";
 import { Loader2Icon } from "lucide-react";
 import { DynamicIcon } from "lucide-react/dynamic";
-import { useCallback, useMemo, useState } from "react";
-import { ipv4CidrMaskOptions } from "./CIDRMasks";
-import { EditableKey, FIELD_TYPES, getExtrasForType } from "./consts";
-import { MarkdownEditor } from "@/components/markdown-editor";
+import React, {
+  memo,
+  MemoExoticComponent,
+  useCallback,
+  useRef,
+  useState
+} from "react";
+import {
+  EditableKey,
+  ExtraRootKeys,
+  FIELD_TYPES,
+  getExtrasForType,
+  NonSystemKeys
+} from "./consts";
+import { FieldPropType, getFieldProps } from "./fieldSettings";
 
 type FieldFormProps = {
-  idPrefix: string;
-  values: WithoutSystemFields<Omit<FieldType, "slug">>;
-  onChange: <K extends EditableKey>(key: K, value: ValueType) => void;
+  fieldId?: Id<"fields"> | null;
+  initialValues: WithoutSystemFields<Omit<FieldType, "slug">>;
   lockField?: () => void;
   locked: boolean;
-  onSave: () => void;
   onCancel: () => void;
-  isSaving: boolean;
   isLockedBySomeoneElse: boolean;
   onDelete?: () => void;
 };
 
+type FieldConfig = {
+  id: string;
+  full?: boolean;
+  render: () => React.ReactNode;
+};
+
+const ActionsRow = memo(
+  function ActionsRow({
+    disabled,
+    isSaving,
+    onSave,
+    onCancel,
+    fieldId,
+    tooltipContent,
+    onDelete,
+    isLockedBySomeoneElse
+  }: {
+    disabled: boolean;
+    isSaving: boolean;
+    onSave: (id: Id<"fields"> | null | undefined) => void;
+    onCancel: () => void;
+    fieldId?: Id<"fields"> | null;
+    tooltipContent: string | null;
+    onDelete?: () => void;
+    isLockedBySomeoneElse: boolean;
+  }) {
+    const [fieldName, setFieldName] = useState("");
+    const [isDeleting, setIsDeleting] = useState(false);
+    return (
+      <div className="col-span-full mt-4 flex gap-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span>
+              <Button
+                type="submit"
+                variant="default"
+                size="sm"
+                onClick={() => onSave(fieldId)}
+                disabled={disabled}
+              >
+                {isSaving && <Loader2Icon className="animate-spin" />}
+                Save
+              </Button>
+            </span>
+          </TooltipTrigger>
+          {!isSaving && tooltipContent && (
+            <TooltipContent>
+              <p>{tooltipContent}</p>
+            </TooltipContent>
+          )}
+        </Tooltip>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={onCancel}
+          disabled={isSaving}
+        >
+          Cancel
+        </Button>
+        {onDelete && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="destructive"
+                size="sm"
+                disabled={isLockedBySomeoneElse || isSaving}
+              >
+                Delete
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Please enter the field name to confirm deletion.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <div className="mt-4">
+                <Input
+                  placeholder="Enter field name"
+                  onChange={e => setFieldName(e.target.value)}
+                />
+              </div>
+              <AlertDialogFooter>
+                <AlertDialogCancel asChild>
+                  <Button variant="outline">Cancel</Button>
+                </AlertDialogCancel>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    if (!onDelete) return;
+                    setIsDeleting(true);
+                    onDelete();
+                    setIsDeleting(false);
+                  }}
+                  disabled={
+                    isLockedBySomeoneElse ||
+                    isSaving ||
+                    isDeleting ||
+                    !fieldName.trim()
+                  }
+                >
+                  {isDeleting && <Loader2Icon className="animate-spin" />}
+                  Delete
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+      </div>
+    );
+  },
+  (a, b) =>
+    a.disabled === b.disabled &&
+    a.isSaving === b.isSaving &&
+    a.tooltipContent === b.tooltipContent &&
+    a.fieldId === b.fieldId &&
+    a.onSave === b.onSave &&
+    a.onCancel === b.onCancel &&
+    a.onDelete === b.onDelete &&
+    a.isLockedBySomeoneElse === b.isLockedBySomeoneElse
+);
+
+const TypeField = memo(
+  function TypeField({
+    value,
+    onPending,
+    onCommit,
+    pendingType,
+    lockField,
+    isLockedBySomeoneElse
+  }: {
+    value: string;
+    onPending: (next: string | null) => void;
+    onCommit: (next: string) => void;
+    pendingType: string | null;
+    lockField?: () => void;
+    isLockedBySomeoneElse: boolean;
+  }) {
+    return (
+      <div className="relative flex flex-col gap-1">
+        <Label className="block text-xs font-medium">Type</Label>
+        <Select
+          value={value}
+          onValueChange={val => onPending(val)}
+          disabled={isLockedBySomeoneElse || pendingType !== null}
+        >
+          <SelectTrigger className="w-full" onClick={lockField}>
+            <SelectValue placeholder="Select type" />
+          </SelectTrigger>
+          <SelectContent>
+            {FIELD_TYPES.map(t => (
+              <SelectItem key={t.value} value={t.value}>
+                <DynamicIcon name={t.icon as IconName} />
+                {t.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {pendingType && (
+          <Alert className="absolute top-full -mt-2 -ml-3">
+            <AlertTitle>Change type?</AlertTitle>
+            <AlertDescription>
+              Changing the type will remove extra fields for the current type.
+            </AlertDescription>
+            <div className="mt-2 flex space-x-2">
+              <Button
+                size="sm"
+                onClick={() => onCommit(pendingType)}
+                variant="destructive"
+              >
+                Change
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPending(null)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </Alert>
+        )}
+      </div>
+    );
+  },
+  (a, b) =>
+    a.value === b.value &&
+    a.pendingType === b.pendingType &&
+    a.lockField === b.lockField &&
+    a.isLockedBySomeoneElse === b.isLockedBySomeoneElse
+);
+
+const ListExtraInput = memo(
+  function ListExtraInput({
+    label,
+    type,
+    value,
+    onChange,
+    onFocus,
+    disabled
+  }: {
+    label: string;
+    type: "text" | "number";
+    value: ValueType;
+    onChange: (v: ValueType) => void;
+    onFocus?: () => void;
+    disabled: boolean;
+  }) {
+    return (
+      <div className="flex flex-col gap-1">
+        <Label className="block text-xs font-medium">{label}</Label>
+        <Input
+          type={type}
+          value={value?.toString() || ""}
+          onChange={e =>
+            onChange(
+              type === "number"
+                ? e.target.value === ""
+                  ? undefined
+                  : Number(e.target.value)
+                : e.target.value
+            )
+          }
+          onFocus={onFocus}
+          disabled={disabled}
+        />
+      </div>
+    );
+  },
+  (a, b) =>
+    a.type === b.type &&
+    a.value === b.value &&
+    a.onFocus === b.onFocus &&
+    a.disabled === b.disabled &&
+    a.label === b.label
+);
+
 export function FieldForm({
-  idPrefix,
-  values,
-  onChange,
+  fieldId,
+  initialValues,
   lockField,
   locked,
-  onSave,
   onCancel,
-  isSaving,
   isLockedBySomeoneElse,
   onDelete
 }: FieldFormProps) {
+  const updateField = useMutation(api.fields.update);
+  const createField = useMutation(api.fields.create);
+  const ingestLogs = useLog();
+
   const [pendingType, setPendingType] = useState<string | null>(null);
-  const [fieldName, setFieldName] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
-  const typeExtras = useMemo(
-    () => getExtrasForType(values.type),
-    [values.type]
+  const [values, setValues] =
+    useState<WithoutSystemFields<Omit<FieldType, "slug">>>(initialValues);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const stableLock = useCallback(() => lockField?.(), [lockField]);
+
+  const onChange = useCallback(
+    <K extends EditableKey>(key: K, value: ValueType) => {
+      setValues(prev => {
+        if (!prev) return prev;
+        const [root, child] = key.toString().split(".") as [
+          string,
+          string | undefined
+        ];
+        const isExtra = !["name", "type", "required", "hidden"].includes(root);
+        if (isExtra) {
+          const parent = root as ExtraRootKeys;
+          if (child) {
+            const current = (
+              prev.extra?.[parent] as Record<string, ValueType>
+            )?.[child];
+            if (current === value) return prev;
+            return {
+              ...prev,
+              extra: {
+                ...prev.extra,
+                [parent]: {
+                  ...((prev.extra?.[parent] as Record<string, ValueType>) ??
+                    {}),
+                  [child]: value
+                }
+              }
+            };
+          }
+          if (prev.extra?.[parent] === value) return prev;
+          return { ...prev, extra: { ...prev.extra, [parent]: value } };
+        }
+        const field = root as NonSystemKeys;
+        if (prev[field] === value) return prev;
+        return { ...prev, [field]: value } as typeof prev;
+      });
+    },
+    []
   );
-  const change = useCallback(
-    <K extends EditableKey>(key: K, value: ValueType) => onChange(key, value),
+
+  const extract = useCallback(
+    (
+      obj: WithoutSystemFields<Omit<FieldType, "slug">>,
+      key: string
+    ): ValueType => {
+      const isExtra = !["name", "type", "required", "hidden"].includes(key);
+      if (isExtra)
+        return (
+          obj.extra?.[key as Exclude<ExtraRootKeys, "listObjectExtra">] ?? ""
+        );
+      return obj[key as NonSystemKeys] ?? "";
+    },
+    []
+  );
+
+  const onSave = useCallback(
+    async (id: Id<"fields"> | null | undefined) => {
+      if (!values) return;
+      setIsSaving(true);
+      try {
+        if (id) {
+          const res = await updateField({
+            fieldId: id,
+            name: values.name,
+            type: values.type,
+            required: values.required,
+            extra: values.extra || {},
+            hidden: values.hidden || false
+          });
+          ingestLogs(res);
+          if (res.success) onCancel();
+        } else {
+          const res = await createField({
+            name: values.name,
+            type: values.type,
+            required: values.required,
+            extra: values.extra || {},
+            hidden: values.hidden || false
+          });
+          ingestLogs(res);
+          if (res.success && res.fieldId) onCancel();
+        }
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [values, ingestLogs, onCancel, updateField, createField]
+  );
+
+  const typeExtras = getExtrasForType(values.type);
+
+  const onTypePending = useCallback(
+    (next: string | null) => {
+      if (next === null) {
+        setPendingType(null);
+        return;
+      }
+      const extras = getExtrasForType(values.type);
+      const hasExtras = extras.some(k => {
+        const v = values.extra?.[k as keyof typeof values.extra];
+        return Array.isArray(v) ? v.length > 0 : v != null && v !== "";
+      });
+      if (hasExtras) setPendingType(next);
+      else onChange("type", next);
+    },
+    [values, onChange]
+  );
+
+  const onTypeCommit = useCallback(
+    (next: string) => {
+      onChange("type", next);
+      setPendingType(null);
+    },
     [onChange]
   );
-  const subnetRef = useMaskito({ options: ipv4CidrMaskOptions });
 
-  const changeMdHandler = useCallback(
-    (value: string) => change("mdPreset", value),
-    [change]
-  );
+  const componentCache = useRef<
+    Record<string, MemoExoticComponent<FieldPropType>>
+  >({});
 
-  // TODO: client-side validation
-  // TODO: if the field has changed, show the warning about conflict
+  const getWrappedComponent = useCallback((id: string, C: FieldPropType) => {
+    if (!componentCache.current[id]) componentCache.current[id] = memo(C);
+    return componentCache.current[id];
+  }, []);
 
-  const formFields = useMemo(() => {
-    return [
-      {
-        key: "name",
-        node: (
-          <div className="flex flex-col gap-1">
-            <Label className="block text-xs font-medium">Name</Label>
-            <Input
-              value={values.name}
-              onChange={e => change("name", e.target.value)}
-              onFocus={lockField}
-              disabled={isLockedBySomeoneElse}
-            />
-          </div>
+  const baseFieldProps = getFieldProps(typeExtras);
+
+  const listObjectExtraKeys =
+    typeExtras.includes("listObjectExtra") && values.extra?.listObjectType
+      ? getExtrasForType(values.extra.listObjectType).filter(
+          k => !["icon", "description", "options", "placeholder"].includes(k)
         )
-      },
-      {
-        key: "type",
-        node: (
-          <div className="relative flex flex-col gap-1">
-            <Label className="block text-xs font-medium">Type</Label>
-            <Select
-              value={values.type}
-              onValueChange={val => {
-                const extras = getExtrasForType(values.type);
-                const hasExtras = extras.some(k => {
-                  const v = values.extra?.[k as keyof typeof values.extra];
-                  return Array.isArray(v)
-                    ? v.length > 0
-                    : v != null && v !== "";
-                });
-                if (hasExtras) {
-                  setPendingType(val);
-                } else {
-                  change("type", val);
-                }
-              }}
-              disabled={isLockedBySomeoneElse || pendingType !== null}
-            >
-              <SelectTrigger className="w-full" onClick={lockField}>
-                <SelectValue placeholder="Select type" />
-              </SelectTrigger>
-              <SelectContent>
-                {FIELD_TYPES.map(t => (
-                  <SelectItem key={t.value} value={t.value}>
-                    <DynamicIcon name={t.icon as IconName} />
-                    {t.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {pendingType && (
-              <Alert className="absolute top-full -mt-2 -ml-3">
-                <AlertTitle>Change type?</AlertTitle>
-                <AlertDescription>
-                  Changing the type will remove extra fields for the current
-                  type.
-                </AlertDescription>
-                <div className="mt-2 flex space-x-2">
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      change("type", pendingType);
-                      setPendingType(null);
-                    }}
-                    variant="destructive"
-                  >
-                    Change
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setPendingType(null)}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </Alert>
-            )}
-          </div>
-        )
-      },
-      {
-        key: "icon",
-        node: (
-          <div className="flex flex-col gap-1">
-            <Label className="block text-xs font-medium">Icon</Label>
-            <IconPicker
-              value={(values.extra?.icon as IconName) || ""}
-              onValueChange={v => change("icon", v)}
-              onOpenChange={lockField}
-              disabled={isLockedBySomeoneElse}
-            />
-          </div>
-        )
-      },
-      {
-        key: "description",
-        node: (
-          <div className="flex flex-col gap-1">
-            <Label className="block text-xs font-medium">Description</Label>
-            <Input
-              value={values.extra?.description || ""}
-              onChange={e => change("description", e.target.value)}
-              onFocus={lockField}
-              disabled={isLockedBySomeoneElse}
-            />
-          </div>
-        )
-      },
-      ...(typeExtras.includes("placeholder")
-        ? [
-            {
-              key: "placeholder",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">
-                    Placeholder
-                  </Label>
-                  <Input
-                    value={values.extra?.placeholder || ""}
-                    onChange={e => change("placeholder", e.target.value)}
-                    onFocus={lockField}
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              )
-            }
-          ]
-        : []),
-      ...(typeExtras.includes("regex")
-        ? [
-            {
-              key: "regex",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">Regex</Label>
-                  <Input
-                    value={values.extra?.regex || ""}
-                    onChange={e => change("regex", e.target.value)}
-                    onFocus={lockField}
-                    placeholder="^...$"
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              )
-            }
-          ]
-        : []),
-      ...(typeExtras.includes("regexError")
-        ? [
-            {
-              key: "regexError",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">
-                    Regex Error
-                  </Label>
-                  <Input
-                    value={values.extra?.regexError || ""}
-                    onChange={e => change("regexError", e.target.value)}
-                    onFocus={lockField}
-                    placeholder="Please enter a valid yara yara"
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              )
-            }
-          ]
-        : []),
-      ...(typeExtras.includes("minLength")
-        ? [
-            {
-              key: "minLength",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">
-                    Min Length
-                  </Label>
-                  <Input
-                    type="number"
-                    value={values.extra?.minLength ?? ""}
-                    onChange={e =>
-                      change(
-                        "minLength",
-                        e.target.value === ""
-                          ? undefined
-                          : Number(e.target.value)
-                      )
-                    }
-                    onFocus={lockField}
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              )
-            }
-          ]
-        : []),
-      ...(typeExtras.includes("maxLength")
-        ? [
-            {
-              key: "maxLength",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">
-                    Max Length
-                  </Label>
-                  <Input
-                    type="number"
-                    value={values.extra?.maxLength ?? ""}
-                    onChange={e =>
-                      change(
-                        "maxLength",
-                        e.target.value === ""
-                          ? undefined
-                          : Number(e.target.value)
-                      )
-                    }
-                    onFocus={lockField}
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              )
-            }
-          ]
-        : []),
-      ...(typeExtras.includes("minItems")
-        ? [
-            {
-              key: "minItems",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">Min Items</Label>
-                  <Input
-                    type="number"
-                    value={values.extra?.minItems ?? ""}
-                    onChange={e =>
-                      change(
-                        "minItems",
-                        e.target.value === ""
-                          ? undefined
-                          : Number(e.target.value)
-                      )
-                    }
-                    onFocus={lockField}
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              )
-            }
-          ]
-        : []),
-      ...(typeExtras.includes("maxItems")
-        ? [
-            {
-              key: "maxItems",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">Max Items</Label>
-                  <Input
-                    type="number"
-                    value={values.extra?.maxItems ?? ""}
-                    onChange={e =>
-                      change(
-                        "maxItems",
-                        e.target.value === ""
-                          ? undefined
-                          : Number(e.target.value)
-                      )
-                    }
-                    onFocus={lockField}
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              )
-            }
-          ]
-        : []),
-      ...(typeExtras.includes("listObjectType")
-        ? [
-            {
-              key: "listObjectType",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">
-                    List Object Type
-                  </Label>
-                  <Select
-                    value={values.extra?.listObjectType || ""}
-                    onValueChange={v => change("listObjectType", v)}
-                    disabled={isLockedBySomeoneElse}
-                  >
-                    <SelectTrigger className="w-full" onClick={lockField}>
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {FIELD_TYPES.filter(e =>
-                        ["number", "string", "user", "email", "url"].includes(
-                          e.value
-                        )
-                      ).map(t => (
-                        <SelectItem key={t.value} value={t.value}>
-                          <DynamicIcon name={t.icon as IconName} />
-                          {t.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )
-            }
-          ]
-        : []),
-      ...(typeExtras.includes("listObjectExtra") && values.extra?.listObjectType
-        ? getExtrasForType(values.extra.listObjectType)
-            .filter(
-              k =>
-                !["icon", "description", "options", "placeholder"].includes(k)
-            )
-            .map(
-              extraKey =>
-                extraKey as keyof NonNullable<
-                  NonNullable<FieldType["extra"]>["listObjectExtra"]
-                >
-            )
-            .map(extraKey => ({
-              key: `listObjectExtra-${extraKey}`,
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">
-                    List Item{" "}
-                    {(
-                      {
-                        placeholder: "Placeholder",
-                        regex: "Regex",
-                        regexError: "Regex Error",
-                        minLength: "Min Length",
-                        maxLength: "Max Length",
-                        minItems: "Min Items",
-                        maxItems: "Max Items",
-                        minValue: "Min Value",
-                        maxValue: "Max Value"
-                      } as Record<string, string>
-                    )[extraKey] || extraKey.replace(/([A-Z])/g, " $1").trim()}
-                  </Label>
-                  <Input
-                    type={
-                      [
-                        "minValue",
-                        "maxValue",
-                        "minLength",
-                        "maxLength",
-                        "minItems",
-                        "maxItems"
-                      ].includes(extraKey)
-                        ? "number"
-                        : "text"
-                    }
-                    value={
-                      values.extra?.listObjectExtra?.[
-                        extraKey as keyof typeof values.extra.listObjectExtra
-                      ] ?? ""
-                    }
-                    onChange={e =>
-                      change(
-                        `listObjectExtra.${extraKey}`,
-                        e.target.value === ""
-                          ? undefined
-                          : /Value|Length|Items/.test(extraKey)
-                            ? Number(e.target.value)
-                            : e.target.value
-                      )
-                    }
-                    onFocus={lockField}
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              )
-            }))
-        : []),
-      ...(typeExtras.includes("minValue")
-        ? [
-            {
-              key: "minValue",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">Min Value</Label>
-                  <Input
-                    type="number"
-                    value={values.extra?.minValue ?? ""}
-                    onChange={e =>
-                      change(
-                        "minValue",
-                        e.target.value === ""
-                          ? undefined
-                          : Number(e.target.value)
-                      )
-                    }
-                    onFocus={lockField}
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              )
-            }
-          ]
-        : []),
-      ...(typeExtras.includes("options")
-        ? [
-            {
-              key: "options",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">Options</Label>
-                  <OptionsInput
-                    options={values.extra?.options || []}
-                    onChange={opts => {
-                      lockField?.();
-                      change("options", opts);
-                    }}
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              )
-            }
-          ]
-        : []),
-      ...(typeExtras.includes("maxValue")
-        ? [
-            {
-              key: "maxValue",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">Max Value</Label>
-                  <Input
-                    type="number"
-                    value={values.extra?.maxValue ?? ""}
-                    onChange={e =>
-                      change(
-                        "maxValue",
-                        e.target.value === ""
-                          ? undefined
-                          : Number(e.target.value)
-                      )
-                    }
-                    onFocus={lockField}
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              )
-            }
-          ]
-        : []),
-      ...(typeExtras.includes("subnet")
-        ? [
-            {
-              key: "subnet",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">Subnet</Label>
-                  <Input
-                    ref={subnetRef}
-                    value={values.extra?.subnet || ""}
-                    onChange={e => change("subnet", e.target.value)}
-                    onFocus={lockField}
-                    placeholder="0.0.0.0/0"
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              )
-            }
-          ]
-        : []),
-      ...(typeExtras.includes("md-preset")
-        ? [
-            {
-              key: "md-preset",
-              node: (
-                <div className="flex flex-col gap-1">
-                  <Label className="block text-xs font-medium">
-                    Markdown Preset
-                  </Label>
-                  <MarkdownEditor
-                    value={values.extra?.mdPreset || ""}
-                    onChange={changeMdHandler}
-                    onFocus={lockField}
-                    disabled={isLockedBySomeoneElse}
-                  />
-                </div>
-              ),
-              full: true
-            }
-          ]
-        : []),
-      {
-        key: "hideFromSearch",
-        node: (
-          <div className="flex items-center gap-2">
-            <Checkbox
-              checked={!!values.extra?.hideFromSearch}
-              onCheckedChange={checked => {
-                lockField?.();
-                change("hideFromSearch", !!checked);
-              }}
-              id={`hideFromSearch-${idPrefix}`}
-              disabled={isLockedBySomeoneElse}
-            />
-            <Label
-              htmlFor={`hideFromSearch-${idPrefix}`}
-              className="text-xs font-medium"
-            >
-              Hide from search
-            </Label>
-          </div>
-        ),
-        full: true
-      },
-      {
-        key: "required",
-        node: (
-          <div className="flex items-center gap-2">
-            <Checkbox
-              checked={!!values.required}
-              onCheckedChange={checked => {
-                lockField?.();
-                change("required", !!checked);
-              }}
-              id={`required-${idPrefix}`}
-              disabled={isLockedBySomeoneElse}
-            />
-            <Label
-              htmlFor={`required-${idPrefix}`}
-              className="text-xs font-medium"
-            >
-              Required
-            </Label>
-          </div>
-        ),
-        full: true
-      },
-      {
-        key: "hidden",
-        node: (
-          <div className="flex items-center gap-2">
-            <Checkbox
-              checked={!!values.hidden}
-              onCheckedChange={checked => {
-                lockField?.();
-                change("hidden", !!checked);
-              }}
-              id={`hidden-${idPrefix}`}
-              disabled={isLockedBySomeoneElse}
-            />
-            <Label
-              htmlFor={`hidden-${idPrefix}`}
-              className="text-xs font-medium"
-            >
-              Hidden
-            </Label>
-          </div>
-        ),
-        full: true
-      },
-      {
-        key: "actions",
-        node: (
-          <div className="col-span-full mt-4 flex gap-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span>
-                  <Button
-                    type="submit"
-                    variant="default"
-                    size="sm"
-                    onClick={onSave}
-                    disabled={
-                      isLockedBySomeoneElse ||
-                      !locked ||
-                      isSaving ||
-                      !values.name.trim() ||
-                      !values.type.trim() ||
-                      pendingType !== null ||
-                      (values.type === "array" && !values.extra?.listObjectType)
-                    }
-                  >
-                    {isSaving && <Loader2Icon className="animate-spin" />}
-                    Save
-                  </Button>
-                </span>
-              </TooltipTrigger>
-              {!isSaving &&
-                (!values.name.trim() ||
-                  !values.type.trim() ||
-                  pendingType !== null ||
-                  (values.type === "array" &&
-                    !values.extra?.listObjectType)) && (
-                  <TooltipContent>
-                    <p>
-                      {values.name.trim() === "" && "Name is required."}
-                      {values.type.trim() === "" && "Type is required."}
-                      {pendingType !== null &&
-                        "Pending type change must be resolved."}
-                      {values.type === "array" &&
-                        !values.extra?.listObjectType &&
-                        "List Object Type is required for object type."}
-                    </p>
-                  </TooltipContent>
-                )}
-            </Tooltip>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={onCancel}
-              disabled={isSaving}
-            >
-              Cancel
-            </Button>
-            {onDelete && (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    disabled={isLockedBySomeoneElse || isSaving}
-                  >
-                    Delete
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Please enter <b>{values.name.toLowerCase()}</b> to confirm
-                      deletion. This action cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <div className="mt-4">
-                    <Input
-                      placeholder="Enter field name"
-                      onChange={e => setFieldName(e.target.value)}
-                    />
-                  </div>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel asChild>
-                      <Button variant="outline" onClick={() => {}}>
-                        Cancel
-                      </Button>
-                    </AlertDialogCancel>
-                    <Button
-                      variant="destructive"
-                      onClick={() => {
-                        if (fieldName === values.name.toLowerCase()) {
-                          setIsDeleting(true);
-                          onDelete();
-                          setIsDeleting(false);
-                        }
-                      }}
-                      disabled={
-                        isLockedBySomeoneElse ||
-                        isSaving ||
-                        fieldName.toLowerCase() !== values.name.toLowerCase() ||
-                        isDeleting
-                      }
-                    >
-                      {isDeleting && <Loader2Icon className="animate-spin" />}
-                      Delete
-                    </Button>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            )}
-          </div>
-        ),
-        full: true
-      }
-    ];
-  }, [
-    values,
-    typeExtras,
-    locked,
-    isSaving,
-    pendingType,
-    idPrefix,
-    lockField,
-    change,
-    onSave,
-    onCancel,
-    onDelete,
-    fieldName,
-    isDeleting,
-    subnetRef,
-    isLockedBySomeoneElse,
-    changeMdHandler
-  ]);
+      : [];
+
+  const fields: FieldConfig[] = [];
+
+  fields.push({
+    id: "type",
+    render: () => (
+      <TypeField
+        value={values.type}
+        onPending={onTypePending}
+        onCommit={onTypeCommit}
+        pendingType={pendingType}
+        lockField={stableLock}
+        isLockedBySomeoneElse={isLockedBySomeoneElse}
+      />
+    )
+  });
+
+  baseFieldProps.forEach(f => {
+    const Comp = getWrappedComponent(f.key, f.component);
+    fields.push({
+      id: f.key,
+      full: "full" in f ? f.full : false,
+      render: () => (
+        <Comp
+          value={extract(values, f.key)}
+          lockField={stableLock}
+          isLockedBySomeoneElse={isLockedBySomeoneElse}
+          change={onChange}
+        />
+      )
+    });
+  });
+
+  listObjectExtraKeys.forEach(rawKey => {
+    const labelMap: Record<string, string> = {
+      placeholder: "Placeholder",
+      regex: "Regex",
+      regexError: "Regex Error",
+      minLength: "Min Length",
+      maxLength: "Max Length",
+      minItems: "Min Items",
+      maxItems: "Max Items",
+      minValue: "Min Value",
+      maxValue: "Max Value"
+    };
+    const label = `List Item ${labelMap[rawKey] || rawKey.replace(/([A-Z])/g, " $1").trim()}`;
+    const isNumber = [
+      "minValue",
+      "maxValue",
+      "minLength",
+      "maxLength",
+      "minItems",
+      "maxItems"
+    ].includes(rawKey);
+    const value =
+      values.extra?.listObjectExtra?.[
+        rawKey as keyof NonNullable<
+          NonNullable<FieldType["extra"]>["listObjectExtra"]
+        >
+      ] ?? "";
+    fields.push({
+      id: `listObjectExtra-${rawKey}`,
+      render: () => (
+        <ListExtraInput
+          label={label}
+          type={isNumber ? "number" : "text"}
+          value={value}
+          onChange={v =>
+            onChange(`listObjectExtra.${rawKey}` as EditableKey, v)
+          }
+          onFocus={stableLock}
+          disabled={isLockedBySomeoneElse}
+        />
+      )
+    });
+  });
+
+  const invalidName = values.name.trim() === "";
+  const invalidType = values.type.trim() === "";
+  const needsListType =
+    values.type === "array" && !values.extra?.listObjectType;
+  const disabledSave =
+    isLockedBySomeoneElse ||
+    !locked ||
+    isSaving ||
+    invalidName ||
+    invalidType ||
+    pendingType !== null ||
+    needsListType;
+
+  const tooltipContent =
+    !isSaving &&
+    (invalidName || invalidType || pendingType !== null || needsListType)
+      ? [
+          invalidName ? "Name is required." : null,
+          invalidType ? "Type is required." : null,
+          pendingType !== null ? "Pending type change must be resolved." : null,
+          needsListType ? "List Object Type is required for object type." : null
+        ]
+          .filter(Boolean)
+          .join(" ")
+      : null;
+
+  fields.push({
+    id: "actions",
+    full: true,
+    render: () => (
+      <ActionsRow
+        disabled={disabledSave}
+        isSaving={isSaving}
+        onSave={onSave}
+        onCancel={onCancel}
+        fieldId={fieldId}
+        tooltipContent={tooltipContent}
+        onDelete={onDelete}
+        isLockedBySomeoneElse={isLockedBySomeoneElse}
+      />
+    )
+  });
+
+  const total = fields.length;
 
   return (
     <motion.form
@@ -812,13 +606,9 @@ export function FieldForm({
         collapsed: { opacity: 0, height: 0, marginTop: 0 }
       }}
       transition={{
-        opacity: {
-          duration: formFields.length * 0.03 + 0.15,
-          type: "spring",
-          bounce: 0.2
-        },
+        opacity: { duration: total * 0.03 + 0.15, type: "spring", bounce: 0.2 },
         height: { duration: 0.1, ease: "easeInOut" },
-        marginTop: { duration: formFields.length * 0.03, ease: "easeInOut" }
+        marginTop: { duration: total * 0.03, ease: "easeInOut" }
       }}
     >
       <motion.div
@@ -830,9 +620,9 @@ export function FieldForm({
           }
         }}
       >
-        {formFields.map((f, idx) => (
+        {fields.map((f, idx) => (
           <motion.div
-            key={f.key}
+            key={f.id}
             className={f.full ? "col-span-full" : ""}
             initial={{ opacity: 0, y: 10 }}
             animate={{
@@ -843,13 +633,10 @@ export function FieldForm({
             exit={{
               opacity: 0,
               y: 10,
-              transition: {
-                duration: 0.15,
-                delay: (formFields.length - 1 - idx) * 0.03
-              }
+              transition: { duration: 0.15, delay: (total - 1 - idx) * 0.03 }
             }}
           >
-            {f.node}
+            {f.render()}
           </motion.div>
         ))}
       </motion.div>

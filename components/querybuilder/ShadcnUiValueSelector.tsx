@@ -55,7 +55,7 @@ export const ShadcnUiValueSelector = ({
   return _multiple ? (
     <MultiSelect
       options={options}
-      value={value ? [value] : []}
+      value={value as unknown as string[]}
       onValueChange={handleOnChange}
     />
   ) : (
@@ -65,7 +65,7 @@ export const ShadcnUiValueSelector = ({
       onValueChange={handleOnChange}
       {...extraProps}
     >
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger size="sm">
         <SelectValue placeholder={title} />
       </SelectTrigger>
       <SelectContent>{toSelectOptions(options)}</SelectContent>

@@ -105,7 +105,7 @@ export default function RootLayout({
     <ConvexAuthNextjsServerProvider>
       <html lang="en">
         <body
-          className={`${syne.variable} ${spaceGrotesk.variable} ${spaceMono.variable} ${inter.variable} ${sourceCodePro.variable} bg-background overscroll-none font-sans antialiased`}
+          className={`${syne.variable} ${spaceGrotesk.variable} ${spaceMono.variable} ${inter.variable} ${sourceCodePro.variable} bg-background font-sans antialiased`}
         >
           <ConvexClientProvider>
             <ClientLayout>{children}</ClientLayout>

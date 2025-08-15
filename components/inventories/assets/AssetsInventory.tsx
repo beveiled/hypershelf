@@ -29,7 +29,6 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -60,21 +59,21 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
-  useReactTable,
-  VisibilityState
+  useReactTable
 } from "@tanstack/react-table";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { FunctionReturnType, WithoutSystemFields } from "convex/server";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowDown,
   ArrowUpDown,
-  ChevronDown,
+  ChevronDownIcon,
   CircleCheck,
   CirclePlus,
   Download,
   Eye,
+  Loader2,
   MoreHorizontal,
   Pencil,
   Search,
@@ -84,7 +83,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Debugger } from "../Debugger";
 import { useLock } from "../useLock";
 import { AssetForm } from "./AssetForm";
-import { RuleGroupType } from "react-querybuilder";
+import { TableSkeleton } from "./TableSkeleton";
+import { ViewSwitcher } from "./ViewSwitcher";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectValue
+} from "@/components/ui/select";
+import * as SelectPrimitive from "@radix-ui/react-select";
 
 function Unset({ required }: { required?: boolean }) {
   return (
@@ -99,21 +106,127 @@ function Unset({ required }: { required?: boolean }) {
   );
 }
 
+function InlineSelector({
+  assetId,
+  fieldId,
+  value,
+  options,
+  disabled
+}: {
+  assetId: Id<"assets">;
+  fieldId: Id<"fields">;
+  value?: string;
+  options: string[];
+  disabled?: boolean;
+}) {
+  const updateAsset = useMutation(api.assets.update);
+  const [updating, setUpdating] = useState(false);
+
+  return (
+    <Select
+      value={value}
+      onValueChange={value => {
+        setUpdating(true);
+        setTimeout(() => {
+          updateAsset({
+            assetId,
+            values: {
+              [fieldId]: value
+            }
+          }).then(() => setUpdating(false));
+        }, 0);
+      }}
+      disabled={disabled}
+    >
+      <SelectPrimitive.Trigger asChild>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="h-auto w-full py-1"
+          disabled={disabled || updating}
+        >
+          {value && options.includes(value) ? (
+            <SelectValue placeholder="Select option" />
+          ) : (
+            value
+          )}
+          {updating ? (
+            <Loader2 className="size-4 animate-spin opacity-30" />
+          ) : (
+            <ChevronDownIcon className="size-4 opacity-30" />
+          )}
+        </Button>
+      </SelectPrimitive.Trigger>
+      <SelectContent>
+        {options.map(option => (
+          <SelectItem key={option} value={option}>
+            {option}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+function InlineCheckmark({
+  assetId,
+  fieldId,
+  value,
+  disabled
+}: {
+  assetId: Id<"assets">;
+  fieldId: Id<"fields">;
+  value?: boolean;
+  disabled?: boolean;
+}) {
+  const updateAsset = useMutation(api.assets.update);
+  const [updating, setUpdating] = useState(false);
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="size-7 !bg-transparent"
+      disabled={disabled || updating}
+      onClick={() => {
+        setUpdating(true);
+        setTimeout(() => {
+          updateAsset({
+            assetId,
+            values: {
+              [fieldId]: !value
+            }
+          }).then(() => setUpdating(false));
+        }, 0);
+      }}
+    >
+      {updating ? (
+        <Loader2 className="size-5 animate-spin" />
+      ) : value ? (
+        <CircleCheck className="size-5 text-green-500" />
+      ) : (
+        <CirclePlus className="size-5 rotate-45 text-red-500" />
+      )}
+    </Button>
+  );
+}
+
 export function renderField(
+  assetId: Id<"assets">,
+  fieldId: Id<"fields">,
   field: WithoutSystemFields<Omit<FieldType, "slug">>,
   value: ValueType,
   users: FunctionReturnType<typeof api.users.get>["users"],
   setMarkdownPreview: (content: string | null) => void,
-  checkmarkClassname?: string
+  noInlineEdits?: boolean
 ) {
   if (field.type === "boolean")
-    return value ? (
-      <CircleCheck
-        className={cn("size-5 text-green-500", checkmarkClassname)}
-      />
-    ) : (
-      <CirclePlus
-        className={cn("size-5 rotate-45 text-red-500", checkmarkClassname)}
+    return (
+      <InlineCheckmark
+        assetId={assetId}
+        fieldId={fieldId}
+        value={value as boolean}
+        disabled={!!field.editingBy || noInlineEdits}
       />
     );
 
@@ -145,6 +258,18 @@ export function renderField(
     );
   }
 
+  if (field.type === "select" && Array.isArray(field.extra?.options)) {
+    return (
+      <InlineSelector
+        assetId={assetId}
+        fieldId={fieldId}
+        value={value as string}
+        options={field.extra.options}
+        disabled={!!field.editingBy || noInlineEdits}
+      />
+    );
+  }
+
   if (
     value == null ||
     value === "" ||
@@ -158,7 +283,6 @@ export function renderField(
 
 export function AssetsInventory() {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [globalFilter, setGlobalFilter] = useState("");
   const [editingAsset, setEditingAsset] = useState<AssetType | null>(null);
@@ -166,8 +290,6 @@ export function AssetsInventory() {
   const [isDebug, setIsDebug] = useState(false);
   const [markdownPreview, setMarkdownPreview] = useState<string | null>(null);
   const [activeViewId, setActiveViewId] = useState<Id<"views"> | null>(null);
-  const [columnOrder, setColumnOrder] = useState<string[]>([]);
-  const [filters, setFilters] = useState<RuleGroupType | undefined>(undefined);
 
   const headerRef = useRef<HTMLTableRowElement>(null);
 
@@ -176,7 +298,53 @@ export function AssetsInventory() {
   const { assets } = useQuery(api.assets.get) ?? {};
   const { fields } = useQuery(api.fields.get) ?? {};
   const { users } = useQuery(api.users.get) ?? {};
-  const { views } = useQuery(api.views.get) ?? {};
+  const { views } = useQuery(api.views.get, {}) ?? {};
+
+  const activeView = useMemo(() => {
+    if (!views || !activeViewId) return null;
+    return views.find(v => v._id === activeViewId) || null;
+  }, [views, activeViewId]);
+
+  const columnOrder = useMemo(() => {
+    if (!activeView || !fields) return [];
+    return [
+      "edit",
+      ...activeView.fields.map(
+        f => fields.find(ff => ff.field._id === f)!.field.slug
+      ),
+      "actions"
+    ];
+  }, [activeView, fields]);
+
+  const columnVisibility = useMemo(() => {
+    if (!activeView || !fields) return {};
+    return Object.fromEntries([
+      ...fields.map(f => [
+        f.field.slug,
+        activeView.fields.includes(f.field._id)
+      ]),
+      ["edit", true],
+      ["actions", true]
+    ]);
+  }, [activeView, fields]);
+
+  useEffect(() => {
+    if (!activeView || !fields) return;
+    setSorting(prev =>
+      prev.length > 0
+        ? prev
+        : (activeView.sortBy?.map(s => ({
+            id: fields.find(f => f.field._id === s.fieldId)?.field.slug || "",
+            desc: s.direction === "desc"
+          })) ?? [])
+    );
+  }, [activeView, fields]);
+
+  const filters = useMemo(() => {
+    if (!activeView || !fields) return undefined;
+    if (!activeView.enableFiltering) return undefined;
+    return activeView.filters || undefined;
+  }, [activeView, fields]);
 
   useEffect(() => {
     if (activeViewId || !views) return;
@@ -189,27 +357,6 @@ export function AssetsInventory() {
     if (!view) return;
 
     setActiveViewId(view._id);
-    setColumnOrder([
-      "edit",
-      ...view.fields.map(
-        f => fields!.find(ff => ff.field._id === f)!.field.slug
-      ),
-      "actions"
-    ]);
-    setColumnVisibility(
-      Object.fromEntries([
-        ...fields!.map(f => [f.field.slug, view.fields.includes(f.field._id)]),
-        ["edit", true],
-        ["actions", true]
-      ])
-    );
-    setSorting(
-      view.sortBy?.map(s => ({
-        id: fields!.find(f => f.field._id === s.fieldId)?.field.slug || "",
-        desc: s.direction === "desc"
-      })) ?? []
-    );
-    setFilters(view.filters || undefined);
   }, [activeViewId, fields, views]);
 
   const formFields = useMemo(() => fields?.map(f => f.field) ?? [], [fields]);
@@ -404,14 +551,28 @@ export function AssetsInventory() {
                 <Tooltip>
                   <TooltipTrigger>
                     <div className="rounded-md bg-red-500/30 px-2 py-1">
-                      {renderField(f, val, users ?? [], setMarkdownPreview)}
+                      {renderField(
+                        row.original.asset._id,
+                        f._id,
+                        f,
+                        val,
+                        users ?? [],
+                        setMarkdownPreview
+                      )}
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>{fieldError}</TooltipContent>
                 </Tooltip>
               );
             } else {
-              return renderField(f, val, users ?? [], setMarkdownPreview);
+              return renderField(
+                row.original.asset._id,
+                f._id,
+                f,
+                val,
+                users ?? [],
+                setMarkdownPreview
+              );
             }
           },
           enableHiding: !isHidden,
@@ -435,7 +596,6 @@ export function AssetsInventory() {
       getPaginationRowModel: getPaginationRowModel(),
       getSortedRowModel: getSortedRowModel(),
       getFilteredRowModel: getFilteredRowModel(),
-      onColumnVisibilityChange: setColumnVisibility,
       onRowSelectionChange: setRowSelection,
       globalFilterFn: row => predicate(row.original),
       manualPagination: true,
@@ -452,107 +612,24 @@ export function AssetsInventory() {
 
   useEffect(() => {
     setHeaderContent(
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="!h-auto py-0 text-xs !ring-0 hover:!bg-transparent"
-          >
-            {views?.find(v => v._id === activeViewId)?.name || "Select View"}
-            <ChevronDown />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <div className="flex flex-col gap-1">
-            {views?.map(view => (
-              <Button
-                key={view._id}
-                variant="ghost"
-                className={cn(
-                  "w-48 text-left",
-                  activeViewId === view._id
-                    ? "pointer-events-none bg-white/10"
-                    : "hover:bg-white/5"
-                )}
-                onClick={() => {
-                  setColumnOrder([
-                    "edit",
-                    "event",
-                    ...view.fields.map(
-                      f => fields!.find(ff => ff.field._id === f)!.field.slug
-                    ),
-                    "actions"
-                  ]);
-                  if (fields) {
-                    setColumnVisibility(
-                      Object.fromEntries([
-                        ...fields.map(f => [
-                          f.field.slug,
-                          view.fields.includes(f.field._id)
-                        ]),
-                        ["edit", true],
-                        ["event", true],
-                        ["actions", true]
-                      ])
-                    );
-                  }
-                  setSorting(
-                    view.sortBy?.map(s => ({
-                      id:
-                        fields!.find(f => f.field._id === s.fieldId)?.field
-                          .slug || "",
-                      desc: s.direction === "desc"
-                    })) ?? []
-                  );
-                  setFilters(view.filters || undefined);
-                  setActiveViewId(view._id);
-                  localStorage.setItem("activeViewId", view._id);
-                }}
-              >
-                {view.name}
-              </Button>
-            ))}
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <ViewSwitcher
+        activeViewId={activeViewId}
+        setActiveViewId={setActiveViewId}
+        views={views ?? []}
+      />
     );
     return () => setHeaderContent(null);
-  }, [activeViewId, setHeaderContent, views, fields]);
+  }, [setHeaderContent, activeViewId, views]);
 
   if (viewer === undefined || assets === undefined) {
-    return (
-      <div className="overflow-x-scroll rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {Array.from({ length: 10 }).map((_, index) => (
-                <TableHead key={index}>
-                  <Skeleton className="h-4 w-26 rounded" />
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Array.from({ length: 30 }).map((_, rowIndex) => (
-              <TableRow key={rowIndex}>
-                {Array.from({ length: 10 }).map((_, cellIndex) => (
-                  <TableCell key={cellIndex}>
-                    <Skeleton className="h-4 w-full rounded" />
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
+    return <TableSkeleton />;
   }
 
   return (
     <>
       <div>
         <div className="h-[calc(100dvh-3.5rem)] overflow-scroll rounded-md border">
-          <Table>
+          <Table className="table-auto">
             <TableHeader>
               {table.getHeaderGroups().map(headerGroup => (
                 <TableRow
@@ -589,9 +666,15 @@ export function AssetsInventory() {
                       ).includes(row.original.asset._id)
                     })}
                   >
-                    {row.getVisibleCells().map(cell => (
-                      <TableCell key={cell.id} className="px-2">
-                        <div className="flex items-center justify-center">
+                    {row.getVisibleCells().map((cell, idx) => (
+                      <TableCell
+                        key={cell.id}
+                        className={cn(
+                          "px-2",
+                          idx > 0 && "border-border border-l"
+                        )}
+                      >
+                        <div className="m-auto flex w-max max-w-sm items-center justify-center break-words break-all hyphens-auto whitespace-normal">
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()

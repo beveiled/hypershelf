@@ -44,7 +44,7 @@ export * from "./ShadcnUiActionElement";
 export * from "./ShadcnUiValueSelector";
 
 export const shadcnUiControlClassnames = {
-  ruleGroup: "rounded-lg shadow-sm border bg-background"
+  ruleGroup: "rounded-md !border-0 bg-background !p-0"
 } satisfies Partial<Classnames>;
 
 export const shadcnUiControlElements = {

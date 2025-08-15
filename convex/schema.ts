@@ -102,7 +102,7 @@ export const fileSchema = {
 };
 
 export const viewSchema = {
-  name: v.string(),
+  name: v.optional(v.string()),
   fields: v.array(v.id("fields")),
   sortBy: v.optional(
     v.array(
@@ -112,7 +112,15 @@ export const viewSchema = {
       })
     )
   ),
-  filters: v.optional(v.any())
+  filters: v.optional(v.any()),
+  enableFiltering: v.optional(v.boolean()),
+  global: v.optional(v.boolean()),
+  builtin: v.optional(v.boolean())
+};
+
+export const viewSchemaInternal = {
+  ...viewSchema,
+  userId: v.id("users")
 };
 
 export default defineSchema({
@@ -120,11 +128,8 @@ export default defineSchema({
   assets: defineTable(assetSchemaInternal),
   fields: defineTable(fieldSchemaInternal),
   files: defineTable(fileSchema),
-  views: defineTable(viewSchema),
-  views2users: defineTable({
-    userId: v.id("users"),
-    viewId: v.id("views")
-  })
+  views: defineTable(viewSchemaInternal),
+  system: defineTable({ version: v.string() })
 });
 
 export type AssetType = Doc<"assets">;

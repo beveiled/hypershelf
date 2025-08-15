@@ -22,6 +22,7 @@ import type * as files from "../files.js";
 import type * as general from "../general.js";
 import type * as http from "../http.js";
 import type * as locks from "../locks.js";
+import type * as system from "../system.js";
 import type * as users from "../users.js";
 import type * as utils from "../utils.js";
 import type * as views from "../views.js";
@@ -44,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   general: typeof general;
   http: typeof http;
   locks: typeof locks;
+  system: typeof system;
   users: typeof users;
   utils: typeof utils;
   views: typeof views;

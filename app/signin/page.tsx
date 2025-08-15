@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { pwnedPassword } from "hibp";
-import { Cloud, KeyRound, Loader2Icon } from "lucide-react";
+import { CircleAlert, Cloud, KeyRound, Loader2Icon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { z } from "zod";
@@ -225,7 +225,7 @@ export default function SignIn() {
   };
 
   return (
-    <div className="flex items-center justify-center md:min-h-screen">
+    <div className="flex flex-col items-center justify-center gap-4 md:min-h-screen md:pb-16">
       <Card className="w-full max-w-md gap-2 py-4 md:gap-6 md:py-6">
         <CardHeader>
           <CardTitle className="font-title relative text-lg font-extrabold md:text-2xl">
@@ -366,6 +366,14 @@ export default function SignIn() {
           </form>
         </CardContent>
         <CardFooter />
+      </Card>
+      <Card className="w-full max-w-md rounded-lg">
+        <CardContent className="flex h-full items-center justify-center">
+          <div className="flex items-center justify-center gap-2 text-sm font-semibold text-red-500">
+            <CircleAlert className="size-4.5" />
+            Early access. Do not use as a single source of truth.
+          </div>
+        </CardContent>
       </Card>
     </div>
   );

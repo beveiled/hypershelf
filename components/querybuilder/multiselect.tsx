@@ -90,24 +90,23 @@ export function MultiSelect({
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className={cn("flex space-x-1", value.length > 0 && "px-1")}
+          size="sm"
+          className={cn("flex gap-x-1", value.length > 0 && "px-1")}
         >
-          {[...value].slice(0, 2).map(it => (
-            <div key={it} className="bg-accent rounded-sm px-3 py-1 text-sm">
+          {[...value].slice(0, 5).map(it => (
+            <div key={it} className="bg-accent rounded-sm px-3 py-0.5 text-sm">
               {it}
             </div>
           ))}
-          {value.length > 2 && (
-            <div className="bg-accent rounded-sm px-3 py-1 text-sm">
-              +{value.length - 2}
+          {value.length > 5 && (
+            <div className="bg-accent rounded-sm px-3 py-0.5 text-sm">
+              +{value.length - 5}
             </div>
           )}
           {value.length === 0 && "Choose..."}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        {toDropdownOptions(options)}
-      </DropdownMenuContent>
+      <DropdownMenuContent>{toDropdownOptions(options)}</DropdownMenuContent>
     </DropdownMenu>
   );
 }
