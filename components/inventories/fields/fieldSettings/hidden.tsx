@@ -21,7 +21,7 @@ class HiddenProp extends AbstractProp {
           }}
           disabled={isLockedBySomeoneElse}
         />
-        <Label className="text-xs font-medium">Hidden</Label>
+        <Label className="text-xs font-medium">Невидимое</Label>
       </div>
     );
   }

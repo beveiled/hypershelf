@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -136,7 +136,7 @@ export function AssetForm({
         if (res.success) {
           onClose();
         } else {
-          setErrors(res.errors ?? { _: "Unknown error" });
+          setErrors(res.errors ?? { _: "Неизвестная ошибка" });
         }
       } else {
         const res = await createAsset({ metadata: editedValues });
@@ -144,7 +144,7 @@ export function AssetForm({
         if (res.success) {
           onClose();
         } else {
-          setErrors(res.errors ?? { _: "Unknown error" });
+          setErrors(res.errors ?? { _: "Неизвестная ошибка" });
         }
       }
     } finally {
@@ -159,17 +159,15 @@ export function AssetForm({
         <VisuallyHidden>
           <AlertDialogDescription>
             {asset ? (
-              <span>
-                Editing asset <strong>{asset._id}</strong>
-              </span>
+              <span>Редактирование хоста</span>
             ) : (
-              <span>Creating a new asset</span>
+              <span>Создание нового хоста</span>
             )}
           </AlertDialogDescription>
         </VisuallyHidden>
         <AlertDialogHeader>
           <AlertDialogTitle className="hidden md:block">
-            {asset ? "Edit Asset" : "Create Asset"}
+            {asset ? "Редактирование хоста" : "Создание хоста"}
           </AlertDialogTitle>
         </AlertDialogHeader>
         <div className="grid max-h-[75vh] grid-cols-1 gap-y-3 overflow-y-scroll xl:grid-cols-2 xl:gap-x-8 xl:gap-y-2 xl:py-4">
@@ -202,7 +200,7 @@ export function AssetForm({
                     aria-invalid={!!errors[fieldId]}
                     disabled={isLockedBySomeoneElse}
                   >
-                    {value ? String(value) : "Select an option"}
+                    {value ? String(value) : "Выбери опцию"}
                   </SelectTrigger>
                   <SelectContent>
                     {field.extra?.options?.map(option => (
@@ -218,7 +216,7 @@ export function AssetForm({
                 <TagInput
                   tags={Array.isArray(value) ? value : []}
                   setTags={t => handleFieldChange(fieldId, t)}
-                  placeholder={field.extra?.placeholder || "Add items..."}
+                  placeholder={field.extra?.placeholder || "Добавить..."}
                   className={cn("col-span-3", {
                     "border-destructive": !!errors[fieldId]
                   })}
@@ -304,7 +302,11 @@ export function AssetForm({
             } else if (field.type === "user") {
               if (users === undefined) {
                 input = (
-                  <Input id={fieldId} placeholder="Loading users..." disabled />
+                  <Input
+                    id={fieldId}
+                    placeholder="Загружаем юзеров..."
+                    disabled
+                  />
                 );
               } else {
                 input = (
@@ -327,19 +329,19 @@ export function AssetForm({
                       >
                         {value
                           ? users.find(user => user.id === value)?.email
-                          : field.extra?.placeholder || "Select a user"}
+                          : field.extra?.placeholder || "Выбери юзера"}
                         <ChevronsUpDown className="opacity-50" />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="p-0">
                       <Command>
                         <CommandInput
-                          placeholder="Search users..."
+                          placeholder="Поиск..."
                           className="h-9"
                           disabled={isLockedBySomeoneElse}
                         />
                         <CommandList>
-                          <CommandEmpty>No users found.</CommandEmpty>
+                          <CommandEmpty>Не нашли никого</CommandEmpty>
                           <CommandGroup>
                             {users.map(user => (
                               <CommandItem
@@ -449,14 +451,14 @@ export function AssetForm({
         {errors._ && <div className="text-destructive text-sm">{errors._}</div>}
         {Object.keys(errors).length > 0 && !errors._ && (
           <div className="text-destructive text-sm">
-            Please fix the errors above before saving.
+            Исправь ошибки сверху, чтобы сохранить
           </div>
         )}
 
         <AlertDialogFooter>
           <Button variant="outline" onClick={onClose} size="sm">
             <X />
-            Cancel
+            Отмена
           </Button>
           <Button
             onClick={handleSave}
@@ -464,7 +466,7 @@ export function AssetForm({
             size="sm"
           >
             {isLoading ? <Loader2Icon className="animate-spin" /> : <Save />}
-            Save
+            Сохранить
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

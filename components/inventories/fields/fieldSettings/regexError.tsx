@@ -14,12 +14,12 @@ class RegexProp extends AbstractProp {
     const { value, lockField, isLockedBySomeoneElse } = this.props;
     return (
       <div className="flex flex-col gap-1">
-        <Label className="block text-xs font-medium">Regex Error</Label>
+        <Label className="block text-xs font-medium">Ошибка регулярки</Label>
         <Input
           value={value?.toString() || ""}
           onChange={this.handleChange}
           onFocus={lockField}
-          placeholder="Please enter a valid yara yara"
+          placeholder="Введи правильное имя"
           disabled={isLockedBySomeoneElse}
         />
       </div>

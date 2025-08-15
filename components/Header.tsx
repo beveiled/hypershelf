@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -159,7 +159,7 @@ export default function Header() {
               })}
             ></div>
             <div className="text-muted-foreground text-xs">
-              {isConnected ? "Live" : "Reconnecting..."}
+              {isConnected ? "Онлайн" : "Переподключаемся..."}
             </div>
           </div>
         </div>
@@ -169,19 +169,19 @@ export default function Header() {
             {pathname !== "/signin" && (
               <>
                 <NavLink href="/">
-                  <span className="hidden lg:inline">Assets</span>
+                  <span className="hidden lg:inline">Хосты</span>
                   <Table2 className="inline size-4 lg:hidden" />
                 </NavLink>
                 <NavLink href="/fields">
-                  <span className="hidden lg:inline">Fields</span>
+                  <span className="hidden lg:inline">Поля</span>
                   <Settings2 className="inline size-4 lg:hidden" />
                 </NavLink>
                 <NavLink href="/schemas">
-                  <span className="hidden lg:inline">Schemas</span>
+                  <span className="hidden lg:inline">Схемы</span>
                   <GitBranch className="inline size-4 lg:hidden" />
                 </NavLink>
                 <NavLink href="/views">
-                  <span className="hidden lg:inline">Views</span>
+                  <span className="hidden lg:inline">Виды</span>
                   <Cog className="inline size-4 lg:hidden" />
                 </NavLink>
               </>
@@ -190,7 +190,7 @@ export default function Header() {
               (isAuthenticated ? (
                 <>
                   <NavLink href="/signout">
-                    <span className="hidden lg:inline">Sign Out</span>
+                    <span className="hidden lg:inline">Выйти</span>
                     <LogOut className="text-destructive inline size-4 lg:hidden" />
                   </NavLink>
                   <div className="text-muted-foreground hidden text-xs md:block">
@@ -199,7 +199,7 @@ export default function Header() {
                 </>
               ) : (
                 <NavLink href="/signin">
-                  <span className="hidden lg:inline">Sign In</span>
+                  <span className="hidden lg:inline">Войти</span>
                   <LogIn className="inline size-4 lg:hidden" />
                 </NavLink>
               ))}

@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -56,30 +56,30 @@ const defaultOperators = [
   { name: ">", value: ">", label: ">" },
   { name: "<=", value: "<=", label: "<=" },
   { name: ">=", value: ">=", label: ">=" },
-  { name: "contains", value: "contains", label: "contains" },
-  { name: "beginsWith", value: "beginsWith", label: "begins with" },
-  { name: "endsWith", value: "endsWith", label: "ends with" },
+  { name: "contains", value: "contains", label: "включает в себя" },
+  { name: "beginsWith", value: "beginsWith", label: "начинается с" },
+  { name: "endsWith", value: "endsWith", label: "заканчивается на" },
   {
     name: "doesNotContain",
     value: "doesNotContain",
-    label: "does not contain"
+    label: "не включает в себя"
   },
   {
     name: "doesNotBeginWith",
     value: "doesNotBeginWith",
-    label: "does not begin with"
+    label: "не начинается с"
   },
   {
     name: "doesNotEndWith",
     value: "doesNotEndWith",
-    label: "does not end with"
+    label: "не заканчивается на"
   },
-  { name: "null", value: "null", label: "is null" },
-  { name: "notNull", value: "notNull", label: "is not null" },
-  { name: "in", value: "in", label: "in" },
-  { name: "notIn", value: "notIn", label: "not in" },
-  { name: "between", value: "between", label: "between" },
-  { name: "notBetween", value: "notBetween", label: "not between" }
+  { name: "null", value: "null", label: "пустой" },
+  { name: "notNull", value: "notNull", label: "не пустой" },
+  { name: "in", value: "in", label: "один из" },
+  { name: "notIn", value: "notIn", label: "не один из" },
+  { name: "between", value: "between", label: "между" },
+  { name: "notBetween", value: "notBetween", label: "не между" }
 ];
 
 const operatorByName = new Map<Operator["name"], Operator>(

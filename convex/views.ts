@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -46,12 +46,13 @@ export const get = query({
     const globalViews = await ctx.db
       .query("views")
       .filter(q => q.eq(q.field("global"), true))
+      .filter(q => q.neq(q.field("userId"), userId))
       .collect();
     const fields = await ctx.db.query("fields").collect();
     const builtin = [
       {
         _id: "builtin:all",
-        name: "All",
+        name: "Все",
         userId: null,
         global: true,
         fields: fields.map(f => f._id),

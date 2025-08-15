@@ -14,7 +14,7 @@ class IconProp extends AbstractProp {
     const { value, lockField, isLockedBySomeoneElse } = this.props;
     return (
       <div className="flex flex-col gap-1">
-        <Label className="block text-xs font-medium">Icon</Label>
+        <Label className="block text-xs font-medium">Иконка</Label>
         <IconPicker
           value={(value as IconName) || ""}
           onValueChange={this.handleChange}

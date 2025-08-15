@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -121,7 +121,7 @@ const ActionsRow = memo(
                 disabled={disabled}
               >
                 {isSaving && <Loader2Icon className="animate-spin" />}
-                Save
+                Сохранить
               </Button>
             </span>
           </TooltipTrigger>
@@ -138,7 +138,7 @@ const ActionsRow = memo(
           onClick={onCancel}
           disabled={isSaving}
         >
-          Cancel
+          Отмена
         </Button>
         {onDelete && (
           <AlertDialog>
@@ -148,25 +148,25 @@ const ActionsRow = memo(
                 size="sm"
                 disabled={isLockedBySomeoneElse || isSaving}
               >
-                Delete
+                Удалить
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className="border-red-500">
               <AlertDialogHeader>
-                <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+                <AlertDialogTitle>Подтверждение удаления</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Please enter the field name to confirm deletion.
+                  Нужно ввести название поля, чтобы подтвердить удаление
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="mt-4">
                 <Input
-                  placeholder="Enter field name"
+                  placeholder="Введи название поля"
                   onChange={e => setFieldName(e.target.value)}
                 />
               </div>
               <AlertDialogFooter>
                 <AlertDialogCancel asChild>
-                  <Button variant="outline">Cancel</Button>
+                  <Button variant="outline">Отмена</Button>
                 </AlertDialogCancel>
                 <Button
                   variant="destructive"
@@ -184,7 +184,7 @@ const ActionsRow = memo(
                   }
                 >
                   {isDeleting && <Loader2Icon className="animate-spin" />}
-                  Delete
+                  Удалить
                 </Button>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -222,7 +222,7 @@ const TypeField = memo(
   }) {
     return (
       <div className="relative flex flex-col gap-1">
-        <Label className="block text-xs font-medium">Type</Label>
+        <Label className="block text-xs font-medium">Тип</Label>
         <Select
           value={value}
           onValueChange={val => onPending(val)}
@@ -242,9 +242,9 @@ const TypeField = memo(
         </Select>
         {pendingType && (
           <Alert className="absolute top-full -mt-2 -ml-3">
-            <AlertTitle>Change type?</AlertTitle>
+            <AlertTitle>Изменить тип поля?</AlertTitle>
             <AlertDescription>
-              Changing the type will remove extra fields for the current type.
+              Изменение типа поля удалит все расширенные настройки.
             </AlertDescription>
             <div className="mt-2 flex space-x-2">
               <Button
@@ -252,14 +252,14 @@ const TypeField = memo(
                 onClick={() => onCommit(pendingType)}
                 variant="destructive"
               >
-                Change
+                Изменить
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => onPending(null)}
               >
-                Cancel
+                Отмена
               </Button>
             </div>
           </Alert>
@@ -565,10 +565,12 @@ export function FieldForm({
     !isSaving &&
     (invalidName || invalidType || pendingType !== null || needsListType)
       ? [
-          invalidName ? "Name is required." : null,
-          invalidType ? "Type is required." : null,
-          pendingType !== null ? "Pending type change must be resolved." : null,
-          needsListType ? "List Object Type is required for object type." : null
+          invalidName ? "Имя обязательное" : null,
+          invalidType ? "Тип обязательные" : null,
+          pendingType !== null
+            ? "Измени тип поля или отмени, прежде чем сохранять"
+            : null,
+          needsListType ? "Нужно выбрать тип элементов списка" : null
         ]
           .filter(Boolean)
           .join(" ")

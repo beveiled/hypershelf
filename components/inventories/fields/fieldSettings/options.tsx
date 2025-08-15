@@ -14,7 +14,7 @@ class OptionsProp extends AbstractProp {
     const { value, lockField, isLockedBySomeoneElse } = this.props;
     return (
       <div className="flex flex-col gap-1">
-        <Label className="block text-xs font-medium">Options</Label>
+        <Label className="block text-xs font-medium">Варианты</Label>
         <OptionsInput
           options={(value as string[] | undefined) || []}
           onChange={this.handleChange}

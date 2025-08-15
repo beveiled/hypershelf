@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -38,12 +38,12 @@ export function Debugger(props: DebuggerProps) {
     <AlertDialog open={props.open} onOpenChange={props.setIsOpen}>
       <AlertDialogContent className="max-h-[60vh] !max-w-2xl overflow-y-auto">
         <AlertDialogHeader>
-          <AlertDialogTitle>Debug Information</AlertDialogTitle>
+          <AlertDialogTitle>Дебаггер</AlertDialogTitle>
         </AlertDialogHeader>
         <JsonViewer {...props} className="text-xs" />
         <AlertDialogFooter>
           {props.children}
-          <AlertDialogCancel>Close</AlertDialogCancel>
+          <AlertDialogCancel>Отмена</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

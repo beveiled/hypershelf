@@ -21,7 +21,7 @@ class HideFromSearchProp extends AbstractProp {
           }}
           disabled={isLockedBySomeoneElse}
         />
-        <Label className="text-xs font-medium">Hide from search</Label>
+        <Label className="text-xs font-medium">Не использовать в поиске</Label>
       </div>
     );
   }

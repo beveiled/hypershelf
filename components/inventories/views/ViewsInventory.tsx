@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -288,8 +288,7 @@ function ViewHeaderButton({
             Delete View
             <div className="bg-brand absolute bottom-0.5 left-0 h-0.5 w-4" />
           </div>
-          Are you sure you want to delete this view? This action cannot be
-          undone.
+          Уверен, что хочешь удалить? Это нельзя отменить
           <div className="flex gap-2">
             <Button
               variant="destructive"
@@ -308,13 +307,13 @@ function ViewHeaderButton({
               className="flex-auto"
             >
               <Trash2 className="size-4" />
-              Delete
+              Удалить
             </Button>
             <Button
               variant="secondary"
               onClick={() => setOpenViewDeletePopover(false)}
             >
-              Cancel
+              Отмена
             </Button>
           </div>
         </PopoverContent>
@@ -364,7 +363,7 @@ function ViewPicker({
           variant="ghost"
           className="!h-auto py-0 text-xs !ring-0 hover:!bg-transparent"
         >
-          {views.find(v => v._id === activeViewId)?.name || "Select View"}
+          {views.find(v => v._id === activeViewId)?.name || "Выбрать вид"}
           <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
@@ -392,17 +391,17 @@ function ViewPicker({
               className="w-full justify-start text-left"
               onClick={() => setCreatingNewView(true)}
             >
-              <Plus /> Create new
+              <Plus /> Создать новый
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-80">
             <div className="flex flex-col gap-4">
               <div className="font-title relative text-lg font-extrabold">
-                Create New View
+                New View
                 <div className="bg-brand absolute bottom-0.5 left-0 h-0.5 w-4" />
               </div>
               <Input
-                placeholder="View Name"
+                placeholder="Название"
                 value={newViewName}
                 onChange={e => setNewViewName(e.target.value)}
               />
@@ -425,7 +424,7 @@ function ViewPicker({
                   className="flex-auto"
                 >
                   <Plus className="size-4" />
-                  Create
+                  Создать
                 </Button>
                 <Button
                   variant="secondary"
@@ -434,7 +433,7 @@ function ViewPicker({
                     setNewViewName("");
                   }}
                 >
-                  Cancel
+                  Отмена
                 </Button>
               </div>
             </div>
@@ -501,7 +500,7 @@ function Debug({
                   }}
                 >
                   <Link2 />
-                  Make public
+                  Сделать публичным
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -511,12 +510,11 @@ function Debug({
                   </AlertDialogTitle>
                 </AlertDialogHeader>
                 <p className="text-sm">
-                  All users of Hypershelf will see this view. They will not be
-                  able to edit it.
+                  Все пользователи будут видеть этот вид. Они не смогут его
+                  отредактировать
                 </p>
                 <p className="text-destructive text-sm font-bold">
-                  This action cannot be undone. Are you sure you want to make
-                  this view public?
+                  Это действие нельзя отменить
                 </p>
                 <AlertDialogFooter>
                   <Button
@@ -542,10 +540,10 @@ function Debug({
                     ) : (
                       <Link2 />
                     )}
-                    Make public
+                    Сделать публичным
                   </Button>
                   <AlertDialogCancel asChild>
-                    <Button variant="secondary">Cancel</Button>
+                    <Button variant="secondary">Отмена</Button>
                   </AlertDialogCancel>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -800,12 +798,12 @@ export function ViewsInventory() {
                   {enableQueryBuilder ? (
                     <>
                       <EyeOff className="size-4" />
-                      Disable Filtering
+                      Выключить фильтры
                     </>
                   ) : (
                     <>
                       <Eye className="size-4" />
-                      Enable Filtering
+                      Включить фильтры
                     </>
                   )}
                 </Button>
@@ -871,7 +869,7 @@ export function ViewsInventory() {
                       className="h-24 text-center"
                       colSpan={columnOrder.length}
                     >
-                      No results.
+                      Ничего не нашлось. Попробуй изменить фильтры
                     </TableCell>
                   </TableRow>
                 )}
@@ -882,7 +880,9 @@ export function ViewsInventory() {
       )}
       {!isActiveViewSet && (
         <div className="flex h-[calc(100dvh-3.5rem)] items-center justify-center">
-          <span className="text-muted-foreground">Select or create a view</span>
+          <span className="text-muted-foreground">
+            Выбери или создай новый вид
+          </span>
         </div>
       )}
       <Debug activeViewId={activeViewId} views={views} />

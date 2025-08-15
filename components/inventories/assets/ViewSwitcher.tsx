@@ -29,7 +29,7 @@ export function ViewSwitcher({
           variant="ghost"
           className="!h-auto py-0 text-xs !ring-0 hover:!bg-transparent"
         >
-          {views?.find(v => v._id === activeViewId)?.name || "Select View"}
+          {views?.find(v => v._id === activeViewId)?.name || "Выбери вид"}
           <ChevronDown />
         </Button>
       </DropdownMenuTrigger>

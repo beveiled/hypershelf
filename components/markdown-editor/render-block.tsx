@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -185,7 +185,7 @@ class EmbedWidget extends WidgetType {
   toDOM(view: EditorView): HTMLElement {
     const wrapper = document.createElement("div");
     wrapper.className = "cm-markdoc-embedWrapper";
-    wrapper.textContent = "Loading...";
+    wrapper.textContent = "Загружаем...";
 
     const renderImage = () => {
       const img = document.createElement("img");
@@ -210,7 +210,7 @@ class EmbedWidget extends WidgetType {
 
       const tooltip = document.createElement("div");
       tooltip.className = "cm-markdoc-fileWidgetTooltip";
-      tooltip.textContent = "Click to open";
+      tooltip.textContent = "Нажми, чтобы открыть";
       block.appendChild(tooltip);
 
       const icon = document.createElement("div");

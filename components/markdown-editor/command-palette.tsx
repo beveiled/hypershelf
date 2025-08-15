@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -34,19 +34,19 @@ const TEMPLATES: Record<
   { title: string; icon: IconName; content: string; pos: number }
 > = {
   table: {
-    title: "Insert Table",
+    title: "Вставить таблицу",
     icon: "table-2",
     content: "\n||||\n|---|---|---|\n||||\n",
     pos: 2
   },
   codeblock: {
-    title: "Insert Code Block",
+    title: "Вставить блок кода",
     icon: "code",
     content: "\n```\n```\n",
     pos: 4
   },
   callout: {
-    title: "Insert Callout",
+    title: "Вставить инфоблок",
     icon: "message-square-quote",
     content: '\n{% callout type="info" %}\n\n{% /callout %}\n',
     pos: 27
@@ -64,98 +64,98 @@ const formattingOptions: Record<
   }
 > = {
   bold: {
-    title: "Bold",
+    title: "Жирный",
     keybind: "Ctrl+B",
     keybindMac: "⌘B",
     mousetrap: "mod+b",
     format: "**{}**"
   },
   italic: {
-    title: "Italic",
+    title: "Курсив",
     keybind: "Ctrl+I",
     keybindMac: "⌘I",
     mousetrap: "mod+i",
     format: "*{}*"
   },
   strikethrough: {
-    title: "Strikethrough",
+    title: "Зачеркнутый",
     keybind: "Ctrl+Shift+S",
     keybindMac: "⌘^S",
     mousetrap: "mod+shift+s",
     format: "~~{}~~"
   },
   link: {
-    title: "Link",
+    title: "Ссылка",
     keybind: "Ctrl+K",
     keybindMac: "⌘K",
     mousetrap: "mod+k",
     format: "[{}]()"
   },
   inlineCode: {
-    title: "Inline Code",
+    title: "Встроенный код",
     keybind: "Ctrl+K",
     keybindMac: "⌘K",
     mousetrap: "mod+k",
     format: "`{}`"
   },
   blockquote: {
-    title: "Blockquote",
+    title: "Цитата",
     keybind: "Ctrl+Q",
     keybindMac: "⌘Q",
     mousetrap: "mod+q",
     format: "> {}\n"
   },
   heading1: {
-    title: "Heading 1",
+    title: "Заголовок 1",
     keybind: "Ctrl+1",
     keybindMac: "⌘1",
     mousetrap: "mod+1",
     format: "# {}\n"
   },
   heading2: {
-    title: "Heading 2",
+    title: "Заголовок 2",
     keybind: "Ctrl+2",
     keybindMac: "⌘2",
     mousetrap: "mod+2",
     format: "## {}\n"
   },
   heading3: {
-    title: "Heading 3",
+    title: "Заголовок 3",
     keybind: "Ctrl+3",
     keybindMac: "⌘3",
     mousetrap: "mod+3",
     format: "### {}\n"
   },
   heading4: {
-    title: "Heading 4",
+    title: "Заголовок 4",
     keybind: "Ctrl+4",
     keybindMac: "⌘4",
     mousetrap: "mod+4",
     format: "#### {}\n"
   },
   heading5: {
-    title: "Heading 5",
+    title: "Заголовок 5",
     keybind: "Ctrl+5",
     keybindMac: "⌘5",
     mousetrap: "mod+5",
     format: "##### {}\n"
   },
   unorderedList: {
-    title: "Unordered List",
+    title: "Ненумерованный список",
     keybind: "Ctrl+Shift+U",
     keybindMac: "⌘^U",
     mousetrap: "mod+shift+u",
     format: "- {}\n"
   },
   orderedList: {
-    title: "Ordered List",
+    title: "Нумерованный список",
     keybind: "Ctrl+Shift+O",
     keybindMac: "⌘^O",
     mousetrap: "mod+shift+o",
     format: "1. {}\n"
   },
   taskList: {
-    title: "Task List",
+    title: "Список задач",
     keybind: "Ctrl+Shift+T",
     keybindMac: "⌘^T",
     mousetrap: "mod+shift+t",
@@ -310,7 +310,7 @@ export function MarkdownCommandPalette({
     <CommandDialog open={open} onOpenChange={setOpen}>
       <CommandInput placeholder="Search commands..." />
       <CommandList>
-        <CommandEmpty>No commands found.</CommandEmpty>
+        <CommandEmpty>Ничего не нашли</CommandEmpty>
         <CommandGroup heading="Templates">
           {Object.entries(TEMPLATES).map(([key, template]) => (
             <CommandItem key={key} onSelect={() => handleSelect(template)}>

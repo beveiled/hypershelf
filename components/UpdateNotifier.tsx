@@ -27,18 +27,18 @@ export function UpdateNotifier() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm font-bold">
           <CircleFadingArrowUp className="size-4" />
-          Update available
+          Доступно обновление
         </div>
         <Button
           size="sm"
           className="pointer-events-auto h-auto w-fit py-0.5 text-sm"
           onClick={() => window.location.reload()}
         >
-          Reload
+          Обновить
         </Button>
       </div>
       <div className="text-secondary-fg mt-2 text-xs">
-        Reload the page to apply a new version of Hypershelf.
+        Обнови страницу, чтобы применить последнее обновление Hypershelf.
       </div>
     </motion.div>
   );

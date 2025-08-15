@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -61,14 +61,14 @@ export const shadcnUiTranslations = {
   addRule: {
     label: (
       <>
-        <Plus className="mr-2 h-4 w-4" /> Rule
+        <Plus className="mr-2 h-4 w-4" /> Правило
       </>
     )
   },
   addGroup: {
     label: (
       <>
-        <Plus className="mr-2 h-4 w-4" /> Group
+        <Plus className="mr-2 h-4 w-4" /> Группа
       </>
     )
   },

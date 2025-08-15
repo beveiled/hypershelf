@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -46,15 +46,18 @@ const schema = z
     email: z.string().email({ message: "Invalid email address" }),
     password: z
       .string()
-      .min(10, { message: "Password must be at least 10 characters" })
-      .regex(/[a-z]/, { message: "Password must contain a lowercase letter" })
-      .regex(/[A-Z]/, { message: "Password must contain an uppercase letter" })
-      .regex(/[0-9]/, { message: "Password must contain a number" })
+      .min(10, { message: "Пароль должен быть как минимум 10 символов" })
+      .regex(/[a-z]/, { message: "Пароль должен содержать нижний регистр" })
+      .regex(/[A-Z]/, { message: "Пароль должен содержать верхний регистр" })
+      .regex(/[0-9]/, { message: "Пароль должен содержать цифры" })
       .regex(/[^A-Za-z0-9]/, {
-        message: "Password must contain a special symbol"
+        message: "Пароль должен содержать специальные символы"
       }),
     passwordConfirm: z.string().optional(),
-    inviteCode: z.string().uuid({ message: "Invalid invite code" }).optional()
+    inviteCode: z
+      .string()
+      .uuid({ message: "Неверный код приглашения" })
+      .optional()
   })
   .superRefine((data, ctx) => {
     if ("passwordConfirm" in data && data.passwordConfirm !== undefined) {
@@ -62,7 +65,7 @@ const schema = z
         ctx.addIssue({
           code: "custom",
           path: ["passwordConfirm"],
-          message: "Passwords do not match"
+          message: "Пароли не совпадают"
         });
       }
     }
@@ -181,9 +184,7 @@ export default function SignIn() {
       try {
         const pwnedCount = await pwnedPassword(fields.password);
         if (pwnedCount > 0) {
-          setError(
-            `Your password has been exposed in ${pwnedCount} breaches. Please choose a different password.`
-          );
+          setError(`Пароль нашелся в ${pwnedCount} утечках. Выбери другой.`);
           setLoading(false);
           return;
         }
@@ -208,8 +209,8 @@ export default function SignIn() {
           error.message !== "result is null"
             ? error.message
             : flow === "signIn"
-              ? "Invalid email or password"
-              : "Error signing up. Please try again."
+              ? "Неверная почта или пароль"
+              : "Не получилось зарегистрироваться. Проверь почту и пароль"
         );
       })
       .then(() => {
@@ -230,7 +231,7 @@ export default function SignIn() {
         <CardHeader>
           <CardTitle className="font-title relative text-lg font-extrabold md:text-2xl">
             <div className="bg-brand absolute bottom-0.5 left-0 h-0.5 w-4 md:bottom-0 md:h-1 md:w-6"></div>
-            {flow === "signIn" ? "Login" : "Sign Up"}
+            {flow === "signIn" ? "Sign In" : "Sign Up"}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -241,7 +242,7 @@ export default function SignIn() {
                   <Input
                     type="email"
                     name="email"
-                    placeholder="Email"
+                    placeholder="Почта"
                     autoComplete="email"
                     required
                     value={fields.email}
@@ -260,7 +261,7 @@ export default function SignIn() {
                   <Input
                     type="password"
                     name="password"
-                    placeholder="Password"
+                    placeholder="Пароль"
                     autoComplete="current-password"
                     required
                     value={fields.password}
@@ -283,7 +284,7 @@ export default function SignIn() {
                     <Input
                       type="password"
                       name="passwordConfirm"
-                      placeholder="Confirm Password"
+                      placeholder="Опять пароль"
                       autoComplete="new-password"
                       required
                       value={fields.passwordConfirm}
@@ -306,7 +307,7 @@ export default function SignIn() {
                     <Input
                       type="text"
                       name="inviteCode"
-                      placeholder="Invite Code"
+                      placeholder="Код приглашения"
                       required
                       value={fields.inviteCode}
                       onChange={handleChange}
@@ -336,17 +337,15 @@ export default function SignIn() {
               ) : (
                 <KeyRound />
               )}
-              {flow === "signIn" ? "Sign in" : "Sign up"}
+              {flow === "signIn" ? "Войти" : "Зарегистрироваться"}
             </Button>
             <Button disabled variant="secondary" className="w-full" size="sm">
               <Cloud />
-              Use SSO
+              Войти через SSO
             </Button>
             <div className="mt-2 flex items-center justify-between text-sm">
               <span>
-                {flow === "signIn"
-                  ? "Don't have an account?"
-                  : "Already have an account?"}
+                {flow === "signIn" ? "Нет аккаунта?" : "Уже есть аккаунт??"}
               </span>
               <Button
                 type="button"
@@ -355,7 +354,7 @@ export default function SignIn() {
                 className="cursor-pointer"
                 onClick={() => setFlow(flow === "signIn" ? "signUp" : "signIn")}
               >
-                {flow === "signIn" ? "Sign up instead" : "Sign in instead"}
+                {flow === "signIn" ? "К регистрации" : "К входу"}
               </Button>
             </div>
             {error && (
@@ -371,7 +370,7 @@ export default function SignIn() {
         <CardContent className="flex h-full items-center justify-center">
           <div className="flex items-center justify-center gap-2 text-sm font-semibold text-red-500">
             <CircleAlert className="size-4.5" />
-            Early access. Do not use as a single source of truth.
+            Ранний доступ. Не использовать как единственное хранилище.
           </div>
         </CardContent>
       </Card>

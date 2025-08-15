@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -51,7 +51,7 @@ export function Footer() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <a
-                href="https://github.com/hikariatama/hypershelf"
+                href="https://github.com/beveiled/hypershelf"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -89,7 +89,7 @@ export function Footer() {
               width={16}
               height={16}
             />
-            vSphere Plugin
+            Плагин для vSphere
           </Button>
 
           <Dialog open={showInstallGuide} onOpenChange={setShowInstallGuide}>
@@ -103,63 +103,63 @@ export function Footer() {
                     height={24}
                     className="mr-2 inline-block"
                   />
-                  vSphere Plugin Installation Guide
+                  Гайд по установке плагина
                 </DialogTitle>
                 <VisuallyHidden>
                   <DialogDescription>
-                    Follow these steps to install the Hypershelf vSphere plugin
+                    Следуй этим шагам, чтобы установить плагин для vSphere
                   </DialogDescription>
                 </VisuallyHidden>
               </DialogHeader>
 
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <h4 className="font-medium">Step 1: Extract the ZIP file</h4>
+                  <h4 className="font-medium">Шаг 1: Распакуй ZIP файл</h4>
                 </div>
 
                 <div className="space-y-2">
                   <h4 className="font-medium">
-                    Step 2: Open <code>chrome://extensions</code>
+                    Шаг 2: Открой <code>chrome://extensions</code>
                   </h4>
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="font-medium">Step 3: Enable Developer Mode</h4>
+                  <h4 className="font-medium">
+                    Шаг 3: Включи режим разработчика
+                  </h4>
                   <p className="text-muted-foreground">
-                    Toggle the &quot;Developer mode&quot; switch in the top
-                    right corner.
+                    Включи &quot;Developer mode&quot; переключатель в правом
+                    верхнем углу страницы.
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <h4 className="font-medium">
-                    Step 4: Load the unpacked extension
-                  </h4>
+                  <h4 className="font-medium">Шаг 4: Загрузи расширение</h4>
                   <p className="text-muted-foreground">
-                    Click the &quot;Load unpacked&quot; button and select the
-                    extracted folder containing the 3 plugin files.
+                    Нажми &quot;Загрузить распакованное расширение&quot; и
+                    выбери папку с содержимым распакованного ZIP файла (должно
+                    быть 3 файла).
                   </p>
                 </div>
               </div>
 
               <DialogFooter>
                 <Button onClick={() => setShowInstallGuide(false)}>
-                  Got it, thanks!
+                  Окей, спасибо!
                 </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
         <p className="text-muted-foreground mt-2 w-full text-xs">
-          © Daniil Gazizullin {new Date().getFullYear()} &middot; Released
-          under the{" "}
+          Распространяется под лицензией{" "}
           <a
             href="https://www.gnu.org/licenses/agpl-3.0.en.html"
             className="hover:text-primary underline"
             target="_blank"
             rel="noopener noreferrer"
           >
-            GNU Affero General Public License v3.0
+            GNU AGPL v3.0
           </a>
           .
         </p>

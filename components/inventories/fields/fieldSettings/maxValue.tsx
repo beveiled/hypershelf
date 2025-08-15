@@ -17,7 +17,7 @@ class MaxValueProp extends AbstractProp {
     const { value, lockField, isLockedBySomeoneElse } = this.props;
     return (
       <div className="flex flex-col gap-1">
-        <Label className="block text-xs font-medium">Max Value</Label>
+        <Label className="block text-xs font-medium">Макс. значение</Label>
         <Input
           type="number"
           value={value?.toString() || ""}

@@ -14,7 +14,7 @@ class NameProp extends AbstractProp {
     const { value, lockField, isLockedBySomeoneElse } = this.props;
     return (
       <div className="flex flex-col gap-1">
-        <Label className="block text-xs font-medium">Name</Label>
+        <Label className="block text-xs font-medium">Название</Label>
         <Input
           value={value?.toString() || ""}
           onChange={this.handleChange}

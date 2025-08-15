@@ -21,7 +21,7 @@ class RequiredProp extends AbstractProp {
           }}
           disabled={isLockedBySomeoneElse}
         />
-        <Label className="text-xs font-medium">Required</Label>
+        <Label className="text-xs font-medium">Обязательное</Label>
       </div>
     );
   }

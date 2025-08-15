@@ -50,6 +50,13 @@ export function getFieldProps(typeExtras: string[]) {
   return allFieldProps.filter(
     prop =>
       typeExtras.includes(prop.key) ||
-      ["name", "icon", "description", "hideFromSearch", "required", "hidden"].includes(prop.key)
+      [
+        "name",
+        "icon",
+        "description",
+        "hideFromSearch",
+        "required",
+        "hidden"
+      ].includes(prop.key)
   );
 }

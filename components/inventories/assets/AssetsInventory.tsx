@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -422,7 +422,7 @@ export function AssetsInventory() {
                     className="absolute top-full left-0 mt-1"
                   >
                     <Input
-                      placeholder="Search assets..."
+                      placeholder="Поиск хостов..."
                       value={globalFilter}
                       onChange={event => setGlobalFilter(event.target.value)}
                       onBlur={() => !globalFilter && setShowSearchInput(false)}
@@ -461,7 +461,7 @@ export function AssetsInventory() {
             {row.original.asset.editing && (
               <div className="bg-brand text-background absolute top-0 left-0 rounded-sm px-2 py-0 text-[0.6rem]">
                 <span className="font-semibold">
-                  {row.original.editingBy?.email || "Unknown"}
+                  {row.original.editingBy?.email || "Незвестный юзер"}
                 </span>
               </div>
             )}
@@ -488,15 +488,15 @@ export function AssetsInventory() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="size-7 p-0">
-                <span className="sr-only">Open menu</span>
+                <span className="sr-only">Открыть меню</span>
                 <MoreHorizontal />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>Действия</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                View details ({row.original.asset._id})
+                Показать детали ({row.original.asset._id})
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -687,7 +687,7 @@ export function AssetsInventory() {
               ) : (
                 <TableRow>
                   <TableCell className="h-24 text-center">
-                    No results.
+                    Ничего не нашлось. Попробуй изменить фильтры
                   </TableCell>
                 </TableRow>
               )}

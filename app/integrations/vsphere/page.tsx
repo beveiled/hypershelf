@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -120,7 +120,7 @@ export default function VSphereIntegrationPage() {
       return (
         <div className="mt-2 flex h-full w-full items-center justify-center gap-2 font-bold text-red-500">
           <ShieldAlert className="h-5 w-5" />
-          Authenticate in popup and reload the page
+          Авторизуйся с новой вкладке и перезагрузи страницу
         </div>
       );
     }
@@ -140,7 +140,7 @@ export default function VSphereIntegrationPage() {
             <Fingerprint className="size-10" />
           )}
         </motion.button>
-        Click the button to authenticate
+        Нажми для авторизации
       </div>
     );
   }
@@ -149,7 +149,7 @@ export default function VSphereIntegrationPage() {
     return (
       <div className="mt-2 flex h-full w-full items-center justify-center gap-2 font-bold text-red-500">
         <ShieldAlert className="h-5 w-5" />
-        You must give permission to access your assets
+        Нужно разрешить доступ для доступа к хостам
       </div>
     );
   }
@@ -159,14 +159,14 @@ export default function VSphereIntegrationPage() {
       {!isLoading && (!fieldMappings.hostname || !fieldMappings.ip) && (
         <div className="mt-2 flex h-full w-full items-center justify-center gap-2 font-bold text-red-500">
           <ShieldAlert className="h-5 w-5" />
-          Hypershelf schema is invalid
+          Что-то не так с полями в Hypershelf
         </div>
       )}
 
       {!isLoading && fieldMappings.hostname && fieldMappings.ip && !asset && (
         <div className="text-muted-foreground mt-2 flex h-full w-full items-center justify-center gap-2 font-bold">
           <CloudOff className="h-5 w-5" />
-          This asset is not in the inventory
+          Этого хоста нет в Hypershelf
         </div>
       )}
 

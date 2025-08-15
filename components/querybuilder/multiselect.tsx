@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -103,7 +103,7 @@ export function MultiSelect({
               +{value.length - 5}
             </div>
           )}
-          {value.length === 0 && "Choose..."}
+          {value.length === 0 && "Выбери..."}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>{toDropdownOptions(options)}</DropdownMenuContent>

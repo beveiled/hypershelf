@@ -21,7 +21,7 @@ class ListObjectTypeProp extends AbstractProp {
     const { value, lockField, isLockedBySomeoneElse } = this.props;
     return (
       <div className="flex flex-col gap-1">
-        <Label className="block text-xs font-medium">List Object Type</Label>
+        <Label className="block text-xs font-medium">Тип элементов</Label>
         <Select
           value={value?.toString() || ""}
           onValueChange={this.handleChange}

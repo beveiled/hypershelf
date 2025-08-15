@@ -1,5 +1,5 @@
 /*
-https://github.com/hikariatama/hypershelf
+https://github.com/beveiled/hypershelf
 Copyright (C) 2025  Daniil Gazizullin
 
 This program is free software: you can redistribute it and/or modify
@@ -115,7 +115,7 @@ export function FieldsInventory() {
       <div className="mx-auto w-full max-w-2xl pb-8">
         <div className="flex flex-col gap-4 pt-6 md:px-4">
           <h1 className="font-title relative mb-2 text-2xl font-extrabold">
-            Fields Management
+            Fields
             <div className="bg-brand absolute bottom-0 left-0 h-1 w-6"></div>
           </h1>
           {Array.from({ length: 5 }).map((_, i) => (
@@ -161,21 +161,20 @@ export function FieldsInventory() {
                   }}
                 >
                   <Lock />
-                  Lock Field
+                  Заблокировать поле
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle className="text-2xl">
-                    Lock Field
+                    Блокировка поля
                   </AlertDialogTitle>
                 </AlertDialogHeader>
                 <p className="text-sm">
-                  Locking this field will prevent it from deletion.
+                  Заблокированное поле нельзя будет удалить
                 </p>
                 <p className="text-destructive text-sm font-bold">
-                  This action cannot be undone. Are you sure you want to lock
-                  this field?
+                  Это действие нельзя отменить!
                 </p>
                 <AlertDialogFooter>
                   <Button
@@ -201,10 +200,10 @@ export function FieldsInventory() {
                     ) : (
                       <Lock />
                     )}
-                    Lock Field
+                    Заблокировать
                   </Button>
                   <AlertDialogCancel asChild>
-                    <Button variant="secondary">Cancel</Button>
+                    <Button variant="secondary">Отмена</Button>
                   </AlertDialogCancel>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -214,7 +213,7 @@ export function FieldsInventory() {
       <GlobalKeySequenceListener onMatch={() => setIsDebug(true)} />
       <div className="flex flex-col gap-4 pt-6 md:px-4">
         <h1 className="font-title relative mx-4 mb-2 text-xl font-extrabold md:text-2xl">
-          Fields Management
+          Fields
           <div className="bg-brand absolute bottom-0 left-0 h-1 w-5 md:w-6"></div>
         </h1>
 
@@ -326,7 +325,7 @@ export function FieldsInventory() {
             onClick={handleCreateClick}
           >
             <Plus />
-            Add Field
+            Создать новое поле
           </Button>
         </div>
       </div>

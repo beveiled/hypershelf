@@ -35,7 +35,7 @@ class SubnetProp extends AbstractProp {
     const { value, lockField, isLockedBySomeoneElse } = this.props;
     return (
       <div className="flex flex-col gap-1">
-        <Label className="block text-xs font-medium">Subnet</Label>
+        <Label className="block text-xs font-medium">Подсеть</Label>
         <SubnetInput
           value={value?.toString() || ""}
           onChange={this.handleChange}

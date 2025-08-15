@@ -14,7 +14,7 @@ class MarkdownPresetProp extends AbstractProp {
     const { value, lockField, isLockedBySomeoneElse } = this.props;
     return (
       <div className="flex flex-col gap-1">
-        <Label className="block text-xs font-medium">Markdown Preset</Label>
+        <Label className="block text-xs font-medium">Шаблон Markdown</Label>
         <MarkdownEditor
           value={value?.toString() || ""}
           onChange={this.handleChange}

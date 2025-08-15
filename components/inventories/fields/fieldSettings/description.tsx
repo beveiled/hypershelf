@@ -14,7 +14,7 @@ class DescriptionProp extends AbstractProp {
     const { value, lockField, isLockedBySomeoneElse } = this.props;
     return (
       <div className="flex flex-col gap-1">
-        <Label className="block text-xs font-medium">Description</Label>
+        <Label className="block text-xs font-medium">Описание</Label>
         <Input
           value={value?.toString()}
           onChange={this.handleChange}
