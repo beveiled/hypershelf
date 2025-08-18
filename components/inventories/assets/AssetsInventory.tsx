@@ -72,7 +72,6 @@ export function AssetsInventory() {
 
   useEffect(() => {
     if (unstableViewer) {
-      console.log(unstableViewer);
       setViewer(unstableViewer);
     }
   }, [unstableViewer, setViewer]);

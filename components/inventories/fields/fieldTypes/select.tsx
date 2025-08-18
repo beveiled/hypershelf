@@ -1,3 +1,20 @@
+/*
+https://github.com/beveiled/hypershelf
+Copyright (C) 2025  Daniil Gazizullin
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -37,6 +54,9 @@ function InlineSelect({
   const lockedBy = useHypershelf(
     state => state.lockedFields[assetId]?.[fieldId]
   );
+  const lazyError = useHypershelf(
+    state => state.assetErrors?.[assetId]?.[fieldId]
+  );
   const disabled = useMemo(() => !!lockedBy, [lockedBy]);
 
   const onValueChange = useCallback(
@@ -47,13 +67,7 @@ function InlineSelect({
           assetId,
           fieldId,
           value
-        })
-          .then(() => {
-            setUpdating(false);
-            const locker = useHypershelf.getState().locker;
-            locker.release(assetId, fieldId);
-          })
-          .finally(() => setUpdating(false));
+        }).finally(() => setUpdating(false));
       }, 0);
     },
     [assetId, fieldId, updateAsset]
@@ -88,7 +102,7 @@ function InlineSelect({
   return (
     <div className="relative">
       {lockedBy && (
-        <span className="text-brand absolute top-0 -mt-0.5 -translate-y-full text-[10px]">
+        <span className="text-brand absolute top-0 -mt-0.5 -translate-y-full text-[10px] whitespace-pre">
           {lockedBy}
         </span>
       )}
@@ -106,7 +120,10 @@ function InlineSelect({
             variant="ghost"
             className={cn(
               "h-auto w-full py-1",
-              lockedBy && "ring-brand ring-2"
+              lockedBy && "ring-brand ring-2",
+              lazyError &&
+                !open &&
+                "rounded-br-none rounded-bl-none !border-b-2 border-red-500"
             )}
             disabled={!!lockedBy || updating}
           >

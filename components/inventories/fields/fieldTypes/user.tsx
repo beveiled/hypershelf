@@ -1,3 +1,20 @@
+/*
+https://github.com/beveiled/hypershelf
+Copyright (C) 2025  Daniil Gazizullin
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -67,11 +84,7 @@ function InlineUser({
       assetId,
       fieldId,
       value: selectedUser
-    }).finally(() => {
-      setUpdating(false);
-      const locker = useHypershelf.getState().locker;
-      locker.release(assetId, fieldId);
-    });
+    }).finally(() => setUpdating(false));
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -88,7 +101,7 @@ function InlineUser({
   return (
     <div>
       {lockedBy && (
-        <span className="text-brand absolute -mt-0.5 -translate-y-full text-[10px]">
+        <span className="text-brand absolute -mt-0.5 -translate-y-full text-[10px] whitespace-pre">
           {lockedBy}
         </span>
       )}
@@ -99,6 +112,10 @@ function InlineUser({
             role="combobox"
             aria-expanded={!!assetId}
             disabled={!!lockedBy || updating}
+            className={cn(
+              lockedBy &&
+                "text-foreground/70 ring-brand cursor-not-allowed !opacity-100 ring-2"
+            )}
           >
             {updating && <Loader2 className="animate-spin" />}
             {value ? (

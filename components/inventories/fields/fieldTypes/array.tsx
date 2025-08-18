@@ -1,3 +1,20 @@
+/*
+https://github.com/beveiled/hypershelf
+Copyright (C) 2025  Daniil Gazizullin
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 import { TagInput } from "@/components/ui/tag-input";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -35,12 +52,16 @@ export function InlineArray({
   const lockedBy = useHypershelf(
     state => state.lockedFields?.[assetId]?.[fieldId]
   );
+  const lazyError = useHypershelf(
+    state => state.assetErrors?.[assetId]?.[fieldId]
+  );
   const uniqueId = useMemo(() => `${assetId}-${fieldId}`, [assetId, fieldId]);
 
   const [val, setVal] = useState(value);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
+  const [isFocus, setIsFocus] = useState(false);
   const measure = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -71,14 +92,8 @@ export function InlineArray({
         fieldId,
         value: val
       })
-        .then(() => {
-          setIsDirty(false);
-          const locker = useHypershelf.getState().locker;
-          locker.release(assetId, fieldId);
-        })
-        .finally(() => {
-          setUpdating(false);
-        });
+        .then(() => setIsDirty(false))
+        .finally(() => setUpdating(false));
     }
   };
 
@@ -172,23 +187,34 @@ export function InlineArray({
           setTags={onChange}
           placeholder={placeholder || "Добавить..."}
           className={cn(
-            "relative h-auto !border-none !bg-transparent py-1 text-sm",
+            "relative h-auto !border-0 !bg-transparent py-1 text-sm",
             error && "!ring-2 !ring-red-500",
             updating && "animate-pulse opacity-50",
             !val && "!placeholder-muted-foreground/50 italic",
             lockedBy &&
               "text-foreground/70 ring-brand cursor-not-allowed !opacity-100 ring-2",
-            isDirty && "z-50"
+            (isDirty || error || (lazyError && isFocus)) && "z-50",
+            lazyError &&
+              !isDirty &&
+              !isFocus &&
+              "rounded-br-none rounded-bl-none !border-b-2 border-red-500"
           )}
           draggable
           disabled={!!lockedBy || updating}
           validateTag={validateTag}
           uniqueId={uniqueId}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => {
+            if (val === (value || [])) {
+              setError(null);
+            }
+            setIsFocus(false);
+          }}
         />
       </div>
       <ActionsRow
-        showButton={showButton}
-        error={error}
+        showButton={showButton || !!error || (!!lazyError && isFocus)}
+        error={error || (isFocus ? lazyError : null)}
         updating={updating}
         handleSave={handleSave}
         handleCancel={handleCancel}

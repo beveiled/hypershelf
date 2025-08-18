@@ -49,7 +49,7 @@ const SortableTag: React.FC<{
   return (
     <Badge
       variant="secondary"
-      className="flex items-center gap-1 select-none"
+      className="bg-secondary/80 flex items-center gap-1 select-none"
       asChild
     >
       <motion.div
@@ -111,7 +111,9 @@ export function TagInput({
   uniqueId,
   draggable = true,
   validateTag = () => true,
-  disabled = false
+  disabled = false,
+  onFocus = () => {},
+  onBlur = () => {}
 }: {
   tags: string[];
   setTags: (tags: string[]) => void;
@@ -121,6 +123,8 @@ export function TagInput({
   draggable?: boolean;
   validateTag?: (tag: string) => boolean;
   disabled?: boolean;
+  onFocus?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
 }) {
   const [value, setValue] = useState("");
   const [isInvalid, setIsInvalid] = useState(false);
@@ -230,7 +234,10 @@ export function TagInput({
               value={value}
               onChange={handleInputChange}
               onKeyDown={onKeyDown}
-              onBlur={() => setIsEditing(false)}
+              onBlur={e => {
+                setIsEditing(false);
+                onBlur(e);
+              }}
               placeholder={placeholder}
               className={cn(
                 "flex-1 border-0 !bg-transparent p-0 text-xs shadow-none focus-visible:ring-0",
@@ -242,6 +249,7 @@ export function TagInput({
               minRows={1}
               maxRows={10}
               ref={inputRef}
+              onFocus={onFocus}
             />
           </motion.div>
         ) : (

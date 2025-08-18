@@ -1,3 +1,20 @@
+/*
+https://github.com/beveiled/hypershelf
+Copyright (C) 2025  Daniil Gazizullin
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 import { Id } from "@/convex/_generated/dataModel";
 import { ExtendedAssetType } from "@/convex/assets";
 import { AssetType, FieldType, UserType } from "@/convex/schema";
@@ -128,18 +145,29 @@ type Actions = {
   revalidateLocks: () => void;
 };
 
+const initialState: State = {
+  assetIds: [],
+  assets: {},
+  fieldIds: [],
+  fields: {},
+  views: {},
+  assetErrors: {},
+  lockedFields: {},
+  locker: {
+    acquire: async () => false,
+    release: async () => {}
+  },
+  markdownPreviewContent: null,
+  activeViewId: null,
+  sorting: {},
+  viewer: null,
+  users: []
+} as State;
+
 export const useHypershelf = create<State & Actions>()(
   devtools(
-    immer(set => ({
-      assetIds: [],
-      assets: {},
-      assetErrors: {},
-      lockedFields: {},
-      locker: {
-        acquire: async () => false,
-        release: async () => {}
-      },
-      markdownPreviewContent: null,
+    immer((set, get) => ({
+      ...initialState,
       setMarkdownPreviewContent: content =>
         set(state => {
           state.markdownPreviewContent = content;
@@ -151,14 +179,9 @@ export const useHypershelf = create<State & Actions>()(
               Object.values(state.fields),
               asset.asset.metadata ?? {}
             );
-            if (
-              errs &&
-              Object.keys(errs).length > 0 &&
-              !shallow(state.assetErrors[asset.asset._id], errs)
-            ) {
-              if (!state.assetErrors[asset.asset._id]) {
+            if (errs && Object.keys(errs).length > 0) {
+              if (!state.assetErrors[asset.asset._id])
                 state.assetErrors[asset.asset._id] = {};
-              }
               for (const [fieldId, error] of Object.entries(errs)) {
                 if (
                   state.assetErrors[asset.asset._id][
@@ -169,6 +192,15 @@ export const useHypershelf = create<State & Actions>()(
                 state.assetErrors[asset.asset._id][fieldId as Id<"fields">] =
                   error;
               }
+              for (const fieldId of Object.keys(
+                state.assetErrors[asset.asset._id]
+              )) {
+                if (!errs[fieldId]) {
+                  delete state.assetErrors[asset.asset._id][
+                    fieldId as Id<"fields">
+                  ];
+                }
+              }
             } else {
               delete state.assetErrors[asset.asset._id];
             }
@@ -176,6 +208,10 @@ export const useHypershelf = create<State & Actions>()(
         }),
       revalidateLocks: () =>
         set(state => {
+          if (!state.viewer) {
+            console.warn("Refusing to revalidate locks without viewer");
+            return;
+          }
           for (const [, asset] of Object.entries(state.assets)) {
             if (!asset.locks) continue;
             if (!state.lockedFields[asset.asset._id]) {
@@ -184,7 +220,8 @@ export const useHypershelf = create<State & Actions>()(
             for (const lock of asset.locks) {
               if (
                 state.lockedFields[asset.asset._id][lock.fieldId] !==
-                (lock.holder?.email || "Кто-то")
+                  (lock.holder?.email || "Кто-то") &&
+                lock.holder?.id !== state.viewer
               ) {
                 state.lockedFields[asset.asset._id][lock.fieldId] =
                   lock.holder?.email || "Кто-то";
@@ -219,6 +256,9 @@ export const useHypershelf = create<State & Actions>()(
             if (!state.assets[id]) {
               state.assets[id] = asset;
             } else {
+              if (!shallow(asset.locks, state.assets[id].locks)) {
+                state.assets[id].locks = asset.locks;
+              }
               if (asset.asset.metadata) {
                 const prevKeys = Object.keys(
                   state.assets[id].asset.metadata || {}
@@ -259,12 +299,9 @@ export const useHypershelf = create<State & Actions>()(
             }
           }
         });
-        set(state => state.revalidateErrors());
-        set(state => state.revalidateLocks());
+        get().revalidateErrors();
+        get().revalidateLocks();
       },
-
-      fieldIds: [],
-      fields: {},
       setFields: incoming => {
         set(state => {
           for (const [id, field] of Object.entries(incoming) as [
@@ -318,19 +355,15 @@ export const useHypershelf = create<State & Actions>()(
             }
           }
         });
-        set(state => state.revalidateErrors());
+        get().revalidateErrors();
       },
-
-      viewer: null,
       setViewer: viewer => {
         set(state => {
           if (state.viewer === viewer) return;
           state.viewer = viewer;
         });
-        set(state => state.revalidateLocks());
+        get().revalidateLocks();
       },
-
-      users: [],
       setUsers: users =>
         set(state => {
           for (const user of users) {
@@ -349,7 +382,6 @@ export const useHypershelf = create<State & Actions>()(
             }
           }
         }),
-      sorting: {},
       setSorting: sorting => {
         set(state => {
           for (const [fieldId, order] of Object.entries(sorting) as [
@@ -379,12 +411,10 @@ export const useHypershelf = create<State & Actions>()(
           }
         });
       },
-      activeViewId: null,
       setActiveViewId: activeView =>
         set(state => {
           state.activeViewId = activeView;
         }),
-      views: {},
       setViews: views =>
         set(state => {
           for (const view of views) {

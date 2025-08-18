@@ -43,11 +43,13 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ) => {
     const ref = React.useRef<HTMLTextAreaElement>(null);
     const sizerRef = React.useRef<HTMLDivElement>(null);
+    const sizerShadowRef = React.useRef<HTMLDivElement>(null);
 
     const measure = React.useCallback(() => {
       const el = ref.current;
       const sizer = sizerRef.current;
-      if (!el || !sizer) return;
+      const sizerShadow = sizerShadowRef.current;
+      if (!el || !sizer || !sizerShadow) return;
 
       const cs = window.getComputedStyle(el);
 
@@ -57,14 +59,22 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       sizer.style.letterSpacing = cs.letterSpacing;
       sizer.style.textTransform = cs.textTransform;
       sizer.style.padding = cs.padding;
-      sizer.style.width = "auto";
-      sizer.style.whiteSpace = "pre-wrap";
-      sizer.style.wordWrap = "break-word";
+
+      sizerShadow.style.font = cs.font;
+      sizerShadow.style.fontWeight = cs.fontWeight;
+      sizerShadow.style.fontStyle = cs.fontStyle;
+      sizerShadow.style.letterSpacing = cs.letterSpacing;
+      sizerShadow.style.textTransform = cs.textTransform;
+      sizerShadow.style.padding = cs.padding;
 
       const text =
         (value != null ? String(value) : el.value) || placeholder || "";
       sizer.textContent = text || " ";
+      sizerShadow.textContent = text || " ";
 
+      const shadowHeight = sizerShadow.getBoundingClientRect().height;
+      const shadowLineHeight = parseFloat(cs.lineHeight) || shadowHeight;
+      const shadowLines = Math.floor(shadowHeight / shadowLineHeight);
       const lineHeight =
         parseFloat(cs.lineHeight) || sizer.getBoundingClientRect().height;
       const borderY =
@@ -76,7 +86,18 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       const maxH = maxRows
         ? Math.floor(lineHeight * maxRows + borderY)
         : undefined;
-      const measuredH = sizer.scrollHeight + borderY;
+
+      let measuredH = 0;
+      let measuredW = 0;
+
+      if (shadowLines > 1) {
+        measuredH = sizerShadow.scrollHeight + borderY;
+        measuredW = Math.ceil(sizerShadow.scrollWidth + 1);
+      } else {
+        measuredH = sizer.scrollHeight + borderY;
+        measuredW = Math.ceil(sizer.scrollWidth + 1);
+      }
+
       const clampedH = Math.min(
         maxH ?? measuredH,
         Math.max(measuredH, minH ?? measuredH)
@@ -84,7 +105,6 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       el.style.height = `${clampedH}px`;
       el.style.overflowY = maxH && clampedH >= maxH ? "auto" : "hidden";
 
-      const measuredW = Math.ceil(sizer.scrollWidth + 1);
       const minW = autosizeFrom ?? measuredW;
       const maxW = autosizeTo ?? measuredW;
       const clampedW = Math.min(maxW, Math.max(measuredW, minW));
@@ -147,8 +167,21 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             height: "auto",
             whiteSpace: "pre-wrap",
             wordWrap: "break-word",
+            width: "auto",
             ...(autosizeFrom ? { minWidth: autosizeFrom } : {}),
             ...(autosizeTo ? { maxWidth: autosizeTo } : {})
+          }}
+        />
+        <div
+          ref={sizerShadowRef}
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            visibility: "hidden",
+            height: "auto",
+            whiteSpace: "pre-wrap",
+            wordWrap: "break-word",
+            width: autosizeTo
           }}
         />
       </>

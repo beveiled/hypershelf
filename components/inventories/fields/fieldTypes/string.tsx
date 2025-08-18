@@ -1,3 +1,20 @@
+/*
+https://github.com/beveiled/hypershelf
+Copyright (C) 2025  Daniil Gazizullin
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
@@ -28,14 +45,37 @@ export function ActionsRow({
   measure: Ref<HTMLElement>;
 }) {
   const [rect, setRect] = useState<DOMRect | null>(null);
-
+  const [parentRect, setParentRect] = useState<DOMRect | null>(null);
   useEffect(() => {
-    if (measure && "current" in measure && measure.current) {
-      setRect(measure.current.getBoundingClientRect());
-    }
-  }, [measure, showButton, error]);
+    const measureEl = measure && "current" in measure ? measure.current : null;
+    if (!measureEl) return;
 
-  if (!rect) return null;
+    let parentEl = measureEl.parentElement;
+    while (parentEl && getComputedStyle(parentEl).position !== "relative") {
+      parentEl = parentEl.parentElement;
+    }
+
+    if (!parentEl) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      setRect(measureEl.getBoundingClientRect());
+      if (parentEl) {
+        setParentRect(parentEl.getBoundingClientRect());
+      }
+    });
+
+    resizeObserver.observe(measureEl);
+    resizeObserver.observe(parentEl);
+
+    setRect(measureEl.getBoundingClientRect());
+    setParentRect(parentEl.getBoundingClientRect());
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [measure]);
+
+  if (!rect || !parentRect) return null;
 
   return (
     <AnimatePresence>
@@ -48,15 +88,19 @@ export function ActionsRow({
             opacity: { duration: 0.2 },
             scale: { type: "spring", bounce: 0.5, duration: 0.2 }
           }}
-          className="border-border-focus bg-background/80 fixed z-40 flex flex-col justify-end rounded-md border border-dashed p-1 pt-0 backdrop-blur-lg"
+          className="border-border-focus bg-background/80 absolute z-40 flex min-w-fit flex-col justify-end rounded-md border border-dashed p-1 pt-0 backdrop-blur-lg"
           style={{
-            top: rect.top - 8,
-            left: rect.left - 8,
+            top: rect.top - parentRect.top - 8,
+            left: rect.left - parentRect.left - 8,
             width: Math.max(rect.width + 16, 150),
             height: `calc(${rect.height + 16}px + ${(showButton ? 2.125 : 0) + (error ? 1 : 0)}rem)`
           }}
         >
-          {error && <div className="pl-1 text-xs text-red-500">{error}</div>}
+          {error && (
+            <div className="px-1 text-xs whitespace-pre text-red-500">
+              {error}
+            </div>
+          )}
           {error && showButton && <div className="h-1" />}
           {showButton && (
             <div className="flex w-full items-center gap-1">
@@ -117,6 +161,9 @@ export function InlineString({
   const lockedBy = useHypershelf(
     state => state.lockedFields?.[assetId]?.[fieldId]
   );
+  const lazyError = useHypershelf(
+    state => state.assetErrors?.[assetId]?.[fieldId]
+  );
 
   const [val, setVal] = useState(value?.toString() || "");
   const [error, setError] = useState<string | null>(null);
@@ -126,14 +173,14 @@ export function InlineString({
   const measure = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isDirty && !isFocused) {
+    if (!isDirty && !isFocused && !error) {
       const storeValue = value?.toString() || "";
       if (val !== storeValue) {
         setVal(storeValue);
         setError(null);
       }
     }
-  }, [value, isDirty, isFocused, val]);
+  }, [value, isDirty, isFocused, val, error]);
 
   const showButton = useMemo(() => isDirty, [isDirty]);
   const updateAsset = useMutation(api.assets.update);
@@ -154,14 +201,8 @@ export function InlineString({
         fieldId,
         value: val
       })
-        .then(() => {
-          setIsDirty(false);
-          const locker = useHypershelf.getState().locker;
-          locker.release(assetId, fieldId);
-        })
-        .finally(() => {
-          setUpdating(false);
-        });
+        .then(() => setIsDirty(false))
+        .finally(() => setUpdating(false));
     }
   };
 
@@ -206,7 +247,7 @@ export function InlineString({
     <div className="flex flex-col gap-2">
       <div ref={measure}>
         {lockedBy && (
-          <span className="text-brand absolute -mt-0.5 -translate-y-full text-[10px]">
+          <span className="text-brand absolute -mt-0.5 -translate-y-full text-[10px] whitespace-pre">
             {lockedBy}
           </span>
         )}
@@ -220,15 +261,19 @@ export function InlineString({
             }
             setIsFocused(false);
           }}
-          placeholder={placeholder || (isFocused ? "Пиши тут..." : "пусто")}
+          placeholder={isFocused ? placeholder || "Пиши тут..." : "пусто"}
           className={cn(
-            "relative h-auto !border-none !bg-transparent py-1 text-sm shadow-none",
+            "relative h-auto !border-0 !bg-transparent py-1 text-sm shadow-none",
             error && "!ring-2 !ring-red-500",
             updating && "animate-pulse opacity-50",
             !isFocused && !val && "!placeholder-muted-foreground/50 italic",
             lockedBy &&
               "text-foreground/70 ring-brand cursor-not-allowed !opacity-100 ring-2",
-            isDirty && "z-50"
+            (isDirty || error || (lazyError && isFocused)) && "z-50",
+            lazyError &&
+              !isDirty &&
+              !isFocused &&
+              "rounded-br-none rounded-bl-none !border-b-2 border-red-500"
           )}
           disabled={updating || !!lockedBy}
           autosizeFrom={60}
@@ -238,8 +283,8 @@ export function InlineString({
         />
       </div>
       <ActionsRow
-        showButton={showButton}
-        error={error}
+        showButton={showButton || !!error || (!!lazyError && isFocused)}
+        error={error || (isFocused ? lazyError : null)}
         updating={updating}
         handleSave={handleSave}
         handleCancel={handleCancel}

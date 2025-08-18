@@ -54,7 +54,7 @@ export const buildValuesSchema = (
           !(typeof v === "string" && v.trim() === "") &&
           v !== undefined &&
           v !== null,
-        "Field is required"
+        "Это поле обязательное"
       );
     } else {
       schema = schema.optional();
@@ -100,7 +100,7 @@ export const buildSchema = ({
         !(typeof v === "string" && v.trim() === "") &&
         v !== undefined &&
         v !== null,
-      "Field is required"
+      "Это поле обязательное"
     );
   } else {
     schema = schema.optional();
@@ -148,7 +148,7 @@ const buildPrimitiveSchema = (
   switch (kind) {
     case "number":
       schema = z.number({
-        invalid_type_error: "Value must be a number",
+        invalid_type_error: "Значение должно быть числом",
         coerce: true
       });
       break;
@@ -156,15 +156,17 @@ const buildPrimitiveSchema = (
       schema = z.boolean();
       break;
     case "email":
-      schema = z.string().email("Invalid email");
+      schema = z.string().email("Кривая почта");
       break;
     case "url":
-      schema = z.string().url("Invalid URL");
+      schema = z.string().url("Кривая ссылка");
       break;
     case "date":
       schema = z.preprocess(
         v => (typeof v === "string" || v instanceof Date ? new Date(v) : v),
-        z.date()
+        z.date({
+          invalid_type_error: "Значение должно быть датой"
+        })
       );
       break;
     case "ip":
@@ -172,12 +174,12 @@ const buildPrimitiveSchema = (
         .string()
         .regex(
           /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/([1-2]?[0-9]|3[0-2]))?$/,
-          "Invalid IP address"
+          "Кривой IP адрес"
         );
       if (extra.subnet) {
         schema = schema.refine(
           v => ipInSubnet(v, extra.subnet as string),
-          `IP address must be in subnet ${extra.subnet}`
+          `IP адрес должен быть в подсети ${extra.subnet}`
         );
       }
       break;
@@ -190,7 +192,7 @@ const buildPrimitiveSchema = (
     if (extra.regex)
       schema = schema.regex(
         new RegExp(extra.regex),
-        extra.regexError || "Value does not match the regex"
+        extra.regexError || "Значение не соответствует регулярке"
       );
     if (extra.minLength && schema instanceof z.ZodString)
       schema = schema.min(extra.minLength);
@@ -250,7 +252,7 @@ export const validateField = (
     schema.parse(value);
   } catch (err) {
     if (err instanceof ZodError) {
-      return err.issues[0]?.message || "Invalid value";
+      return err.issues[0]?.message || "Неверное значение";
     } else {
       throw err;
     }

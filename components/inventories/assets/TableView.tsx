@@ -1,3 +1,20 @@
+/*
+https://github.com/beveiled/hypershelf
+Copyright (C) 2025  Daniil Gazizullin
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -189,12 +206,14 @@ function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
 
 function DataRow({ assetId }: { assetId: Id<"assets"> }) {
   const fieldIds = useHypershelf(state => state.fieldIds);
-  const isError = useHypershelf(state => !!state.assetErrors?.[assetId]);
+  const isError = useHypershelf(
+    state => !!Object.keys(state.assetErrors[assetId] || {}).length
+  );
 
   return (
     <TableRow
       className={cn("relative", {
-        "bg-red-500/10 hover:!bg-red-500/20": isError
+        "bg-red-500/10 hover:!bg-red-500/15": isError
       })}
     >
       {fieldIds.map((fieldId, idx) => (
@@ -291,10 +310,10 @@ export function TableView() {
 
   return (
     <>
-      <div className="bg-background/70 border-border absolute z-10 h-8 w-[calc(100vw-1rem)] rounded-tl-md rounded-tr-md border backdrop-blur-lg" />
+      <div className="bg-background/70 border-border absolute z-[99] h-8 w-[calc(100vw-1rem)] rounded-tl-md rounded-tr-md border backdrop-blur-lg" />
       <div className="relative h-[calc(100dvh-3.5rem)] overflow-auto overscroll-none rounded-md border">
         <Table className="table-auto">
-          <TableHeader className="sticky top-0 z-50 !border-0">
+          <TableHeader className="sticky top-0 z-[100] !border-0">
             <TableRow className="relative h-8 !border-0 hover:bg-transparent">
               {fieldIds.map(fieldId => (
                 <TableHead key={fieldId} className="!h-auto !border-0">
