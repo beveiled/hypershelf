@@ -38,6 +38,9 @@ export default function ClientLayout({
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    fetch(process.env.NEXT_PUBLIC_CONVEX_URL!).catch(
+      e => "Failed to fetch" === e.message && setInsecure(true)
+    );
     const isLocal = ["localhost", "127.0.0.1"].includes(
       window.location.hostname
     );

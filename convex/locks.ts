@@ -19,9 +19,9 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 import { mutation } from "./_generated/server";
 
-export const acquire = mutation({
+export const acquireField = mutation({
   args: {
-    id: v.union(v.id("fields"), v.id("assets"))
+    id: v.id("fields")
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -40,7 +40,7 @@ export const acquire = mutation({
         _logs: ["Failed to acquire lock: not found"]
       };
     }
-    if (obj.editing && obj.editingBy !== userId) {
+    if (obj.editingBy && obj.editingBy !== userId) {
       return {
         success: false,
         error: "Object is already being edited by another user",
@@ -51,7 +51,6 @@ export const acquire = mutation({
     const now = Date.now();
     const expiresAt = now + 60 * 1000;
     await ctx.db.patch(args.id, {
-      editing: true,
       editingBy: userId,
       editingLockExpires: expiresAt
     });
@@ -59,9 +58,9 @@ export const acquire = mutation({
   }
 });
 
-export const release = mutation({
+export const releaseField = mutation({
   args: {
-    id: v.union(v.id("fields"), v.id("assets"))
+    id: v.id("fields")
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -80,7 +79,7 @@ export const release = mutation({
         _logs: ["Failed to release lock: not found"]
       };
     }
-    if (!obj.editing || obj.editingBy !== userId) {
+    if (!obj.editingBy || obj.editingBy !== userId) {
       return {
         success: false,
         error: "Object is not being edited by you",
@@ -88,7 +87,6 @@ export const release = mutation({
       };
     }
     await ctx.db.patch(args.id, {
-      editing: false,
       editingBy: undefined,
       editingLockExpires: undefined
     });
@@ -96,9 +94,9 @@ export const release = mutation({
   }
 });
 
-export const renew = mutation({
+export const renewField = mutation({
   args: {
-    id: v.union(v.id("fields"), v.id("assets"))
+    id: v.id("fields")
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -117,7 +115,7 @@ export const renew = mutation({
         _logs: ["Failed to renew lock: not found"]
       };
     }
-    if (!obj.editing || obj.editingBy !== userId) {
+    if (!obj.editingBy || obj.editingBy !== userId) {
       return {
         success: false,
         error: "Event is not being edited by you",
@@ -130,5 +128,131 @@ export const renew = mutation({
       editingLockExpires: expiresAt
     });
     return { success: true, _logs: ["Lock renewed"] };
+  }
+});
+
+export const acquireAsset = mutation({
+  args: {
+    assetId: v.id("assets"),
+    fieldId: v.id("fields")
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return {
+        success: false,
+        error: "Not authenticated",
+        _logs: ["Failed to acquire asset lock: not authenticated"]
+      };
+    }
+
+    const existingLock = await ctx.db
+      .query("assetLocks")
+      .withIndex("by_assetId_fieldId", q =>
+        q.eq("assetId", args.assetId).eq("fieldId", args.fieldId)
+      )
+      .unique();
+
+    if (
+      existingLock &&
+      existingLock.userId !== userId &&
+      existingLock.expires > Date.now()
+    ) {
+      return {
+        success: false,
+        error: "This property is being edited by someone else",
+        _logs: [
+          "Failed to acquire asset lock: this property is being edited by someone else"
+        ]
+      };
+    }
+
+    if (existingLock && existingLock.userId === userId) {
+      const expiresAt = Date.now() + 60 * 1000;
+      await ctx.db.patch(existingLock._id, { expires: expiresAt });
+      return { success: true, _logs: ["Asset lock renewed"] };
+    }
+
+    const expiresAt = Date.now() + 60 * 1000;
+    await ctx.db.insert("assetLocks", {
+      assetId: args.assetId,
+      fieldId: args.fieldId,
+      userId,
+      expires: expiresAt
+    });
+
+    return { success: true, _logs: ["Asset lock acquired"] };
+  }
+});
+
+export const releaseAsset = mutation({
+  args: {
+    assetId: v.id("assets"),
+    fieldId: v.id("fields")
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return {
+        success: false,
+        error: "Not authenticated",
+        _logs: ["Failed to release asset lock: not authenticated"]
+      };
+    }
+
+    const existingLock = await ctx.db
+      .query("assetLocks")
+      .withIndex("by_assetId_fieldId", q =>
+        q.eq("assetId", args.assetId).eq("fieldId", args.fieldId)
+      )
+      .unique();
+
+    if (!existingLock || existingLock.userId !== userId) {
+      return {
+        success: false,
+        error: "You do not hold the lock on this asset",
+        _logs: ["Failed to release asset lock: you do not hold the lock"]
+      };
+    }
+
+    await ctx.db.delete(existingLock._id);
+    return { success: true, _logs: ["Asset lock released"] };
+  }
+});
+
+export const renewAsset = mutation({
+  args: {
+    assetId: v.id("assets"),
+    fieldId: v.id("fields")
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return {
+        success: false,
+        error: "Not authenticated",
+        _logs: ["Failed to renew asset lock: not authenticated"]
+      };
+    }
+
+    const existingLock = await ctx.db
+      .query("assetLocks")
+      .withIndex("by_assetId_fieldId", q =>
+        q.eq("assetId", args.assetId).eq("fieldId", args.fieldId)
+      )
+      .unique();
+
+    if (!existingLock || existingLock.userId !== userId) {
+      return {
+        success: false,
+        error: "You do not hold the lock on this asset",
+        _logs: ["Failed to renew asset lock: you do not hold the lock"]
+      };
+    }
+
+    const expiresAt = Date.now() + 60 * 1000;
+    await ctx.db.patch(existingLock._id, { expires: expiresAt });
+
+    return { success: true, _logs: ["Asset lock renewed"] };
   }
 });

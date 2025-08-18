@@ -29,10 +29,41 @@ import {
 import { SiGithub, SiTelegram } from "@icons-pack/react-simple-icons";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function Footer() {
   const [showInstallGuide, setShowInstallGuide] = useState(false);
+  const [isShift, setIsShift] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Shift") {
+        setIsShift(true);
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === "Shift") {
+        setIsShift(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => setIsInView(window.scrollY >= 10);
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleDownload = () => {
     const link = document.createElement("a");
@@ -43,6 +74,8 @@ export function Footer() {
     document.body.removeChild(link);
     setShowInstallGuide(true);
   };
+
+  if (!isInView && !isShift) return null;
 
   return (
     <footer className="w-full p-2">

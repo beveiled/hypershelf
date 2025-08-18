@@ -20,14 +20,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { api } from "@/convex/_generated/api";
 import { cn } from "@/lib/utils";
 import { useConvexAuth, useQuery } from "convex/react";
+import { motion } from "framer-motion";
+import { GitBranch, LogIn, LogOut, Settings2, Table2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { convex } from "./ConvexClientProvider";
 import { useHeaderContent } from "./util/HeaderContext";
-import { motion } from "framer-motion";
 import { useLoading } from "./util/LoadingContext";
-import { Cog, GitBranch, LogIn, LogOut, Settings2, Table2 } from "lucide-react";
 
 function NavLink({
   href,
@@ -179,10 +179,6 @@ export default function Header() {
                 <NavLink href="/schemas">
                   <span className="hidden lg:inline">Схемы</span>
                   <GitBranch className="inline size-4 lg:hidden" />
-                </NavLink>
-                <NavLink href="/views">
-                  <span className="hidden lg:inline">Виды</span>
-                  <Cog className="inline size-4 lg:hidden" />
                 </NavLink>
               </>
             )}

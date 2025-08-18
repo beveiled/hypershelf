@@ -17,6 +17,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 "use client";
 
+import {
+  EditableKey,
+  ExtraRootKeys,
+  fieldTypes,
+  getPropsForType,
+  NonSystemKeys
+} from "@/components/inventories/fields/fieldTypes";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
@@ -61,14 +68,7 @@ import React, {
   useRef,
   useState
 } from "react";
-import {
-  EditableKey,
-  ExtraRootKeys,
-  FIELD_TYPES,
-  getExtrasForType,
-  NonSystemKeys
-} from "./consts";
-import { FieldPropType, getFieldProps } from "./fieldSettings";
+import { fieldProps, FieldPropType, getFieldProps } from "./fieldProps";
 
 type FieldFormProps = {
   fieldId?: Id<"fields"> | null;
@@ -232,8 +232,8 @@ const TypeField = memo(
             <SelectValue placeholder="Select type" />
           </SelectTrigger>
           <SelectContent>
-            {FIELD_TYPES.map(t => (
-              <SelectItem key={t.value} value={t.value}>
+            {fieldTypes.map(t => (
+              <SelectItem key={t.key} value={t.key}>
                 <DynamicIcon name={t.icon as IconName} />
                 {t.label}
               </SelectItem>
@@ -272,51 +272,6 @@ const TypeField = memo(
     a.pendingType === b.pendingType &&
     a.lockField === b.lockField &&
     a.isLockedBySomeoneElse === b.isLockedBySomeoneElse
-);
-
-const ListExtraInput = memo(
-  function ListExtraInput({
-    label,
-    type,
-    value,
-    onChange,
-    onFocus,
-    disabled
-  }: {
-    label: string;
-    type: "text" | "number";
-    value: ValueType;
-    onChange: (v: ValueType) => void;
-    onFocus?: () => void;
-    disabled: boolean;
-  }) {
-    return (
-      <div className="flex flex-col gap-1">
-        <Label className="block text-xs font-medium">{label}</Label>
-        <Input
-          type={type}
-          value={value?.toString() || ""}
-          onChange={e =>
-            onChange(
-              type === "number"
-                ? e.target.value === ""
-                  ? undefined
-                  : Number(e.target.value)
-                : e.target.value
-            )
-          }
-          onFocus={onFocus}
-          disabled={disabled}
-        />
-      </div>
-    );
-  },
-  (a, b) =>
-    a.type === b.type &&
-    a.value === b.value &&
-    a.onFocus === b.onFocus &&
-    a.disabled === b.disabled &&
-    a.label === b.label
 );
 
 export function FieldForm({
@@ -427,7 +382,7 @@ export function FieldForm({
     [values, ingestLogs, onCancel, updateField, createField]
   );
 
-  const typeExtras = getExtrasForType(values.type);
+  const typeExtras = getPropsForType(values.type);
 
   const onTypePending = useCallback(
     (next: string | null) => {
@@ -435,7 +390,7 @@ export function FieldForm({
         setPendingType(null);
         return;
       }
-      const extras = getExtrasForType(values.type);
+      const extras = getPropsForType(values.type);
       const hasExtras = extras.some(k => {
         const v = values.extra?.[k as keyof typeof values.extra];
         return Array.isArray(v) ? v.length > 0 : v != null && v !== "";
@@ -467,7 +422,7 @@ export function FieldForm({
 
   const listObjectExtraKeys =
     typeExtras.includes("listObjectExtra") && values.extra?.listObjectType
-      ? getExtrasForType(values.extra.listObjectType).filter(
+      ? getPropsForType(values.extra.listObjectType).filter(
           k => !["icon", "description", "options", "placeholder"].includes(k)
         )
       : [];
@@ -489,13 +444,15 @@ export function FieldForm({
   });
 
   baseFieldProps.forEach(f => {
-    const Comp = getWrappedComponent(f.key, f.component);
+    const Comp = getWrappedComponent(f.prop, f.component);
     fields.push({
-      id: f.key,
+      id: f.prop,
       full: "full" in f ? f.full : false,
       render: () => (
         <Comp
-          value={extract(values, f.key)}
+          value={extract(values, f.prop)}
+          prop={f.prop}
+          label={f.label}
           lockField={stableLock}
           isLockedBySomeoneElse={isLockedBySomeoneElse}
           change={onChange}
@@ -505,26 +462,9 @@ export function FieldForm({
   });
 
   listObjectExtraKeys.forEach(rawKey => {
-    const labelMap: Record<string, string> = {
-      placeholder: "Placeholder",
-      regex: "Regex",
-      regexError: "Regex Error",
-      minLength: "Min Length",
-      maxLength: "Max Length",
-      minItems: "Min Items",
-      maxItems: "Max Items",
-      minValue: "Min Value",
-      maxValue: "Max Value"
-    };
-    const label = `List Item ${labelMap[rawKey] || rawKey.replace(/([A-Z])/g, " $1").trim()}`;
-    const isNumber = [
-      "minValue",
-      "maxValue",
-      "minLength",
-      "maxLength",
-      "minItems",
-      "maxItems"
-    ].includes(rawKey);
+    const prop = fieldProps.find(p => p.prop === rawKey);
+    if (!prop) return;
+    const label = `Элементы: ${prop.label}`;
     const value =
       values.extra?.listObjectExtra?.[
         rawKey as keyof NonNullable<
@@ -534,15 +474,13 @@ export function FieldForm({
     fields.push({
       id: `listObjectExtra-${rawKey}`,
       render: () => (
-        <ListExtraInput
+        <prop.component
+          prop={`listObjectExtra-${rawKey}` as EditableKey}
           label={label}
-          type={isNumber ? "number" : "text"}
           value={value}
-          onChange={v =>
-            onChange(`listObjectExtra.${rawKey}` as EditableKey, v)
-          }
-          onFocus={stableLock}
-          disabled={isLockedBySomeoneElse}
+          lockField={stableLock}
+          isLockedBySomeoneElse={isLockedBySomeoneElse}
+          change={onChange}
         />
       )
     });
@@ -608,7 +546,7 @@ export function FieldForm({
         collapsed: { opacity: 0, height: 0, marginTop: 0 }
       }}
       transition={{
-        opacity: { duration: total * 0.03 + 0.15, type: "spring", bounce: 0.2 },
+        opacity: { duration: total * 0.03 + 0.15, type: "spring", bounce: 0.5 },
         height: { duration: 0.1, ease: "easeInOut" },
         marginTop: { duration: total * 0.03, ease: "easeInOut" }
       }}

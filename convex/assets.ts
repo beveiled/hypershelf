@@ -20,7 +20,13 @@ import { v } from "convex/values";
 import { Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 import { assetSchema, FieldType, ValueType } from "./schema";
-import { validateFields } from "./utils";
+import { validateField, validateFields } from "./utils";
+import { FunctionReturnType } from "convex/server";
+import { api } from "./_generated/api";
+
+export type ExtendedAssetType = FunctionReturnType<
+  typeof api.assets.get
+>["assets"][number];
 
 export const get = query({
   handler: async ctx => {
@@ -30,16 +36,36 @@ export const get = query({
     }
 
     const assets = await ctx.db.query("assets").order("asc").collect();
-    const editors = await Promise.all(
-      assets.map(f =>
-        f.editingBy ? ctx.db.get(f.editingBy) : Promise.resolve(null)
+    const locks = await Promise.all(
+      assets.map(asset =>
+        ctx.db
+          .query("assetLocks")
+          .filter(q => q.eq(q.field("assetId"), asset._id))
+          .collect()
       )
+    );
+    const editors = await Promise.all(
+      assets.map(async (asset, i) => {
+        const assetLocks = locks[i];
+        return await Promise.all(
+          assetLocks.map(async lock => {
+            const user = await ctx.db.get(lock.userId);
+            return {
+              fieldId: lock.fieldId,
+              holder: user
+                ? { id: user._id, email: user.email }
+                : { id: lock.userId, email: "Unknown User" },
+              expires: lock.expires
+            };
+          })
+        );
+      })
     );
 
     return {
       assets: assets.map((asset, i) => ({
         asset,
-        editingBy: editors[i]
+        locks: editors[i]
       }))
     };
   }
@@ -93,10 +119,7 @@ export const create = mutation({
     const asset = {
       metadata,
       createdAt: Date.now(),
-      updatedAt: Date.now(),
-      editing: false,
-      editingBy: undefined,
-      editingLockExpires: undefined
+      updatedAt: Date.now()
     };
 
     const assetId = await ctx.db.insert("assets", asset);
@@ -111,7 +134,8 @@ export const create = mutation({
 export const update = mutation({
   args: {
     assetId: v.id("assets"),
-    values: v.record(v.id("fields"), v.any())
+    fieldId: v.id("fields"),
+    value: v.any()
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -130,44 +154,37 @@ export const update = mutation({
         _logs: ["Failed to update asset: asset not found"]
       };
     }
-    if (asset.editing && asset.editingBy !== userId) {
+    const existingLock = await ctx.db
+      .query("assetLocks")
+      .withIndex("by_assetId_fieldId", q =>
+        q.eq("assetId", args.assetId).eq("fieldId", args.fieldId)
+      )
+      .unique();
+    if (
+      existingLock &&
+      existingLock.userId !== userId &&
+      existingLock.expires > Date.now()
+    ) {
       return {
         success: false,
-        errors: { _: "Asset is not being edited by you" },
-        _logs: [`Failed to update asset: not being edited by you`]
+        errors: { _: "This property is being edited by someone else" },
+        _logs: [
+          `Failed to update asset: this property is being edited by someone else`
+        ]
       };
     }
     const metadata = asset.metadata!;
-    let fields: FieldType[];
-    try {
-      fields = await Promise.all(
-        Object.entries(args.values).map(async ([fieldId]) => {
-          const field = await ctx.db.get(fieldId as Id<"fields">);
-          if (!field) {
-            throw new Error(`Field with ID ${fieldId} not found`);
-          }
-          return field;
-        })
-      );
-    } catch {
-      return {
-        success: false,
-        errors: { _: "Unknown error" },
-        _logs: ["Failed to fetch fields"]
-      };
+    const field = await ctx.db.get(args.fieldId);
+    if (!field) {
+      throw new Error(`Field with ID ${args.fieldId} not found`);
     }
 
-    const errors = validateFields(fields, args.values);
-    if (errors !== null) {
-      return { success: false, errors };
+    const error = validateField(field, args.value);
+    if (error !== null) {
+      return { success: false, error };
     }
 
-    for (const [fieldId, value] of Object.entries(args.values)) {
-      const field = fields.find(f => f._id === fieldId);
-      if (field) {
-        metadata[field._id] = value;
-      }
-    }
+    metadata[args.fieldId] = args.value;
 
     await ctx.db.patch(args.assetId, {
       metadata,
@@ -176,10 +193,7 @@ export const update = mutation({
 
     return {
       success: true,
-      _logs: [
-        "Asset updated successfully",
-        ...(!asset.editing ? ["Warning: lock missing"] : [])
-      ]
+      _logs: ["Asset updated successfully"]
     };
   }
 });

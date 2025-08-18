@@ -66,6 +66,48 @@ export const buildValuesSchema = (
   return z.object(shape);
 };
 
+export const buildSchema = ({
+  type,
+  extra,
+  required
+}: {
+  type: FieldType["type"];
+  extra?: FieldType["extra"];
+  required?: boolean;
+}): ZodTypeAny => {
+  let schema: ZodTypeAny;
+  extra ??= {};
+
+  if (type === "array") {
+    const itemSchema = buildPrimitiveSchema(
+      extra.listObjectType ?? "string",
+      extra.listObjectExtra || {}
+    );
+
+    schema = z.array(itemSchema);
+
+    if (extra.minItems !== undefined && schema instanceof z.ZodArray)
+      schema = schema.min(extra.minItems);
+    if (extra.maxItems !== undefined && schema instanceof z.ZodArray)
+      schema = schema.max(extra.maxItems);
+  } else {
+    schema = buildPrimitiveSchema(type, extra);
+  }
+
+  if (required) {
+    schema = schema.refine(
+      v =>
+        !(typeof v === "string" && v.trim() === "") &&
+        v !== undefined &&
+        v !== null,
+      "Field is required"
+    );
+  } else {
+    schema = schema.optional();
+  }
+  return schema;
+};
+
 const ipInSubnet = (ip: string, subnet: string): boolean => {
   const ipToInt = (ip: string): number => {
     const parts = ip.split(".").map(Number);
@@ -192,5 +234,26 @@ export const validateFields = (
     return errors;
   }
 
+  return null;
+};
+
+export const validateField = (
+  field: {
+    type: FieldType["type"];
+    extra?: FieldType["extra"];
+    required?: boolean;
+  },
+  value: ValueType
+): string | null => {
+  const schema = buildSchema(field);
+  try {
+    schema.parse(value);
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return err.issues[0]?.message || "Invalid value";
+    } else {
+      throw err;
+    }
+  }
   return null;
 };

@@ -22,7 +22,7 @@ export function UpdateNotifier() {
       className="bg-background/50 shadow-brand pointer-events-none fixed right-0 bottom-0 z-50 w-full p-4 text-white shadow-[0_0_0.5rem_var(--color-brand)] backdrop-blur-lg md:right-4 md:bottom-4 md:w-auto md:rounded-xl"
       initial={{ opacity: 0, y: -10, scale: 0.7 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      transition={{ type: "spring", bounce: 0.5 }}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm font-bold">

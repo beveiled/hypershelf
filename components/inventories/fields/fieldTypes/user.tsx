@@ -1,0 +1,155 @@
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { cn } from "@/lib/utils";
+import { useHypershelf } from "@/stores/assets";
+import { useMutation } from "convex/react";
+import { Check, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { FieldPropConfig } from "./_abstractType";
+
+function InlineUser({
+  assetId,
+  fieldId,
+  readonly = false
+}: {
+  assetId: Id<"assets">;
+  fieldId: Id<"fields">;
+  readonly?: boolean;
+}) {
+  const { placeholder } =
+    useHypershelf(state => state.fields?.[fieldId]?.extra || {}) || {};
+  const value = useHypershelf(
+    state => state.assets?.[assetId]?.asset?.metadata?.[fieldId]
+  );
+  const lockedBy = useHypershelf(
+    state => state.lockedFields?.[assetId]?.[fieldId]
+  );
+  const users = useHypershelf(state => state.users);
+
+  const [updating, setUpdating] = useState(false);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+
+  const updateAsset = useMutation(api.assets.update);
+
+  if (readonly) {
+    return (
+      <div className="select-none">
+        {value
+          ? users.find(user => user.id === value)?.email || placeholder
+          : placeholder || "пусто"}
+      </div>
+    );
+  }
+
+  const handleUserSelect = (selectedUser: string | undefined) => {
+    setPopoverOpen(false);
+    if (!selectedUser) return;
+
+    const isSame = selectedUser === value;
+    if (isSame) return;
+
+    setUpdating(true);
+    updateAsset({
+      assetId,
+      fieldId,
+      value: selectedUser
+    }).finally(() => {
+      setUpdating(false);
+      const locker = useHypershelf.getState().locker;
+      locker.release(assetId, fieldId);
+    });
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    if (updating) return;
+    setPopoverOpen(open);
+    const locker = useHypershelf.getState().locker;
+    if (open) {
+      locker.acquire(assetId, fieldId);
+    } else {
+      locker.release(assetId, fieldId);
+    }
+  };
+
+  return (
+    <div>
+      {lockedBy && (
+        <span className="text-brand absolute -mt-0.5 -translate-y-full text-[10px]">
+          {lockedBy}
+        </span>
+      )}
+      <Popover open={popoverOpen} onOpenChange={handleOpenChange}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="ghost"
+            role="combobox"
+            aria-expanded={!!assetId}
+            disabled={!!lockedBy || updating}
+          >
+            {updating && <Loader2 className="animate-spin" />}
+            {value ? (
+              users.find(user => user.id === value)?.email
+            ) : (
+              <span className="text-muted-foreground/50 italic">пусто</span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="p-0">
+          <Command>
+            <CommandInput
+              placeholder="Поиск..."
+              className="h-9"
+              disabled={!!lockedBy || updating}
+            />
+            <CommandList>
+              <CommandEmpty>Не нашли никого</CommandEmpty>
+              <CommandGroup>
+                {users.map(user => (
+                  <CommandItem
+                    key={user.id}
+                    value={user.id}
+                    keywords={[user.email!]}
+                    onSelect={handleUserSelect}
+                    disabled={!!lockedBy || updating}
+                  >
+                    {user.email}
+                    <Check
+                      className={cn(
+                        "ml-auto",
+                        value === user.id ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
+const config: FieldPropConfig = {
+  key: "user",
+  label: "Юзер",
+  icon: "circle-user",
+  fieldProps: ["placeholder"],
+  component: InlineUser
+};
+
+export default config;

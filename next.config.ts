@@ -18,7 +18,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  devIndicators: false
+  devIndicators: false,
+  experimental: {
+    reactCompiler: true
+  }
 };
 
 export default nextConfig;

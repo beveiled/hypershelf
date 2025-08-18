@@ -17,7 +17,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
   DndContext,
@@ -33,57 +32,53 @@ import {
   rectSortingStrategy,
   useSortable
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import React, { KeyboardEvent, useState } from "react";
-
-interface TagInputProps {
-  tags: string[];
-  setTags: (tags: string[]) => void;
-  placeholder?: string;
-  className?: string;
-  draggable?: boolean;
-  validateTag?: (tag: string) => boolean;
-  disabled?: boolean;
-}
+import { Textarea } from "./textarea";
 
 const SortableTag: React.FC<{
   tag: string;
   onRemove: () => void;
   disabled: boolean;
 }> = ({ tag, onRemove, disabled = false }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: tag });
-
-  const style: React.CSSProperties = {
-    transform: CSS.Transform.toString(transform),
-    transition
-  };
+  const { attributes, listeners, setNodeRef, transform } = useSortable({
+    id: tag
+  });
 
   return (
     <Badge
-      ref={setNodeRef}
-      style={style}
       variant="secondary"
-      {...attributes}
       className="flex items-center gap-1 select-none"
+      asChild
     >
-      <span {...listeners} className="cursor-move">
-        {tag}
-      </span>
-
-      <Button
-        type="button"
-        size="icon"
-        variant="secondary"
-        onPointerDown={e => e.stopPropagation()}
-        onClick={onRemove}
-        className="h-4 w-4 p-0"
-        disabled={disabled}
+      <motion.div
+        initial={{ scale: 1 }}
+        animate={{ x: transform?.x, y: transform?.y }}
+        whileTap={{ scale: 0.9 }}
+        transition={{
+          duration: 0,
+          scale: { type: "spring", bounce: 0.15, duration: 0.15 }
+        }}
+        ref={setNodeRef}
+        {...attributes}
       >
-        <X size={12} />
-      </Button>
+        <span {...listeners} className="cursor-grab active:cursor-grabbing">
+          {tag}
+        </span>
+
+        <Button
+          type="button"
+          size="icon"
+          variant="secondary"
+          onPointerDown={e => e.stopPropagation()}
+          onClick={onRemove}
+          className="h-4 w-4 p-0"
+          disabled={disabled}
+        >
+          <X className="size-3" />
+        </Button>
+      </motion.div>
     </Badge>
   );
 };
@@ -103,7 +98,7 @@ const StaticTag: React.FC<{
       className="h-4 w-4 p-0"
       disabled={disabled}
     >
-      <X size={12} />
+      <X className="size-3" />
     </Button>
   </Badge>
 );
@@ -111,14 +106,27 @@ const StaticTag: React.FC<{
 export function TagInput({
   tags,
   setTags,
-  placeholder = "Add items…",
+  placeholder = "Add items...",
   className,
+  uniqueId,
   draggable = true,
   validateTag = () => true,
   disabled = false
-}: TagInputProps) {
+}: {
+  tags: string[];
+  setTags: (tags: string[]) => void;
+  uniqueId: string;
+  placeholder?: string;
+  className?: string;
+  draggable?: boolean;
+  validateTag?: (tag: string) => boolean;
+  disabled?: boolean;
+}) {
   const [value, setValue] = useState("");
   const [isInvalid, setIsInvalid] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const inputRef = React.useRef<HTMLTextAreaElement>(null);
+
   const sensors = useSensors(useSensor(PointerSensor));
 
   const addTag = (raw: string) => {
@@ -135,9 +143,10 @@ export function TagInput({
     return false;
   };
 
-  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if ((e.key === "Enter" || e.key === ",") && value.trim()) {
+  const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
+      if (!value.trim()) return;
       const success = addTag(value);
       if (success) {
         setValue("");
@@ -148,7 +157,7 @@ export function TagInput({
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
     if (isInvalid) {
       setIsInvalid(false);
@@ -167,7 +176,7 @@ export function TagInput({
   return (
     <div
       className={cn(
-        "focus-within:ring-ring flex flex-wrap items-center gap-1 rounded-md border p-2 focus-within:ring-2",
+        "flex flex-wrap items-center gap-1 rounded-md border p-2",
         className
       )}
     >
@@ -203,21 +212,63 @@ export function TagInput({
         ))
       )}
       <motion.div
-        className="min-w-[6rem] flex-1"
+        className="flex-1"
         animate={isInvalid ? { x: [0, -5, 5, -5, 5, 0] } : {}}
         transition={{ duration: 0.4 }}
       >
-        <Input
-          value={value}
-          onChange={handleInputChange}
-          onKeyDown={onKeyDown}
-          placeholder={placeholder}
-          className={cn(
-            "min-w-[6rem] flex-1 border-0 !bg-transparent p-0 text-xs shadow-none focus-visible:ring-0",
-            isInvalid && "text-red-500"
-          )}
-          disabled={disabled}
-        />
+        {isEditing ? (
+          // TODO: handle different inner types
+          <motion.div
+            layout
+            layoutId={uniqueId}
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0.8 }}
+            transition={{ type: "spring", bounce: 0.15, duration: 0.15 }}
+          >
+            <Textarea
+              value={value}
+              onChange={handleInputChange}
+              onKeyDown={onKeyDown}
+              onBlur={() => setIsEditing(false)}
+              placeholder={placeholder}
+              className={cn(
+                "flex-1 border-0 !bg-transparent p-0 text-xs shadow-none focus-visible:ring-0",
+                isInvalid && "text-red-500"
+              )}
+              disabled={disabled}
+              autosizeFrom={30}
+              autosizeTo={150}
+              minRows={1}
+              maxRows={10}
+              ref={inputRef}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            layout
+            layoutId={uniqueId}
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0.8 }}
+            transition={{ type: "spring", bounce: 0.15, duration: 0.15 }}
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-fit w-fit !p-0.5 text-xs"
+              onClick={() => {
+                setIsEditing(true);
+                setTimeout(() => {
+                  inputRef.current?.focus();
+                }, 0);
+              }}
+              disabled={disabled}
+            >
+              <Plus />
+            </Button>
+          </motion.div>
+        )}
       </motion.div>
     </div>
   );

@@ -15,32 +15,28 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-import { Id } from "./_generated/dataModel";
 import { internalMutation } from "./_generated/server";
 
 export const releaseExpiredLocks = internalMutation({
   handler: async ctx => {
-    const objects: { _id: Id<"fields"> | Id<"assets"> }[] = (
-      await Promise.all([
-        ctx.db
-          .query("fields")
-          .filter(q => q.lt(q.field("editingLockExpires"), Date.now()))
-          .collect(),
-        ctx.db
-          .query("assets")
-          .filter(q => q.lt(q.field("editingLockExpires"), Date.now()))
-          .collect()
-      ])
-    ).flat();
+    const objects = await ctx.db
+      .query("fields")
+      .filter(q => q.lt(q.field("editingLockExpires"), Date.now()))
+      .collect();
 
-    await Promise.all(
-      objects.map(f =>
-        ctx.db.patch(f._id, {
-          editing: false,
-          editingBy: undefined,
-          editingLockExpires: undefined
-        })
-      )
-    );
+    for (const object of objects) {
+      await ctx.db.patch(object._id, {
+        editingBy: undefined,
+        editingLockExpires: undefined
+      });
+    }
+
+    const locks = await ctx.db
+      .query("assetLocks")
+      .filter(q => q.lt(q.field("expires"), Date.now()))
+      .collect();
+    for (const lock of locks) {
+      await ctx.db.delete(lock._id);
+    }
   }
 });

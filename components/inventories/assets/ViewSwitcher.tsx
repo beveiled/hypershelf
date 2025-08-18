@@ -4,38 +4,34 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
-import { FunctionReturnType } from "convex/server";
+import { useHypershelf } from "@/stores/assets";
 import { ChevronDown, Link } from "lucide-react";
 import { useState } from "react";
 
-export function ViewSwitcher({
-  views,
-  activeViewId,
-  setActiveViewId
-}: {
-  views: FunctionReturnType<typeof api.views.get>["views"];
-  activeViewId: Id<"views"> | null;
-  setActiveViewId: (id: Id<"views">) => void;
-}) {
+export function ViewSwitcher() {
+  const views = useHypershelf(state => state.views);
+  const activeViewId = useHypershelf(state => state.activeViewId);
+  const setActiveViewId = useHypershelf(state => state.setActiveViewId);
   const [isOpen, setIsOpen] = useState(false);
+
+  console.log(views);
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="!h-auto py-0 text-xs !ring-0 hover:!bg-transparent"
+          className="!h-auto cursor-not-allowed py-0 text-xs !ring-0 hover:!bg-transparent"
+          disabled={true}
         >
-          {views?.find(v => v._id === activeViewId)?.name || "Выбери вид"}
+          {(activeViewId && views?.[activeViewId]?.name) || "Выбери вид"}
           <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <div className="flex flex-col gap-1">
-          {views?.map(view => (
+          {Object.values(views).map(view => (
             <Button
               key={view._id}
               variant="ghost"

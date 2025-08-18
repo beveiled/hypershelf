@@ -1,6 +1,6 @@
 {
   "name": "hypershelf",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "private": true,
   "scripts": {
     "dev": "npm-run-all --parallel dev:frontend dev:backend",
@@ -59,6 +59,7 @@
     "framer-motion": "^12.23.12",
     "fuse.js": "^7.1.0",
     "hibp": "^15.0.1",
+    "immer": "^10.1.1",
     "json-logic-js": "^2.0.5",
     "lucide-react": "^0.539.0",
     "mousetrap": "^1.6.5",
@@ -69,8 +70,10 @@
     "react-querybuilder": "^8.8.3",
     "sass": "^1.90.0",
     "tailwind-merge": "^3.3.1",
+    "use-sync-external-store": "^1.5.0",
     "usehooks-ts": "^3.1.1",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "zustand": "^5.0.7"
   },
   "devDependencies": {
     "@edge-runtime/vm": "^5.0.0",
@@ -81,6 +84,7 @@
     "@types/node": "^20.19.10",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
+    "babel-plugin-react-compiler": "^19.1.0-rc.2",
     "dotenv": "^16.6.1",
     "eslint": "^9.33.0",
     "eslint-config-next": "15.2.3",

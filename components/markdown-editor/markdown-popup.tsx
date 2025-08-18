@@ -24,18 +24,18 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { MarkdownEditor } from "./index";
+import { useHypershelf } from "@/stores/assets";
 
-export function MarkdownEditorPopup({
-  content,
-  className = "",
-  onClose = () => {},
-  preview = false
-}: {
-  content: string;
-  className?: string;
-  onClose?: () => void;
-  preview?: boolean;
-}) {
+export function MarkdownEditorPopup() {
+  const markdownPreviewContent = useHypershelf(
+    state => state.markdownPreviewContent
+  );
+  const setMarkdownPreviewContent = useHypershelf(
+    state => state.setMarkdownPreviewContent
+  );
+
+  if (!markdownPreviewContent) return null;
+
   return (
     <AlertDialog open={true} onOpenChange={() => {}}>
       <VisuallyHidden>
@@ -43,15 +43,13 @@ export function MarkdownEditorPopup({
           Markdown Preview
         </AlertDialogTitle>
       </VisuallyHidden>
-      <AlertDialogContent
-        className={`!bg-card !w-[90vw] !border-0 !p-0 ${className}`}
-      >
+      <AlertDialogContent className="!bg-card !w-[90vw] !border-0 !p-0">
         <div className="relative">
           <MarkdownEditor
-            value={content}
+            value={markdownPreviewContent}
             disabled={true}
             defaultExpanded={true}
-            preview={preview}
+            preview={true}
             className="bg-card !max-h-[90vh] overflow-y-scroll"
           />
           <motion.button
@@ -59,7 +57,7 @@ export function MarkdownEditorPopup({
             whileHover={{ rotate: 90 }}
             transition={{ type: "spring", stiffness: 500, damping: 35 }}
             className="hover:bg-input absolute right-2 bottom-2 z-10 cursor-pointer rounded-2xl p-1 shadow-md backdrop-blur-lg transition-colors hover:shadow-lg"
-            onClick={() => onClose()}
+            onClick={() => setMarkdownPreviewContent(null)}
           >
             <X className="size-5" />
           </motion.button>

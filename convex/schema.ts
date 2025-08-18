@@ -74,6 +74,7 @@ export const fieldSchema = {
 const fieldSchemaInternal = {
   ...fieldSchema,
   slug: v.string(),
+  /** @deprecated Use `editingBy` instead */
   editing: v.optional(v.boolean()),
   editingBy: v.optional(v.id("users")),
   editingLockExpires: v.optional(v.number()),
@@ -86,14 +87,27 @@ export const assetSchema = {
 
 const assetSchemaInternal = {
   ...assetSchema,
+  /** @deprecated Use `assetLocks` instead */
   mutex: v.optional(v.boolean()),
+  /** @deprecated Use `assetLocks` instead */
   mutexHolderId: v.optional(v.id("users")),
+  /** @deprecated Use `assetLocks` instead */
   mutexExpiresAt: v.optional(v.number()),
   createdAt: v.optional(v.number()),
   updatedAt: v.optional(v.number()),
+  /** @deprecated Use `assetLocks` instead */
   editing: v.optional(v.boolean()),
+  /** @deprecated Use `assetLocks` instead */
   editingBy: v.optional(v.id("users")),
+  /** @deprecated Use `assetLocks` instead */
   editingLockExpires: v.optional(v.number())
+};
+
+const assetLocks = {
+  assetId: v.id("assets"),
+  fieldId: v.id("fields"),
+  userId: v.id("users"),
+  expires: v.number()
 };
 
 export const fileSchema = {
@@ -105,12 +119,7 @@ export const viewSchema = {
   name: v.optional(v.string()),
   fields: v.array(v.id("fields")),
   sortBy: v.optional(
-    v.array(
-      v.object({
-        fieldId: v.id("fields"),
-        direction: v.union(v.literal("asc"), v.literal("desc"))
-      })
-    )
+    v.record(v.id("fields"), v.union(v.literal("asc"), v.literal("desc")))
   ),
   filters: v.optional(v.any()),
   enableFiltering: v.optional(v.boolean()),
@@ -126,6 +135,10 @@ export const viewSchemaInternal = {
 export default defineSchema({
   ...authTables,
   assets: defineTable(assetSchemaInternal),
+  assetLocks: defineTable(assetLocks).index("by_assetId_fieldId", [
+    "assetId",
+    "fieldId"
+  ]),
   fields: defineTable(fieldSchemaInternal),
   files: defineTable(fileSchema),
   views: defineTable(viewSchemaInternal),
@@ -133,6 +146,7 @@ export default defineSchema({
 });
 
 export type AssetType = Doc<"assets">;
+export type AssetLocksType = Doc<"assetLocks">;
 export type FieldType = Doc<"fields">;
 export type UserType = Doc<"users">;
 export type ValueType = string | number | boolean | undefined | string[];

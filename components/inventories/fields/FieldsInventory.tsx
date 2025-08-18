@@ -42,7 +42,7 @@ import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useEffect, useState } from "react";
 import { useLog } from "../../util/Log";
 import { Debugger } from "../Debugger";
-import { useLock } from "../useLock";
+import { useFieldLock } from "../useLock";
 import { FieldForm } from "./FieldForm";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -71,7 +71,7 @@ export function FieldsInventory() {
   const [isLocking, setIsLocking] = useState(false);
   const [lockTimeout, setLockTimeout] = useState(0);
 
-  const { lockedId, acquireLock, releaseLock } = useLock<Id<"fields">>(
+  const { lockedId, acquireLock, releaseLock } = useFieldLock(
     ingestLogs,
     30000,
     30
@@ -79,7 +79,7 @@ export function FieldsInventory() {
 
   const handleExpand = (field: FieldType) => {
     if (field._id === expandedFieldId && lockedId) return;
-    if (field.editing && field.editingBy !== viewer) return;
+    if (field.editingBy && field.editingBy !== viewer) return;
     if (expandedFieldId && lockedId) releaseLock();
     if (expandedFieldId === field._id) {
       setExpandedFieldId(null);
@@ -255,19 +255,20 @@ export function FieldsInventory() {
                 "relative rounded-lg border bg-black p-4 shadow-sm transition-all",
                 {
                   "shadow-lg": isExpanded,
-                  "border-brand border-2": field.editing && editingBy !== viewer
+                  "border-brand border-2":
+                    field.editingBy && editingBy !== viewer
                 }
               )}
             >
-              {field.editing && editingBy !== viewer && (
+              {field.editingBy && editingBy !== viewer && (
                 <div className="bg-brand text-background absolute top-0 right-0 -translate-y-full rounded-sm px-2 py-0.5 text-xs">
                   <span className="font-semibold">{editingBy?.email}</span>
                 </div>
               )}
               <div
                 className={cn("flex items-center", {
-                  "cursor-pointer": !field.editing || editingBy === viewer,
-                  "cursor-not-allowed": field.editing && editingBy !== viewer
+                  "cursor-pointer": !field.editingBy || editingBy === viewer,
+                  "cursor-not-allowed": field.editingBy && editingBy !== viewer
                 })}
                 onClick={() => handleExpand(field)}
               >
@@ -309,7 +310,7 @@ export function FieldsInventory() {
                         : () => deleteField({ fieldId: field._id })
                     }
                     isLockedBySomeoneElse={
-                      (field.editing && field.editingBy !== viewer) || false
+                      (field.editingBy && field.editingBy !== viewer) || false
                     }
                   />
                 )}

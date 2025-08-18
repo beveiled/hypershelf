@@ -89,7 +89,7 @@ export const remove = mutation({
         _logs: ["Failed to delete field: field not found"]
       };
     }
-    if (field.editing && field.editingBy !== userId) {
+    if (field.editingBy && field.editingBy !== userId) {
       return {
         success: false,
         error: "Field is being edited by another user",
@@ -125,7 +125,7 @@ export const update = mutation({
       };
     }
 
-    if (field.editing && field.editingBy !== userId) {
+    if (field.editingBy && field.editingBy !== userId) {
       return {
         success: false,
         error: "Field is not being edited by you",
@@ -144,7 +144,7 @@ export const update = mutation({
       success: true,
       _logs: [
         `Field ${field.name} saved`,
-        ...(!field.editing ? ["Warning: lock missing"] : [])
+        ...(!field.editingBy ? ["Warning: lock missing"] : [])
       ]
     };
   }

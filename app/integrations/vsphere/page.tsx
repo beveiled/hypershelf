@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 "use client";
 
-import { renderField } from "@/components/inventories/assets/AssetsInventory";
+import { FieldRenderer } from "@/components/inventories/assets/FieldRenderer";
 import { useLoading } from "@/components/util/LoadingContext";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
@@ -184,19 +184,7 @@ export default function VSphereIntegrationPage() {
                   className="h-4 w-4"
                 />
                 <strong>{field.name}:</strong>{" "}
-                {renderField(
-                  asset.asset._id,
-                  field._id,
-                  field,
-                  (
-                    asset.asset.metadata as NonNullable<
-                      typeof asset.asset.metadata
-                    >
-                  )[field._id],
-                  users.users!,
-                  // TODO: Markdown preview
-                  () => {}
-                )}
+                <FieldRenderer assetId={asset.asset._id} fieldId={field._id} />
               </div>
             );
           })}
