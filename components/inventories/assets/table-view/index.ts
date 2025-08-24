@@ -15,17 +15,6 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { TableView } from "./TableView";
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
-export function shallowPositional(a: string[], b: string[]) {
-  if (a.length !== b.length) return false;
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) return false;
-  }
-  return true;
-}
+export { TableView };

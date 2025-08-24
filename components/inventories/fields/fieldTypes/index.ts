@@ -22,6 +22,7 @@ import BooleanTypeConfig from "./boolean";
 import DateTypeConfig from "./date";
 import EmailTypeConfig from "./email";
 import IPTypeConfig from "./ip";
+import MarkdownTypeConfig from "./markdown";
 import NumberTypeConfig from "./number";
 import SelectTypeConfig from "./select";
 import StringTypeConfig from "./string";
@@ -34,6 +35,7 @@ export const fieldTypes = [
   DateTypeConfig,
   EmailTypeConfig,
   IPTypeConfig,
+  MarkdownTypeConfig,
   NumberTypeConfig,
   SelectTypeConfig,
   StringTypeConfig,

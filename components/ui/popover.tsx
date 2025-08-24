@@ -58,7 +58,7 @@ function PopoverContent({
           exit={{ scale: 0.9 }}
           transition={{ type: "spring", bounce: 0.5, duration: 0.3 }}
           className={cn(
-            "text-popover-foreground z-50 w-72 origin-(--radix-popover-content-transform-origin) rounded-md border bg-black/40 p-4 shadow-md outline-hidden backdrop-blur-lg",
+            "text-popover-foreground bg-background/60 z-[9999] w-72 origin-(--radix-popover-content-transform-origin) rounded-md border p-4 shadow-md outline-hidden backdrop-blur-lg",
             className
           )}
         >

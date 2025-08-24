@@ -318,7 +318,10 @@ function replaceBlocks(
       }
 
       if (!["Table", "Blockquote", "MarkdocTag"].includes(node.name)) return;
-      if (!preview && (inside || isSelected)) return false;
+      const editorFocused =
+        typeof document !== "undefined" &&
+        document.activeElement?.closest(".cm-editor");
+      if (!preview && editorFocused && (inside || isSelected)) return false;
 
       if (node.name === "MarkdocTag") {
         const text = state.doc.sliceString(node.from, node.to);

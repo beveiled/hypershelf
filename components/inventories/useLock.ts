@@ -21,7 +21,6 @@ import { useMutation } from "convex/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useFieldLock(
-  ingestLogs: (response: unknown, isError?: boolean) => void,
   renewIntervalMs = 30000,
   maxRenewals = 30
 ): {
@@ -49,18 +48,15 @@ export function useFieldLock(
       if (!targetId) return;
 
       clearRenewInterval();
-      let res;
       try {
-        res = await releaseLockFn({ id: targetId });
+        await releaseLockFn({ id: targetId });
       } catch (error) {
         console.error("Failed to release lock:", error);
-        ingestLogs({ success: false, error: "Failed to release lock" }, true);
         return;
       }
-      ingestLogs(res);
       setLockedId(null);
     },
-    [lockedId, releaseLockFn, ingestLogs, clearRenewInterval]
+    [lockedId, releaseLockFn, clearRenewInterval]
   );
 
   const startRenewInterval = useCallback(
@@ -68,22 +64,14 @@ export function useFieldLock(
       clearRenewInterval();
       renewsLeftRef.current = maxRenewals;
       intervalRef.current = setInterval(async () => {
-        const res = await renewLockFn({ id });
-        ingestLogs(res);
+        await renewLockFn({ id });
         renewsLeftRef.current -= 1;
         if (renewsLeftRef.current <= 0) {
           await release(id);
         }
       }, renewIntervalMs);
     },
-    [
-      renewLockFn,
-      ingestLogs,
-      maxRenewals,
-      renewIntervalMs,
-      clearRenewInterval,
-      release
-    ]
+    [renewLockFn, maxRenewals, renewIntervalMs, clearRenewInterval, release]
   );
 
   const acquire = useCallback(
@@ -96,11 +84,8 @@ export function useFieldLock(
         res = await acquireLockFn({ id });
       } catch (error) {
         console.error("Failed to acquire lock:", error);
-        ingestLogs({ success: false, error: "Failed to acquire lock" }, true);
         return false;
       }
-
-      ingestLogs(res);
 
       if (res.success) {
         setLockedId(id);
@@ -110,7 +95,7 @@ export function useFieldLock(
 
       return false;
     },
-    [lockedId, acquireLockFn, ingestLogs, startRenewInterval, release]
+    [lockedId, acquireLockFn, startRenewInterval, release]
   );
 
   useEffect(() => {
@@ -144,7 +129,6 @@ export function useFieldLock(
 }
 
 export function useAssetLock(
-  ingestLogs: (response: unknown, isError?: boolean) => void,
   renewIntervalMs = 30000,
   maxRenewals = 30
 ): {
@@ -175,20 +159,17 @@ export function useAssetLock(
 
   const release = useCallback(
     async (assetId: Id<"assets">, fieldId: Id<"fields">) => {
-      let res;
       try {
-        res = await releaseLockFn({ assetId, fieldId });
+        await releaseLockFn({ assetId, fieldId });
       } catch (error) {
         console.error("Failed to release lock:", error);
-        ingestLogs({ success: false, error: "Failed to release lock" }, true);
         return;
       }
-      ingestLogs(res);
       setLockedPairs(prev =>
         prev.filter(p => !(p.assetId === assetId && p.fieldId === fieldId))
       );
     },
-    [releaseLockFn, ingestLogs]
+    [releaseLockFn]
   );
 
   const releaseAllLocks = useCallback(async () => {
@@ -213,9 +194,7 @@ export function useAssetLock(
                 assetId: p.assetId,
                 fieldId: p.fieldId
               });
-              ingestLogs(res);
               if (!res.success) {
-                // If renewal fails, remove the lock from the list
                 setLockedPairs(prev =>
                   prev.filter(
                     pair =>
@@ -227,11 +206,6 @@ export function useAssetLock(
               }
             } catch (error) {
               console.error("Failed to renew lock:", error);
-              ingestLogs(
-                { success: false, error: "Failed to renew lock" },
-                true
-              );
-              // Also remove on error
               setLockedPairs(prev =>
                 prev.filter(
                   pair =>
@@ -252,7 +226,6 @@ export function useAssetLock(
     }, renewIntervalMs);
   }, [
     renewLockFn,
-    ingestLogs,
     maxRenewals,
     renewIntervalMs,
     clearRenewInterval,
@@ -277,11 +250,8 @@ export function useAssetLock(
         res = await acquireLockFn({ assetId, fieldId });
       } catch (error) {
         console.error("Failed to acquire lock:", error);
-        ingestLogs({ success: false, error: "Failed to acquire lock" }, true);
         return false;
       }
-
-      ingestLogs(res);
 
       if (res.success) {
         setLockedPairs(prev => {
@@ -296,7 +266,7 @@ export function useAssetLock(
 
       return false;
     },
-    [acquireLockFn, ingestLogs, startRenewInterval, isLocked]
+    [acquireLockFn, startRenewInterval, isLocked]
   );
 
   useEffect(() => {

@@ -114,6 +114,7 @@ type ViewsDict = Record<Id<"views">, ViewType>;
 
 type State = {
   assetIds: Id<"assets">[];
+  loadingAssets: boolean;
   assets: AssetsDict;
   assetErrors: AssetErrors;
   lockedFields: LockedFields;
@@ -122,13 +123,15 @@ type State = {
   viewer: Id<"users"> | null | undefined;
   users: { id: Id<"users">; email?: string }[];
   sorting: SortingDict;
+  hiding: boolean;
+  hiddenFields: Id<"fields">[];
+  fieldOrder: Id<"fields">[];
   activeViewId: Id<"views"> | null;
   views: ViewsDict;
   locker: {
     acquire: (assetId: Id<"assets">, fieldId: Id<"fields">) => Promise<boolean>;
     release: (assetId: Id<"assets">, fieldId: Id<"fields">) => Promise<void>;
   };
-  markdownPreviewContent: string | null;
 };
 
 type Actions = {
@@ -138,15 +141,17 @@ type Actions = {
   setUsers: (users: UserType[]) => void;
   setSorting: (sorting: SortingDict) => void;
   toggleSorting: (fieldId: Id<"fields">) => void;
+  toggleVisibility: (fieldId: Id<"fields">) => void;
+  toggleHiding: () => void;
   setActiveViewId: (activeView: Id<"views"> | null) => void;
   setViews: (views: ViewType[]) => void;
-  setMarkdownPreviewContent: (content: string | null) => void;
   revalidateErrors: () => void;
   revalidateLocks: () => void;
 };
 
 const initialState: State = {
   assetIds: [],
+  loadingAssets: true,
   assets: {},
   fieldIds: [],
   fields: {},
@@ -157,9 +162,11 @@ const initialState: State = {
     acquire: async () => false,
     release: async () => {}
   },
-  markdownPreviewContent: null,
   activeViewId: null,
   sorting: {},
+  hiding: true,
+  hiddenFields: [],
+  fieldOrder: [],
   viewer: null,
   users: []
 } as State;
@@ -168,10 +175,6 @@ export const useHypershelf = create<State & Actions>()(
   devtools(
     immer((set, get) => ({
       ...initialState,
-      setMarkdownPreviewContent: content =>
-        set(state => {
-          state.markdownPreviewContent = content;
-        }),
       revalidateErrors: () =>
         set(state => {
           for (const [, asset] of Object.entries(state.assets)) {
@@ -298,6 +301,7 @@ export const useHypershelf = create<State & Actions>()(
               delete state.assetIds[state.assetIds.indexOf(id)];
             }
           }
+          if (state.loadingAssets) state.loadingAssets = false;
         });
         get().revalidateErrors();
         get().revalidateLocks();
@@ -409,6 +413,25 @@ export const useHypershelf = create<State & Actions>()(
           } else {
             state.sorting[fieldId] = "asc";
           }
+        });
+      },
+      toggleVisibility: fieldId => {
+        set(state => {
+          if (state.hiddenFields.includes(fieldId)) {
+            for (let i = 0; i < state.hiddenFields.length; i++) {
+              if (state.hiddenFields[i] === fieldId) {
+                delete state.hiddenFields[i];
+                break;
+              }
+            }
+          } else {
+            state.hiddenFields.push(fieldId);
+          }
+        });
+      },
+      toggleHiding: () => {
+        set(state => {
+          state.hiding = !state.hiding;
         });
       },
       setActiveViewId: activeView =>

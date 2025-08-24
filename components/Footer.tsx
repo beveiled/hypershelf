@@ -79,7 +79,7 @@ export function Footer() {
 
   return (
     <footer className="w-full p-2">
-      <div className="border-border flex flex-col gap-1 rounded-md border bg-black/40 px-8 py-4 text-sm backdrop-blur-xl">
+      <div className="border-border bg-background/60 flex flex-col gap-1 rounded-md border px-8 py-4 text-sm backdrop-blur-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">

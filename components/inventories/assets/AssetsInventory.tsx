@@ -17,9 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 "use client";
 
-import { MarkdownEditorPopup } from "@/components/markdown-editor/markdown-popup";
 import { useHeaderContent } from "@/components/util/HeaderContext";
-import { useLog } from "@/components/util/Log";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { ExtendedAssetType } from "@/convex/assets";
@@ -30,11 +28,20 @@ import { useQuery } from "convex/react";
 import { useEffect, useMemo } from "react";
 import { useAssetLock } from "../useLock";
 import { TableSkeleton } from "./TableSkeleton";
-import { TableView } from "./TableView";
+import { TableView } from "./table-view";
 import { ViewSwitcher } from "./ViewSwitcher";
+import { HeaderMenu } from "./HeaderMenu";
+
+function Header() {
+  return (
+    <div className="flex justify-between">
+      <HeaderMenu />
+      <ViewSwitcher />
+    </div>
+  );
+}
 
 export function AssetsInventory() {
-  const ingestLogs = useLog();
   const { viewer: unstableViewer } = useQuery(api.users.me) ?? {};
   const { assets: unstableAssets } = useQuery(api.assets.get) ?? {};
   const { fields: unstableFields } = useQuery(api.fields.get) ?? {};
@@ -42,13 +49,13 @@ export function AssetsInventory() {
   const { views: unstableViews } = useQuery(api.views.get, {}) ?? {};
 
   const views = useHypershelf(state => state.views);
-  const assets = useHypershelf(state => state.assets);
   const setAssets = useHypershelf(state => state.setAssets);
   const setFields = useHypershelf(state => state.setFields);
   const setViewer = useHypershelf(state => state.setViewer);
   const activeViewId = useHypershelf(state => state.activeViewId);
   const setActiveViewId = useHypershelf(state => state.setActiveViewId);
   const setSorting = useHypershelf(state => state.setSorting);
+  const loadingAssets = useHypershelf(state => state.loadingAssets);
 
   useEffect(() => {
     if (unstableAssets) {
@@ -115,7 +122,7 @@ export function AssetsInventory() {
     setActiveViewId(view._id);
   }, [activeViewId, views, setActiveViewId]);
 
-  const { acquireLock, releaseLock } = useAssetLock(ingestLogs, 30000, 30);
+  const { acquireLock, releaseLock } = useAssetLock(30000, 30);
 
   useEffect(() => {
     useHypershelf.setState({
@@ -129,18 +136,13 @@ export function AssetsInventory() {
   const { setContent: setHeaderContent } = useHeaderContent();
 
   useEffect(() => {
-    setHeaderContent(<ViewSwitcher />);
+    setHeaderContent(<Header />);
     return () => setHeaderContent(null);
   }, [setHeaderContent]);
 
-  if (assets === undefined) {
+  if (loadingAssets) {
     return <TableSkeleton />;
   }
 
-  return (
-    <>
-      <TableView />
-      <MarkdownEditorPopup />
-    </>
-  );
+  return <TableView />;
 }

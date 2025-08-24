@@ -32,6 +32,7 @@ import {
   rectSortingStrategy,
   useSortable
 } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { motion } from "framer-motion";
 import { Plus, X } from "lucide-react";
 import React, { KeyboardEvent, useState } from "react";
@@ -42,44 +43,51 @@ const SortableTag: React.FC<{
   onRemove: () => void;
   disabled: boolean;
 }> = ({ tag, onRemove, disabled = false }) => {
-  const { attributes, listeners, setNodeRef, transform } = useSortable({
-    id: tag
-  });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: tag
+    });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition
+  };
 
   return (
-    <Badge
-      variant="secondary"
-      className="bg-secondary/80 flex items-center gap-1 select-none"
-      asChild
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="m-0.5 inline-block align-bottom"
+      {...attributes}
     >
       <motion.div
         initial={{ scale: 1 }}
-        animate={{ x: transform?.x, y: transform?.y }}
         whileTap={{ scale: 0.9 }}
         transition={{
-          duration: 0,
           scale: { type: "spring", bounce: 0.15, duration: 0.15 }
         }}
-        ref={setNodeRef}
-        {...attributes}
       >
-        <span {...listeners} className="cursor-grab active:cursor-grabbing">
-          {tag}
-        </span>
+        <Badge variant="outline" className="border-input" asChild>
+          <div className="flex items-center gap-1 select-none">
+            <span {...listeners} className="cursor-grab active:cursor-grabbing">
+              {tag}
+            </span>
 
-        <Button
-          type="button"
-          size="icon"
-          variant="secondary"
-          onPointerDown={e => e.stopPropagation()}
-          onClick={onRemove}
-          className="h-4 w-4 p-0"
-          disabled={disabled}
-        >
-          <X className="size-3" />
-        </Button>
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              onPointerDown={e => e.stopPropagation()}
+              onClick={onRemove}
+              className="h-4 w-4 p-0"
+              disabled={disabled}
+            >
+              <X className="size-3" />
+            </Button>
+          </div>
+        </Badge>
       </motion.div>
-    </Badge>
+    </div>
   );
 };
 
@@ -88,19 +96,21 @@ const StaticTag: React.FC<{
   onRemove: () => void;
   disabled: boolean;
 }> = ({ tag, onRemove, disabled = false }) => (
-  <Badge variant="secondary" className="flex items-center gap-1 select-none">
-    <span className="mr-0.5">{tag}</span>
-    <Button
-      type="button"
-      size="icon"
-      variant="ghost"
-      onClick={onRemove}
-      className="h-4 w-4 p-0"
-      disabled={disabled}
-    >
-      <X className="size-3" />
-    </Button>
-  </Badge>
+  <div className="m-0.5 inline-block align-bottom">
+    <Badge variant="secondary" className="flex items-center gap-1 select-none">
+      <span className="mr-0.5">{tag}</span>
+      <Button
+        type="button"
+        size="icon"
+        variant="ghost"
+        onClick={onRemove}
+        className="h-4 w-4 p-0"
+        disabled={disabled}
+      >
+        <X className="size-3" />
+      </Button>
+    </Badge>
+  </div>
 );
 
 export function TagInput({
@@ -108,7 +118,6 @@ export function TagInput({
   setTags,
   placeholder = "Add items...",
   className,
-  uniqueId,
   draggable = true,
   validateTag = () => true,
   disabled = false,
@@ -117,7 +126,6 @@ export function TagInput({
 }: {
   tags: string[];
   setTags: (tags: string[]) => void;
-  uniqueId: string;
   placeholder?: string;
   className?: string;
   draggable?: boolean;
@@ -178,12 +186,7 @@ export function TagInput({
   const Tag = draggable ? SortableTag : StaticTag;
 
   return (
-    <div
-      className={cn(
-        "flex flex-wrap items-center gap-1 rounded-md border p-2",
-        className
-      )}
-    >
+    <div className={cn("rounded-md border p-2 text-center", className)}>
       {draggable ? (
         <DndContext
           sensors={sensors}
@@ -216,31 +219,30 @@ export function TagInput({
         ))
       )}
       <motion.div
-        className="flex-1"
+        className="m-0.5 inline-block align-bottom"
         animate={isInvalid ? { x: [0, -5, 5, -5, 5, 0] } : {}}
         transition={{ duration: 0.4 }}
       >
         {isEditing ? (
           // TODO: handle different inner types
           <motion.div
-            layout
-            layoutId={uniqueId}
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.8 }}
             transition={{ type: "spring", bounce: 0.15, duration: 0.15 }}
+            className="border border-transparent px-2 py-0.5"
           >
             <Textarea
               value={value}
               onChange={handleInputChange}
               onKeyDown={onKeyDown}
               onBlur={e => {
-                setIsEditing(false);
+                if (!value.trim()) setIsEditing(false);
                 onBlur(e);
               }}
               placeholder={placeholder}
               className={cn(
-                "flex-1 border-0 !bg-transparent p-0 text-xs shadow-none focus-visible:ring-0",
+                "border-0 !bg-transparent p-0 text-xs shadow-none focus-visible:ring-0",
                 isInvalid && "text-red-500"
               )}
               disabled={disabled}
@@ -254,17 +256,21 @@ export function TagInput({
           </motion.div>
         ) : (
           <motion.div
-            layout
-            layoutId={uniqueId}
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.8 }}
             transition={{ type: "spring", bounce: 0.15, duration: 0.15 }}
+            className="flex size-fit"
           >
             <Button
-              variant="outline"
+              variant={tags.length === 0 ? "ghost" : "outline"}
               size="sm"
-              className="h-fit w-fit !p-0.5 text-xs"
+              className={cn(
+                "h-fit w-fit",
+                tags.length === 0
+                  ? "text-muted-foreground/50 px-2 py-1 text-sm italic"
+                  : "!p-0.5 text-xs"
+              )}
               onClick={() => {
                 setIsEditing(true);
                 setTimeout(() => {
@@ -273,7 +279,7 @@ export function TagInput({
               }}
               disabled={disabled}
             >
-              <Plus />
+              {tags.length === 0 ? "пусто" : <Plus className="size-4" />}
             </Button>
           </motion.div>
         )}

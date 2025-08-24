@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 "use client";
 
-import { FieldRenderer } from "@/components/inventories/assets/FieldRenderer";
+import { FieldRenderer } from "@/components/inventories/assets/table-view/FieldRenderer";
 import { useLoading } from "@/components/util/LoadingContext";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";

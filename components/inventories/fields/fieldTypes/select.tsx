@@ -17,20 +17,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectValue
-} from "@/components/ui/select";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from "@/components/ui/command";
+import { Kbd } from "@/components/ui/kbd";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { cn } from "@/lib/utils";
+import { cn, shallowPositional } from "@/lib/utils";
 import { useHypershelf } from "@/stores/assets";
-import * as SelectPrimitive from "@radix-ui/react-select";
 import { useMutation } from "convex/react";
-import { ChevronDownIcon, Loader2 } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { Check, ChevronDown, Loader2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useStoreWithEqualityFn } from "zustand/traditional";
 import { FieldPropConfig } from "./_abstractType";
+import { AnimateTransition } from "./string";
 
 function InlineSelect({
   assetId,
@@ -48,8 +57,10 @@ function InlineSelect({
   const value = useHypershelf(state =>
     String(state.assets?.[assetId]?.asset?.metadata?.[fieldId])
   );
-  const options = useHypershelf(
-    state => state.fields?.[fieldId]?.extra?.options || []
+  const options = useStoreWithEqualityFn(
+    useHypershelf,
+    state => state.fields?.[fieldId]?.extra?.options || [],
+    shallowPositional
   );
   const lockedBy = useHypershelf(
     state => state.lockedFields[assetId]?.[fieldId]
@@ -57,17 +68,22 @@ function InlineSelect({
   const lazyError = useHypershelf(
     state => state.assetErrors?.[assetId]?.[fieldId]
   );
-  const disabled = useMemo(() => !!lockedBy, [lockedBy]);
+  const disabled = useMemo(() => !!lockedBy || updating, [lockedBy, updating]);
 
   const onValueChange = useCallback(
     (value: string) => {
       setUpdating(true);
+      setOpen(false);
       setTimeout(() => {
         updateAsset({
           assetId,
           fieldId,
           value
-        }).finally(() => setUpdating(false));
+        }).finally(() => {
+          setUpdating(false);
+          const locker = useHypershelf.getState().locker;
+          locker.release(assetId, fieldId);
+        });
       }, 0);
     },
     [assetId, fieldId, updateAsset]
@@ -85,6 +101,22 @@ function InlineSelect({
     },
     [assetId, fieldId]
   );
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => {
+      const idx = Number(e.key);
+      if ((e.ctrlKey || e.metaKey) && idx >= 0 && idx <= 9) {
+        e.preventDefault();
+        const option = options[idx - 1];
+        if (option && !disabled) {
+          onValueChange(option);
+        }
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [open, assetId, fieldId, options, onValueChange, disabled]);
 
   if (readonly) {
     return (
@@ -106,47 +138,71 @@ function InlineSelect({
           {lockedBy}
         </span>
       )}
-      {/* // TODO: Fix phantom re-renders (hook 22) */}
-      <Select
-        value={value}
-        onValueChange={onValueChange}
-        disabled={disabled}
-        open={open}
-        onOpenChange={onOpenChange}
-      >
-        <SelectPrimitive.Trigger asChild>
+      <Popover open={open} onOpenChange={onOpenChange}>
+        <PopoverTrigger asChild>
           <Button
-            size="sm"
             variant="ghost"
+            role="combobox"
+            aria-expanded={!!assetId}
+            disabled={!!lockedBy || updating}
             className={cn(
-              "h-auto w-full py-1",
-              lockedBy && "ring-brand ring-2",
+              lockedBy &&
+                "text-foreground/70 ring-brand cursor-not-allowed !opacity-100 ring-2",
               lazyError &&
                 !open &&
                 "rounded-br-none rounded-bl-none !border-b-2 border-red-500"
             )}
-            disabled={!!lockedBy || updating}
           >
-            {value && options.includes(String(value)) ? (
-              <SelectValue placeholder="Выбери опцию" />
-            ) : (
-              value
-            )}
-            {updating ? (
-              <Loader2 className="size-4 animate-spin opacity-30" />
-            ) : (
-              <ChevronDownIcon className="size-4 opacity-30" />
-            )}
+            {updating && <Loader2 className="animate-spin" />}
+            <AnimateTransition assetId={assetId} fieldId={fieldId}>
+              {value ? (
+                <div className="flex items-center gap-1.5">
+                  {value}
+                  <ChevronDown className="opacity-50" />
+                </div>
+              ) : (
+                <span className="text-muted-foreground/50 italic">пусто</span>
+              )}
+            </AnimateTransition>
           </Button>
-        </SelectPrimitive.Trigger>
-        <SelectContent>
-          {options.map(option => (
-            <SelectItem key={option} value={option}>
-              {option}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        </PopoverTrigger>
+        <PopoverContent className="w-fit p-0">
+          <Command
+            className="!bg-transparent !backdrop-blur-none"
+            value={value}
+          >
+            <CommandInput
+              placeholder="Поиск..."
+              className="h-9"
+              disabled={disabled}
+            />
+            <CommandList>
+              <CommandEmpty>Не нашли ничего</CommandEmpty>
+              <CommandGroup>
+                {options.map((option, idx) => (
+                  <CommandItem
+                    key={option}
+                    value={option}
+                    onSelect={onValueChange}
+                    disabled={disabled}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      {idx <= 10 && <Kbd keys={["Meta", String(idx + 1)]} />}
+                      {option}
+                    </div>
+                    <Check
+                      className={cn(
+                        "ml-auto",
+                        value === option ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }

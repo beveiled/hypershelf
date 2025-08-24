@@ -50,7 +50,8 @@ function MarkdownPresetProp({
 
 const config: FieldPropConfig = {
   prop: "mdPreset",
-  label: "Шаблон Markdown",
-  component: MarkdownPresetProp
+  label: "Шаблон Маркдауна",
+  component: MarkdownPresetProp,
+  full: true
 };
 export default config;

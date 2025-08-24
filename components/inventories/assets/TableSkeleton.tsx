@@ -27,23 +27,29 @@ import {
 
 export function TableSkeleton() {
   return (
-    <div className="overflow-x-scroll rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
+    <div className="relative h-[calc(100dvh-3.5rem)] overflow-auto overscroll-none rounded-md border">
+      <Table className="table-auto">
+        <TableHeader className="sticky top-0 z-[100]">
+          <TableRow className="relative h-8 hover:bg-transparent">
             {Array.from({ length: 10 }).map((_, index) => (
-              <TableHead key={index}>
-                <Skeleton className="h-4 w-26 rounded" />
+              <TableHead
+                key={index}
+                className={index > 0 ? "border-border border-l" : ""}
+              >
+                <Skeleton className="h-4 w-16 rounded-md" />
               </TableHead>
             ))}
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="relative">
           {Array.from({ length: 30 }).map((_, rowIndex) => (
-            <TableRow key={rowIndex}>
+            <TableRow key={rowIndex} className="h-10">
               {Array.from({ length: 10 }).map((_, cellIndex) => (
-                <TableCell key={cellIndex}>
-                  <Skeleton className="h-4 w-full rounded" />
+                <TableCell
+                  key={cellIndex}
+                  className={cellIndex > 0 ? "border-border border-l" : ""}
+                >
+                  <Skeleton className="bg-accent/60 h-4 w-16 rounded" />
                 </TableCell>
               ))}
             </TableRow>

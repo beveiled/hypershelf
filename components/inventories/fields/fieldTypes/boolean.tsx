@@ -21,7 +21,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { useHypershelf } from "@/stores/assets";
 import { useMutation } from "convex/react";
 import { CircleCheck, CirclePlus, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FieldPropConfig } from "./_abstractType";
 
 function InlineBoolean({
@@ -38,6 +38,20 @@ function InlineBoolean({
   const value = useHypershelf(
     state => state.assets?.[assetId]?.asset?.metadata?.[fieldId]
   );
+  const onClick = useCallback(() => {
+    setUpdating(true);
+    setTimeout(() => {
+      updateAsset({
+        assetId,
+        fieldId,
+        value: !value
+      }).finally(() => {
+        setUpdating(false);
+        const locker = useHypershelf.getState().locker;
+        locker.release(assetId, fieldId);
+      });
+    }, 0);
+  }, [assetId, fieldId, updateAsset, value]);
 
   if (readonly) {
     return value ? (
@@ -53,16 +67,7 @@ function InlineBoolean({
       size="icon"
       className="size-7 !bg-transparent"
       disabled={updating}
-      onClick={() => {
-        setUpdating(true);
-        setTimeout(() => {
-          updateAsset({
-            assetId,
-            fieldId,
-            value: !value
-          }).finally(() => setUpdating(false));
-        }, 0);
-      }}
+      onClick={onClick}
     >
       {updating ? (
         <Loader2 className="size-5 animate-spin" />

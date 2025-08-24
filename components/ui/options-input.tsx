@@ -76,8 +76,8 @@ const OptionRow = memo(
     }, [id, onRemove, onFocus]);
 
     return (
-      <SortableItem id={id}>
-        <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1">
+        <SortableItem id={id}>
           <Button
             size="icon"
             variant="ghost"
@@ -87,25 +87,25 @@ const OptionRow = memo(
           >
             <GripVertical className="size-3" />
           </Button>
-          <Input
-            value={value}
-            onChange={handleChange}
-            placeholder="Option"
-            className="h-auto flex-1 py-1 text-xs"
-            disabled={disabled}
-            onFocus={onFocus}
-          />
-          <Button
-            size="icon"
-            variant="ghost"
-            onClick={handleRemove}
-            className="size-7"
-            disabled={disabled}
-          >
-            <Trash className="size-3" />
-          </Button>
-        </div>
-      </SortableItem>
+        </SortableItem>
+        <Input
+          value={value}
+          onChange={handleChange}
+          placeholder="Option"
+          className="h-auto flex-1 py-1 text-xs"
+          disabled={disabled}
+          onFocus={onFocus}
+        />
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={handleRemove}
+          className="size-7"
+          disabled={disabled}
+        >
+          <Trash className="size-3" />
+        </Button>
+      </div>
     );
   },
   (a, b) =>

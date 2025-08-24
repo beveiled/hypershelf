@@ -28,6 +28,7 @@ import { Loader2, Save, X } from "lucide-react";
 import { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/shallow";
 import { FieldPropConfig } from "./_abstractType";
+import { Kbd } from "@/components/ui/kbd";
 
 export function ActionsRow({
   showButton,
@@ -46,6 +47,10 @@ export function ActionsRow({
 }) {
   const [rect, setRect] = useState<DOMRect | null>(null);
   const [parentRect, setParentRect] = useState<DOMRect | null>(null);
+  const uniqueId = useMemo(
+    () => `actions-row-${Math.random().toString(36).substr(2, 9)}`,
+    []
+  );
   useEffect(() => {
     const measureEl = measure && "current" in measure ? measure.current : null;
     if (!measureEl) return;
@@ -75,6 +80,29 @@ export function ActionsRow({
     };
   }, [measure]);
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (showButton && e.key === "Escape") {
+        handleCancel();
+        (document.activeElement as HTMLElement)?.blur();
+      }
+      if (
+        !error &&
+        !updating &&
+        showButton &&
+        (e.metaKey || e.ctrlKey) &&
+        (e.key === "s" || e.key === "ы")
+      ) {
+        e.preventDefault();
+        handleSave();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => {
+      window.removeEventListener("keydown", handler);
+    };
+  }, [error, handleCancel, handleSave, showButton, updating]);
+
   if (!rect || !parentRect) return null;
 
   return (
@@ -88,16 +116,16 @@ export function ActionsRow({
             opacity: { duration: 0.2 },
             scale: { type: "spring", bounce: 0.5, duration: 0.2 }
           }}
-          className="border-border-focus bg-background/80 absolute z-40 flex min-w-fit flex-col justify-end rounded-md border border-dashed p-1 pt-0 backdrop-blur-lg"
+          className="border-border-focus bg-background/60 absolute z-40 flex min-w-fit flex-col justify-end rounded-md border border-dashed p-2 backdrop-blur-lg"
           style={{
-            top: rect.top - parentRect.top - 8,
-            left: rect.left - parentRect.left - 8,
-            width: Math.max(rect.width + 16, 150),
-            height: `calc(${rect.height + 16}px + ${(showButton ? 2.125 : 0) + (error ? 1 : 0)}rem)`
+            top: rect.top - parentRect.top - 10,
+            left: rect.left - parentRect.left - 10,
+            width: Math.max(rect.width + 18, 150),
+            height: `calc(${rect.height + 18}px + ${(showButton ? 2.375 : 0) + (error ? 1.25 : 0)}rem)`
           }}
         >
           {error && (
-            <div className="px-1 text-xs whitespace-pre text-red-500">
+            <div className="px-0.5 text-xs whitespace-pre text-red-500">
               {error}
             </div>
           )}
@@ -107,6 +135,22 @@ export function ActionsRow({
               <Button
                 variant="outline"
                 size="sm"
+                className="h-auto !p-1 text-xs"
+                onClick={handleCancel}
+                disabled={updating}
+              >
+                <AnimateTransition postfix={`${uniqueId}-cancel`}>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <X />
+                      Отмена
+                    </div>
+                    {!updating && <Kbd keys={["Esc"]} size="sm" />}
+                  </div>
+                </AnimateTransition>
+              </Button>
+              <Button
+                size="sm"
                 className={cn(
                   "h-auto flex-1 py-1 text-xs",
                   !!error && "cursor-not-allowed"
@@ -114,21 +158,21 @@ export function ActionsRow({
                 onClick={handleSave}
                 disabled={updating || !!error}
               >
-                {updating ? (
-                  <Loader2 className="size-3 animate-spin" />
-                ) : (
-                  <Save className="size-3" />
-                )}
-                Сохранить
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-auto !p-1 text-xs"
-                onClick={handleCancel}
-                disabled={updating}
-              >
-                <X />
+                <AnimateTransition postfix={`${uniqueId}-save`}>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
+                      {updating ? (
+                        <Loader2 className="size-3 animate-spin" />
+                      ) : (
+                        <Save className="size-3" />
+                      )}
+                      Сохранить
+                    </div>
+                    {!updating && !error && (
+                      <Kbd keys={["Meta", "S"]} variant="light" size="sm" />
+                    )}
+                  </div>
+                </AnimateTransition>
               </Button>
             </div>
           )}
@@ -202,7 +246,11 @@ export function InlineString({
         value: val
       })
         .then(() => setIsDirty(false))
-        .finally(() => setUpdating(false));
+        .finally(() => {
+          setUpdating(false);
+          const locker = useHypershelf.getState().locker;
+          locker.release(assetId, fieldId);
+        });
     }
   };
 
@@ -263,34 +311,71 @@ export function InlineString({
           }}
           placeholder={isFocused ? placeholder || "Пиши тут..." : "пусто"}
           className={cn(
-            "relative h-auto !border-0 !bg-transparent py-1 text-sm shadow-none",
-            error && "!ring-2 !ring-red-500",
+            "relative h-auto !border-0 !bg-transparent py-1 text-center text-sm shadow-none",
+            (error || (lazyError && !isDirty && isFocused)) &&
+              "!ring-2 !ring-red-500",
             updating && "animate-pulse opacity-50",
             !isFocused && !val && "!placeholder-muted-foreground/50 italic",
             lockedBy &&
               "text-foreground/70 ring-brand cursor-not-allowed !opacity-100 ring-2",
-            (isDirty || error || (lazyError && isFocused)) && "z-50",
+            (isDirty || error || (lazyError && isFocused && !isDirty)) &&
+              "z-50",
             lazyError &&
               !isDirty &&
               !isFocused &&
               "rounded-br-none rounded-bl-none !border-b-2 border-red-500"
           )}
           disabled={updating || !!lockedBy}
-          autosizeFrom={60}
+          autosizeFrom={40}
           autosizeTo={384}
           minRows={1}
           maxRows={10}
         />
       </div>
       <ActionsRow
-        showButton={showButton || !!error || (!!lazyError && isFocused)}
-        error={error || (isFocused ? lazyError : null)}
+        showButton={
+          showButton || !!error || (!!lazyError && isFocused && !isDirty)
+        }
+        error={error || (isFocused && !isDirty ? lazyError : null)}
         updating={updating}
         handleSave={handleSave}
         handleCancel={handleCancel}
         measure={measure}
       />
     </div>
+  );
+}
+
+export function AnimateTransition({
+  children,
+  assetId,
+  fieldId,
+  postfix
+}: {
+  children: React.ReactNode;
+  assetId?: Id<"assets">;
+  fieldId?: Id<"fields">;
+  postfix?: string;
+}) {
+  const uniqueId = useMemo(
+    () =>
+      fieldId && assetId
+        ? `field-${fieldId}-asset-${assetId}${postfix ? `-${postfix}` : ""}`
+        : fieldId
+          ? `field-${fieldId}${postfix ? `-${postfix}` : ""}`
+          : assetId
+            ? `asset-${assetId}${postfix ? `-${postfix}` : ""}`
+            : postfix,
+    [assetId, fieldId, postfix]
+  );
+  return (
+    <motion.div
+      layout
+      layoutId={uniqueId}
+      transition={{ type: "spring", bounce: 0.05, duration: 0.1 }}
+    >
+      {children}
+    </motion.div>
   );
 }
 

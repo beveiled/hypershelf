@@ -17,29 +17,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 "use client";
 
-import * as React from "react";
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { LucideProps, LucideIcon } from "lucide-react";
-import { DynamicIcon, IconName } from "lucide-react/dynamic";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from "@/components/ui/tooltip";
-import { iconsData } from "./icons-data";
-import { useVirtualizer, VirtualItem } from "@tanstack/react-virtual";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import { useVirtualizer, VirtualItem } from "@tanstack/react-virtual";
 import Fuse from "fuse.js";
+import { LucideIcon, LucideProps } from "lucide-react";
+import { DynamicIcon, IconName } from "lucide-react/dynamic";
+import * as React from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
+import { iconsData } from "./icons-data";
 
 export type IconData = (typeof iconsData)[number];
 
@@ -328,22 +322,16 @@ const IconPicker = React.forwardRef<
 
     const renderIcon = useCallback(
       (icon: IconData) => (
-        <TooltipProvider key={icon.name}>
-          <Tooltip>
-            <TooltipTrigger
-              className={cn(
-                "hover:bg-foreground/10 rounded-md border p-2 transition",
-                "flex items-center justify-center"
-              )}
-              onClick={() => handleIconClick(icon.name as IconName)}
-            >
-              <IconRenderer name={icon.name as IconName} />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{icon.name}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Button
+          variant="outline"
+          className={cn(
+            "hover:bg-foreground/10 rounded-md border p-2 transition",
+            "flex items-center justify-center"
+          )}
+          onClick={() => handleIconClick(icon.name as IconName)}
+        >
+          <IconRenderer name={icon.name as IconName} />
+        </Button>
       ),
       [handleIconClick]
     );
@@ -492,4 +480,4 @@ const Icon = React.forwardRef<React.ComponentRef<LucideIcon>, IconProps>(
 );
 Icon.displayName = "Icon";
 
-export { IconPicker, Icon, type IconName };
+export { Icon, IconPicker, type IconName };

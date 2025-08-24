@@ -37,6 +37,7 @@ import { useMutation } from "convex/react";
 import { Check, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { FieldPropConfig } from "./_abstractType";
+import { AnimateTransition } from "./string";
 
 function InlineUser({
   assetId,
@@ -84,7 +85,11 @@ function InlineUser({
       assetId,
       fieldId,
       value: selectedUser
-    }).finally(() => setUpdating(false));
+    }).finally(() => {
+      setUpdating(false);
+      const locker = useHypershelf.getState().locker;
+      locker.release(assetId, fieldId);
+    });
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -118,15 +123,20 @@ function InlineUser({
             )}
           >
             {updating && <Loader2 className="animate-spin" />}
-            {value ? (
-              users.find(user => user.id === value)?.email
-            ) : (
-              <span className="text-muted-foreground/50 italic">пусто</span>
-            )}
+            <AnimateTransition assetId={assetId} fieldId={fieldId}>
+              {value ? (
+                users.find(user => user.id === value)?.email
+              ) : (
+                <span className="text-muted-foreground/50 italic">пусто</span>
+              )}
+            </AnimateTransition>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="p-0">
-          <Command>
+        <PopoverContent className="w-fit p-0">
+          <Command
+            className="!bg-transparent !backdrop-blur-none"
+            value={value}
+          >
             <CommandInput
               placeholder="Поиск..."
               className="h-9"

@@ -139,7 +139,7 @@ export default function Header() {
 
   return (
     <header className="fixed z-50 w-screen">
-      <div className="border-border text-foreground m-2 flex h-8 items-center justify-between rounded-md border bg-black/40 px-4 py-1.5 backdrop-blur-xl">
+      <div className="border-border text-foreground bg-background/60 m-2 flex h-8 items-center justify-between rounded-md border px-4 py-1.5 backdrop-blur-xl">
         <div className="flex items-center md:gap-8">
           <Link href="/" className="font-title relative text-xs font-extrabold">
             <span className="hidden md:inline">Hypershelf</span>

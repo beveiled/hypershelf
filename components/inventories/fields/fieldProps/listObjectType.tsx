@@ -61,8 +61,10 @@ function ListObjectTypeProp({
             )
             .map(t => (
               <SelectItem key={t.key} value={t.key}>
-                <DynamicIcon name={t.icon as IconName} />
-                {t.label}
+                <div className="flex items-center gap-1.5">
+                  <DynamicIcon name={t.icon as IconName} />
+                  {t.label}
+                </div>
               </SelectItem>
             ))}
         </SelectContent>

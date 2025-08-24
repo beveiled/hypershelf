@@ -19,11 +19,11 @@ import { TagInput } from "@/components/ui/tag-input";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { validateField } from "@/convex/utils";
-import { cn } from "@/lib/utils";
+import { cn, shallowPositional } from "@/lib/utils";
 import { useHypershelf } from "@/stores/assets";
 import { useMutation } from "convex/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { shallow, useShallow } from "zustand/shallow";
+import { useShallow } from "zustand/shallow";
 import { FieldPropConfig } from "./_abstractType";
 import { ActionsRow } from "./string";
 
@@ -55,18 +55,17 @@ export function InlineArray({
   const lazyError = useHypershelf(
     state => state.assetErrors?.[assetId]?.[fieldId]
   );
-  const uniqueId = useMemo(() => `${assetId}-${fieldId}`, [assetId, fieldId]);
 
   const [val, setVal] = useState(value);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
-  const [isFocus, setIsFocus] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const measure = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isDirty) {
-      if (!shallow(val, value)) {
+      if (!shallowPositional(val, value)) {
         setVal(value);
         setError(null);
       }
@@ -78,7 +77,7 @@ export function InlineArray({
 
   const handleSave = () => {
     if (!fieldInfo) return;
-    if (!shallow(val, value)) {
+    if (!shallowPositional(val, value)) {
       const validationError = validateField(fieldInfo, val);
       if (validationError) {
         setError(validationError);
@@ -93,7 +92,11 @@ export function InlineArray({
         value: val
       })
         .then(() => setIsDirty(false))
-        .finally(() => setUpdating(false));
+        .finally(() => {
+          setUpdating(false);
+          const locker = useHypershelf.getState().locker;
+          locker.release(assetId, fieldId);
+        });
     }
   };
 
@@ -108,7 +111,7 @@ export function InlineArray({
   const onChange = useCallback(
     (incoming: string[]) => {
       setVal(incoming);
-      const dirty = !shallow(incoming, value);
+      const dirty = !shallowPositional(incoming, value);
       setIsDirty(dirty);
       const locker = useHypershelf.getState().locker;
       if (dirty) {
@@ -188,33 +191,36 @@ export function InlineArray({
           placeholder={placeholder || "Добавить..."}
           className={cn(
             "relative h-auto !border-0 !bg-transparent py-1 text-sm",
-            error && "!ring-2 !ring-red-500",
+            (error || (lazyError && !isDirty && isFocused)) &&
+              "!ring-2 !ring-red-500",
             updating && "animate-pulse opacity-50",
             !val && "!placeholder-muted-foreground/50 italic",
             lockedBy &&
               "text-foreground/70 ring-brand cursor-not-allowed !opacity-100 ring-2",
-            (isDirty || error || (lazyError && isFocus)) && "z-50",
+            (isDirty || error || (lazyError && isFocused && !isDirty)) &&
+              "z-50",
             lazyError &&
               !isDirty &&
-              !isFocus &&
+              !isFocused &&
               "rounded-br-none rounded-bl-none !border-b-2 border-red-500"
           )}
           draggable
           disabled={!!lockedBy || updating}
           validateTag={validateTag}
-          uniqueId={uniqueId}
-          onFocus={() => setIsFocus(true)}
+          onFocus={() => setIsFocused(true)}
           onBlur={() => {
             if (val === (value || [])) {
               setError(null);
             }
-            setIsFocus(false);
+            setIsFocused(false);
           }}
         />
       </div>
       <ActionsRow
-        showButton={showButton || !!error || (!!lazyError && isFocus)}
-        error={error || (isFocus ? lazyError : null)}
+        showButton={
+          showButton || !!error || (!!lazyError && isFocused && !isDirty)
+        }
+        error={error || (isFocused && !isDirty ? lazyError : null)}
         updating={updating}
         handleSave={handleSave}
         handleCancel={handleCancel}

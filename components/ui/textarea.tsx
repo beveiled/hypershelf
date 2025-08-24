@@ -43,12 +43,14 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ) => {
     const ref = React.useRef<HTMLTextAreaElement>(null);
     const sizerRef = React.useRef<HTMLDivElement>(null);
+    const sizerOuterRef = React.useRef<HTMLDivElement>(null);
 
     const measureCore = React.useCallback(
       (wrapMode: "whitespace" | "anywhere") => {
         const el = ref.current;
         const sizer = sizerRef.current;
-        if (!el || !sizer) return null;
+        const sizerOuter = sizerOuterRef.current;
+        if (!el || !sizer || !sizerOuter) return null;
 
         const cs = window.getComputedStyle(el);
 
@@ -57,12 +59,12 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         sizer.style.fontStyle = cs.fontStyle;
         sizer.style.letterSpacing = cs.letterSpacing;
         sizer.style.textTransform = cs.textTransform;
-        sizer.style.padding = cs.padding;
         sizer.style.whiteSpace = "pre-wrap";
         sizer.style.wordBreak =
           wrapMode === "anywhere" ? "break-word" : "normal";
         sizer.style.overflowWrap =
           wrapMode === "anywhere" ? "anywhere" : "normal";
+        sizerOuter.style.padding = cs.padding;
 
         const content =
           (value != null ? String(value) : el.value) || placeholder || "";
@@ -74,6 +76,12 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         const paddingY =
           (parseFloat(cs.paddingTop) || 0) +
           (parseFloat(cs.paddingBottom) || 0);
+        const paddingX =
+          (parseFloat(cs.paddingLeft) || 0) +
+          (parseFloat(cs.paddingRight) || 0);
+        const borderX =
+          (parseFloat(cs.borderLeftWidth) || 0) +
+          (parseFloat(cs.borderRightWidth) || 0);
 
         const baseWidth =
           typeof autosizeTo === "number" && autosizeTo > 0
@@ -87,7 +95,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           parseFloat(cs.lineHeight) || Math.max(1, baseRect.height);
         const linesAtBase = Math.max(
           1,
-          Math.ceil((baseRect.height - borderY - paddingY) / lineHeight)
+          Math.ceil(baseRect.height / lineHeight)
         );
 
         const overflowedAtBase =
@@ -106,7 +114,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           const currentRect = sizer.getBoundingClientRect();
           const currentLines = Math.max(
             1,
-            Math.ceil((currentRect.height - borderY - paddingY) / lineHeight)
+            Math.ceil(currentRect.height / lineHeight)
           );
           const overflowed =
             Math.ceil(sizer.scrollWidth) > Math.ceil(sizer.clientWidth);
@@ -124,12 +132,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           }
         }
 
-        const minH = minRows
-          ? Math.ceil(lineHeight * minRows + borderY + paddingY)
-          : undefined;
-        const maxH = maxRows
-          ? Math.floor(lineHeight * maxRows + borderY + paddingY)
-          : undefined;
+        const minH = minRows ? Math.ceil(lineHeight * minRows) : undefined;
+        const maxH = maxRows ? Math.floor(lineHeight * maxRows) : undefined;
 
         const measuredH = bestH;
         const clampedH = Math.min(
@@ -142,11 +146,14 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         const maxW = baseWidth;
         const clampedW = Math.min(maxW, Math.max(measuredW, minW));
 
-        el.style.height = `${clampedH}px`;
-        el.style.overflowY = maxH && clampedH >= maxH ? "auto" : "hidden";
-        el.style.width = `${clampedW}px`;
+        const realH = clampedH + paddingY + borderY;
+        const realW = clampedW + paddingX + borderX;
+
+        el.style.height = `${realH}px`;
+        el.style.overflowY = maxH && realH >= maxH ? "auto" : "hidden";
+        el.style.width = `${realW}px`;
         el.style.overflowX =
-          typeof autosizeTo === "number" && clampedW >= autosizeTo
+          typeof autosizeTo === "number" && realW >= autosizeTo
             ? "auto"
             : "hidden";
         el.style.whiteSpace = "pre-wrap";
@@ -217,17 +224,20 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           {...props}
         />
         <div
-          ref={sizerRef}
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            visibility: "hidden",
-            height: "auto",
-            whiteSpace: "pre-wrap",
-            wordBreak: "normal",
-            overflowWrap: "normal"
-          }}
-        />
+          className="absolute"
+          style={{ visibility: "hidden" }}
+          ref={sizerOuterRef}
+        >
+          <div
+            ref={sizerRef}
+            aria-hidden="true"
+            style={{
+              whiteSpace: "pre-wrap",
+              wordBreak: "normal",
+              overflowWrap: "normal"
+            }}
+          />
+        </div>
       </>
     );
   }

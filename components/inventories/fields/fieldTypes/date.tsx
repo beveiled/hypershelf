@@ -32,6 +32,7 @@ import { ru } from "date-fns/locale";
 import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { FieldPropConfig } from "./_abstractType";
+import { AnimateTransition } from "./string";
 
 function InlineDate({
   assetId,
@@ -97,7 +98,11 @@ function InlineDate({
       assetId,
       fieldId,
       value: selectedDate.toISOString()
-    }).finally(() => setUpdating(false));
+    }).finally(() => {
+      setUpdating(false);
+      const locker = useHypershelf.getState().locker;
+      locker.release(assetId, fieldId);
+    });
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -133,19 +138,21 @@ function InlineDate({
             disabled={updating || !!lockedBy}
           >
             {updating && <Loader2 className="animate-spin" />}
-            {date ? (
-              format(
-                date,
-                date.getFullYear() === new Date().getFullYear()
-                  ? "d MMMM"
-                  : "PPP",
-                { locale: ru }
-              )
-            ) : (
-              <span className="text-muted-foreground/50 italic">
-                {placeholder || "пусто"}
-              </span>
-            )}
+            <AnimateTransition assetId={assetId} fieldId={fieldId}>
+              {date ? (
+                format(
+                  date,
+                  date.getFullYear() === new Date().getFullYear()
+                    ? "d MMMM"
+                    : "PPP",
+                  { locale: ru }
+                )
+              ) : (
+                <span className="text-muted-foreground/50 italic">
+                  {placeholder || "пусто"}
+                </span>
+              )}
+            </AnimateTransition>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">

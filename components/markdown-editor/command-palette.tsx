@@ -187,7 +187,7 @@ export function MarkdownCommandPalette({
   useEffect(() => {
     if (!enabled) return;
     const down = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "p") {
+      if ((e.ctrlKey || e.metaKey) && (e.key === "p" || e.key === "з")) {
         e.preventDefault();
         setOpen(true);
       }

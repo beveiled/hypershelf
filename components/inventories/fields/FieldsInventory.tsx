@@ -40,7 +40,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Loader2, Lock, Plus } from "lucide-react";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useEffect, useState } from "react";
-import { useLog } from "../../util/Log";
 import { Debugger } from "../Debugger";
 import { useFieldLock } from "../useLock";
 import { FieldForm } from "./FieldForm";
@@ -54,7 +53,6 @@ const defaultNewField: WithoutSystemFields<Omit<FieldType, "slug">> = {
 };
 
 export function FieldsInventory() {
-  const ingestLogs = useLog();
   const { viewer } = useQuery(api.users.me) ?? {};
   const { fields } = useQuery(api.fields.get) ?? {};
   const deleteField = useMutation(api.fields.remove);
@@ -71,11 +69,7 @@ export function FieldsInventory() {
   const [isLocking, setIsLocking] = useState(false);
   const [lockTimeout, setLockTimeout] = useState(0);
 
-  const { lockedId, acquireLock, releaseLock } = useFieldLock(
-    ingestLogs,
-    30000,
-    30
-  );
+  const { lockedId, acquireLock, releaseLock } = useFieldLock(30000, 30);
 
   const handleExpand = (field: FieldType) => {
     if (field._id === expandedFieldId && lockedId) return;
@@ -252,7 +246,7 @@ export function FieldsInventory() {
                   : "0 1px 4px rgba(0,0,0,0.10)"
               }}
               className={cn(
-                "relative rounded-lg border bg-black p-4 shadow-sm transition-all",
+                "bg-background relative rounded-lg border p-4 shadow-sm transition-all",
                 {
                   "shadow-lg": isExpanded,
                   "border-brand border-2":

@@ -38,6 +38,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { IconName } from "@/components/ui/icon-picker";
 import { Input } from "@/components/ui/input";
+import { Kbd } from "@/components/ui/kbd";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -51,7 +52,6 @@ import {
   TooltipContent,
   TooltipTrigger
 } from "@/components/ui/tooltip";
-import { useLog } from "@/components/util/Log";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { FieldType } from "@/convex/fields";
@@ -161,17 +161,37 @@ const ActionsRow = memo(
               <div className="mt-4">
                 <Input
                   placeholder="Введи название поля"
+                  value={fieldName}
                   onChange={e => setFieldName(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                      e.preventDefault();
+                      if (
+                        !isLockedBySomeoneElse &&
+                        !isSaving &&
+                        !isDeleting &&
+                        fieldName.trim()
+                      ) {
+                        setIsDeleting(true);
+                        onDelete();
+                        setIsDeleting(false);
+                      }
+                    }
+                  }}
+                  autoFocus
+                  disabled={isLockedBySomeoneElse || isSaving || isDeleting}
                 />
               </div>
               <AlertDialogFooter>
                 <AlertDialogCancel asChild>
-                  <Button variant="outline">Отмена</Button>
+                  <Button variant="outline">
+                    Отмена
+                    <Kbd keys={["Esc"]} />
+                  </Button>
                 </AlertDialogCancel>
                 <Button
                   variant="destructive"
                   onClick={() => {
-                    if (!onDelete) return;
                     setIsDeleting(true);
                     onDelete();
                     setIsDeleting(false);
@@ -185,6 +205,12 @@ const ActionsRow = memo(
                 >
                   {isDeleting && <Loader2Icon className="animate-spin" />}
                   Удалить
+                  {!isLockedBySomeoneElse &&
+                    !isSaving &&
+                    !isDeleting &&
+                    fieldName.trim() && (
+                      <Kbd keys={["Meta", "Enter"]} variant="white" />
+                    )}
                 </Button>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -234,8 +260,10 @@ const TypeField = memo(
           <SelectContent>
             {fieldTypes.map(t => (
               <SelectItem key={t.key} value={t.key}>
-                <DynamicIcon name={t.icon as IconName} />
-                {t.label}
+                <div className="flex items-center gap-1.5">
+                  <DynamicIcon name={t.icon as IconName} />
+                  {t.label}
+                </div>
               </SelectItem>
             ))}
           </SelectContent>
@@ -253,6 +281,7 @@ const TypeField = memo(
                 variant="destructive"
               >
                 Изменить
+                <Kbd keys={["Meta", "Enter"]} />
               </Button>
               <Button
                 variant="outline"
@@ -260,6 +289,7 @@ const TypeField = memo(
                 onClick={() => onPending(null)}
               >
                 Отмена
+                <Kbd keys={["Esc"]} />
               </Button>
             </div>
           </Alert>
@@ -285,7 +315,6 @@ export function FieldForm({
 }: FieldFormProps) {
   const updateField = useMutation(api.fields.update);
   const createField = useMutation(api.fields.create);
-  const ingestLogs = useLog();
 
   const [pendingType, setPendingType] = useState<string | null>(null);
   const [values, setValues] =
@@ -362,7 +391,6 @@ export function FieldForm({
             extra: values.extra || {},
             hidden: values.hidden || false
           });
-          ingestLogs(res);
           if (res.success) onCancel();
         } else {
           const res = await createField({
@@ -372,14 +400,13 @@ export function FieldForm({
             extra: values.extra || {},
             hidden: values.hidden || false
           });
-          ingestLogs(res);
           if (res.success && res.fieldId) onCancel();
         }
       } finally {
         setIsSaving(false);
       }
     },
-    [values, ingestLogs, onCancel, updateField, createField]
+    [values, onCancel, updateField, createField]
   );
 
   const typeExtras = getPropsForType(values.type);
