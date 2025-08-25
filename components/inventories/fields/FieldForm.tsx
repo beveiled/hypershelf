@@ -36,17 +36,23 @@ import {
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from "@/components/ui/command";
 import { IconName } from "@/components/ui/icon-picker";
 import { Input } from "@/components/ui/input";
 import { Kbd } from "@/components/ui/kbd";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover";
 import {
   Tooltip,
   TooltipContent,
@@ -56,19 +62,22 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { FieldType } from "@/convex/fields";
 import { ValueType } from "@/convex/schema";
+import { cn } from "@/lib/utils";
 import { useMutation } from "convex/react";
 import { WithoutSystemFields } from "convex/server";
 import { motion } from "framer-motion";
-import { Loader2Icon } from "lucide-react";
+import { Check, ChevronDown, Loader2Icon } from "lucide-react";
 import { DynamicIcon } from "lucide-react/dynamic";
 import React, {
   memo,
   MemoExoticComponent,
   useCallback,
+  useMemo,
   useRef,
   useState
 } from "react";
 import { fieldProps, FieldPropType, getFieldProps } from "./fieldProps";
+import { AnimateTransition } from "./fieldTypes/string";
 
 type FieldFormProps = {
   fieldId?: Id<"fields"> | null;
@@ -246,35 +255,81 @@ const TypeField = memo(
     lockField?: () => void;
     isLockedBySomeoneElse: boolean;
   }) {
+    const selectedType = useMemo(
+      () => fieldTypes.find(t => t.key === value),
+      [value]
+    );
+
     return (
       <div className="relative flex flex-col gap-1">
         <Label className="block text-xs font-medium">Тип</Label>
-        <Select
-          value={value}
-          onValueChange={val => onPending(val)}
-          disabled={isLockedBySomeoneElse || pendingType !== null}
-        >
-          <SelectTrigger className="w-full" onClick={lockField}>
-            <SelectValue placeholder="Select type" />
-          </SelectTrigger>
-          <SelectContent>
-            {fieldTypes.map(t => (
-              <SelectItem key={t.key} value={t.key}>
-                <div className="flex items-center gap-1.5">
-                  <DynamicIcon name={t.icon as IconName} />
-                  {t.label}
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              disabled={isLockedBySomeoneElse || pendingType !== null}
+              onClick={lockField}
+            >
+              <AnimateTransition postfix="field-type-changer">
+                {selectedType ? (
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <DynamicIcon name={selectedType.icon as IconName} />
+                      {selectedType.label}
+                    </div>
+                    <ChevronDown className="opacity-50" />
+                  </div>
+                ) : (
+                  <span className="text-muted-foreground/50 italic">пусто</span>
+                )}
+              </AnimateTransition>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-fit p-0">
+            <Command
+              className="!bg-transparent !backdrop-blur-none"
+              value={value}
+            >
+              <CommandInput
+                placeholder="Поиск..."
+                className="h-9"
+                disabled={isLockedBySomeoneElse || pendingType !== null}
+              />
+              <CommandList>
+                <CommandEmpty>Не нашли ничего</CommandEmpty>
+                <CommandGroup>
+                  {fieldTypes.map(fieldType => (
+                    <CommandItem
+                      key={fieldType.key}
+                      value={fieldType.key}
+                      disabled={isLockedBySomeoneElse || pendingType !== null}
+                      onSelect={val => onPending(val)}
+                    >
+                      <div className="flex items-center gap-1.5">
+                        <DynamicIcon name={fieldType.icon as IconName} />
+                        {fieldType.label}
+                      </div>
+                      <Check
+                        className={cn(
+                          "ml-auto",
+                          value === fieldType.key ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
         {pendingType && (
-          <Alert className="absolute top-full -mt-2 -ml-3">
+          <Alert className="absolute top-full z-50 m-4 flex size-fit flex-col">
             <AlertTitle>Изменить тип поля?</AlertTitle>
             <AlertDescription>
               Изменение типа поля удалит все расширенные настройки.
             </AlertDescription>
-            <div className="mt-2 flex space-x-2">
+            <div className="mt-2 flex items-center gap-2">
               <Button
                 size="sm"
                 onClick={() => onCommit(pendingType)}
