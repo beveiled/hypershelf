@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Id } from "@/convex/_generated/dataModel";
-import { cn } from "@/lib/utils";
+import { cn, shallowPositional } from "@/lib/utils";
 import { useHypershelf } from "@/stores/assets";
 import { memo } from "react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
@@ -54,16 +54,15 @@ function DataRow({ assetId }: { assetId: Id<"assets"> }) {
     useHypershelf,
     state => {
       const { fieldIds, hiddenFields, hiding } = state;
-      if (hiddenFields.length === 0 || !hiding) return fieldIds;
-      return fieldIds.filter(f => !hiddenFields.includes(f));
+      return fieldIds
+        .filter(f => !hiding || !hiddenFields.includes(f))
+        .sort((a, b) => {
+          const posA = state.fieldOrder.indexOf(a);
+          const posB = state.fieldOrder.indexOf(b);
+          return posA - posB;
+        });
     },
-    (a, b) => {
-      if (a.length !== b.length) return false;
-      for (let i = 0; i < a.length; i++) {
-        if (a[i] !== b[i]) return false;
-      }
-      return true;
-    }
+    shallowPositional
   );
   const isError = useHypershelf(
     state => !!Object.keys(state.assetErrors[assetId] || {}).length

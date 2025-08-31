@@ -35,7 +35,7 @@ export function HeaderMenu() {
           <Ellipsis className="size-4 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent side="bottom">
+      <PopoverContent side="bottom" className="z-[9999]">
         <div className="flex flex-col">
           <Button variant="ghost" onClick={toggleHiding}>
             {hiding ? (

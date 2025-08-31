@@ -66,9 +66,7 @@ function InlineUser({
   if (readonly) {
     return (
       <div className="select-none">
-        {value
-          ? users.find(user => user.id === value)?.email || placeholder
-          : placeholder || "пусто"}
+        {value ? users[value] || placeholder : placeholder || "пусто"}
       </div>
     );
   }
@@ -125,7 +123,7 @@ function InlineUser({
             {updating && <Loader2 className="animate-spin" />}
             <AnimateTransition assetId={assetId} fieldId={fieldId}>
               {value ? (
-                users.find(user => user.id === value)?.email
+                users[value]
               ) : (
                 <span className="text-muted-foreground/50 italic">пусто</span>
               )}
@@ -145,23 +143,25 @@ function InlineUser({
             <CommandList>
               <CommandEmpty>Не нашли никого</CommandEmpty>
               <CommandGroup>
-                {users.map(user => (
-                  <CommandItem
-                    key={user.id}
-                    value={user.id}
-                    keywords={[user.email!]}
-                    onSelect={handleUserSelect}
-                    disabled={!!lockedBy || updating}
-                  >
-                    {user.email}
-                    <Check
-                      className={cn(
-                        "ml-auto",
-                        value === user.id ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                  </CommandItem>
-                ))}
+                {Object.entries(users).map(([id, email]) => {
+                  return (
+                    <CommandItem
+                      key={id}
+                      value={id}
+                      keywords={[email]}
+                      onSelect={handleUserSelect}
+                      disabled={!!lockedBy || updating}
+                    >
+                      {email}
+                      <Check
+                        className={cn(
+                          "ml-auto",
+                          value === id ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  );
+                })}
               </CommandGroup>
             </CommandList>
           </Command>

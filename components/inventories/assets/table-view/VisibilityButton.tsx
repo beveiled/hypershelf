@@ -20,7 +20,6 @@ import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores/assets";
 import { AnimatePresence, motion } from "framer-motion";
-import { useMemo } from "react";
 
 export function VisibilityButton({
   fieldId,
@@ -30,7 +29,6 @@ export function VisibilityButton({
   isHidden: boolean;
 }) {
   const toggleVisibility = useHypershelf(state => state.toggleVisibility);
-  const uniqueId = useMemo(() => `visibility-icon-${fieldId}`, [fieldId]);
 
   return (
     <Button
@@ -39,11 +37,7 @@ export function VisibilityButton({
       onClick={() => toggleVisibility(fieldId)}
       className={cn("!size-auto !p-1")}
     >
-      <motion.div
-        layout
-        layoutId={uniqueId}
-        transition={{ type: "spring", bounce: 0.2, duration: 0.3 }}
-      >
+      <motion.div transition={{ type: "spring", bounce: 0.2, duration: 0.3 }}>
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"

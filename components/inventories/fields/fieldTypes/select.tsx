@@ -150,7 +150,7 @@ function InlineSelect({
                 "text-foreground/70 ring-brand cursor-not-allowed !opacity-100 ring-2",
               lazyError &&
                 !open &&
-                "rounded-br-none rounded-bl-none !border-b-2 border-red-500"
+                "rounded-br-none rounded-bl-none !border-b-2 !border-red-500"
             )}
           >
             {updating && <Loader2 className="animate-spin" />}

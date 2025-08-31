@@ -202,7 +202,7 @@ export function InlineArray({
             lazyError &&
               !isDirty &&
               !isFocused &&
-              "rounded-br-none rounded-bl-none !border-b-2 border-red-500"
+              "rounded-br-none rounded-bl-none !border-b-2 !border-red-500"
           )}
           draggable
           disabled={!!lockedBy || updating}

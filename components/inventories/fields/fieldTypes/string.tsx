@@ -15,7 +15,7 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-import { Button } from "@/components/ui/button";
+import { ButtonWithKbd } from "@/components/ui/kbd-button";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -28,7 +28,6 @@ import { Loader2, Save, X } from "lucide-react";
 import { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/shallow";
 import { FieldPropConfig } from "./_abstractType";
-import { Kbd } from "@/components/ui/kbd";
 
 export function ActionsRow({
   showButton,
@@ -47,10 +46,7 @@ export function ActionsRow({
 }) {
   const [rect, setRect] = useState<DOMRect | null>(null);
   const [parentRect, setParentRect] = useState<DOMRect | null>(null);
-  const uniqueId = useMemo(
-    () => `actions-row-${Math.random().toString(36).substr(2, 9)}`,
-    []
-  );
+  const [innerWidth, setInnerWidth] = useState<number>(0);
   useEffect(() => {
     const measureEl = measure && "current" in measure ? measure.current : null;
     if (!measureEl) return;
@@ -64,6 +60,7 @@ export function ActionsRow({
 
     const resizeObserver = new ResizeObserver(() => {
       setRect(measureEl.getBoundingClientRect());
+      setInnerWidth(window.innerWidth);
       if (parentEl) {
         setParentRect(parentEl.getBoundingClientRect());
       }
@@ -74,6 +71,7 @@ export function ActionsRow({
 
     setRect(measureEl.getBoundingClientRect());
     setParentRect(parentEl.getBoundingClientRect());
+    setInnerWidth(window.innerWidth);
 
     return () => {
       resizeObserver.disconnect();
@@ -119,8 +117,15 @@ export function ActionsRow({
           className="border-border-focus bg-background/60 absolute z-40 flex min-w-fit flex-col justify-end rounded-md border border-dashed p-2 backdrop-blur-lg"
           style={{
             top: rect.top - parentRect.top - 10,
-            left: rect.left - parentRect.left - 10,
-            width: Math.max(rect.width + 18, 150),
+            left:
+              innerWidth - rect.right > 200
+                ? rect.left - parentRect.left - 10
+                : undefined,
+            right:
+              innerWidth - rect.right > 200
+                ? undefined
+                : parentRect.right - rect.right - 10,
+            width: Math.max(rect.width + 18, 200),
             height: `calc(${rect.height + 18}px + ${(showButton ? 2.375 : 0) + (error ? 1.25 : 0)}rem)`
           }}
         >
@@ -132,24 +137,20 @@ export function ActionsRow({
           {error && showButton && <div className="h-1" />}
           {showButton && (
             <div className="flex w-full items-center gap-1">
-              <Button
+              <ButtonWithKbd
                 variant="outline"
                 size="sm"
                 className="h-auto !p-1 text-xs"
                 onClick={handleCancel}
                 disabled={updating}
+                keys={["Esc"]}
+                showKbd={!updating}
+                kbdSize="sm"
               >
-                <AnimateTransition postfix={`${uniqueId}-cancel`}>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1.5">
-                      <X />
-                      Отмена
-                    </div>
-                    {!updating && <Kbd keys={["Esc"]} size="sm" />}
-                  </div>
-                </AnimateTransition>
-              </Button>
-              <Button
+                <X />
+                Отмена
+              </ButtonWithKbd>
+              <ButtonWithKbd
                 size="sm"
                 className={cn(
                   "h-auto flex-1 py-1 text-xs",
@@ -157,23 +158,17 @@ export function ActionsRow({
                 )}
                 onClick={handleSave}
                 disabled={updating || !!error}
+                keys={["Meta", "S"]}
+                showKbd={!updating && !error}
+                kbdSize="sm"
               >
-                <AnimateTransition postfix={`${uniqueId}-save`}>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1.5">
-                      {updating ? (
-                        <Loader2 className="size-3 animate-spin" />
-                      ) : (
-                        <Save className="size-3" />
-                      )}
-                      Сохранить
-                    </div>
-                    {!updating && !error && (
-                      <Kbd keys={["Meta", "S"]} variant="light" size="sm" />
-                    )}
-                  </div>
-                </AnimateTransition>
-              </Button>
+                {updating ? (
+                  <Loader2 className="size-3 animate-spin" />
+                ) : (
+                  <Save className="size-3" />
+                )}
+                Сохранить
+              </ButtonWithKbd>
             </div>
           )}
         </motion.div>
@@ -323,7 +318,7 @@ export function InlineString({
             lazyError &&
               !isDirty &&
               !isFocused &&
-              "rounded-br-none rounded-bl-none !border-b-2 border-red-500"
+              "rounded-br-none rounded-bl-none !border-b-2 !border-red-500"
           )}
           disabled={updating || !!lockedBy}
           autosizeFrom={40}

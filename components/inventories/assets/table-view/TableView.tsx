@@ -24,12 +24,27 @@ import {
 } from "@/components/ui/table";
 import { Id } from "@/convex/_generated/dataModel";
 import { useHypershelf } from "@/stores/assets";
-import { useMemo } from "react";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors
+} from "@dnd-kit/core";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 import { DataRowStable } from "./DataRow";
-import { HeaderCell } from "./HeaderCell";
+import { SmartHeader } from "./SmartHeader";
+import { useCallback } from "react";
 
 export function TableView() {
+  const sensors = useSensors(
+    useSensor(MouseSensor),
+    useSensor(TouchSensor),
+    useSensor(KeyboardSensor)
+  );
   const assetIds = useStoreWithEqualityFn(
     useHypershelf,
     state => {
@@ -67,40 +82,45 @@ export function TableView() {
       return true;
     }
   );
-  const fieldIds = useHypershelf(state => state.fieldIds);
-  const hiddenFields = useHypershelf(state => state.hiddenFields);
-  const hiding = useHypershelf(state => state.hiding);
-  const visibleFieldIds = useMemo(() => {
-    if (hiddenFields.length === 0 || !hiding) return fieldIds;
-    return fieldIds.filter(f => !hiddenFields.includes(f));
-  }, [fieldIds, hiddenFields, hiding]);
+  const reorderField = useHypershelf(state => state.reorderField);
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (active.id !== over?.id) {
+        reorderField(active.id as Id<"fields">, over?.id as Id<"fields">);
+      }
+    },
+    [reorderField]
+  );
 
   return (
     <>
       <div className="bg-background/70 border-border absolute z-[99] h-8 w-[calc(100vw-1rem)] rounded-tl-md rounded-tr-md border backdrop-blur-lg" />
       <div className="relative h-[calc(100dvh-3.5rem)] overflow-auto overscroll-none rounded-md border">
-        <Table className="table-auto">
-          <TableHeader className="sticky top-0 z-[100] !border-0">
-            <TableRow className="relative h-8 !border-0 hover:bg-transparent">
-              {visibleFieldIds.map(fieldId => (
-                <HeaderCell key={fieldId} fieldId={fieldId} />
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody className="relative">
-            {assetIds.length ? (
-              assetIds.map(assetId => (
-                <DataRowStable key={assetId} assetId={assetId} />
-              ))
-            ) : (
-              <TableRow>
-                <TableCell className="h-24 text-center">
-                  Ничего не нашлось. Попробуй изменить фильтры
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <Table className="table-auto">
+            <TableHeader className="sticky top-0 z-[100] !border-0">
+              <SmartHeader />
+            </TableHeader>
+            <TableBody className="relative">
+              {assetIds.length ? (
+                assetIds.map(assetId => (
+                  <DataRowStable key={assetId} assetId={assetId} />
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell className="h-24 text-center">
+                    Ничего не нашлось. Попробуй изменить фильтры
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </DndContext>
       </div>
     </>
   );

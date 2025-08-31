@@ -67,7 +67,7 @@ const IconsColumnSkeleton = () => {
       <Skeleton className="h-4 w-1/2 rounded-md" />
       <div className="grid w-full grid-cols-5 gap-2">
         {Array.from({ length: 40 }).map((_, i) => (
-          <Skeleton key={i} className="h-10 w-10 rounded-md" />
+          <Skeleton key={i} className="size-10 rounded-md" />
         ))}
       </div>
     </div>

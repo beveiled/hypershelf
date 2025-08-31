@@ -79,7 +79,7 @@ const SortableTag: React.FC<{
               variant="ghost"
               onPointerDown={e => e.stopPropagation()}
               onClick={onRemove}
-              className="h-4 w-4 p-0"
+              className="size-4 p-0"
               disabled={disabled}
             >
               <X className="size-3" />
@@ -104,7 +104,7 @@ const StaticTag: React.FC<{
         size="icon"
         variant="ghost"
         onClick={onRemove}
-        className="h-4 w-4 p-0"
+        className="size-4 p-0"
         disabled={disabled}
       >
         <X className="size-3" />

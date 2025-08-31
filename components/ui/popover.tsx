@@ -128,6 +128,9 @@ function PopoverContent({
               exit={{
                 ...initial,
                 transition: {
+                  type: "spring",
+                  duration: 0.3,
+                  bounce: 0.2,
                   scaleX: { duration: 0.2 },
                   scaleY: { duration: 0.2 }
                 }
@@ -141,7 +144,7 @@ function PopoverContent({
               }}
               style={{ willChange: "transform, opacity" }}
               className={cn(
-                "text-popover-foreground bg-background/60 z-50 w-72 origin-(--radix-popover-content-transform-origin) rounded-md border p-4 shadow-md outline-hidden backdrop-blur-lg",
+                "text-popover-foreground bg-background/60 relative z-50 w-72 origin-(--radix-popover-content-transform-origin) rounded-md border p-4 shadow-md outline-hidden backdrop-blur-lg",
                 className
               )}
             >

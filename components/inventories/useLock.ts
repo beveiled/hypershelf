@@ -114,10 +114,7 @@ export function useFieldLock(
   useEffect(() => {
     if (!lockedId) return;
     const beforeunload = (e: BeforeUnloadEvent) => {
-      const confirmationMessage =
-        "You have unsaved changes. Do you really want to leave?";
-      (e || window.event).returnValue = confirmationMessage;
-      return confirmationMessage;
+      e.preventDefault();
     };
     window.addEventListener("beforeunload", beforeunload);
     return () => {
@@ -284,11 +281,8 @@ export function useAssetLock(
 
   useEffect(() => {
     if (lockedPairs.length === 0) return;
-    const beforeunload = (e: BeforeUnloadEvent) => {
-      const confirmationMessage =
-        "You have unsaved changes. Do you really want to leave?";
-      (e || window.event).returnValue = confirmationMessage;
-      return confirmationMessage;
+    const beforeunload = () => {
+      return "You have unsaved changes. Do you really want to leave?";
     };
     window.addEventListener("beforeunload", beforeunload);
     return () => {

@@ -119,7 +119,7 @@ export default function VSphereIntegrationPage() {
       }
       return (
         <div className="mt-2 flex h-full w-full items-center justify-center gap-2 font-bold text-red-500">
-          <ShieldAlert className="h-5 w-5" />
+          <ShieldAlert className="size-5" />
           Авторизуйся с новой вкладке и перезагрузи страницу
         </div>
       );
@@ -148,7 +148,7 @@ export default function VSphereIntegrationPage() {
   if (isPermissionDenied) {
     return (
       <div className="mt-2 flex h-full w-full items-center justify-center gap-2 font-bold text-red-500">
-        <ShieldAlert className="h-5 w-5" />
+        <ShieldAlert className="size-5" />
         Нужно разрешить доступ для доступа к хостам
       </div>
     );
@@ -158,14 +158,14 @@ export default function VSphereIntegrationPage() {
     <>
       {!isLoading && (!fieldMappings.hostname || !fieldMappings.ip) && (
         <div className="mt-2 flex h-full w-full items-center justify-center gap-2 font-bold text-red-500">
-          <ShieldAlert className="h-5 w-5" />
+          <ShieldAlert className="size-5" />
           Что-то не так с полями в Hypershelf
         </div>
       )}
 
       {!isLoading && fieldMappings.hostname && fieldMappings.ip && !asset && (
         <div className="text-muted-foreground mt-2 flex h-full w-full items-center justify-center gap-2 font-bold">
-          <CloudOff className="h-5 w-5" />
+          <CloudOff className="size-5" />
           Этого хоста нет в Hypershelf
         </div>
       )}
@@ -181,7 +181,7 @@ export default function VSphereIntegrationPage() {
               >
                 <DynamicIcon
                   name={(field.extra?.icon || "circle") as IconName}
-                  className="h-4 w-4"
+                  className="size-4"
                 />
                 <strong>{field.name}:</strong>{" "}
                 <FieldRenderer assetId={asset.asset._id} fieldId={field._id} />

@@ -117,7 +117,7 @@ function JsonNode({
         onClick={isExpandable ? handleToggle : undefined}
       >
         {isExpandable ? (
-          <div className="flex h-4 w-4 items-center justify-center">
+          <div className="flex size-4 items-center justify-center">
             {isExpanded ? (
               <ChevronDown className="text-muted-foreground h-3.5 w-3.5" />
             ) : (
@@ -233,9 +233,9 @@ function JsonValue({ data }: { data: JsonAllowedTypes }) {
             {`"`}
             <div className="absolute top-1/2 right-0 translate-x-[calc(100%+4px)] -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100">
               {isExpanded ? (
-                <ChevronUp className="text-muted-foreground h-3 w-3" />
+                <ChevronUp className="text-muted-foreground size-3" />
               ) : (
-                <MoreHorizontal className="text-muted-foreground h-3 w-3" />
+                <MoreHorizontal className="text-muted-foreground size-3" />
               )}
             </div>
           </div>

@@ -17,12 +17,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 import { Id } from "@/convex/_generated/dataModel";
 import { ExtendedAssetType } from "@/convex/assets";
-import { AssetType, FieldType, UserType } from "@/convex/schema";
+import { AssetType, ExtendedViewType, FieldType } from "@/convex/schema";
 import { validateFields } from "@/convex/utils";
-import { ViewType } from "@/convex/views";
+import { shallowPositional } from "@/lib/utils";
 import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
 import { devtools } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 import { shallow } from "zustand/shallow";
 
 function compareMetadata(a: AssetType["metadata"], b: AssetType["metadata"]) {
@@ -109,8 +109,9 @@ type LockedFields = Record<Id<"assets">, Record<Id<"fields">, string>>;
 type AssetErrors = Record<Id<"assets">, Record<Id<"fields">, string>>;
 type AssetsDict = Record<Id<"assets">, ExtendedAssetType>;
 type FieldsDict = Record<Id<"fields">, FieldType>;
+type UsersDict = Record<Id<"users">, string>;
 type SortingDict = Record<Id<"fields">, "asc" | "desc">;
-type ViewsDict = Record<Id<"views">, ViewType>;
+type ViewsDict = Record<Id<"views">, ExtendedViewType>;
 
 type State = {
   assetIds: Id<"assets">[];
@@ -121,7 +122,7 @@ type State = {
   fieldIds: Id<"fields">[];
   fields: FieldsDict;
   viewer: Id<"users"> | null | undefined;
-  users: { id: Id<"users">; email?: string }[];
+  users: UsersDict;
   sorting: SortingDict;
   hiding: boolean;
   hiddenFields: Id<"fields">[];
@@ -137,16 +138,19 @@ type State = {
 type Actions = {
   setAssets: (assets: AssetsDict) => void;
   setFields: (fields: FieldsDict) => void;
+  setUsers: (users: UsersDict) => void;
   setViewer: (viewer: Id<"users"> | null | undefined) => void;
-  setUsers: (users: UserType[]) => void;
   setSorting: (sorting: SortingDict) => void;
   toggleSorting: (fieldId: Id<"fields">) => void;
   toggleVisibility: (fieldId: Id<"fields">) => void;
   toggleHiding: () => void;
   setActiveViewId: (activeView: Id<"views"> | null) => void;
-  setViews: (views: ViewType[]) => void;
+  applyView: (viewId: Id<"views">) => void;
+  setViews: (views: ExtendedViewType[]) => void;
   revalidateErrors: () => void;
   revalidateLocks: () => void;
+  reorderField: (from: Id<"fields">, to: Id<"fields">) => void;
+  init: () => void;
 };
 
 const initialState: State = {
@@ -168,13 +172,28 @@ const initialState: State = {
   hiddenFields: [],
   fieldOrder: [],
   viewer: null,
-  users: []
+  users: {}
 } as State;
 
 export const useHypershelf = create<State & Actions>()(
   devtools(
     immer((set, get) => ({
       ...initialState,
+      reorderField: (from, to) =>
+        set(state => {
+          if (state.fieldOrder.length === 0) {
+            state.fieldOrder = [...state.fieldIds];
+          }
+          const fromIndex = state.fieldOrder.indexOf(from);
+          const toIndex = state.fieldOrder.indexOf(to);
+          if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex)
+            return;
+          state.fieldOrder.splice(fromIndex, 1);
+          state.fieldOrder.splice(toIndex, 0, from);
+          if (shallowPositional(state.fieldOrder, state.fieldIds)) {
+            state.fieldOrder = [];
+          }
+        }),
       revalidateErrors: () =>
         set(state => {
           for (const [, asset] of Object.entries(state.assets)) {
@@ -368,21 +387,18 @@ export const useHypershelf = create<State & Actions>()(
         });
         get().revalidateLocks();
       },
-      setUsers: users =>
+      setUsers: incoming =>
         set(state => {
-          for (const user of users) {
-            const p = state.users.find(u => u.id === user._id);
-            if (p) {
-              if (p.email !== user.email) {
-                p.email = user.email;
-              }
-            } else {
-              state.users.push({ id: user._id, email: user.email });
-            }
+          for (const [id, name] of Object.entries(incoming) as [
+            Id<"users">,
+            string
+          ][]) {
+            if (state.users[id] === name) continue;
+            state.users[id] = name;
           }
-          for (const user of state.users) {
-            if (!users.some(u => u._id === user.id)) {
-              delete state.users[state.users.indexOf(user)];
+          for (const id of Object.keys(state.users)) {
+            if (!incoming[id as Id<"users">]) {
+              delete state.users[id as Id<"users">];
             }
           }
         }),
@@ -420,7 +436,7 @@ export const useHypershelf = create<State & Actions>()(
           if (state.hiddenFields.includes(fieldId)) {
             for (let i = 0; i < state.hiddenFields.length; i++) {
               if (state.hiddenFields[i] === fieldId) {
-                delete state.hiddenFields[i];
+                state.hiddenFields.splice(i, 1);
                 break;
               }
             }
@@ -429,15 +445,46 @@ export const useHypershelf = create<State & Actions>()(
           }
         });
       },
+      init: () => {
+        set(state => {
+          const storedHiding = localStorage.getItem("hiding");
+          if (storedHiding === "0") {
+            state.hiding = false;
+          } else if (storedHiding === "1") {
+            state.hiding = true;
+          }
+        });
+      },
       toggleHiding: () => {
         set(state => {
           state.hiding = !state.hiding;
+          localStorage.setItem("hiding", state.hiding ? "1" : "0");
         });
       },
-      setActiveViewId: activeView =>
+      setActiveViewId: activeView => {
         set(state => {
+          if (state.activeViewId === activeView) return;
+          if (activeView && !state.views[activeView]) {
+            console.warn("Tried to set unknown view as active:", activeView);
+            return;
+          }
           state.activeViewId = activeView;
-        }),
+        });
+        if (activeView) get().applyView(activeView);
+      },
+      applyView: viewId => {
+        const state = get();
+        if (!state.views[viewId]) {
+          console.warn("Tried to apply unknown view:", viewId);
+          return;
+        }
+        const view = state.views[viewId];
+        set(state => {
+          state.sorting = { ...view.sorting };
+          state.hiddenFields = [...(view.hiddenFields || [])];
+          state.fieldOrder = [...(view.fieldOrder || [])];
+        });
+      },
       setViews: views =>
         set(state => {
           for (const view of views) {
@@ -452,3 +499,24 @@ export const useHypershelf = create<State & Actions>()(
     }))
   )
 );
+
+export const useIsViewDirty = () => {
+  return useHypershelf(state => {
+    const view = (state.activeViewId
+      ? state.views[state.activeViewId]
+      : null) ?? {
+      _id: "",
+      name: "Default",
+      global: false,
+      builtin: true,
+      sorting: {},
+      fieldOrder: [],
+      hiddenFields: []
+    };
+    return (
+      !shallow(view.sorting || {}, state.sorting) ||
+      !shallowPositional(view.fieldOrder || [], state.fieldOrder) ||
+      !shallowPositional(view.hiddenFields || [], state.hiddenFields)
+    );
+  });
+};

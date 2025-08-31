@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 import { MarkdownEditor } from "@/components/markdown-editor";
 import { Button } from "@/components/ui/button";
-import { Kbd } from "@/components/ui/kbd";
+import { ButtonWithKbd } from "@/components/ui/kbd-button";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,6 @@ import { CircleCheck, Download, Eye, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { FieldPropConfig } from "./_abstractType";
-import { AnimateTransition } from "./string";
 
 function MarkdownEditorPortal({
   fieldId,
@@ -131,40 +130,24 @@ function MarkdownEditorPortal({
           </div>
         )}
         <div className="mt-2 flex justify-end gap-2">
-          <Button variant="outline" onClick={handleClose} disabled={updating}>
-            <AnimateTransition
-              assetId={assetId}
-              fieldId={fieldId}
-              postfix="md-cancel"
-            >
-              <div className="flex items-center gap-2">
-                Отмена
-                {!isDirty && <Kbd keys={["Esc"]} />}
-              </div>
-            </AnimateTransition>
-          </Button>
-          <Button
+          <ButtonWithKbd
+            variant="outline"
+            onClick={handleClose}
+            disabled={updating}
+            keys={["Esc"]}
+            showKbd={!isDirty}
+          >
+            Отмена
+          </ButtonWithKbd>
+          <ButtonWithKbd
             onClick={() => onSave(val)}
             disabled={disabled || updating || readonly || !isDirty}
+            keys={["Meta", "S"]}
+            showKbd={isDirty}
           >
-            <AnimateTransition
-              assetId={assetId}
-              fieldId={fieldId}
-              postfix="md-save"
-            >
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5">
-                  {updating ? (
-                    <Loader2 className="animate-spin" />
-                  ) : (
-                    <CircleCheck />
-                  )}
-                  Сохранить
-                </div>
-                {isDirty && <Kbd keys={["Meta", "S"]} variant="light" />}
-              </div>
-            </AnimateTransition>
-          </Button>
+            {updating ? <Loader2 className="animate-spin" /> : <CircleCheck />}
+            Сохранить
+          </ButtonWithKbd>
         </div>
       </div>
     </div>

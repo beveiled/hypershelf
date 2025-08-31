@@ -20,20 +20,41 @@ import { TableHead } from "@/components/ui/table";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores/assets";
+import { useSortable } from "@dnd-kit/sortable";
 import { AnimatePresence, motion, Transition } from "framer-motion";
 import { Ellipsis, GripVertical, X } from "lucide-react";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useMemo, useState } from "react";
+import { shallow } from "zustand/shallow";
+import { useStoreWithEqualityFn } from "zustand/traditional";
 import { SortButton } from "./SortButton";
 import { VisibilityButton } from "./VisibilityButton";
 
 const TRANSITION = { type: "spring", bounce: 0.2, duration: 0.3 } as Transition;
 
 export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
-  const field = useHypershelf(state => state.fields?.[fieldId]);
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: fieldId });
+  const style = {
+    transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0)`,
+    transition
+  };
+  const fieldInfo = useStoreWithEqualityFn(
+    useHypershelf,
+    state => {
+      const field = state.fields?.[fieldId];
+      if (!field) return null;
+      return {
+        type: field.type,
+        name: field.name,
+        icon: field.extra?.icon
+      };
+    },
+    shallow
+  );
   const canSort = useMemo(() => {
     return (
-      field?.type &&
+      fieldInfo?.type &&
       [
         "string",
         "number",
@@ -44,29 +65,29 @@ export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
         "user",
         "date",
         "email"
-      ].includes(field?.type)
+      ].includes(fieldInfo?.type)
     );
-  }, [field?.type]);
+  }, [fieldInfo?.type]);
   const [actionsExpanded, setActionsExpanded] = useState(false);
   const isSorted = useHypershelf(state => state.sorting?.[fieldId]);
   const isHidden = useHypershelf(state => state.hiddenFields.includes(fieldId));
 
-  if (!field) return null;
+  if (!fieldInfo) return null;
 
   return (
-    <TableHead className="!h-auto !border-0">
+    <TableHead ref={setNodeRef} style={style} className="!h-auto !border-0">
       <div className="flex items-center justify-center">
         <div className="flex items-center gap-1 px-2">
           <div
             className={cn("flex items-center gap-1", isHidden && "opacity-50")}
           >
-            {field.extra?.icon && (
+            {fieldInfo.icon && (
               <DynamicIcon
-                name={field.extra.icon as IconName}
+                name={fieldInfo.icon as IconName}
                 className="mr-1 size-4 opacity-50"
               />
             )}
-            {field.name}
+            {fieldInfo.name}
           </div>
           <div className="flex items-center">
             <AnimatePresence>
@@ -108,6 +129,8 @@ export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
                     variant="ghost"
                     size="sm"
                     className="!size-auto cursor-grab !p-1 active:cursor-grabbing"
+                    {...attributes}
+                    {...listeners}
                   >
                     <GripVertical className="size-4 opacity-50" />
                   </Button>
@@ -121,11 +144,7 @@ export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
                 className="!size-auto !p-1"
                 onClick={() => setActionsExpanded(!actionsExpanded)}
               >
-                <motion.div
-                  layout
-                  layoutId={`header-actions-icon-${fieldId}`}
-                  transition={TRANSITION}
-                >
+                <motion.div transition={TRANSITION}>
                   {actionsExpanded ? (
                     <X className="size-4 opacity-50" />
                   ) : (

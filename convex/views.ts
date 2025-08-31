@@ -16,16 +16,9 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 import { getAuthUserId } from "@convex-dev/auth/server";
-import { Doc } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
-import { viewSchema } from "./schema";
+import { ExtendedViewType, viewSchema } from "./schema";
 import { v } from "convex/values";
-
-export type ViewType = Doc<"views">;
-export type ExtendedViewType = ViewType & {
-  immutable: boolean;
-  global: boolean;
-};
 
 export const get = query({
   args: {
@@ -48,15 +41,14 @@ export const get = query({
       .filter(q => q.eq(q.field("global"), true))
       .filter(q => q.neq(q.field("userId"), userId))
       .collect();
-    const fields = await ctx.db.query("fields").collect();
     const builtin = [
       {
         _id: "builtin:all",
         name: "Все",
         userId: null,
         global: true,
-        fields: fields.map(f => f._id),
-        sortBy: [],
+        hiddenFields: [],
+        sorting: {},
         filters: [],
         enableFiltering: false,
         builtin: true
@@ -88,12 +80,9 @@ export const create = mutation({
       throw new Error("Unauthorized");
     }
 
-    const fields = await ctx.db.query("fields").collect();
-
     const view = await ctx.db.insert("views", {
       userId,
-      name: args.name,
-      fields: fields.map(f => f._id)
+      name: args.name
     });
 
     return view;
@@ -116,6 +105,10 @@ export const update = mutation({
     const view = await ctx.db.get(viewId);
     if (view === null) {
       throw new Error("View not found");
+    }
+
+    if (view.userId !== userId) {
+      throw new Error("You can only update your own views");
     }
 
     await ctx.db.patch(args.viewId, {
@@ -142,6 +135,10 @@ export const remove = mutation({
       throw new Error("View not found");
     }
 
+    if (view.userId !== userId) {
+      throw new Error("You can only delete your own views");
+    }
+
     await ctx.db.delete(args.viewId);
 
     return view;
@@ -165,6 +162,10 @@ export const makeGlobal = mutation({
 
     if (view.global) {
       throw new Error("View is already global");
+    }
+
+    if (view.userId !== userId) {
+      throw new Error("You can only make your own views global");
     }
 
     await ctx.db.patch(args.viewId, { global: true });

@@ -28,7 +28,7 @@ export const ShadcnUiDragHandle = forwardRef<
   ShadcnUiDragHandleProps
 >(({ className, title }, dragRef) => (
   <span ref={dragRef} className={className} title={title}>
-    <GripVertical className="text-input h-5 w-5" />
+    <GripVertical className="text-input size-5" />
   </span>
 ));
 

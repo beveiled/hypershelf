@@ -61,27 +61,27 @@ export const shadcnUiTranslations = {
   addRule: {
     label: (
       <>
-        <Plus className="mr-2 h-4 w-4" /> Правило
+        <Plus className="mr-2 size-4" /> Правило
       </>
     )
   },
   addGroup: {
     label: (
       <>
-        <Plus className="mr-2 h-4 w-4" /> Группа
+        <Plus className="mr-2 size-4" /> Группа
       </>
     )
   },
-  removeGroup: { label: <X className="h-4 w-4" /> },
-  removeRule: { label: <X className="h-4 w-4" /> },
-  cloneRuleGroup: { label: <Copy className="h-4 w-4" /> },
-  cloneRule: { label: <Copy className="h-4 w-4" /> },
-  lockGroup: { label: <Unlock className="h-4 w-4" /> },
-  lockRule: { label: <Unlock className="h-4 w-4" /> },
-  lockGroupDisabled: { label: <Lock className="h-4 w-4" /> },
-  lockRuleDisabled: { label: <Lock className="h-4 w-4" /> },
-  shiftActionDown: { label: <ChevronDown className="h-4 w-4" /> },
-  shiftActionUp: { label: <ChevronUp className="h-4 w-4" /> }
+  removeGroup: { label: <X className="size-4" /> },
+  removeRule: { label: <X className="size-4" /> },
+  cloneRuleGroup: { label: <Copy className="size-4" /> },
+  cloneRule: { label: <Copy className="size-4" /> },
+  lockGroup: { label: <Unlock className="size-4" /> },
+  lockRule: { label: <Unlock className="size-4" /> },
+  lockGroupDisabled: { label: <Lock className="size-4" /> },
+  lockRuleDisabled: { label: <Lock className="size-4" /> },
+  shiftActionDown: { label: <ChevronDown className="size-4" /> },
+  shiftActionUp: { label: <ChevronUp className="size-4" /> }
 } satisfies Partial<Translations>;
 
 export const QueryBuilderShadcnUi = getCompatContextProvider({

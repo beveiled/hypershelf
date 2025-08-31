@@ -46,7 +46,7 @@ import {
 } from "@/components/ui/command";
 import { IconName } from "@/components/ui/icon-picker";
 import { Input } from "@/components/ui/input";
-import { Kbd } from "@/components/ui/kbd";
+import { ButtonWithKbd } from "@/components/ui/kbd-button";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
@@ -193,12 +193,11 @@ const ActionsRow = memo(
               </div>
               <AlertDialogFooter>
                 <AlertDialogCancel asChild>
-                  <Button variant="outline">
+                  <ButtonWithKbd variant="outline" keys={["Esc"]}>
                     Отмена
-                    <Kbd keys={["Esc"]} />
-                  </Button>
+                  </ButtonWithKbd>
                 </AlertDialogCancel>
-                <Button
+                <ButtonWithKbd
                   variant="destructive"
                   onClick={() => {
                     setIsDeleting(true);
@@ -211,16 +210,17 @@ const ActionsRow = memo(
                     isDeleting ||
                     !fieldName.trim()
                   }
+                  keys={["Meta", "Enter"]}
+                  showKbd={
+                    !isLockedBySomeoneElse &&
+                    !isSaving &&
+                    !isDeleting &&
+                    !!fieldName.trim()
+                  }
                 >
                   {isDeleting && <Loader2Icon className="animate-spin" />}
                   Удалить
-                  {!isLockedBySomeoneElse &&
-                    !isSaving &&
-                    !isDeleting &&
-                    fieldName.trim() && (
-                      <Kbd keys={["Meta", "Enter"]} variant="white" />
-                    )}
-                </Button>
+                </ButtonWithKbd>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -330,22 +330,22 @@ const TypeField = memo(
               Изменение типа поля удалит все расширенные настройки.
             </AlertDescription>
             <div className="mt-2 flex items-center gap-2">
-              <Button
+              <ButtonWithKbd
                 size="sm"
                 onClick={() => onCommit(pendingType)}
                 variant="destructive"
+                keys={["Meta", "Enter"]}
               >
                 Изменить
-                <Kbd keys={["Meta", "Enter"]} />
-              </Button>
-              <Button
+              </ButtonWithKbd>
+              <ButtonWithKbd
                 variant="outline"
                 size="sm"
                 onClick={() => onPending(null)}
+                keys={["Esc"]}
               >
                 Отмена
-                <Kbd keys={["Esc"]} />
-              </Button>
+              </ButtonWithKbd>
             </div>
           </Alert>
         )}

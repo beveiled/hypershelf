@@ -247,7 +247,7 @@ export const OptionsInput: React.FC<OptionsInputProps> = ({
         className="w-fit"
         disabled={disabled}
       >
-        <Plus className="h-4 w-4" /> Добавить
+        <Plus className="size-4" /> Добавить
       </Button>
     </div>
   );

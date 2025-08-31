@@ -117,8 +117,15 @@ export const fileSchema = {
 
 export const viewSchema = {
   name: v.optional(v.string()),
-  fields: v.array(v.id("fields")),
+  /** @deprecated Use `hiddenFields` and `fieldOrder instead */
+  fields: v.optional(v.array(v.id("fields"))),
+  hiddenFields: v.optional(v.array(v.id("fields"))),
+  fieldOrder: v.optional(v.array(v.id("fields"))),
+  /** @deprecated Use `sorting` instead */
   sortBy: v.optional(
+    v.record(v.id("fields"), v.union(v.literal("asc"), v.literal("desc")))
+  ),
+  sorting: v.optional(
     v.record(v.id("fields"), v.union(v.literal("asc"), v.literal("desc")))
   ),
   filters: v.optional(v.any()),
@@ -145,8 +152,34 @@ export default defineSchema({
   system: defineTable({ version: v.string() })
 });
 
-export type AssetType = Doc<"assets">;
+export type AssetType = Doc<"assets"> & {
+  /** @deprecated Use `assetLocks` instead */
+  mutex?: Doc<"assets">["mutex"];
+  /** @deprecated Use `assetLocks` instead */
+  mutexHolderId?: Doc<"assets">["mutexHolderId"];
+  /** @deprecated Use `assetLocks` instead */
+  mutexExpiresAt?: Doc<"assets">["mutexExpiresAt"];
+  /** @deprecated Use `assetLocks` instead */
+  editing?: Doc<"assets">["editing"];
+  /** @deprecated Use `assetLocks` instead */
+  editingBy?: Doc<"assets">["editingBy"];
+  /** @deprecated Use `assetLocks` instead */
+  editingLockExpires?: Doc<"assets">["editingLockExpires"];
+};
 export type AssetLocksType = Doc<"assetLocks">;
-export type FieldType = Doc<"fields">;
+export type FieldType = Doc<"fields"> & {
+  /** @deprecated Use `editingBy` instead */
+  editing?: Doc<"fields">["editing"];
+};
 export type UserType = Doc<"users">;
+export type ViewType = Doc<"views"> & {
+  /** @deprecated Use `hiddenFields` and `fieldOrder instead */
+  fields?: Doc<"views">["fields"];
+  /** @deprecated Use `sorting` instead */
+  sortBy?: Doc<"views">["sortBy"];
+};
+export type ExtendedViewType = ViewType & {
+  immutable: boolean;
+  global: boolean;
+};
 export type ValueType = string | number | boolean | undefined | string[];
