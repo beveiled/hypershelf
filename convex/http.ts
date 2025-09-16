@@ -1,26 +1,8 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-import { httpRouter } from "convex/server";
-import { auth } from "./auth";
-
+import { api } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
 import { httpAction } from "./_generated/server";
-import { api } from "./_generated/api";
+import { auth } from "./auth";
+import { httpRouter } from "convex/server";
 
 const http = httpRouter();
 
@@ -34,7 +16,7 @@ http.route({
     const blob = await ctx.storage.get(file.storageId);
     if (blob === null) {
       return new Response("File not found", {
-        status: 404
+        status: 404,
       });
     }
     return new Response(blob, {
@@ -42,10 +24,10 @@ http.route({
         "Content-Disposition": `attachment; filename="${file.fileName}"`,
         "Access-Control-Allow-Origin": request.headers.get("origin") || "*",
         "Access-Control-Expose-Headers": "Content-Disposition",
-        Vary: "origin"
-      }
+        Vary: "origin",
+      },
     });
-  })
+  }),
 });
 
 http.route({
@@ -64,13 +46,13 @@ http.route({
           "Access-Control-Allow-Origin": origin,
           "Access-Control-Allow-Methods": "GET",
           "Access-Control-Allow-Headers": "Content-Type, Digest",
-          "Access-Control-Max-Age": "86400"
-        })
+          "Access-Control-Max-Age": "86400",
+        }),
       });
     } else {
       return new Response();
     }
-  })
+  }),
 });
 
 auth.addHttpRoutes(http);

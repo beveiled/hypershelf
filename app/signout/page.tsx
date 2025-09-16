@@ -1,25 +1,9 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function SignOutPage() {
   const { signOut } = useAuthActions();
@@ -31,5 +15,12 @@ export default function SignOutPage() {
     });
   }, [router, signOut]);
 
-  return null;
+  return (
+    <div className="text-muted-foreground flex h-screen w-screen flex-col items-center justify-center gap-4">
+      <div className="flex items-center gap-1.5">
+        <Loader2 className="size-6 animate-spin" />
+        <div className="text-sm">Signing you out...</div>
+      </div>
+    </div>
+  );
 }

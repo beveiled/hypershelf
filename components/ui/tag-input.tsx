@@ -1,42 +1,25 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Textarea } from "./textarea";
 import {
   DndContext,
   DragEndEvent,
   PointerSensor,
   closestCenter,
   useSensor,
-  useSensors
+  useSensors,
 } from "@dnd-kit/core";
 import {
   SortableContext,
   arrayMove,
   rectSortingStrategy,
-  useSortable
+  useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { motion } from "framer-motion";
 import { Plus, X } from "lucide-react";
 import React, { KeyboardEvent, useState } from "react";
-import { Textarea } from "./textarea";
 
 const SortableTag: React.FC<{
   tag: string;
@@ -45,12 +28,12 @@ const SortableTag: React.FC<{
 }> = ({ tag, onRemove, disabled = false }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
-      id: tag
+      id: tag,
     });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition
+    transition,
   };
 
   return (
@@ -64,7 +47,7 @@ const SortableTag: React.FC<{
         initial={{ scale: 1 }}
         whileTap={{ scale: 0.9 }}
         transition={{
-          scale: { type: "spring", bounce: 0.15, duration: 0.15 }
+          scale: { type: "spring", bounce: 0.15, duration: 0.15 },
         }}
       >
         <Badge variant="outline" className="border-input" asChild>
@@ -122,7 +105,7 @@ export function TagInput({
   validateTag = () => true,
   disabled = false,
   onFocus = () => {},
-  onBlur = () => {}
+  onBlur = () => {},
 }: {
   tags: string[];
   setTags: (tags: string[]) => void;
@@ -243,7 +226,7 @@ export function TagInput({
               placeholder={placeholder}
               className={cn(
                 "border-0 !bg-transparent p-0 text-xs shadow-none focus-visible:ring-0",
-                isInvalid && "text-red-500"
+                isInvalid && "text-red-500",
               )}
               disabled={disabled}
               autosizeFrom={30}
@@ -269,7 +252,7 @@ export function TagInput({
                 "h-fit w-fit",
                 tags.length === 0
                   ? "text-muted-foreground/50 px-2 py-1 text-sm italic"
-                  : "!p-0.5 text-xs"
+                  : "!p-0.5 text-xs",
               )}
               onClick={() => {
                 setIsEditing(true);

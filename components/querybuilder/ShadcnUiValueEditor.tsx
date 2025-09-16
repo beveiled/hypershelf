@@ -1,32 +1,15 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-import type { ValueEditorProps } from "react-querybuilder";
-import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import type { ValueEditorProps } from "react-querybuilder";
 import {
   getFirstOption,
   standardClassnames,
-  useValueEditor
+  useValueEditor,
 } from "react-querybuilder";
 
 export type ShadcnUiValueEditorProps = ValueEditorProps & {
@@ -67,7 +50,7 @@ export const ShadcnUiValueEditor = (allProps: ShadcnUiValueEditorProps) => {
     type,
     listsAsArrays,
     parseNumbers,
-    values
+    values,
   });
 
   if (operator === "null" || operator === "notNull") {

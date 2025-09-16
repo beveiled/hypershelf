@@ -1,37 +1,20 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 "use client";
 
 import { api } from "@/convex/_generated/api";
 import { cn } from "@/lib/utils";
+import { convex } from "./ConvexClientProvider";
+import { useHeaderContent } from "./util/HeaderContext";
+import { useLoading } from "./util/LoadingContext";
 import { useConvexAuth, useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { GitBranch, LogIn, LogOut, Settings2, Table2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { convex } from "./ConvexClientProvider";
-import { useHeaderContent } from "./util/HeaderContext";
-import { useLoading } from "./util/LoadingContext";
 
 function NavLink({
   href,
-  children
+  children,
 }: {
   href: string;
   children: React.ReactNode;
@@ -62,7 +45,7 @@ function NavLink({
         className={cn("bg-brand absolute bottom-0 left-0 h-[1px] w-full", {
           "animate-load": isNavigating,
           "origin-left scale-x-0 transform transition-transform duration-100 group-hover:scale-x-100":
-            !isNavigating
+            !isNavigating,
         })}
       />
     </Link>
@@ -97,7 +80,7 @@ export default function Header() {
         left: "50%",
         x: "-50%",
         y: "-50%",
-        scale: 1
+        scale: 1,
       },
       corner: {
         top: "0.5rem",
@@ -105,8 +88,8 @@ export default function Header() {
         x: 0,
         y: 0,
         scale: 0.3,
-        transition: { type: "spring", stiffness: 300, damping: 30 }
-      }
+        transition: { type: "spring", stiffness: 300, damping: 30 },
+      },
     } as const;
     return (
       <motion.div
@@ -128,7 +111,7 @@ export default function Header() {
                 "bg-brand h-full w-full",
                 isLoading
                   ? "animate-brand-load"
-                  : "group-hover:animate-brand-once"
+                  : "group-hover:animate-brand-once",
               )}
             />
           </div>
@@ -147,7 +130,9 @@ export default function Header() {
             <div
               className={cn(
                 "bg-brand md:!bg-brand absolute bottom-0 left-0 h-0.5 w-4",
-                { "bg-red-500": !isConnected }
+                {
+                  "bg-red-500": !isConnected,
+                },
               )}
             ></div>
           </Link>
@@ -155,7 +140,7 @@ export default function Header() {
             <div
               className={cn("h-1.5 w-1.5 rounded-full", {
                 "bg-green-500": isConnected,
-                "bg-red-500": !isConnected
+                "bg-red-500": !isConnected,
               })}
             ></div>
             <div className="text-muted-foreground text-xs">

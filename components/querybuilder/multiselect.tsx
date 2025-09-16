@@ -1,26 +1,5 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 "use client";
 
-import * as React from "react";
-import { isOptionGroupArray } from "react-querybuilder";
-import type { OptionList } from "react-querybuilder";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -28,8 +7,12 @@ import {
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import * as React from "react";
+import { isOptionGroupArray } from "react-querybuilder";
+import type { OptionList } from "react-querybuilder";
 
 export type MultiSelectProps = {
   options?: OptionList;
@@ -40,7 +23,7 @@ export type MultiSelectProps = {
 export function MultiSelect({
   options = [],
   value,
-  onValueChange
+  onValueChange,
 }: MultiSelectProps) {
   const toDropdownOptions = (list: OptionList) =>
     isOptionGroupArray(list)
@@ -57,7 +40,7 @@ export function MultiSelect({
                   onValueChange(
                     checked
                       ? [...value, opt.name ?? ""]
-                      : value.filter(v => v !== opt.name)
+                      : value.filter(v => v !== opt.name),
                   );
                 }}
               >
@@ -76,7 +59,7 @@ export function MultiSelect({
                 onValueChange(
                   checked
                     ? [...value, opt.name]
-                    : value.filter(v => v !== opt.name)
+                    : value.filter(v => v !== opt.name),
                 );
               }}
             >

@@ -1,20 +1,3 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
@@ -22,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export function useFieldLock(
   renewIntervalMs = 30000,
-  maxRenewals = 30
+  maxRenewals = 30,
 ): {
   lockedId: Id<"fields"> | null;
   acquireLock: (id: Id<"fields">) => Promise<boolean>;
@@ -56,7 +39,7 @@ export function useFieldLock(
       }
       setLockedId(null);
     },
-    [lockedId, releaseLockFn, clearRenewInterval]
+    [lockedId, releaseLockFn, clearRenewInterval],
   );
 
   const startRenewInterval = useCallback(
@@ -71,7 +54,7 @@ export function useFieldLock(
         }
       }, renewIntervalMs);
     },
-    [renewLockFn, maxRenewals, renewIntervalMs, clearRenewInterval, release]
+    [renewLockFn, maxRenewals, renewIntervalMs, clearRenewInterval, release],
   );
 
   const acquire = useCallback(
@@ -95,7 +78,7 @@ export function useFieldLock(
 
       return false;
     },
-    [lockedId, acquireLockFn, startRenewInterval, release]
+    [lockedId, acquireLockFn, startRenewInterval, release],
   );
 
   useEffect(() => {
@@ -127,13 +110,13 @@ export function useFieldLock(
 
 export function useAssetLock(
   renewIntervalMs = 30000,
-  maxRenewals = 30
+  maxRenewals = 30,
 ): {
   lockedPairs: Array<{ assetId: Id<"assets">; fieldId: Id<"fields"> }>;
   isLocked: (assetId: Id<"assets">, fieldId: Id<"fields">) => boolean;
   acquireLock: (
     assetId: Id<"assets">,
-    fieldId: Id<"fields">
+    fieldId: Id<"fields">,
   ) => Promise<boolean>;
   releaseLock: (assetId: Id<"assets">, fieldId: Id<"fields">) => Promise<void>;
   releaseAllLocks: () => Promise<void>;
@@ -163,10 +146,10 @@ export function useAssetLock(
         return;
       }
       setLockedPairs(prev =>
-        prev.filter(p => !(p.assetId === assetId && p.fieldId === fieldId))
+        prev.filter(p => !(p.assetId === assetId && p.fieldId === fieldId)),
       );
     },
-    [releaseLockFn]
+    [releaseLockFn],
   );
 
   const releaseAllLocks = useCallback(async () => {
@@ -189,7 +172,7 @@ export function useAssetLock(
             try {
               const res = await renewLockFn({
                 assetId: p.assetId,
-                fieldId: p.fieldId
+                fieldId: p.fieldId,
               });
               if (!res.success) {
                 setLockedPairs(prev =>
@@ -197,8 +180,8 @@ export function useAssetLock(
                     pair =>
                       !(
                         pair.assetId === p.assetId && pair.fieldId === p.fieldId
-                      )
-                  )
+                      ),
+                  ),
                 );
               }
             } catch (error) {
@@ -206,11 +189,11 @@ export function useAssetLock(
               setLockedPairs(prev =>
                 prev.filter(
                   pair =>
-                    !(pair.assetId === p.assetId && pair.fieldId === p.fieldId)
-                )
+                    !(pair.assetId === p.assetId && pair.fieldId === p.fieldId),
+                ),
               );
             }
-          })
+          }),
         );
 
         return currentLockedPairs;
@@ -226,16 +209,16 @@ export function useAssetLock(
     maxRenewals,
     renewIntervalMs,
     clearRenewInterval,
-    releaseAllLocks
+    releaseAllLocks,
   ]);
 
   const isLocked = useCallback(
     (assetId: Id<"assets">, fieldId: Id<"fields">) => {
       return lockedPairs.some(
-        p => p.assetId === assetId && p.fieldId === fieldId
+        p => p.assetId === assetId && p.fieldId === fieldId,
       );
     },
-    [lockedPairs]
+    [lockedPairs],
   );
 
   const acquire = useCallback(
@@ -263,7 +246,7 @@ export function useAssetLock(
 
       return false;
     },
-    [acquireLockFn, startRenewInterval, isLocked]
+    [acquireLockFn, startRenewInterval, isLocked],
   );
 
   useEffect(() => {
@@ -301,6 +284,6 @@ export function useAssetLock(
     isLocked,
     acquireLock: acquire,
     releaseLock: release,
-    releaseAllLocks
+    releaseAllLocks,
   };
 }

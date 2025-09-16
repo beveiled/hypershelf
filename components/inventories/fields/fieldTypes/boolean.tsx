@@ -1,33 +1,16 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useHypershelf } from "@/stores/assets";
+import { useHypershelf } from "@/stores";
+import { FieldPropConfig } from "./_abstractType";
 import { useMutation } from "convex/react";
 import { CircleCheck, CirclePlus, Loader2 } from "lucide-react";
 import { useCallback, useState } from "react";
-import { FieldPropConfig } from "./_abstractType";
 
 function InlineBoolean({
   assetId,
   fieldId,
-  readonly = false
+  readonly = false,
 }: {
   assetId: Id<"assets">;
   fieldId: Id<"fields">;
@@ -36,7 +19,7 @@ function InlineBoolean({
   const updateAsset = useMutation(api.assets.update);
   const [updating, setUpdating] = useState(false);
   const value = useHypershelf(
-    state => state.assets?.[assetId]?.asset?.metadata?.[fieldId]
+    state => state.assets?.[assetId]?.asset?.metadata?.[fieldId],
   );
   const onClick = useCallback(() => {
     setUpdating(true);
@@ -44,7 +27,7 @@ function InlineBoolean({
       updateAsset({
         assetId,
         fieldId,
-        value: !value
+        value: !value,
       }).finally(() => {
         setUpdating(false);
         const locker = useHypershelf.getState().locker;
@@ -85,7 +68,7 @@ const config: FieldPropConfig = {
   label: "Да/Нет",
   icon: "square-check",
   fieldProps: [],
-  component: InlineBoolean
+  component: InlineBoolean,
 };
 
 export default config;

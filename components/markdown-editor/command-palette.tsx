@@ -1,20 +1,3 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import {
   CommandDialog,
   CommandEmpty,
@@ -22,7 +5,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandShortcut
+  CommandShortcut,
 } from "@/components/ui/command";
 import { EditorView } from "@codemirror/view";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
@@ -37,20 +20,20 @@ const TEMPLATES: Record<
     title: "Вставить таблицу",
     icon: "table-2",
     content: "\n||||\n|---|---|---|\n||||\n",
-    pos: 2
+    pos: 2,
   },
   codeblock: {
     title: "Вставить блок кода",
     icon: "code",
     content: "\n```\n```\n",
-    pos: 4
+    pos: 4,
   },
   callout: {
     title: "Вставить инфоблок",
     icon: "message-square-quote",
     content: '\n{% callout type="info" %}\n\n{% /callout %}\n',
-    pos: 27
-  }
+    pos: 27,
+  },
 };
 
 const formattingOptions: Record<
@@ -68,99 +51,99 @@ const formattingOptions: Record<
     keybind: "Ctrl+B",
     keybindMac: "⌘B",
     mousetrap: "mod+b",
-    format: "**{}**"
+    format: "**{}**",
   },
   italic: {
     title: "Курсив",
     keybind: "Ctrl+I",
     keybindMac: "⌘I",
     mousetrap: "mod+i",
-    format: "*{}*"
+    format: "*{}*",
   },
   strikethrough: {
     title: "Зачеркнутый",
     keybind: "Ctrl+Shift+S",
     keybindMac: "⌘^S",
     mousetrap: "mod+shift+s",
-    format: "~~{}~~"
+    format: "~~{}~~",
   },
   link: {
     title: "Ссылка",
     keybind: "Ctrl+K",
     keybindMac: "⌘K",
     mousetrap: "mod+k",
-    format: "[{}]()"
+    format: "[{}]()",
   },
   inlineCode: {
     title: "Встроенный код",
     keybind: "Ctrl+K",
     keybindMac: "⌘K",
     mousetrap: "mod+k",
-    format: "`{}`"
+    format: "`{}`",
   },
   blockquote: {
     title: "Цитата",
     keybind: "Ctrl+Q",
     keybindMac: "⌘Q",
     mousetrap: "mod+q",
-    format: "> {}\n"
+    format: "> {}\n",
   },
   heading1: {
     title: "Заголовок 1",
     keybind: "Ctrl+1",
     keybindMac: "⌘1",
     mousetrap: "mod+1",
-    format: "# {}\n"
+    format: "# {}\n",
   },
   heading2: {
     title: "Заголовок 2",
     keybind: "Ctrl+2",
     keybindMac: "⌘2",
     mousetrap: "mod+2",
-    format: "## {}\n"
+    format: "## {}\n",
   },
   heading3: {
     title: "Заголовок 3",
     keybind: "Ctrl+3",
     keybindMac: "⌘3",
     mousetrap: "mod+3",
-    format: "### {}\n"
+    format: "### {}\n",
   },
   heading4: {
     title: "Заголовок 4",
     keybind: "Ctrl+4",
     keybindMac: "⌘4",
     mousetrap: "mod+4",
-    format: "#### {}\n"
+    format: "#### {}\n",
   },
   heading5: {
     title: "Заголовок 5",
     keybind: "Ctrl+5",
     keybindMac: "⌘5",
     mousetrap: "mod+5",
-    format: "##### {}\n"
+    format: "##### {}\n",
   },
   unorderedList: {
     title: "Ненумерованный список",
     keybind: "Ctrl+Shift+U",
     keybindMac: "⌘^U",
     mousetrap: "mod+shift+u",
-    format: "- {}\n"
+    format: "- {}\n",
   },
   orderedList: {
     title: "Нумерованный список",
     keybind: "Ctrl+Shift+O",
     keybindMac: "⌘^O",
     mousetrap: "mod+shift+o",
-    format: "1. {}\n"
+    format: "1. {}\n",
   },
   taskList: {
     title: "Список задач",
     keybind: "Ctrl+Shift+T",
     keybindMac: "⌘^T",
     mousetrap: "mod+shift+t",
-    format: "- [ ] {}\n"
-  }
+    format: "- [ ] {}\n",
+  },
 };
 
 const wrappingSymbols = {
@@ -171,13 +154,13 @@ const wrappingSymbols = {
   "{": "{}",
   "~": "~~",
   '"': '""',
-  "'": "''"
+  "'": "''",
 };
 
 export function MarkdownCommandPalette({
   enabled,
   viewRef,
-  isInFocus
+  isInFocus,
 }: {
   enabled?: boolean;
   viewRef?: React.RefObject<EditorView | null>;
@@ -208,7 +191,7 @@ export function MarkdownCommandPalette({
   }, []);
 
   const handleSelect = (
-    template: (typeof TEMPLATES)[keyof typeof TEMPLATES]
+    template: (typeof TEMPLATES)[keyof typeof TEMPLATES],
   ) => {
     setOpen(false);
     if (!viewRef?.current) return;
@@ -217,8 +200,8 @@ export function MarkdownCommandPalette({
     view.dispatch(
       view.state.update({
         changes: { from: pos, insert: template.content },
-        scrollIntoView: true
-      })
+        scrollIntoView: true,
+      }),
     );
     setTimeout(() => {
       view.focus();
@@ -226,8 +209,8 @@ export function MarkdownCommandPalette({
       view.dispatch(
         view.state.update({
           selection: { anchor: newPos, head: newPos },
-          scrollIntoView: true
-        })
+          scrollIntoView: true,
+        }),
       );
     }, 0);
   };
@@ -247,16 +230,16 @@ export function MarkdownCommandPalette({
           changes: { from, to, insert: formattedText },
           selection: {
             anchor: from + format.indexOf("}") - 1,
-            head: to + format.indexOf("}") - 1
+            head: to + format.indexOf("}") - 1,
           },
-          scrollIntoView: true
-        })
+          scrollIntoView: true,
+        }),
       );
       setTimeout(() => {
         view.focus();
       }, 0);
     },
-    [viewRef]
+    [viewRef],
   );
 
   useEffect(() => {
@@ -286,10 +269,10 @@ export function MarkdownCommandPalette({
             changes: { from, to, insert: wrappedText },
             selection: {
               anchor: from + 1,
-              head: to + 1
+              head: to + 1,
             },
-            scrollIntoView: true
-          })
+            scrollIntoView: true,
+          }),
         );
       });
     });

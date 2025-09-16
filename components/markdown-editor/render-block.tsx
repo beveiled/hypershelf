@@ -1,33 +1,14 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+import { previewModeFacet } from "./preview-facet";
 import { syntaxTree } from "@codemirror/language";
 import { RangeSet, StateField } from "@codemirror/state";
-import { Decoration, EditorView, WidgetType } from "@codemirror/view";
-
-import markdoc from "@markdoc/markdoc";
-
 import type { EditorState, Range } from "@codemirror/state";
+import { Decoration, EditorView, WidgetType } from "@codemirror/view";
 import type { DecorationSet } from "@codemirror/view";
+import markdoc from "@markdoc/markdoc";
 import type { Config } from "@markdoc/markdoc";
-import { previewModeFacet } from "./preview-facet";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
-import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
+import { createRoot } from "react-dom/client";
 
 const mimeCache = new Map<string, string>();
 const fileNameCache = new Map<string, string>();
@@ -54,7 +35,7 @@ class RenderBlockWidget extends WidgetType {
 
   constructor(
     public source: string,
-    config: Config
+    config: Config,
   ) {
     super();
 
@@ -130,7 +111,7 @@ class EmbedWidget extends WidgetType {
             from = node.from;
             to = node.to;
           }
-        }
+        },
       });
 
       view.dispatch({ selection: { anchor: from, head: to } });
@@ -141,10 +122,10 @@ class EmbedWidget extends WidgetType {
         enter(node) {
           if (node.name === "EmbedTagUrl") {
             view.dispatch({
-              selection: { anchor: node.from - 3, head: node.to + 2 }
+              selection: { anchor: node.from - 3, head: node.to + 2 },
             });
           }
-        }
+        },
       });
     });
   }
@@ -156,7 +137,7 @@ class EmbedWidget extends WidgetType {
     if (mimeCache.has(this.src) && fileNameCache.has(this.src))
       return {
         mime: mimeCache.get(this.src) ?? null,
-        fileName: fileNameCache.get(this.src) ?? null
+        fileName: fileNameCache.get(this.src) ?? null,
       };
 
     try {
@@ -172,12 +153,12 @@ class EmbedWidget extends WidgetType {
       }
       return {
         mime: mime ?? null,
-        fileName: fileNameCache.get(this.src) ?? null
+        fileName: fileNameCache.get(this.src) ?? null,
       };
     } catch {
       return {
         mime: null,
-        fileName: null
+        fileName: null,
       };
     }
   }
@@ -197,7 +178,7 @@ class EmbedWidget extends WidgetType {
         mimeCache.set(this.src, "application/octet-stream");
         renderFile(
           "application/octet-stream",
-          fileNameCache.get(this.src) ?? null
+          fileNameCache.get(this.src) ?? null,
         );
       };
       this.attachCommonHandlers(img, view);
@@ -221,8 +202,8 @@ class EmbedWidget extends WidgetType {
             name={guessIcon(mime) as IconName}
             className="cm-markdoc-fileWidgetIcon"
             size={24}
-          />
-        )
+          />,
+        ),
       );
       block.appendChild(icon);
 
@@ -242,7 +223,7 @@ class EmbedWidget extends WidgetType {
       window.addEventListener("keyup", updateTooltip);
       block.addEventListener("mouseenter", updateTooltip);
       block.addEventListener("mouseleave", () =>
-        block.removeAttribute("title")
+        block.removeAttribute("title"),
       );
 
       this.attachCommonHandlers(block, view);
@@ -274,7 +255,7 @@ function replaceBlocks(
   state: EditorState,
   config: Config,
   from?: number,
-  to?: number
+  to?: number,
 ) {
   const decorations: Range<Decoration>[] = [];
   const [cursor] = state.selection.ranges;
@@ -288,7 +269,7 @@ function replaceBlocks(
     enter(node) {
       const inside = cursor.from >= node.from && cursor.to <= node.to;
       const isSelected = state.selection.ranges.some(
-        range => node.to >= range.from && node.from <= range.to
+        range => node.to >= range.from && node.from <= range.to,
       );
       const preview = state.facet(previewModeFacet);
 
@@ -297,7 +278,7 @@ function replaceBlocks(
         const decoration = Decoration.widget({
           widget: new EmbedWidget(src),
           side: 1,
-          block: true
+          block: true,
         });
         decorations.push(decoration.range(node.to + 2));
 
@@ -305,14 +286,14 @@ function replaceBlocks(
           preview ||
           (!inside &&
             !state.selection.ranges.some(
-              range => node.to + 2 >= range.from && node.from - 3 <= range.to
+              range => node.to + 2 >= range.from && node.from - 3 <= range.to,
             ))
         ) {
           decorations.push(
             Decoration.mark({ class: "cm-markdoc-hidden" }).range(
               node.from - 3,
-              node.to + 2
-            )
+              node.to + 2,
+            ),
           );
         }
       }
@@ -345,10 +326,10 @@ function replaceBlocks(
       const text = state.doc.sliceString(node.from, node.to);
       const decoration = Decoration.replace({
         widget: new RenderBlockWidget(text, config),
-        block: true
+        block: true,
       });
       decorations.push(decoration.range(node.from, node.to));
-    }
+    },
   });
 
   for (const [from, to] of tags) {
@@ -356,7 +337,7 @@ function replaceBlocks(
     const text = state.doc.sliceString(from, to);
     const decoration = Decoration.replace({
       widget: new RenderBlockWidget(text, config),
-      block: true
+      block: true,
     });
     decorations.push(decoration.range(from, to));
   }
@@ -382,6 +363,6 @@ export default function renderBlock(config: Config) {
 
     provide(field) {
       return EditorView.decorations.from(field);
-    }
+    },
   });
 }

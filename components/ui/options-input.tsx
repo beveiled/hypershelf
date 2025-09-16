@@ -1,42 +1,25 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SortableItem } from "./sortable-item";
 import {
-  closestCenter,
   DndContext,
   DragEndEvent,
   KeyboardSensor,
   PointerSensor,
+  closestCenter,
   useSensor,
-  useSensors
+  useSensors,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
+  arrayMove,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { GripVertical, Plus, Trash } from "lucide-react";
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
-import { SortableItem } from "./sortable-item";
 
 type OptionsInputProps = {
   options: string[];
@@ -54,7 +37,7 @@ const OptionRow = memo(
     disabled,
     onFocus,
     onChangeValue,
-    onRemove
+    onRemove,
   }: {
     id: string;
     value: string;
@@ -67,7 +50,7 @@ const OptionRow = memo(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         onChangeValue(id, e.target.value);
       },
-      [id, onChangeValue]
+      [id, onChangeValue],
     );
 
     const handleRemove = useCallback(() => {
@@ -114,7 +97,7 @@ const OptionRow = memo(
     a.id === b.id &&
     a.onFocus === b.onFocus &&
     a.onChangeValue === b.onChangeValue &&
-    a.onRemove === b.onRemove
+    a.onRemove === b.onRemove,
 );
 
 const genId = () =>
@@ -126,15 +109,17 @@ export const OptionsInput: React.FC<OptionsInputProps> = ({
   options,
   onChange,
   onFocus,
-  disabled = false
+  disabled = false,
 }) => {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
   );
 
   const [rows, setRows] = useState<Row[]>(() =>
-    options.map(v => ({ id: genId(), value: v }))
+    options.map(v => ({ id: genId(), value: v })),
   );
   const [itemIds, setItemIds] = useState<string[]>(() => rows.map(r => r.id));
   const isEditingRef = useRef(false);
@@ -151,7 +136,7 @@ export const OptionsInput: React.FC<OptionsInputProps> = ({
     (next: Row[]) => {
       onChange(next.map(r => r.value));
     },
-    [onChange]
+    [onChange],
   );
 
   const emitDebounced = useCallback(
@@ -159,7 +144,7 @@ export const OptionsInput: React.FC<OptionsInputProps> = ({
       if (flushTimer.current) clearTimeout(flushTimer.current);
       flushTimer.current = setTimeout(() => emit(next), 200);
     },
-    [emit]
+    [emit],
   );
 
   useEffect(() => {
@@ -179,7 +164,7 @@ export const OptionsInput: React.FC<OptionsInputProps> = ({
       setItemIds(next.map(r => r.id));
       emit(next);
     },
-    [rows, emit]
+    [rows, emit],
   );
 
   const addOption = useCallback(() => {
@@ -197,7 +182,7 @@ export const OptionsInput: React.FC<OptionsInputProps> = ({
       setRows(next);
       emitDebounced(next);
     },
-    [rows, emitDebounced]
+    [rows, emitDebounced],
   );
 
   const removeOption = useCallback(
@@ -207,7 +192,7 @@ export const OptionsInput: React.FC<OptionsInputProps> = ({
       setItemIds(next.map(r => r.id));
       emit(next);
     },
-    [rows, emit]
+    [rows, emit],
   );
 
   const items = itemIds;

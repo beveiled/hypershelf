@@ -1,24 +1,7 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+import { Doc } from "./_generated/dataModel";
 import { authTables } from "@convex-dev/auth/server";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import { Doc } from "./_generated/dataModel";
 
 export const fieldSchema = {
   name: v.string(),
@@ -33,7 +16,7 @@ export const fieldSchema = {
     v.literal("user"),
     v.literal("url"),
     v.literal("ip"),
-    v.literal("markdown")
+    v.literal("markdown"),
   ),
   required: v.boolean(),
   hidden: v.optional(v.boolean()),
@@ -64,11 +47,11 @@ export const fieldSchema = {
           minItems: v.optional(v.number()),
           maxItems: v.optional(v.number()),
           minValue: v.optional(v.number()),
-          maxValue: v.optional(v.number())
-        })
-      )
-    })
-  )
+          maxValue: v.optional(v.number()),
+        }),
+      ),
+    }),
+  ),
 };
 
 const fieldSchemaInternal = {
@@ -78,11 +61,11 @@ const fieldSchemaInternal = {
   editing: v.optional(v.boolean()),
   editingBy: v.optional(v.id("users")),
   editingLockExpires: v.optional(v.number()),
-  persistent: v.optional(v.boolean())
+  persistent: v.optional(v.boolean()),
 };
 
 export const assetSchema = {
-  metadata: v.optional(v.record(v.id("fields"), v.any()))
+  metadata: v.optional(v.record(v.id("fields"), v.any())),
 };
 
 const assetSchemaInternal = {
@@ -100,19 +83,19 @@ const assetSchemaInternal = {
   /** @deprecated Use `assetLocks` instead */
   editingBy: v.optional(v.id("users")),
   /** @deprecated Use `assetLocks` instead */
-  editingLockExpires: v.optional(v.number())
+  editingLockExpires: v.optional(v.number()),
 };
 
 const assetLocks = {
   assetId: v.id("assets"),
   fieldId: v.id("fields"),
   userId: v.id("users"),
-  expires: v.number()
+  expires: v.number(),
 };
 
 export const fileSchema = {
   storageId: v.string(),
-  fileName: v.string()
+  fileName: v.string(),
 };
 
 export const viewSchema = {
@@ -123,20 +106,20 @@ export const viewSchema = {
   fieldOrder: v.optional(v.array(v.id("fields"))),
   /** @deprecated Use `sorting` instead */
   sortBy: v.optional(
-    v.record(v.id("fields"), v.union(v.literal("asc"), v.literal("desc")))
+    v.record(v.id("fields"), v.union(v.literal("asc"), v.literal("desc"))),
   ),
   sorting: v.optional(
-    v.record(v.id("fields"), v.union(v.literal("asc"), v.literal("desc")))
+    v.record(v.id("fields"), v.union(v.literal("asc"), v.literal("desc"))),
   ),
   filters: v.optional(v.any()),
   enableFiltering: v.optional(v.boolean()),
   global: v.optional(v.boolean()),
-  builtin: v.optional(v.boolean())
+  builtin: v.optional(v.boolean()),
 };
 
 export const viewSchemaInternal = {
   ...viewSchema,
-  userId: v.id("users")
+  userId: v.id("users"),
 };
 
 export default defineSchema({
@@ -144,12 +127,12 @@ export default defineSchema({
   assets: defineTable(assetSchemaInternal),
   assetLocks: defineTable(assetLocks).index("by_assetId_fieldId", [
     "assetId",
-    "fieldId"
+    "fieldId",
   ]),
   fields: defineTable(fieldSchemaInternal),
   files: defineTable(fileSchema),
   views: defineTable(viewSchemaInternal),
-  system: defineTable({ version: v.string() })
+  system: defineTable({ version: v.string() }),
 });
 
 export type AssetType = Doc<"assets"> & {

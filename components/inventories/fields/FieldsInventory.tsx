@@ -1,20 +1,3 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 "use client";
 
 import {
@@ -22,17 +5,21 @@ import {
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { GlobalKeySequenceListener } from "@/components/util/GlobalKeySequenceListener";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { FieldType } from "@/convex/fields";
 import { cn } from "@/lib/utils";
+import { Debugger } from "../Debugger";
+import { useFieldLock } from "../useLock";
+import { FieldForm } from "./FieldForm";
 import {
   AlertDialogCancel,
-  AlertDialogTrigger
+  AlertDialogTrigger,
 } from "@radix-ui/react-alert-dialog";
 import { useMutation, useQuery } from "convex/react";
 import { WithoutSystemFields } from "convex/server";
@@ -40,16 +27,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Loader2, Lock, Plus } from "lucide-react";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useEffect, useState } from "react";
-import { Debugger } from "../Debugger";
-import { useFieldLock } from "../useLock";
-import { FieldForm } from "./FieldForm";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const defaultNewField: WithoutSystemFields<Omit<FieldType, "slug">> = {
   name: "",
   type: "string",
   required: false,
-  extra: {}
+  extra: {},
 };
 
 export function FieldsInventory() {
@@ -176,7 +159,7 @@ export function FieldsInventory() {
                     onClick={() => {
                       setIsLocking(true);
                       makePerstent({
-                        fieldId: expandedFieldId as Id<"fields">
+                        fieldId: expandedFieldId as Id<"fields">,
                       });
                       setIsLocking(false);
                       setIsConfirmLock(false);
@@ -243,15 +226,15 @@ export function FieldsInventory() {
               animate={{
                 boxShadow: isExpanded
                   ? "0 8px 32px rgba(0,0,0,0.25)"
-                  : "0 1px 4px rgba(0,0,0,0.10)"
+                  : "0 1px 4px rgba(0,0,0,0.10)",
               }}
               className={cn(
                 "bg-background relative rounded-lg border p-4 shadow-sm transition-all",
                 {
                   "shadow-lg": isExpanded,
                   "border-brand border-2":
-                    field.editingBy && editingBy !== viewer
-                }
+                    field.editingBy && editingBy !== viewer,
+                },
               )}
             >
               {field.editingBy && editingBy !== viewer && (
@@ -262,7 +245,7 @@ export function FieldsInventory() {
               <div
                 className={cn("flex items-center", {
                   "cursor-pointer": !field.editingBy || editingBy === viewer,
-                  "cursor-not-allowed": field.editingBy && editingBy !== viewer
+                  "cursor-not-allowed": field.editingBy && editingBy !== viewer,
                 })}
                 onClick={() => handleExpand(field)}
               >
@@ -281,7 +264,7 @@ export function FieldsInventory() {
                   <ChevronDown
                     className={cn(
                       "transition-transform",
-                      isExpanded ? "rotate-180" : "rotate-0"
+                      isExpanded ? "rotate-180" : "rotate-0",
                     )}
                   />
                 </Button>

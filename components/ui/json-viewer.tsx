@@ -1,20 +1,3 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 // https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
 "use client";
 
@@ -22,7 +5,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import {
@@ -31,9 +14,35 @@ import {
   ChevronRight,
   ChevronUp,
   Copy,
-  MoreHorizontal
+  MoreHorizontal,
 } from "lucide-react";
 import * as React from "react";
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
+
+// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
 
 type JsonAllowedTypes = string | number | boolean | null | Date | object | [];
 
@@ -48,7 +57,7 @@ export function JsonViewer({
   data,
   rootName = "root",
   defaultExpanded = true,
-  className
+  className,
 }: JsonViewerProps) {
   return (
     <TooltipProvider>
@@ -77,7 +86,7 @@ function JsonNode({
   data,
   isRoot = false,
   defaultExpanded = true,
-  level = 0
+  level = 0,
 }: JsonNodeProps) {
   const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
   const [isCopied, setIsCopied] = React.useState(false);
@@ -112,7 +121,7 @@ function JsonNode({
       <div
         className={cn(
           "hover:bg-muted/50 group/property -ml-4 flex cursor-pointer items-center gap-1 rounded px-1 py-1",
-          isRoot && "text-primary font-semibold"
+          isRoot && "text-primary font-semibold",
         )}
         onClick={isExpandable ? handleToggle : undefined}
       >
@@ -212,7 +221,7 @@ function JsonValue({ data }: { data: JsonAllowedTypes }) {
               setIsExpanded(!isExpanded);
             }}
           >
-            {`"`}
+            {'"'}
             {isExpanded ? (
               <span className="inline-block max-w-full">{data as string}</span>
             ) : (
@@ -230,7 +239,7 @@ function JsonValue({ data }: { data: JsonAllowedTypes }) {
                 </TooltipContent>
               </Tooltip>
             )}
-            {`"`}
+            {'"'}
             <div className="absolute top-1/2 right-0 translate-x-[calc(100%+4px)] -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100">
               {isExpanded ? (
                 <ChevronUp className="text-muted-foreground size-3" />

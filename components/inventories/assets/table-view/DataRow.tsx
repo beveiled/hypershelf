@@ -1,32 +1,15 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn, shallowPositional } from "@/lib/utils";
-import { useHypershelf } from "@/stores/assets";
+import { useHypershelf } from "@/stores";
+import { FieldRenderer } from "./FieldRenderer";
 import { memo } from "react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
-import { FieldRenderer } from "./FieldRenderer";
 
 function DataCell({
   assetId,
   fieldId,
-  idx
+  idx,
 }: {
   assetId: Id<"assets">;
   fieldId: Id<"fields">;
@@ -39,7 +22,7 @@ function DataCell({
       className={cn(
         "relative px-2 py-1",
         idx > 0 && "border-border border-l",
-        isHidden && "opacity-50"
+        isHidden && "opacity-50",
       )}
     >
       <div className="m-auto flex w-max max-w-sm items-center justify-center break-words break-all hyphens-auto whitespace-normal">
@@ -62,16 +45,16 @@ function DataRow({ assetId }: { assetId: Id<"assets"> }) {
           return posA - posB;
         });
     },
-    shallowPositional
+    shallowPositional,
   );
   const isError = useHypershelf(
-    state => !!Object.keys(state.assetErrors[assetId] || {}).length
+    state => !!Object.keys(state.assetErrors[assetId] || {}).length,
   );
 
   return (
     <TableRow
       className={cn("relative", {
-        "bg-red-500/10 hover:!bg-red-500/15": isError
+        "bg-red-500/10 hover:!bg-red-500/15": isError,
       })}
     >
       {visibleFieldIds.map((fieldId, idx) => (

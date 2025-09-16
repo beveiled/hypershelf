@@ -1,20 +1,3 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 "use client";
 
 import { FieldRenderer } from "@/components/inventories/assets/table-view/FieldRenderer";
@@ -47,7 +30,7 @@ export default function VSphereIntegrationPage() {
     const ipField = fields.fields.find(f => f.field.slug === "ip");
     return {
       hostname: hostnameField ? hostnameField.field._id : null,
-      ip: ipField ? ipField.field._id : null
+      ip: ipField ? ipField.field._id : null,
     } as const;
   }, [fields]);
 
@@ -66,10 +49,10 @@ export default function VSphereIntegrationPage() {
         type: "HYPERSHELF",
         action: "UPDATE_HEIGHT",
         data: {
-          height: asset ? 250 : 100
-        }
+          height: asset ? 250 : 100,
+        },
       },
-      "*"
+      "*",
     );
 
     if (asset) {
@@ -78,10 +61,10 @@ export default function VSphereIntegrationPage() {
           type: "HYPERSHELF",
           action: "ASSET_FOUND",
           data: {
-            href: `/#${asset.asset._id}`
-          }
+            href: `/#${asset.asset._id}`,
+          },
         },
-        "*"
+        "*",
       );
     }
   }, [asset]);
@@ -111,9 +94,9 @@ export default function VSphereIntegrationPage() {
         window.parent.postMessage(
           {
             type: "HYPERSHELF",
-            action: "AUTH"
+            action: "AUTH",
           },
-          "*"
+          "*",
         );
         setAuthRequestSent(true);
       }

@@ -1,34 +1,17 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 "use client";
 
+import { Footer } from "@/components/Footer";
 import Header from "@/components/Header";
+import { UpdateNotifier } from "@/components/UpdateNotifier";
 import { HeaderContentProvider } from "@/components/util/HeaderContext";
 import { LoadingProvider } from "@/components/util/LoadingContext";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
-import { Footer } from "@/components/Footer";
-import { UpdateNotifier } from "@/components/UpdateNotifier";
-import { useEffect, useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function ClientLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
@@ -38,10 +21,10 @@ export default function ClientLayout({
   useEffect(() => {
     if (typeof window === "undefined") return;
     fetch(process.env.NEXT_PUBLIC_CONVEX_URL!).catch(
-      e => "Failed to fetch" === e.message && setInsecure(true)
+      e => "Failed to fetch" === e.message && setInsecure(true),
     );
     const isLocal = ["localhost", "127.0.0.1"].includes(
-      window.location.hostname
+      window.location.hostname,
     );
     if (
       !isLocal &&
@@ -76,7 +59,7 @@ export default function ClientLayout({
             <main
               className={cn(
                 "px-2",
-                pathname.startsWith("/integrations") ? "py-8" : "pt-12"
+                pathname.startsWith("/integrations") ? "py-8" : "pt-12",
               )}
             >
               {children}

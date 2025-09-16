@@ -1,22 +1,4 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { FieldType } from "@/convex/schema";
-import { WithoutSystemFields } from "convex/server";
 import ArrayTypeConfig from "./array";
 import BooleanTypeConfig from "./boolean";
 import DateTypeConfig from "./date";
@@ -28,6 +10,7 @@ import SelectTypeConfig from "./select";
 import StringTypeConfig from "./string";
 import URLTypeConfig from "./url";
 import UserTypeConfig from "./user";
+import { WithoutSystemFields } from "convex/server";
 
 export const fieldTypes = [
   ArrayTypeConfig,
@@ -40,7 +23,7 @@ export const fieldTypes = [
   SelectTypeConfig,
   StringTypeConfig,
   URLTypeConfig,
-  UserTypeConfig
+  UserTypeConfig,
 ];
 
 export const getPropsForType = (type: string) =>

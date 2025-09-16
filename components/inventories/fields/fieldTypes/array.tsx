@@ -1,36 +1,19 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { TagInput } from "@/components/ui/tag-input";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { validateField } from "@/convex/utils";
 import { cn, shallowPositional } from "@/lib/utils";
-import { useHypershelf } from "@/stores/assets";
+import { useHypershelf } from "@/stores";
+import { FieldPropConfig } from "./_abstractType";
+import { ActionsRow } from "./_shared";
 import { useMutation } from "convex/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/shallow";
-import { FieldPropConfig } from "./_abstractType";
-import { ActionsRow } from "./string";
 
 export function InlineArray({
   assetId,
   fieldId,
-  readonly = false
+  readonly = false,
 }: {
   assetId: Id<"assets">;
   fieldId: Id<"fields">;
@@ -40,20 +23,20 @@ export function InlineArray({
     useShallow(state => ({
       type: state.fields?.[fieldId]?.type,
       extra: state.fields?.[fieldId]?.extra,
-      required: state.fields?.[fieldId]?.required
-    }))
+      required: state.fields?.[fieldId]?.required,
+    })),
   );
   const { placeholder } = fieldInfo?.extra || {};
   const value = useHypershelf(
     useShallow(
-      state => state.assets?.[assetId]?.asset?.metadata?.[fieldId] ?? []
-    )
+      state => state.assets?.[assetId]?.asset?.metadata?.[fieldId] ?? [],
+    ),
   );
   const lockedBy = useHypershelf(
-    state => state.lockedFields?.[assetId]?.[fieldId]
+    state => state.lockedFields?.[assetId]?.[fieldId],
   );
   const lazyError = useHypershelf(
-    state => state.assetErrors?.[assetId]?.[fieldId]
+    state => state.assetErrors?.[assetId]?.[fieldId],
   );
 
   const [val, setVal] = useState(value);
@@ -89,7 +72,7 @@ export function InlineArray({
       updateAsset({
         assetId,
         fieldId,
-        value: val
+        value: val,
       })
         .then(() => setIsDirty(false))
         .finally(() => {
@@ -123,7 +106,7 @@ export function InlineArray({
         setError(validateField(fieldInfo, incoming));
       }
     },
-    [assetId, fieldInfo, fieldId, value]
+    [assetId, fieldInfo, fieldId, value],
   );
 
   const validateTag = useCallback(
@@ -164,7 +147,7 @@ export function InlineArray({
       }
       return true;
     },
-    [fieldInfo]
+    [fieldInfo],
   );
 
   if (readonly) {
@@ -202,7 +185,7 @@ export function InlineArray({
             lazyError &&
               !isDirty &&
               !isFocused &&
-              "rounded-br-none rounded-bl-none !border-b-2 !border-red-500"
+              "rounded-br-none rounded-bl-none !border-b-2 !border-red-500",
           )}
           draggable
           disabled={!!lockedBy || updating}
@@ -239,9 +222,9 @@ const config: FieldPropConfig = {
     "minItems",
     "maxItems",
     "listObjectType",
-    "listObjectExtra"
+    "listObjectExtra",
   ],
-  component: InlineArray
+  component: InlineArray,
 };
 
 export default config;

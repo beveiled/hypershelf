@@ -1,20 +1,3 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 "use client";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -24,52 +7,22 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useLoading } from "@/components/util/LoadingContext";
+import { signinSchema } from "./schema";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { pwnedPassword } from "hibp";
-import { CircleAlert, Cloud, KeyRound, Loader2Icon } from "lucide-react";
+import { Cloud, KeyRound, Loader2Icon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { z } from "zod";
-import { useLoading } from "@/components/util/LoadingContext";
-
-const schema = z
-  .object({
-    email: z.string().email({ message: "Invalid email address" }),
-    password: z
-      .string()
-      .min(10, { message: "Пароль должен быть как минимум 10 символов" })
-      .regex(/[a-z]/, { message: "Пароль должен содержать нижний регистр" })
-      .regex(/[A-Z]/, { message: "Пароль должен содержать верхний регистр" })
-      .regex(/[0-9]/, { message: "Пароль должен содержать цифры" })
-      .regex(/[^A-Za-z0-9]/, {
-        message: "Пароль должен содержать специальные символы"
-      }),
-    passwordConfirm: z.string().optional(),
-    inviteCode: z
-      .string()
-      .uuid({ message: "Неверный код приглашения" })
-      .optional()
-  })
-  .superRefine((data, ctx) => {
-    if ("passwordConfirm" in data && data.passwordConfirm !== undefined) {
-      if (data.password !== data.passwordConfirm) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["passwordConfirm"],
-          message: "Пароли не совпадают"
-        });
-      }
-    }
-  });
 
 export default function SignIn() {
   const { signIn } = useAuthActions();
@@ -80,7 +33,7 @@ export default function SignIn() {
     email: "",
     password: "",
     passwordConfirm: "",
-    inviteCode: ""
+    inviteCode: "",
   });
   const [fieldErrors, setFieldErrors] = useState<{
     email?: string;
@@ -109,14 +62,14 @@ export default function SignIn() {
             email: fields.email,
             password: fields.password,
             passwordConfirm: fields.passwordConfirm,
-            inviteCode: fields.inviteCode
+            inviteCode: fields.inviteCode,
           }
         : { email: fields.email, password: fields.password };
 
     toValidate[name as keyof typeof toValidate] = value;
 
     try {
-      schema.parse(toValidate);
+      signinSchema.parse(toValidate);
       setFieldErrors(prev => ({ ...prev, [name]: undefined }));
     } catch (e: unknown) {
       if (
@@ -128,11 +81,11 @@ export default function SignIn() {
         const errArr = e.errors.filter(
           (err: { path: string[]; message: string }) =>
             err.path[0] === name &&
-            toValidate[name as keyof typeof toValidate] !== ""
+            toValidate[name as keyof typeof toValidate] !== "",
         );
         setFieldErrors(prev => ({
           ...prev,
-          [name]: errArr.length > 0 ? errArr[0].message : undefined
+          [name]: errArr.length > 0 ? errArr[0].message : undefined,
         }));
       }
     }
@@ -158,11 +111,11 @@ export default function SignIn() {
             email: fields.email,
             password: fields.password,
             passwordConfirm: fields.passwordConfirm,
-            inviteCode: fields.inviteCode
+            inviteCode: fields.inviteCode,
           }
         : { email: fields.email, password: fields.password };
 
-    const result = schema.safeParse(toValidate);
+    const result = signinSchema.safeParse(toValidate);
     if (!result.success) {
       const errors: {
         email?: string;
@@ -190,7 +143,7 @@ export default function SignIn() {
         }
       } catch {
         console.log(
-          "Failed to check password against breach database. Proceeding with sign-in."
+          "Failed to check password against breach database. Proceeding with sign-in.",
         );
       }
     }
@@ -210,7 +163,7 @@ export default function SignIn() {
             ? error.message
             : flow === "signIn"
               ? "Неверная почта или пароль"
-              : "Не получилось зарегистрироваться. Проверь почту и пароль"
+              : "Не получилось зарегистрироваться. Проверь почту и пароль",
         );
       })
       .then(() => {
@@ -365,14 +318,6 @@ export default function SignIn() {
           </form>
         </CardContent>
         <CardFooter />
-      </Card>
-      <Card className="w-full max-w-md rounded-lg">
-        <CardContent className="flex h-full items-center justify-center">
-          <div className="flex items-center justify-center gap-2 text-sm font-semibold text-red-500">
-            <CircleAlert className="size-4.5" />
-            Ранний доступ. Не использовать как единственное хранилище.
-          </div>
-        </CardContent>
       </Card>
     </div>
   );

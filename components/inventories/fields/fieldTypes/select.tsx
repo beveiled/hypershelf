@@ -1,20 +1,3 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -22,29 +5,29 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList
+  CommandList,
 } from "@/components/ui/command";
 import { Kbd } from "@/components/ui/kbd";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn, shallowPositional } from "@/lib/utils";
-import { useHypershelf } from "@/stores/assets";
+import { useHypershelf } from "@/stores";
+import { FieldPropConfig } from "./_abstractType";
+import { AnimateTransition } from "./_shared";
 import { useMutation } from "convex/react";
 import { Check, ChevronDown, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
-import { FieldPropConfig } from "./_abstractType";
-import { AnimateTransition } from "./string";
 
 function InlineSelect({
   assetId,
   fieldId,
-  readonly = false
+  readonly = false,
 }: {
   assetId: Id<"assets">;
   fieldId: Id<"fields">;
@@ -55,18 +38,18 @@ function InlineSelect({
   const [open, setOpen] = useState(false);
 
   const value = useHypershelf(state =>
-    String(state.assets?.[assetId]?.asset?.metadata?.[fieldId])
+    String(state.assets?.[assetId]?.asset?.metadata?.[fieldId]),
   );
   const options = useStoreWithEqualityFn(
     useHypershelf,
     state => state.fields?.[fieldId]?.extra?.options || [],
-    shallowPositional
+    shallowPositional,
   );
   const lockedBy = useHypershelf(
-    state => state.lockedFields[assetId]?.[fieldId]
+    state => state.lockedFields[assetId]?.[fieldId],
   );
   const lazyError = useHypershelf(
-    state => state.assetErrors?.[assetId]?.[fieldId]
+    state => state.assetErrors?.[assetId]?.[fieldId],
   );
   const disabled = useMemo(() => !!lockedBy || updating, [lockedBy, updating]);
 
@@ -78,7 +61,7 @@ function InlineSelect({
         updateAsset({
           assetId,
           fieldId,
-          value
+          value,
         }).finally(() => {
           setUpdating(false);
           const locker = useHypershelf.getState().locker;
@@ -86,7 +69,7 @@ function InlineSelect({
         });
       }, 0);
     },
-    [assetId, fieldId, updateAsset]
+    [assetId, fieldId, updateAsset],
   );
 
   const onOpenChange = useCallback(
@@ -99,7 +82,7 @@ function InlineSelect({
         locker.acquire(assetId, fieldId);
       }
     },
-    [assetId, fieldId]
+    [assetId, fieldId],
   );
 
   useEffect(() => {
@@ -123,7 +106,7 @@ function InlineSelect({
       <div
         className={cn(
           "select-none",
-          !value && "text-muted-foreground/50 italic"
+          !value && "text-muted-foreground/50 italic",
         )}
       >
         {value || "пусто"}
@@ -150,7 +133,7 @@ function InlineSelect({
                 "text-foreground/70 ring-brand cursor-not-allowed !opacity-100 ring-2",
               lazyError &&
                 !open &&
-                "rounded-br-none rounded-bl-none !border-b-2 !border-red-500"
+                "rounded-br-none rounded-bl-none !border-b-2 !border-red-500",
             )}
           >
             {updating && <Loader2 className="animate-spin" />}
@@ -187,13 +170,13 @@ function InlineSelect({
                     disabled={disabled}
                   >
                     <div className="flex items-center gap-1.5">
-                      {idx <= 10 && <Kbd keys={["Meta", String(idx + 1)]} />}
+                      {idx <= 9 && <Kbd keys={["Meta", String(idx + 1)]} />}
                       {option}
                     </div>
                     <Check
                       className={cn(
                         "ml-auto",
-                        value === option ? "opacity-100" : "opacity-0"
+                        value === option ? "opacity-100" : "opacity-0",
                       )}
                     />
                   </CommandItem>
@@ -212,7 +195,7 @@ const config: FieldPropConfig = {
   label: "Выбор",
   icon: "list-todo",
   fieldProps: ["options"],
-  component: InlineSelect
+  component: InlineSelect,
 };
 
 export default config;

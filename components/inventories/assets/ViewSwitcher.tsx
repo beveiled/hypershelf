@@ -1,32 +1,16 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ButtonWithKbd } from "@/components/ui/kbd-button";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { api } from "@/convex/_generated/api";
 import { ExtendedViewType } from "@/convex/schema";
 import { cn } from "@/lib/utils";
-import { useHypershelf, useIsViewDirty } from "@/stores/assets";
+import { useHypershelf } from "@/stores";
+import { useIsViewDirty } from "@/stores/hooks";
 import { useMutation } from "convex/react";
 import {
   ChevronDown,
@@ -36,7 +20,7 @@ import {
   Save,
   SaveOff,
   Undo2,
-  X
+  X,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -46,7 +30,7 @@ export function ViewSwitcher() {
 
   const views = useHypershelf(state => state.views);
   const activeView: ExtendedViewType | null = useHypershelf(state =>
-    state.activeViewId ? state.views?.[state.activeViewId] : null
+    state.activeViewId ? state.views?.[state.activeViewId] : null,
   );
   const activeViewId = useHypershelf(state => state.activeViewId);
   const setActiveViewId = useHypershelf(state => state.setActiveViewId);
@@ -65,7 +49,7 @@ export function ViewSwitcher() {
         viewId: activeView._id,
         hiddenFields: hiddenFields,
         sorting: sorting,
-        fieldOrder: fieldOrder
+        fieldOrder: fieldOrder,
       });
       setOpen(false);
     } catch (e) {
@@ -140,7 +124,7 @@ export function ViewSwitcher() {
                     "w-full gap-2 text-left",
                     isActive
                       ? "pointer-events-none bg-white/10"
-                      : "hover:bg-white/5"
+                      : "hover:bg-white/5",
                   )}
                   onClick={() => {
                     setActiveViewId(view._id);

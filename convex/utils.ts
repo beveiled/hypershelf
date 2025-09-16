@@ -1,29 +1,12 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-import { z, ZodError, ZodSchema, ZodTypeAny } from "zod";
-import { FieldType, ValueType } from "./schema";
 import { Id } from "./_generated/dataModel";
+import { FieldType, ValueType } from "./schema";
+import { ZodError, ZodSchema, ZodTypeAny, z } from "zod";
 
 type Extra = NonNullable<FieldType["extra"]>;
 type FieldKind = FieldType["type"];
 
 export const buildValuesSchema = (
-  fields: FieldType[]
+  fields: FieldType[],
 ): ZodSchema<Record<string, unknown>> => {
   const shape: Record<string, ZodTypeAny> = {};
 
@@ -35,7 +18,7 @@ export const buildValuesSchema = (
     if (type === "array") {
       const itemSchema = buildPrimitiveSchema(
         extra.listObjectType ?? "string",
-        extra.listObjectExtra || {}
+        extra.listObjectExtra || {},
       );
 
       schema = z.array(itemSchema);
@@ -54,7 +37,7 @@ export const buildValuesSchema = (
           !(typeof v === "string" && v.trim() === "") &&
           v !== undefined &&
           v !== null,
-        "Это поле обязательное"
+        "Это поле обязательное",
       );
     } else {
       schema = schema.optional();
@@ -69,7 +52,7 @@ export const buildValuesSchema = (
 export const buildSchema = ({
   type,
   extra,
-  required
+  required,
 }: {
   type: FieldType["type"];
   extra?: FieldType["extra"];
@@ -81,7 +64,7 @@ export const buildSchema = ({
   if (type === "array") {
     const itemSchema = buildPrimitiveSchema(
       extra.listObjectType ?? "string",
-      extra.listObjectExtra || {}
+      extra.listObjectExtra || {},
     );
 
     schema = z.array(itemSchema);
@@ -100,7 +83,7 @@ export const buildSchema = ({
         !(typeof v === "string" && v.trim() === "") &&
         v !== undefined &&
         v !== null,
-      "Это поле обязательное"
+      "Это поле обязательное",
     );
   } else {
     schema = schema.optional();
@@ -138,7 +121,7 @@ const ipInSubnet = (ip: string, subnet: string): boolean => {
 
 const buildPrimitiveSchema = (
   kind: FieldKind | string,
-  extra: Extra
+  extra: Extra,
 ): ZodTypeAny => {
   if (extra.options?.length)
     return z.enum([...extra.options] as [string, ...string[]]);
@@ -149,7 +132,7 @@ const buildPrimitiveSchema = (
     case "number":
       schema = z.number({
         invalid_type_error: "Значение должно быть числом",
-        coerce: true
+        coerce: true,
       });
       break;
     case "boolean":
@@ -165,8 +148,8 @@ const buildPrimitiveSchema = (
       schema = z.preprocess(
         v => (typeof v === "string" || v instanceof Date ? new Date(v) : v),
         z.date({
-          invalid_type_error: "Значение должно быть датой"
-        })
+          invalid_type_error: "Значение должно быть датой",
+        }),
       );
       break;
     case "ip":
@@ -174,12 +157,12 @@ const buildPrimitiveSchema = (
         .string()
         .regex(
           /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/([1-2]?[0-9]|3[0-2]))?$/,
-          "Кривой IP адрес"
+          "Кривой IP адрес",
         );
       if (extra.subnet) {
         schema = schema.refine(
           v => ipInSubnet(v, extra.subnet as string),
-          `IP адрес должен быть в подсети ${extra.subnet}`
+          `IP адрес должен быть в подсети ${extra.subnet}`,
         );
       }
       break;
@@ -192,7 +175,7 @@ const buildPrimitiveSchema = (
     if (extra.regex)
       schema = schema.regex(
         new RegExp(extra.regex),
-        extra.regexError || "Значение не соответствует регулярке"
+        extra.regexError || "Значение не соответствует регулярке",
       );
     if (extra.minLength && schema instanceof z.ZodString)
       schema = schema.min(extra.minLength);
@@ -212,7 +195,7 @@ const buildPrimitiveSchema = (
 
 export const validateFields = (
   fields: FieldType[],
-  values: Record<Id<"fields">, ValueType>
+  values: Record<Id<"fields">, ValueType>,
 ): Record<string, string> | null => {
   const schema = buildValuesSchema(fields);
   const errors: Record<string, string> = {};
@@ -245,7 +228,7 @@ export const validateField = (
     extra?: FieldType["extra"];
     required?: boolean;
   },
-  value: ValueType
+  value: ValueType,
 ): string | null => {
   const schema = buildSchema(field);
   try {

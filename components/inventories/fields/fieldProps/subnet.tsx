@@ -1,32 +1,15 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useMaskito } from "@maskito/react";
-import React, { useCallback } from "react";
 import { ipv4CidrMaskOptions } from "../CIDRMasks";
 import { FieldPropArgs, FieldPropConfig } from "./_abstractProp";
+import { useMaskito } from "@maskito/react";
+import React, { useCallback } from "react";
 
 function SubnetInput({
   value,
   onChange,
   onFocus,
-  disabled
+  disabled,
 }: {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -52,13 +35,13 @@ function SubnetProp({
   label,
   lockField,
   isLockedBySomeoneElse,
-  change
+  change,
 }: FieldPropArgs) {
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       change(prop, e.target.value);
     },
-    [change, prop]
+    [change, prop],
   );
 
   return (
@@ -77,6 +60,6 @@ function SubnetProp({
 const config: FieldPropConfig = {
   prop: "subnet",
   label: "Подсеть",
-  component: SubnetProp
+  component: SubnetProp,
 };
 export default config;

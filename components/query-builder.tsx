@@ -1,20 +1,3 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { QueryBuilderShadcnUi } from "@/components/querybuilder";
 import { api } from "@/convex/_generated/api";
 import { AssetType, FieldType } from "@/convex/schema";
@@ -25,9 +8,9 @@ import QueryBuilder, {
   Operator,
   Option as QueryOption,
   RuleGroupType,
+  type ValueEditorType,
   formatQuery,
   jsonLogicAdditionalOperators,
-  type ValueEditorType
 } from "react-querybuilder";
 
 export type RowData = { asset: AssetType };
@@ -46,7 +29,7 @@ const customFieldTypeToQueryBuilderMap: Record<
   markdown: "textarea",
   email: "text",
   number: "text",
-  string: "text"
+  string: "text",
 };
 
 const defaultOperators = [
@@ -62,28 +45,28 @@ const defaultOperators = [
   {
     name: "doesNotContain",
     value: "doesNotContain",
-    label: "не включает в себя"
+    label: "не включает в себя",
   },
   {
     name: "doesNotBeginWith",
     value: "doesNotBeginWith",
-    label: "не начинается с"
+    label: "не начинается с",
   },
   {
     name: "doesNotEndWith",
     value: "doesNotEndWith",
-    label: "не заканчивается на"
+    label: "не заканчивается на",
   },
   { name: "null", value: "null", label: "пустой" },
   { name: "notNull", value: "notNull", label: "не пустой" },
   { name: "in", value: "in", label: "один из" },
   { name: "notIn", value: "notIn", label: "не один из" },
   { name: "between", value: "between", label: "между" },
-  { name: "notBetween", value: "notBetween", label: "не между" }
+  { name: "notBetween", value: "notBetween", label: "не между" },
 ];
 
 const operatorByName = new Map<Operator["name"], Operator>(
-  defaultOperators.map(op => [op.name, op])
+  defaultOperators.map(op => [op.name, op]),
 );
 
 const pick = (names: Operator["name"][]): Operator[] =>
@@ -106,7 +89,7 @@ const operatorOptions: Record<FieldType["type"], Operator[]> = {
     "in",
     "notIn",
     "null",
-    "notNull"
+    "notNull",
   ]),
   string: pick([
     "=",
@@ -120,7 +103,7 @@ const operatorOptions: Record<FieldType["type"], Operator[]> = {
     "in",
     "notIn",
     "null",
-    "notNull"
+    "notNull",
   ]),
   boolean: pick(["="]),
   date: pick([
@@ -135,7 +118,7 @@ const operatorOptions: Record<FieldType["type"], Operator[]> = {
     "in",
     "notIn",
     "null",
-    "notNull"
+    "notNull",
   ]),
   select: pick(["in", "notIn", "null", "notNull"]),
   user: pick(["in", "notIn", "null", "notNull"]),
@@ -149,7 +132,7 @@ const operatorOptions: Record<FieldType["type"], Operator[]> = {
     "endsWith",
     "doesNotEndWith",
     "null",
-    "notNull"
+    "notNull",
   ]),
   ip: pick([
     "=",
@@ -161,7 +144,7 @@ const operatorOptions: Record<FieldType["type"], Operator[]> = {
     "in",
     "notIn",
     "null",
-    "notNull"
+    "notNull",
   ]),
   markdown: pick([
     "=",
@@ -175,7 +158,7 @@ const operatorOptions: Record<FieldType["type"], Operator[]> = {
     "in",
     "notIn",
     "null",
-    "notNull"
+    "notNull",
   ]),
   array: pick(["contains", "doesNotContain", "in", "notIn", "null", "notNull"]),
   email: pick([
@@ -190,12 +173,12 @@ const operatorOptions: Record<FieldType["type"], Operator[]> = {
     "in",
     "notIn",
     "null",
-    "notNull"
-  ])
+    "notNull",
+  ]),
 };
 
 Object.entries(jsonLogicAdditionalOperators).forEach(([op, fn]) =>
-  add_operation(op, fn)
+  add_operation(op, fn),
 );
 
 export function useQueryPredicate(filters: RuleGroupType | undefined) {
@@ -210,7 +193,7 @@ export function HyperQueryBuilder({
   fields,
   users,
   filters,
-  setFilters
+  setFilters,
 }: {
   fields: { field: FieldType }[] | null;
   users: FunctionReturnType<typeof api.users.get>["users"];
@@ -238,29 +221,29 @@ export function HyperQueryBuilder({
       ...(f.field.type === "user" && {
         values: users.map(u => ({
           name: u.email,
-          label: u.email
-        })) as QueryOption[]
+          label: u.email,
+        })) as QueryOption[],
       }),
       ...(f.field.type === "select" && {
         values: f.field.extra?.options?.map(o => ({
           label: o,
-          name: o
-        })) as QueryOption[]
+          name: o,
+        })) as QueryOption[],
       }),
       ...(f.field.type === "array" &&
         f.field.extra?.listObjectType === "select" && {
           values: f.field.extra?.options?.map(o => ({
             label: o,
-            name: o
-          })) as QueryOption[]
+            name: o,
+          })) as QueryOption[],
         }),
       ...(f.field.type === "array" &&
         f.field.extra?.listObjectType === "user" && {
           values: users.map(u => ({
             name: u.email,
-            label: u.email
-          })) as QueryOption[]
-        })
+            label: u.email,
+          })) as QueryOption[],
+        }),
     }));
   }, [fields, users]);
 

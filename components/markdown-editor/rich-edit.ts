@@ -1,25 +1,8 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+import { previewModeFacet } from "./preview-facet";
 import { syntaxTree } from "@codemirror/language";
 import type { Range as StateRange } from "@codemirror/state";
 import type { DecorationSet, EditorView, ViewUpdate } from "@codemirror/view";
 import { Decoration, PluginValue } from "@codemirror/view";
-import { previewModeFacet } from "./preview-facet";
 
 const tokenElement = [
   "InlineCode",
@@ -28,7 +11,7 @@ const tokenElement = [
   "FencedCode",
   "Link",
   "Highlight",
-  "Strikethrough"
+  "Strikethrough",
 ];
 
 const tokenHidden = [
@@ -39,7 +22,7 @@ const tokenHidden = [
   "CodeInfo",
   "URL",
   "HighlightMark",
-  "StrikethroughMark"
+  "StrikethroughMark",
 ];
 
 const decorationHidden = Decoration.mark({ class: "cm-markdoc-hidden" });
@@ -77,7 +60,7 @@ export default class RichEditPlugin implements PluginValue {
 
           const sel = view.state.selection;
           const isSelected = sel.ranges.some(
-            range => node.to >= range.from && node.from <= range.to
+            range => node.to >= range.from && node.from <= range.to,
           );
           const inside = cursor.from >= node.from && cursor.to <= node.to;
 
@@ -104,7 +87,7 @@ export default class RichEditPlugin implements PluginValue {
 
           if (tokenHidden.includes(node.name))
             widgets.push(decorationHidden.range(node.from, node.to));
-        }
+        },
       });
     }
 

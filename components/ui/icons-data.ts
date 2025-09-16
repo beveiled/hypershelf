@@ -1,26 +1,9 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 export enum IconCategory {
   Text = "text",
   Design = "design",
   Layout = "layout",
   Navigation = "navigation",
-  Social = "social"
+  Social = "social",
 }
 export const iconsData: Array<{
   name: string;
@@ -30,22 +13,22 @@ export const iconsData: Array<{
   {
     name: "a-arrow-down",
     categories: ["text", "design"],
-    tags: ["letter", "font size", "text", "formatting", "smaller"]
+    tags: ["letter", "font size", "text", "formatting", "smaller"],
   },
   {
     name: "a-arrow-up",
     categories: ["text", "design"],
-    tags: ["letter", "font size", "text", "formatting", "larger", "bigger"]
+    tags: ["letter", "font size", "text", "formatting", "larger", "bigger"],
   },
   {
     name: "a-large-small",
     categories: ["text", "design"],
-    tags: ["letter", "font size", "text", "formatting"]
+    tags: ["letter", "font size", "text", "formatting"],
   },
   {
     name: "accessibility",
     categories: ["accessibility", "medical"],
-    tags: ["disability", "disabled", "dda", "wheelchair"]
+    tags: ["disability", "disabled", "dda", "wheelchair"],
   },
   {
     name: "activity",
@@ -77,43 +60,49 @@ export const iconsData: Array<{
       "waveform",
       "synthesizer",
       "synthesiser",
-      "music"
-    ]
+      "music",
+    ],
   },
   {
     name: "air-vent",
     categories: ["home"],
-    tags: ["air conditioner", "ac", "central air", "cooling", "climate-control"]
+    tags: [
+      "air conditioner",
+      "ac",
+      "central air",
+      "cooling",
+      "climate-control",
+    ],
   },
   {
     name: "airplay",
     categories: ["multimedia", "connectivity", "devices", "brands"],
-    tags: ["stream", "cast", "mirroring", "screen", "monitor", "macos", "osx"]
+    tags: ["stream", "cast", "mirroring", "screen", "monitor", "macos", "osx"],
   },
   {
     name: "alarm-clock-check",
     categories: ["devices", "notifications", "time"],
-    tags: ["done", "todo", "tick", "complete", "task"]
+    tags: ["done", "todo", "tick", "complete", "task"],
   },
   {
     name: "alarm-clock-minus",
     categories: ["devices", "notifications", "time"],
-    tags: ["remove"]
+    tags: ["remove"],
   },
   {
     name: "alarm-clock-off",
     categories: ["devices", "notifications", "time"],
-    tags: ["morning", "turn-off"]
+    tags: ["morning", "turn-off"],
   },
   {
     name: "alarm-clock-plus",
     categories: ["devices", "notifications", "time"],
-    tags: ["add"]
+    tags: ["add"],
   },
   {
     name: "alarm-clock",
     categories: ["devices", "notifications", "time"],
-    tags: ["morning"]
+    tags: ["morning"],
   },
   {
     name: "alarm-smoke",
@@ -126,143 +115,143 @@ export const iconsData: Array<{
       "carbon monoxide",
       "safety",
       "equipment",
-      "amenities"
-    ]
+      "amenities",
+    ],
   },
   {
     name: "album",
     categories: ["photography", "multimedia"],
-    tags: ["photo", "book"]
+    tags: ["photo", "book"],
   },
   {
     name: "align-center-horizontal",
     categories: ["layout"],
-    tags: ["items", "flex", "justify"]
+    tags: ["items", "flex", "justify"],
   },
   {
     name: "align-center-vertical",
     categories: ["layout"],
-    tags: ["items", "flex", "justify"]
+    tags: ["items", "flex", "justify"],
   },
   {
     name: "align-center",
     categories: ["text"],
-    tags: ["text", "alignment", "center"]
+    tags: ["text", "alignment", "center"],
   },
   {
     name: "align-end-horizontal",
     categories: ["layout"],
-    tags: ["items", "bottom", "flex", "justify"]
+    tags: ["items", "bottom", "flex", "justify"],
   },
   {
     name: "align-end-vertical",
     categories: ["layout"],
-    tags: ["items", "right", "flex", "justify"]
+    tags: ["items", "right", "flex", "justify"],
   },
   {
     name: "align-horizontal-distribute-center",
     categories: ["layout"],
-    tags: ["items", "flex", "justify", "space", "evenly", "around"]
+    tags: ["items", "flex", "justify", "space", "evenly", "around"],
   },
   {
     name: "align-horizontal-distribute-end",
     categories: ["layout"],
-    tags: ["right", "items", "flex", "justify"]
+    tags: ["right", "items", "flex", "justify"],
   },
   {
     name: "align-horizontal-distribute-start",
     categories: ["layout"],
-    tags: ["left", "items", "flex", "justify"]
+    tags: ["left", "items", "flex", "justify"],
   },
   {
     name: "align-horizontal-justify-center",
     categories: ["layout"],
-    tags: ["center", "items", "flex", "justify"]
+    tags: ["center", "items", "flex", "justify"],
   },
   {
     name: "align-horizontal-justify-end",
     categories: ["layout"],
-    tags: ["right", "items", "flex", "justify"]
+    tags: ["right", "items", "flex", "justify"],
   },
   {
     name: "align-horizontal-justify-start",
     categories: ["layout"],
-    tags: ["left", "items", "flex", "justify"]
+    tags: ["left", "items", "flex", "justify"],
   },
   {
     name: "align-horizontal-space-around",
     categories: ["layout"],
-    tags: ["center", "items", "flex", "justify", "distribute", "between"]
+    tags: ["center", "items", "flex", "justify", "distribute", "between"],
   },
   {
     name: "align-horizontal-space-between",
     categories: ["layout"],
-    tags: ["around", "items", "bottom", "flex", "justify"]
+    tags: ["around", "items", "bottom", "flex", "justify"],
   },
   {
     name: "align-justify",
     categories: ["text"],
-    tags: ["text", "alignment", "justified", "menu", "list"]
+    tags: ["text", "alignment", "justified", "menu", "list"],
   },
   {
     name: "align-left",
     categories: ["text"],
-    tags: ["text", "alignment", "left", "list"]
+    tags: ["text", "alignment", "left", "list"],
   },
   {
     name: "align-right",
     categories: ["text"],
-    tags: ["text", "alignment", "right"]
+    tags: ["text", "alignment", "right"],
   },
   {
     name: "align-start-horizontal",
     categories: ["layout"],
-    tags: ["top", "items", "flex", "justify"]
+    tags: ["top", "items", "flex", "justify"],
   },
   {
     name: "align-start-vertical",
     categories: ["layout"],
-    tags: ["left", "items", "flex", "justify"]
+    tags: ["left", "items", "flex", "justify"],
   },
   {
     name: "align-vertical-distribute-center",
     categories: ["layout"],
-    tags: ["items", "flex", "justify", "space", "evenly", "around"]
+    tags: ["items", "flex", "justify", "space", "evenly", "around"],
   },
   {
     name: "align-vertical-distribute-end",
     categories: ["layout"],
-    tags: ["bottom", "items", "flex", "justify"]
+    tags: ["bottom", "items", "flex", "justify"],
   },
   {
     name: "align-vertical-distribute-start",
     categories: ["layout"],
-    tags: ["top", "items", "flex", "justify"]
+    tags: ["top", "items", "flex", "justify"],
   },
   {
     name: "align-vertical-justify-center",
     categories: ["layout"],
-    tags: ["center", "items", "flex", "justify", "distribute", "between"]
+    tags: ["center", "items", "flex", "justify", "distribute", "between"],
   },
   {
     name: "align-vertical-justify-end",
     categories: ["layout"],
-    tags: ["bottom", "items", "flex", "justify", "distribute", "between"]
+    tags: ["bottom", "items", "flex", "justify", "distribute", "between"],
   },
   {
     name: "align-vertical-justify-start",
     categories: ["layout"],
-    tags: ["top", "items", "flex", "justify", "distribute", "between"]
+    tags: ["top", "items", "flex", "justify", "distribute", "between"],
   },
   {
     name: "align-vertical-space-around",
     categories: ["layout"],
-    tags: ["center", "items", "flex", "justify", "distribute", "between"]
+    tags: ["center", "items", "flex", "justify", "distribute", "between"],
   },
   {
     name: "align-vertical-space-between",
     categories: ["layout"],
-    tags: ["center", "items", "flex", "justify", "distribute", "between"]
+    tags: ["center", "items", "flex", "justify", "distribute", "between"],
   },
   {
     name: "ambulance",
@@ -277,18 +266,18 @@ export const iconsData: Array<{
       "transportation",
       "rescue",
       "urgent",
-      "first aid"
-    ]
+      "first aid",
+    ],
   },
   {
     name: "ampersand",
     categories: ["text", "development"],
-    tags: ["and", "typography", "operator", "join", "concatenate", "code", "&"]
+    tags: ["and", "typography", "operator", "join", "concatenate", "code", "&"],
   },
   {
     name: "ampersands",
     categories: ["text", "development"],
-    tags: ["and", "operator", "then", "code", "&&"]
+    tags: ["and", "operator", "then", "code", "&&"],
   },
   {
     name: "amphora",
@@ -303,23 +292,23 @@ export const iconsData: Array<{
       "archaeology",
       "museum",
       "wine",
-      "oil"
-    ]
+      "oil",
+    ],
   },
   {
     name: "anchor",
     categories: ["transportation", "text"],
-    tags: ["ship"]
+    tags: ["ship"],
   },
   {
     name: "angry",
     categories: ["emoji"],
-    tags: ["emoji", "anger", "face", "emotion"]
+    tags: ["emoji", "anger", "face", "emotion"],
   },
   {
     name: "annoyed",
     categories: ["emoji"],
-    tags: ["emoji", "nuisance", "face", "emotion"]
+    tags: ["emoji", "nuisance", "face", "emotion"],
   },
   {
     name: "antenna",
@@ -342,8 +331,8 @@ export const iconsData: Array<{
       "transducer",
       "terrestrial",
       "satellite",
-      "cable"
-    ]
+      "cable",
+    ],
   },
   {
     name: "anvil",
@@ -357,13 +346,13 @@ export const iconsData: Array<{
       "weight",
       "blacksmith",
       "forge",
-      "acme"
-    ]
+      "acme",
+    ],
   },
   {
     name: "aperture",
     categories: ["photography"],
-    tags: ["camera", "photo", "pictures", "shutter", "exposure"]
+    tags: ["camera", "photo", "pictures", "shutter", "exposure"],
   },
   {
     name: "app-window-mac",
@@ -375,68 +364,68 @@ export const iconsData: Array<{
       "preferences",
       "macos",
       "osx",
-      "executable"
-    ]
+      "executable",
+    ],
   },
   {
     name: "app-window",
     categories: ["layout", "design", "development", "files"],
-    tags: ["application", "menu bar", "pane", "executable"]
+    tags: ["application", "menu bar", "pane", "executable"],
   },
   {
     name: "apple",
     categories: ["food-beverage"],
-    tags: ["fruit", "food"]
+    tags: ["fruit", "food"],
   },
   {
     name: "archive-restore",
     categories: ["files", "mail"],
-    tags: ["unarchive", "index", "backup", "box", "storage", "records"]
+    tags: ["unarchive", "index", "backup", "box", "storage", "records"],
   },
   {
     name: "archive-x",
     categories: ["files", "mail"],
-    tags: ["index", "backup", "box", "storage", "records", "junk"]
+    tags: ["index", "backup", "box", "storage", "records", "junk"],
   },
   {
     name: "archive",
     categories: ["files", "mail"],
-    tags: ["index", "backup", "box", "storage", "records"]
+    tags: ["index", "backup", "box", "storage", "records"],
   },
   {
     name: "armchair",
     categories: ["home"],
-    tags: ["sofa", "furniture", "leisure", "lounge", "loveseat", "couch"]
+    tags: ["sofa", "furniture", "leisure", "lounge", "loveseat", "couch"],
   },
   {
     name: "arrow-big-down-dash",
     categories: ["arrows", "navigation", "gaming", "files"],
-    tags: ["backwards", "reverse", "slow", "direction", "south", "download"]
+    tags: ["backwards", "reverse", "slow", "direction", "south", "download"],
   },
   {
     name: "arrow-big-down",
     categories: ["arrows", "navigation", "gaming"],
-    tags: ["backwards", "reverse", "direction", "south"]
+    tags: ["backwards", "reverse", "direction", "south"],
   },
   {
     name: "arrow-big-left-dash",
     categories: ["arrows", "navigation", "gaming"],
-    tags: ["previous", "back", "direction", "west", "turn", "corner"]
+    tags: ["previous", "back", "direction", "west", "turn", "corner"],
   },
   {
     name: "arrow-big-left",
     categories: ["arrows", "navigation", "gaming"],
-    tags: ["previous", "back", "direction", "west", "indicate turn"]
+    tags: ["previous", "back", "direction", "west", "indicate turn"],
   },
   {
     name: "arrow-big-right-dash",
     categories: ["arrows", "navigation", "gaming"],
-    tags: ["next", "forward", "direction", "east", "turn", "corner"]
+    tags: ["next", "forward", "direction", "east", "turn", "corner"],
   },
   {
     name: "arrow-big-right",
     categories: ["arrows", "navigation", "gaming"],
-    tags: ["next", "forward", "direction", "east", "indicate turn"]
+    tags: ["next", "forward", "direction", "east", "indicate turn"],
   },
   {
     name: "arrow-big-up-dash",
@@ -452,8 +441,8 @@ export const iconsData: Array<{
       "north",
       "faster",
       "speed",
-      "boost"
-    ]
+      "boost",
+    ],
   },
   {
     name: "arrow-big-up",
@@ -467,8 +456,8 @@ export const iconsData: Array<{
       "capitalise",
       "forward",
       "direction",
-      "north"
-    ]
+      "north",
+    ],
   },
   {
     name: "arrow-down-0-1",
@@ -482,8 +471,8 @@ export const iconsData: Array<{
       "decreasing",
       "rising",
       "falling",
-      "numerical"
-    ]
+      "numerical",
+    ],
   },
   {
     name: "arrow-down-1-0",
@@ -497,8 +486,8 @@ export const iconsData: Array<{
       "decreasing",
       "rising",
       "falling",
-      "numerical"
-    ]
+      "numerical",
+    ],
   },
   {
     name: "arrow-down-a-z",
@@ -512,8 +501,8 @@ export const iconsData: Array<{
       "decreasing",
       "rising",
       "falling",
-      "alphabetical"
-    ]
+      "alphabetical",
+    ],
   },
   {
     name: "arrow-down-from-line",
@@ -526,13 +515,13 @@ export const iconsData: Array<{
       "download",
       "expand",
       "fold",
-      "vertical"
-    ]
+      "vertical",
+    ],
   },
   {
     name: "arrow-down-left",
     categories: ["arrows", "navigation"],
-    tags: ["direction", "south-west", "diagonal"]
+    tags: ["direction", "south-west", "diagonal"],
   },
   {
     name: "arrow-down-narrow-wide",
@@ -545,18 +534,18 @@ export const iconsData: Array<{
       "increasing",
       "decreasing",
       "rising",
-      "falling"
-    ]
+      "falling",
+    ],
   },
   {
     name: "arrow-down-right",
     categories: ["arrows", "navigation"],
-    tags: ["direction", "south-east", "diagonal"]
+    tags: ["direction", "south-east", "diagonal"],
   },
   {
     name: "arrow-down-to-dot",
     categories: ["arrows", "navigation"],
-    tags: ["direction", "south", "waypoint", "location", "step", "into"]
+    tags: ["direction", "south", "waypoint", "location", "step", "into"],
   },
   {
     name: "arrow-down-to-line",
@@ -572,8 +561,8 @@ export const iconsData: Array<{
       "pull",
       "collapse",
       "fold",
-      "vertical"
-    ]
+      "vertical",
+    ],
   },
   {
     name: "arrow-down-up",
@@ -591,8 +580,8 @@ export const iconsData: Array<{
       "internet",
       "sort",
       "reorder",
-      "move"
-    ]
+      "move",
+    ],
   },
   {
     name: "arrow-down-wide-narrow",
@@ -605,8 +594,8 @@ export const iconsData: Array<{
       "increasing",
       "decreasing",
       "rising",
-      "falling"
-    ]
+      "falling",
+    ],
   },
   {
     name: "arrow-down-z-a",
@@ -621,13 +610,13 @@ export const iconsData: Array<{
       "rising",
       "falling",
       "alphabetical",
-      "reverse"
-    ]
+      "reverse",
+    ],
   },
   {
     name: "arrow-down",
     categories: ["arrows", "navigation"],
-    tags: ["backwards", "reverse", "direction", "south"]
+    tags: ["backwards", "reverse", "direction", "south"],
   },
   {
     name: "arrow-left-from-line",
@@ -640,8 +629,8 @@ export const iconsData: Array<{
       "expand",
       "fold",
       "horizontal",
-      "<-|"
-    ]
+      "<-|",
+    ],
   },
   {
     name: "arrow-left-right",
@@ -656,8 +645,8 @@ export const iconsData: Array<{
       "reorder",
       "move",
       "<-",
-      "->"
-    ]
+      "->",
+    ],
   },
   {
     name: "arrow-left-to-line",
@@ -670,13 +659,13 @@ export const iconsData: Array<{
       "collapse",
       "fold",
       "horizontal",
-      "|<-"
-    ]
+      "|<-",
+    ],
   },
   {
     name: "arrow-left",
     categories: ["arrows", "navigation"],
-    tags: ["previous", "back", "direction", "west", "<-"]
+    tags: ["previous", "back", "direction", "west", "<-"],
   },
   {
     name: "arrow-right-from-line",
@@ -690,8 +679,8 @@ export const iconsData: Array<{
       "expand",
       "fold",
       "horizontal",
-      "|->"
-    ]
+      "|->",
+    ],
   },
   {
     name: "arrow-right-left",
@@ -706,8 +695,8 @@ export const iconsData: Array<{
       "reorder",
       "move",
       "<-",
-      "->"
-    ]
+      "->",
+    ],
   },
   {
     name: "arrow-right-to-line",
@@ -724,13 +713,13 @@ export const iconsData: Array<{
       "collapse",
       "fold",
       "horizontal",
-      "->|"
-    ]
+      "->|",
+    ],
   },
   {
     name: "arrow-right",
     categories: ["arrows", "navigation"],
-    tags: ["forward", "next", "direction", "east", "->"]
+    tags: ["forward", "next", "direction", "east", "->"],
   },
   {
     name: "arrow-up-0-1",
@@ -744,8 +733,8 @@ export const iconsData: Array<{
       "decreasing",
       "rising",
       "falling",
-      "numerical"
-    ]
+      "numerical",
+    ],
   },
   {
     name: "arrow-up-1-0",
@@ -759,8 +748,8 @@ export const iconsData: Array<{
       "decreasing",
       "rising",
       "falling",
-      "numerical"
-    ]
+      "numerical",
+    ],
   },
   {
     name: "arrow-up-a-z",
@@ -774,8 +763,8 @@ export const iconsData: Array<{
       "decreasing",
       "rising",
       "falling",
-      "alphabetical"
-    ]
+      "alphabetical",
+    ],
   },
   {
     name: "arrow-up-down",
@@ -791,13 +780,13 @@ export const iconsData: Array<{
       "internet",
       "sort",
       "reorder",
-      "move"
-    ]
+      "move",
+    ],
   },
   {
     name: "arrow-up-from-dot",
     categories: ["arrows", "navigation"],
-    tags: ["direction", "north", "step", "out"]
+    tags: ["direction", "north", "step", "out"],
   },
   {
     name: "arrow-up-from-line",
@@ -812,13 +801,13 @@ export const iconsData: Array<{
       "push",
       "expand",
       "fold",
-      "vertical"
-    ]
+      "vertical",
+    ],
   },
   {
     name: "arrow-up-left",
     categories: ["arrows", "navigation"],
-    tags: ["direction", "north-west", "diagonal"]
+    tags: ["direction", "north-west", "diagonal"],
   },
   {
     name: "arrow-up-narrow-wide",
@@ -831,13 +820,13 @@ export const iconsData: Array<{
       "increasing",
       "decreasing",
       "rising",
-      "falling"
-    ]
+      "falling",
+    ],
   },
   {
     name: "arrow-up-right",
     categories: ["arrows", "navigation"],
-    tags: ["direction", "north-east", "diagonal"]
+    tags: ["direction", "north-east", "diagonal"],
   },
   {
     name: "arrow-up-to-line",
@@ -849,8 +838,8 @@ export const iconsData: Array<{
       "upload",
       "collapse",
       "fold",
-      "vertical"
-    ]
+      "vertical",
+    ],
   },
   {
     name: "arrow-up-wide-narrow",
@@ -863,8 +852,8 @@ export const iconsData: Array<{
       "increasing",
       "decreasing",
       "rising",
-      "falling"
-    ]
+      "falling",
+    ],
   },
   {
     name: "arrow-up-z-a",
@@ -879,13 +868,13 @@ export const iconsData: Array<{
       "rising",
       "falling",
       "alphabetical",
-      "reverse"
-    ]
+      "reverse",
+    ],
   },
   {
     name: "arrow-up",
     categories: ["arrows", "navigation"],
-    tags: ["forward", "direction", "north"]
+    tags: ["forward", "direction", "north"],
   },
   {
     name: "arrows-up-from-line",
@@ -899,8 +888,8 @@ export const iconsData: Array<{
       "box",
       "fragile",
       "postage",
-      "shipping"
-    ]
+      "shipping",
+    ],
   },
   {
     name: "asterisk",
@@ -914,13 +903,13 @@ export const iconsData: Array<{
       "code",
       "glob pattern",
       "wildcard",
-      "*"
-    ]
+      "*",
+    ],
   },
   {
     name: "at-sign",
     categories: ["text", "account"],
-    tags: ["mention", "at", "email", "message", "@"]
+    tags: ["mention", "at", "email", "message", "@"],
   },
   {
     name: "atom",
@@ -934,8 +923,8 @@ export const iconsData: Array<{
       "molecule",
       "electricity",
       "energy",
-      "chemistry"
-    ]
+      "chemistry",
+    ],
   },
   {
     name: "audio-lines",
@@ -963,8 +952,8 @@ export const iconsData: Array<{
       "voice",
       "vocals",
       "singer",
-      "song"
-    ]
+      "song",
+    ],
   },
   {
     name: "audio-waveform",
@@ -991,13 +980,13 @@ export const iconsData: Array<{
       "voice",
       "vocals",
       "singer",
-      "song"
-    ]
+      "song",
+    ],
   },
   {
     name: "award",
     categories: ["account", "sports", "gaming"],
-    tags: ["achievement", "badge", "rosette", "prize", "winner"]
+    tags: ["achievement", "badge", "rosette", "prize", "winner"],
   },
   {
     name: "axe",
@@ -1014,28 +1003,28 @@ export const iconsData: Array<{
       "lumberjack",
       "woodcutter",
       "logger",
-      "forestry"
-    ]
+      "forestry",
+    ],
   },
   {
     name: "axis-3d",
     categories: ["design"],
-    tags: ["gizmo", "coordinates"]
+    tags: ["gizmo", "coordinates"],
   },
   {
     name: "baby",
     categories: ["accessibility", "people"],
-    tags: ["child", "childproof", "children"]
+    tags: ["child", "childproof", "children"],
   },
   {
     name: "backpack",
     categories: ["gaming", "photography", "travel"],
-    tags: ["bag", "hiking", "travel", "camping", "school", "childhood"]
+    tags: ["bag", "hiking", "travel", "camping", "school", "childhood"],
   },
   {
     name: "badge-alert",
     categories: ["account", "social"],
-    tags: ["check", "verified", "unverified", "security", "safety", "issue"]
+    tags: ["check", "verified", "unverified", "security", "safety", "issue"],
   },
   {
     name: "badge-cent",
@@ -1057,13 +1046,13 @@ export const iconsData: Array<{
       "dollar",
       "usd",
       "$",
-      "¢"
-    ]
+      "¢",
+    ],
   },
   {
     name: "badge-check",
     categories: ["social"],
-    tags: ["verified", "check"]
+    tags: ["verified", "check"],
   },
   {
     name: "badge-dollar-sign",
@@ -1082,8 +1071,8 @@ export const iconsData: Array<{
       "transaction",
       "payment",
       "usd",
-      "$"
-    ]
+      "$",
+    ],
   },
   {
     name: "badge-euro",
@@ -1101,13 +1090,13 @@ export const iconsData: Array<{
       "exchange",
       "transaction",
       "payment",
-      "€"
-    ]
+      "€",
+    ],
   },
   {
     name: "badge-help",
     categories: ["accessibility", "social"],
-    tags: ["verified", "unverified", "help"]
+    tags: ["verified", "unverified", "help"],
   },
   {
     name: "badge-indian-rupee",
@@ -1126,13 +1115,13 @@ export const iconsData: Array<{
       "transaction",
       "payment",
       "inr",
-      "₹"
-    ]
+      "₹",
+    ],
   },
   {
     name: "badge-info",
     categories: ["account", "accessibility", "social"],
-    tags: ["verified", "unverified", "help"]
+    tags: ["verified", "unverified", "help"],
   },
   {
     name: "badge-japanese-yen",
@@ -1151,13 +1140,13 @@ export const iconsData: Array<{
       "transaction",
       "payment",
       "jpy",
-      "¥"
-    ]
+      "¥",
+    ],
   },
   {
     name: "badge-minus",
     categories: ["social"],
-    tags: ["verified", "unverified", "delete", "remove", "erase"]
+    tags: ["verified", "unverified", "delete", "remove", "erase"],
   },
   {
     name: "badge-percent",
@@ -1170,13 +1159,13 @@ export const iconsData: Array<{
       "offer",
       "marketing",
       "sticker",
-      "price tag"
-    ]
+      "price tag",
+    ],
   },
   {
     name: "badge-plus",
     categories: ["social"],
-    tags: ["verified", "unverified", "add", "create", "new"]
+    tags: ["verified", "unverified", "add", "create", "new"],
   },
   {
     name: "badge-pound-sterling",
@@ -1196,8 +1185,8 @@ export const iconsData: Array<{
       "payment",
       "british",
       "gbp",
-      "£"
-    ]
+      "£",
+    ],
   },
   {
     name: "badge-russian-ruble",
@@ -1216,8 +1205,8 @@ export const iconsData: Array<{
       "transaction",
       "payment",
       "rub",
-      "₽"
-    ]
+      "₽",
+    ],
   },
   {
     name: "badge-swiss-franc",
@@ -1236,23 +1225,23 @@ export const iconsData: Array<{
       "transaction",
       "payment",
       "chf",
-      "₣"
-    ]
+      "₣",
+    ],
   },
   {
     name: "badge-x",
     categories: ["social"],
-    tags: ["verified", "unverified", "lost", "delete", "remove"]
+    tags: ["verified", "unverified", "lost", "delete", "remove"],
   },
   {
     name: "badge",
     categories: ["account", "social", "shapes"],
-    tags: ["check", "verified", "unverified"]
+    tags: ["check", "verified", "unverified"],
   },
   {
     name: "baggage-claim",
     categories: ["transportation", "travel"],
-    tags: ["baggage", "luggage", "travel", "cart", "trolley", "suitcase"]
+    tags: ["baggage", "luggage", "travel", "cart", "trolley", "suitcase"],
   },
   {
     name: "ban",
@@ -1271,13 +1260,13 @@ export const iconsData: Array<{
       "circle",
       "slash",
       "null",
-      "void"
-    ]
+      "void",
+    ],
   },
   {
     name: "banana",
     categories: ["food-beverage"],
-    tags: ["fruit", "food"]
+    tags: ["fruit", "food"],
   },
   {
     name: "bandage",
@@ -1296,13 +1285,13 @@ export const iconsData: Array<{
       "protection",
       "emergency",
       "aid",
-      "safety"
-    ]
+      "safety",
+    ],
   },
   {
     name: "banknote",
     categories: ["finance"],
-    tags: ["currency", "money", "payment"]
+    tags: ["currency", "money", "payment"],
   },
   {
     name: "barcode",
@@ -1318,38 +1307,38 @@ export const iconsData: Array<{
       "product",
       "packaging",
       "retail",
-      "consumer"
-    ]
+      "consumer",
+    ],
   },
   {
     name: "baseline",
     categories: ["text"],
-    tags: ["text", "format", "color"]
+    tags: ["text", "format", "color"],
   },
   {
     name: "bath",
     categories: ["travel"],
-    tags: ["amenities", "services", "bathroom", "shower"]
+    tags: ["amenities", "services", "bathroom", "shower"],
   },
   {
     name: "battery-charging",
     categories: ["connectivity", "devices"],
-    tags: ["power", "electricity", "energy", "accumulator", "charge"]
+    tags: ["power", "electricity", "energy", "accumulator", "charge"],
   },
   {
     name: "battery-full",
     categories: ["connectivity", "devices"],
-    tags: ["power", "electricity", "energy", "accumulator", "charge"]
+    tags: ["power", "electricity", "energy", "accumulator", "charge"],
   },
   {
     name: "battery-low",
     categories: ["connectivity", "devices"],
-    tags: ["power", "electricity", "energy", "accumulator", "charge"]
+    tags: ["power", "electricity", "energy", "accumulator", "charge"],
   },
   {
     name: "battery-medium",
     categories: ["connectivity", "devices"],
-    tags: ["power", "electricity", "energy", "accumulator", "charge"]
+    tags: ["power", "electricity", "energy", "accumulator", "charge"],
   },
   {
     name: "battery-plus",
@@ -1368,8 +1357,8 @@ export const iconsData: Array<{
       "maximum",
       "upgrade",
       "extra",
-      "+"
-    ]
+      "+",
+    ],
   },
   {
     name: "battery-warning",
@@ -1380,18 +1369,18 @@ export const iconsData: Array<{
       "energy",
       "accumulator",
       "charge",
-      "exclamation mark"
-    ]
+      "exclamation mark",
+    ],
   },
   {
     name: "battery",
     categories: ["connectivity", "devices"],
-    tags: ["power", "electricity", "energy", "accumulator", "charge"]
+    tags: ["power", "electricity", "energy", "accumulator", "charge"],
   },
   {
     name: "beaker",
     categories: ["science", "gaming"],
-    tags: ["cup", "lab", "chemistry", "experiment", "test"]
+    tags: ["cup", "lab", "chemistry", "experiment", "test"],
   },
   {
     name: "bean-off",
@@ -1404,28 +1393,28 @@ export const iconsData: Array<{
       "seed",
       "allergy",
       "intolerance",
-      "diet"
-    ]
+      "diet",
+    ],
   },
   {
     name: "bean",
     categories: ["food-beverage"],
-    tags: ["legume", "soy", "food", "seed"]
+    tags: ["legume", "soy", "food", "seed"],
   },
   {
     name: "bed-double",
     categories: ["home"],
-    tags: ["sleep", "hotel", "furniture"]
+    tags: ["sleep", "hotel", "furniture"],
   },
   {
     name: "bed-single",
     categories: ["home"],
-    tags: ["sleep", "hotel", "furniture"]
+    tags: ["sleep", "hotel", "furniture"],
   },
   {
     name: "bed",
     categories: ["home"],
-    tags: ["sleep", "hotel", "furniture"]
+    tags: ["sleep", "hotel", "furniture"],
   },
   {
     name: "beef",
@@ -1438,23 +1427,23 @@ export const iconsData: Array<{
       "meal",
       "meat",
       "bbq",
-      "steak"
-    ]
+      "steak",
+    ],
   },
   {
     name: "beer-off",
     categories: ["food-beverage"],
-    tags: ["alcohol", "bar", "beverage", "brewery", "drink"]
+    tags: ["alcohol", "bar", "beverage", "brewery", "drink"],
   },
   {
     name: "beer",
     categories: ["food-beverage"],
-    tags: ["alcohol", "bar", "beverage", "brewery", "drink"]
+    tags: ["alcohol", "bar", "beverage", "brewery", "drink"],
   },
   {
     name: "bell-dot",
     categories: ["account", "notifications"],
-    tags: ["alarm", "notification", "sound", "reminder", "unread"]
+    tags: ["alarm", "notification", "sound", "reminder", "unread"],
   },
   {
     name: "bell-electric",
@@ -1478,8 +1467,8 @@ export const iconsData: Array<{
       "entrance",
       "entry",
       "ring",
-      "reception"
-    ]
+      "reception",
+    ],
   },
   {
     name: "bell-minus",
@@ -1491,28 +1480,28 @@ export const iconsData: Array<{
       "reminder",
       "delete",
       "remove",
-      "erase"
-    ]
+      "erase",
+    ],
   },
   {
     name: "bell-off",
     categories: ["notifications"],
-    tags: ["alarm", "notification", "silent", "reminder"]
+    tags: ["alarm", "notification", "silent", "reminder"],
   },
   {
     name: "bell-plus",
     categories: ["notifications"],
-    tags: ["notification", "silent", "reminder", "add", "create", "new"]
+    tags: ["notification", "silent", "reminder", "add", "create", "new"],
   },
   {
     name: "bell-ring",
     categories: ["notifications"],
-    tags: ["alarm", "notification", "sound", "reminder"]
+    tags: ["alarm", "notification", "sound", "reminder"],
   },
   {
     name: "bell",
     categories: ["account", "notifications"],
-    tags: ["alarm", "notification", "sound", "reminder"]
+    tags: ["alarm", "notification", "sound", "reminder"],
   },
   {
     name: "between-horizontal-end",
@@ -1538,8 +1527,8 @@ export const iconsData: Array<{
       "entries",
       "blocks",
       "rectangles",
-      "chevron"
-    ]
+      "chevron",
+    ],
   },
   {
     name: "between-horizontal-start",
@@ -1565,8 +1554,8 @@ export const iconsData: Array<{
       "entries",
       "blocks",
       "rectangles",
-      "chevron"
-    ]
+      "chevron",
+    ],
   },
   {
     name: "between-vertical-end",
@@ -1589,8 +1578,8 @@ export const iconsData: Array<{
       "entries",
       "blocks",
       "rectangles",
-      "chevron"
-    ]
+      "chevron",
+    ],
   },
   {
     name: "between-vertical-start",
@@ -1613,8 +1602,8 @@ export const iconsData: Array<{
       "entries",
       "blocks",
       "rectangles",
-      "chevron"
-    ]
+      "chevron",
+    ],
   },
   {
     name: "biceps-flexed",
@@ -1628,18 +1617,18 @@ export const iconsData: Array<{
       "toned",
       "muscular",
       "forelimb",
-      "curled"
-    ]
+      "curled",
+    ],
   },
   {
     name: "bike",
     categories: ["transportation"],
-    tags: ["bicycle", "transport", "trip"]
+    tags: ["bicycle", "transport", "trip"],
   },
   {
     name: "binary",
     categories: ["text", "development"],
-    tags: ["code", "digits", "computer", "zero", "one", "boolean"]
+    tags: ["code", "digits", "computer", "zero", "one", "boolean"],
   },
   {
     name: "binoculars",
@@ -1649,7 +1638,7 @@ export const iconsData: Array<{
       "photography",
       "science",
       "travel",
-      "development"
+      "development",
     ],
     tags: [
       "field glasses",
@@ -1669,23 +1658,23 @@ export const iconsData: Array<{
       "viewpoint",
       "travel",
       "tourism",
-      "research"
-    ]
+      "research",
+    ],
   },
   {
     name: "biohazard",
     categories: ["science"],
-    tags: ["fallout", "waste", "biology", "chemistry", "chemical", "element"]
+    tags: ["fallout", "waste", "biology", "chemistry", "chemical", "element"],
   },
   {
     name: "bird",
     categories: ["animals"],
-    tags: ["peace", "freedom", "wing", "avian", "tweet"]
+    tags: ["peace", "freedom", "wing", "avian", "tweet"],
   },
   {
     name: "bitcoin",
     categories: ["brands", "development", "finance"],
-    tags: ["currency", "money", "payment"]
+    tags: ["currency", "money", "payment"],
   },
   {
     name: "blend",
@@ -1708,8 +1697,8 @@ export const iconsData: Array<{
       "brightness",
       "overlap",
       "colors",
-      "colours"
-    ]
+      "colours",
+    ],
   },
   {
     name: "blinds",
@@ -1723,8 +1712,8 @@ export const iconsData: Array<{
       "window",
       "lighting",
       "household",
-      "home"
-    ]
+      "home",
+    ],
   },
   {
     name: "blocks",
@@ -1740,33 +1729,33 @@ export const iconsData: Array<{
       "toys",
       "kids",
       "children",
-      "learning"
-    ]
+      "learning",
+    ],
   },
   {
     name: "bluetooth-connected",
     categories: ["connectivity", "devices"],
-    tags: ["paired"]
+    tags: ["paired"],
   },
   {
     name: "bluetooth-off",
     categories: ["connectivity", "devices"],
-    tags: ["lost"]
+    tags: ["lost"],
   },
   {
     name: "bluetooth-searching",
     categories: ["connectivity", "devices"],
-    tags: ["pairing"]
+    tags: ["pairing"],
   },
   {
     name: "bluetooth",
     categories: ["connectivity", "devices"],
-    tags: ["wireless"]
+    tags: ["wireless"],
   },
   {
     name: "bold",
     categories: ["text"],
-    tags: ["text", "strong", "format"]
+    tags: ["text", "strong", "format"],
   },
   {
     name: "bolt",
@@ -1783,8 +1772,8 @@ export const iconsData: Array<{
       "fixed",
       "build",
       "construction",
-      "parts"
-    ]
+      "parts",
+    ],
   },
   {
     name: "bomb",
@@ -1797,13 +1786,13 @@ export const iconsData: Array<{
       "mine",
       "explosion",
       "explode",
-      "explosive"
-    ]
+      "explosive",
+    ],
   },
   {
     name: "bone",
     categories: ["animals", "medical", "gaming"],
-    tags: ["health", "skeleton", "skull", "death", "pets", "dog"]
+    tags: ["health", "skeleton", "skull", "death", "pets", "dog"],
   },
   {
     name: "book-a",
@@ -1846,8 +1835,8 @@ export const iconsData: Array<{
       "translate",
       "alphabetical",
       "a-z",
-      "ordered"
-    ]
+      "ordered",
+    ],
   },
   {
     name: "book-audio",
@@ -1866,8 +1855,8 @@ export const iconsData: Array<{
       "student",
       "study",
       "learning",
-      "research"
-    ]
+      "research",
+    ],
   },
   {
     name: "book-check",
@@ -1909,8 +1898,8 @@ export const iconsData: Array<{
       "done",
       "completed",
       "finished",
-      "ticked"
-    ]
+      "ticked",
+    ],
   },
   {
     name: "book-copy",
@@ -1949,8 +1938,8 @@ export const iconsData: Array<{
       "research",
       "smart",
       "intelligent",
-      "intellectual"
-    ]
+      "intellectual",
+    ],
   },
   {
     name: "book-dashed",
@@ -1970,13 +1959,13 @@ export const iconsData: Array<{
       "author",
       "unwritten",
       "unpublished",
-      "untold"
-    ]
+      "untold",
+    ],
   },
   {
     name: "book-down",
     categories: ["development"],
-    tags: ["code", "coding", "version control", "git", "repository", "pull"]
+    tags: ["code", "coding", "version control", "git", "repository", "pull"],
   },
   {
     name: "book-headphones",
@@ -1995,8 +1984,8 @@ export const iconsData: Array<{
       "student",
       "study",
       "learning",
-      "research"
-    ]
+      "research",
+    ],
   },
   {
     name: "book-heart",
@@ -2034,8 +2023,8 @@ export const iconsData: Array<{
       "reading",
       "favorite",
       "favourite",
-      "high school"
-    ]
+      "high school",
+    ],
   },
   {
     name: "book-image",
@@ -2046,7 +2035,7 @@ export const iconsData: Array<{
       "files",
       "social",
       "shopping",
-      "travel"
+      "travel",
     ],
     tags: [
       "images",
@@ -2060,8 +2049,8 @@ export const iconsData: Array<{
       "catalogue",
       "brochure",
       "browse",
-      "gallery"
-    ]
+      "gallery",
+    ],
   },
   {
     name: "book-key",
@@ -2079,8 +2068,8 @@ export const iconsData: Array<{
       "hidden",
       "revealed",
       "knowledge",
-      "learning"
-    ]
+      "learning",
+    ],
   },
   {
     name: "book-lock",
@@ -2094,8 +2083,8 @@ export const iconsData: Array<{
       "private",
       "secret",
       "hidden",
-      "knowledge"
-    ]
+      "knowledge",
+    ],
   },
   {
     name: "book-marked",
@@ -2139,8 +2128,8 @@ export const iconsData: Array<{
       "coding",
       "version control",
       "git",
-      "repository"
-    ]
+      "repository",
+    ],
   },
   {
     name: "book-minus",
@@ -2161,8 +2150,8 @@ export const iconsData: Array<{
       "uneducated",
       "re-educate",
       "unlearn",
-      "downgrade"
-    ]
+      "downgrade",
+    ],
   },
   {
     name: "book-open-check",
@@ -2205,8 +2194,8 @@ export const iconsData: Array<{
       "done",
       "completed",
       "finished",
-      "ticked"
-    ]
+      "ticked",
+    ],
   },
   {
     name: "book-open-text",
@@ -2240,8 +2229,8 @@ export const iconsData: Array<{
       "homework",
       "research",
       "documentation",
-      "revealed"
-    ]
+      "revealed",
+    ],
   },
   {
     name: "book-open",
@@ -2278,8 +2267,8 @@ export const iconsData: Array<{
       "documentation",
       "revealed",
       "blank",
-      "plain"
-    ]
+      "plain",
+    ],
   },
   {
     name: "book-plus",
@@ -2305,8 +2294,8 @@ export const iconsData: Array<{
       "knowledge",
       "improve",
       "upgrade",
-      "level up"
-    ]
+      "level up",
+    ],
   },
   {
     name: "book-text",
@@ -2339,8 +2328,8 @@ export const iconsData: Array<{
       "learning",
       "homework",
       "research",
-      "documentation"
-    ]
+      "documentation",
+    ],
   },
   {
     name: "book-type",
@@ -2379,8 +2368,8 @@ export const iconsData: Array<{
       "translate",
       "typography",
       "fonts",
-      "collection"
-    ]
+      "collection",
+    ],
   },
   {
     name: "book-up-2",
@@ -2392,13 +2381,13 @@ export const iconsData: Array<{
       "git",
       "repository",
       "push",
-      "force"
-    ]
+      "force",
+    ],
   },
   {
     name: "book-up",
     categories: ["development"],
-    tags: ["code", "coding", "version control", "git", "repository", "push"]
+    tags: ["code", "coding", "version control", "git", "repository", "push"],
   },
   {
     name: "book-user",
@@ -2415,8 +2404,8 @@ export const iconsData: Array<{
       "phone numbers",
       "directory",
       "listing",
-      "networking"
-    ]
+      "networking",
+    ],
   },
   {
     name: "book-x",
@@ -2446,8 +2435,8 @@ export const iconsData: Array<{
       "banned",
       "uneducated",
       "re-education",
-      "unlearn"
-    ]
+      "unlearn",
+    ],
   },
   {
     name: "book",
@@ -2481,8 +2470,8 @@ export const iconsData: Array<{
       "learning",
       "homework",
       "research",
-      "documentation"
-    ]
+      "documentation",
+    ],
   },
   {
     name: "bookmark-check",
@@ -2495,18 +2484,18 @@ export const iconsData: Array<{
       "marker",
       "tag",
       "task",
-      "todo"
-    ]
+      "todo",
+    ],
   },
   {
     name: "bookmark-minus",
     categories: ["account"],
-    tags: ["delete", "remove"]
+    tags: ["delete", "remove"],
   },
   {
     name: "bookmark-plus",
     categories: ["account"],
-    tags: ["add"]
+    tags: ["add"],
   },
   {
     name: "bookmark-x",
@@ -2520,13 +2509,13 @@ export const iconsData: Array<{
       "close",
       "delete",
       "remove",
-      "clear"
-    ]
+      "clear",
+    ],
   },
   {
     name: "bookmark",
     categories: ["account"],
-    tags: ["read", "clip", "marker", "tag"]
+    tags: ["read", "clip", "marker", "tag"],
   },
   {
     name: "boom-box",
@@ -2539,23 +2528,23 @@ export const iconsData: Array<{
       "sound",
       "broadcast",
       "live",
-      "frequency"
-    ]
+      "frequency",
+    ],
   },
   {
     name: "bot-message-square",
     categories: ["development", "social"],
-    tags: ["robot", "ai", "chat", "assistant"]
+    tags: ["robot", "ai", "chat", "assistant"],
   },
   {
     name: "bot-off",
     categories: ["development", "social"],
-    tags: ["robot", "ai", "chat", "assistant"]
+    tags: ["robot", "ai", "chat", "assistant"],
   },
   {
     name: "bot",
     categories: ["development", "social"],
-    tags: ["robot", "ai", "chat", "assistant"]
+    tags: ["robot", "ai", "chat", "assistant"],
   },
   {
     name: "box",
@@ -2567,8 +2556,8 @@ export const iconsData: Array<{
       "storage",
       "geometry",
       "3d",
-      "isometric"
-    ]
+      "isometric",
+    ],
   },
   {
     name: "boxes",
@@ -2581,18 +2570,18 @@ export const iconsData: Array<{
       "units",
       "collection",
       "cluster",
-      "geometry"
-    ]
+      "geometry",
+    ],
   },
   {
     name: "braces",
     categories: ["development", "files"],
-    tags: ["json", "code", "token", "curly brackets", "data", "{", "}"]
+    tags: ["json", "code", "token", "curly brackets", "data", "{", "}"],
   },
   {
     name: "brackets",
     categories: ["development", "files"],
-    tags: ["code", "token", "array", "list", "square", "[", "]"]
+    tags: ["code", "token", "array", "list", "square", "[", "]"],
   },
   {
     name: "brain-circuit",
@@ -2604,8 +2593,8 @@ export const iconsData: Array<{
       "ai",
       "deep learning",
       "machine learning",
-      "computing"
-    ]
+      "computing",
+    ],
   },
   {
     name: "brain-cog",
@@ -2617,8 +2606,8 @@ export const iconsData: Array<{
       "ai",
       "deep learning",
       "machine learning",
-      "computing"
-    ]
+      "computing",
+    ],
   },
   {
     name: "brain",
@@ -2631,8 +2620,8 @@ export const iconsData: Array<{
       "consciousness",
       "genius",
       "artificial intelligence",
-      "ai"
-    ]
+      "ai",
+    ],
   },
   {
     name: "brick-wall",
@@ -2647,28 +2636,28 @@ export const iconsData: Array<{
       "labourer",
       "quantity surveyor",
       "blocks",
-      "stone"
-    ]
+      "stone",
+    ],
   },
   {
     name: "briefcase-business",
     categories: ["transportation"],
-    tags: ["work", "bag", "baggage", "folder", "portfolio"]
+    tags: ["work", "bag", "baggage", "folder", "portfolio"],
   },
   {
     name: "briefcase-conveyor-belt",
     categories: ["travel", "transportation"],
-    tags: ["baggage", "luggage", "travel", "suitcase", "conveyor", "carousel"]
+    tags: ["baggage", "luggage", "travel", "suitcase", "conveyor", "carousel"],
   },
   {
     name: "briefcase-medical",
     categories: ["medical", "transportation"],
-    tags: ["doctor", "medicine", "first aid"]
+    tags: ["doctor", "medicine", "first aid"],
   },
   {
     name: "briefcase",
     categories: ["transportation"],
-    tags: ["work", "bag", "baggage", "folder"]
+    tags: ["work", "bag", "baggage", "folder"],
   },
   {
     name: "bring-to-front",
@@ -2682,28 +2671,28 @@ export const iconsData: Array<{
       "front",
       "overlap",
       "layer",
-      "order"
-    ]
+      "order",
+    ],
   },
   {
     name: "brush",
     categories: ["text", "design", "tools"],
-    tags: ["draw", "paint", "color", "artist"]
+    tags: ["draw", "paint", "color", "artist"],
   },
   {
     name: "bug-off",
     categories: ["development", "animals"],
-    tags: ["debug", "code", "insect", "kill", "exterminate", "pest control"]
+    tags: ["debug", "code", "insect", "kill", "exterminate", "pest control"],
   },
   {
     name: "bug-play",
     categories: ["development", "animals"],
-    tags: ["debug", "code", "insect"]
+    tags: ["debug", "code", "insect"],
   },
   {
     name: "bug",
     categories: ["development", "animals"],
-    tags: ["issue", "report", "debug", "code", "insect"]
+    tags: ["issue", "report", "debug", "code", "insect"],
   },
   {
     name: "building-2",
@@ -2715,28 +2704,28 @@ export const iconsData: Array<{
       "skyscraper",
       "organisation",
       "organization",
-      "city"
-    ]
+      "city",
+    ],
   },
   {
     name: "building",
     categories: ["account", "buildings"],
-    tags: ["organisation", "organization"]
+    tags: ["organisation", "organization"],
   },
   {
     name: "bus-front",
     categories: ["transportation"],
-    tags: ["coach", "vehicle", "trip", "road"]
+    tags: ["coach", "vehicle", "trip", "road"],
   },
   {
     name: "bus",
     categories: ["transportation"],
-    tags: ["bus", "vehicle", "transport", "trip"]
+    tags: ["bus", "vehicle", "transport", "trip"],
   },
   {
     name: "cable-car",
     categories: ["transportation", "travel"],
-    tags: ["ski lift", "winter holiday", "alpine", "resort", "mountains"]
+    tags: ["ski lift", "winter holiday", "alpine", "resort", "mountains"],
   },
   {
     name: "cable",
@@ -2770,8 +2759,8 @@ export const iconsData: Array<{
       "scart",
       "tv",
       "television",
-      "optical"
-    ]
+      "optical",
+    ],
   },
   {
     name: "cake-slice",
@@ -2789,8 +2778,8 @@ export const iconsData: Array<{
       "fondant",
       "icing sugar",
       "sweet",
-      "baking"
-    ]
+      "baking",
+    ],
   },
   {
     name: "cake",
@@ -2806,13 +2795,13 @@ export const iconsData: Array<{
       "fondant",
       "icing sugar",
       "sweet",
-      "baking"
-    ]
+      "baking",
+    ],
   },
   {
     name: "calculator",
     categories: ["math", "devices"],
-    tags: ["count", "calculating machine"]
+    tags: ["count", "calculating machine"],
   },
   {
     name: "calendar-1",
@@ -2826,8 +2815,8 @@ export const iconsData: Array<{
       "singular",
       "once",
       "1",
-      "first"
-    ]
+      "first",
+    ],
   },
   {
     name: "calendar-arrow-down",
@@ -2844,8 +2833,8 @@ export const iconsData: Array<{
       "increasing",
       "decreasing",
       "rising",
-      "falling"
-    ]
+      "falling",
+    ],
   },
   {
     name: "calendar-arrow-up",
@@ -2862,8 +2851,8 @@ export const iconsData: Array<{
       "increasing",
       "decreasing",
       "rising",
-      "falling"
-    ]
+      "falling",
+    ],
   },
   {
     name: "calendar-check-2",
@@ -2881,8 +2870,8 @@ export const iconsData: Array<{
       "todo",
       "tick",
       "complete",
-      "task"
-    ]
+      "task",
+    ],
   },
   {
     name: "calendar-check",
@@ -2900,28 +2889,28 @@ export const iconsData: Array<{
       "todo",
       "tick",
       "complete",
-      "task"
-    ]
+      "task",
+    ],
   },
   {
     name: "calendar-clock",
     categories: ["time"],
-    tags: ["date", "day", "month", "year", "event", "clock", "hour"]
+    tags: ["date", "day", "month", "year", "event", "clock", "hour"],
   },
   {
     name: "calendar-cog",
     categories: ["time"],
-    tags: ["date", "day", "month", "year", "events", "settings", "gear", "cog"]
+    tags: ["date", "day", "month", "year", "events", "settings", "gear", "cog"],
   },
   {
     name: "calendar-days",
     categories: ["time"],
-    tags: ["date", "month", "year", "event"]
+    tags: ["date", "month", "year", "event"],
   },
   {
     name: "calendar-fold",
     categories: ["time", "files"],
-    tags: ["date", "month", "year", "event", "birthday", "birthdate", "ics"]
+    tags: ["date", "month", "year", "event", "birthday", "birthdate", "ics"],
   },
   {
     name: "calendar-heart",
@@ -2934,23 +2923,23 @@ export const iconsData: Array<{
       "heart",
       "favourite",
       "subscribe",
-      "valentines day"
-    ]
+      "valentines day",
+    ],
   },
   {
     name: "calendar-minus-2",
     categories: ["time"],
-    tags: ["date", "day", "month", "year", "event", "delete", "remove"]
+    tags: ["date", "day", "month", "year", "event", "delete", "remove"],
   },
   {
     name: "calendar-minus",
     categories: ["time"],
-    tags: ["date", "day", "month", "year", "event", "delete", "remove"]
+    tags: ["date", "day", "month", "year", "event", "delete", "remove"],
   },
   {
     name: "calendar-off",
     categories: ["time"],
-    tags: ["date", "day", "month", "year", "event", "delete", "remove"]
+    tags: ["date", "day", "month", "year", "event", "delete", "remove"],
   },
   {
     name: "calendar-plus-2",
@@ -2964,8 +2953,8 @@ export const iconsData: Array<{
       "add",
       "subscribe",
       "create",
-      "new"
-    ]
+      "new",
+    ],
   },
   {
     name: "calendar-plus",
@@ -2979,18 +2968,18 @@ export const iconsData: Array<{
       "add",
       "subscribe",
       "create",
-      "new"
-    ]
+      "new",
+    ],
   },
   {
     name: "calendar-range",
     categories: ["time"],
-    tags: ["date", "day", "month", "year", "event", "range", "period"]
+    tags: ["date", "day", "month", "year", "event", "range", "period"],
   },
   {
     name: "calendar-search",
     categories: ["time"],
-    tags: ["date", "day", "month", "year", "events", "search"]
+    tags: ["date", "day", "month", "year", "events", "search"],
   },
   {
     name: "calendar-sync",
@@ -3010,53 +2999,53 @@ export const iconsData: Array<{
       "schedule",
       "reminder",
       "automatic",
-      "auto"
-    ]
+      "auto",
+    ],
   },
   {
     name: "calendar-x-2",
     categories: ["time"],
-    tags: ["date", "day", "month", "year", "event", "remove"]
+    tags: ["date", "day", "month", "year", "event", "remove"],
   },
   {
     name: "calendar-x",
     categories: ["time"],
-    tags: ["date", "day", "month", "year", "event", "remove", "busy"]
+    tags: ["date", "day", "month", "year", "event", "remove", "busy"],
   },
   {
     name: "calendar",
     categories: ["time"],
-    tags: ["date", "month", "year", "event", "birthday", "birthdate"]
+    tags: ["date", "month", "year", "event", "birthday", "birthdate"],
   },
   {
     name: "camera-off",
     categories: ["photography", "devices", "communication"],
-    tags: ["photo", "webcam", "video"]
+    tags: ["photo", "webcam", "video"],
   },
   {
     name: "camera",
     categories: ["photography", "devices", "communication"],
-    tags: ["photo", "webcam", "video"]
+    tags: ["photo", "webcam", "video"],
   },
   {
     name: "candy-cane",
     categories: ["food-beverage"],
-    tags: ["sugar", "food", "sweet", "christmas", "xmas"]
+    tags: ["sugar", "food", "sweet", "christmas", "xmas"],
   },
   {
     name: "candy-off",
     categories: ["food-beverage"],
-    tags: ["sugar free", "food", "sweet", "allergy", "intolerance", "diet"]
+    tags: ["sugar free", "food", "sweet", "allergy", "intolerance", "diet"],
   },
   {
     name: "candy",
     categories: ["food-beverage"],
-    tags: ["sugar", "food", "sweet"]
+    tags: ["sugar", "food", "sweet"],
   },
   {
     name: "cannabis",
     categories: ["nature"],
-    tags: ["cannabis", "weed", "leaf"]
+    tags: ["cannabis", "weed", "leaf"],
   },
   {
     name: "captions-off",
@@ -3068,8 +3057,8 @@ export const iconsData: Array<{
       "transcription",
       "transcribe",
       "dialogue",
-      "accessibility"
-    ]
+      "accessibility",
+    ],
   },
   {
     name: "captions",
@@ -3081,23 +3070,23 @@ export const iconsData: Array<{
       "transcription",
       "transcribe",
       "dialogue",
-      "accessibility"
-    ]
+      "accessibility",
+    ],
   },
   {
     name: "car-front",
     categories: ["transportation"],
-    tags: ["vehicle", "drive", "trip", "journey"]
+    tags: ["vehicle", "drive", "trip", "journey"],
   },
   {
     name: "car-taxi-front",
     categories: ["transportation"],
-    tags: ["cab", "vehicle", "drive", "trip", "journey"]
+    tags: ["cab", "vehicle", "drive", "trip", "journey"],
   },
   {
     name: "car",
     categories: ["transportation"],
-    tags: ["vehicle", "drive", "trip", "journey"]
+    tags: ["vehicle", "drive", "trip", "journey"],
   },
   {
     name: "caravan",
@@ -3111,28 +3100,28 @@ export const iconsData: Array<{
       "holiday",
       "nomadic",
       "wilderness",
-      "outdoors"
-    ]
+      "outdoors",
+    ],
   },
   {
     name: "carrot",
     categories: ["food-beverage"],
-    tags: ["vegetable", "food", "eat"]
+    tags: ["vegetable", "food", "eat"],
   },
   {
     name: "case-lower",
     categories: ["text"],
-    tags: ["text", "letters", "characters", "font", "typography"]
+    tags: ["text", "letters", "characters", "font", "typography"],
   },
   {
     name: "case-sensitive",
     categories: ["text"],
-    tags: ["text", "letters", "characters", "font", "typography"]
+    tags: ["text", "letters", "characters", "font", "typography"],
   },
   {
     name: "case-upper",
     categories: ["text"],
-    tags: ["text", "letters", "characters", "font", "typography"]
+    tags: ["text", "letters", "characters", "font", "typography"],
   },
   {
     name: "cassette-tape",
@@ -3141,24 +3130,24 @@ export const iconsData: Array<{
       "devices",
       "multimedia",
       "communication",
-      "files"
+      "files",
     ],
-    tags: ["audio", "music", "recording", "play"]
+    tags: ["audio", "music", "recording", "play"],
   },
   {
     name: "cast",
     categories: ["devices", "connectivity"],
-    tags: ["chromecast", "airplay", "screen"]
+    tags: ["chromecast", "airplay", "screen"],
   },
   {
     name: "castle",
     categories: ["buildings", "gaming"],
-    tags: ["fortress", "stronghold", "palace", "chateau", "building"]
+    tags: ["fortress", "stronghold", "palace", "chateau", "building"],
   },
   {
     name: "cat",
     categories: ["animals"],
-    tags: ["animal", "pet", "kitten", "feline"]
+    tags: ["animal", "pet", "kitten", "feline"],
   },
   {
     name: "cctv",
@@ -3167,7 +3156,7 @@ export const iconsData: Array<{
       "devices",
       "communication",
       "connectivity",
-      "photography"
+      "photography",
     ],
     tags: [
       "camera",
@@ -3176,28 +3165,28 @@ export const iconsData: Array<{
       "film",
       "videotape",
       "crime",
-      "watching"
-    ]
+      "watching",
+    ],
   },
   {
     name: "chart-area",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph", "area"]
+    tags: ["statistics", "analytics", "diagram", "graph", "area"],
   },
   {
     name: "chart-bar-big",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph"]
+    tags: ["statistics", "analytics", "diagram", "graph"],
   },
   {
     name: "chart-bar-decreasing",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph", "trending down"]
+    tags: ["statistics", "analytics", "diagram", "graph", "trending down"],
   },
   {
     name: "chart-bar-increasing",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph", "trending up"]
+    tags: ["statistics", "analytics", "diagram", "graph", "trending up"],
   },
   {
     name: "chart-bar-stacked",
@@ -3209,13 +3198,13 @@ export const iconsData: Array<{
       "graph",
       "multivariate",
       "categorical",
-      "comparison"
-    ]
+      "comparison",
+    ],
   },
   {
     name: "chart-bar",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph"]
+    tags: ["statistics", "analytics", "diagram", "graph"],
   },
   {
     name: "chart-candlestick",
@@ -3239,23 +3228,23 @@ export const iconsData: Array<{
       "statistics",
       "analytics",
       "diagram",
-      "graph"
-    ]
+      "graph",
+    ],
   },
   {
     name: "chart-column-big",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph"]
+    tags: ["statistics", "analytics", "diagram", "graph"],
   },
   {
     name: "chart-column-decreasing",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph", "trending down"]
+    tags: ["statistics", "analytics", "diagram", "graph", "trending down"],
   },
   {
     name: "chart-column-increasing",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph", "trending up"]
+    tags: ["statistics", "analytics", "diagram", "graph", "trending up"],
   },
   {
     name: "chart-column-stacked",
@@ -3267,23 +3256,23 @@ export const iconsData: Array<{
       "graph",
       "multivariate",
       "categorical",
-      "comparison"
-    ]
+      "comparison",
+    ],
   },
   {
     name: "chart-column",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph"]
+    tags: ["statistics", "analytics", "diagram", "graph"],
   },
   {
     name: "chart-gantt",
     categories: ["charts"],
-    tags: ["diagram", "graph", "timeline", "planning"]
+    tags: ["diagram", "graph", "timeline", "planning"],
   },
   {
     name: "chart-line",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph"]
+    tags: ["statistics", "analytics", "diagram", "graph"],
   },
   {
     name: "chart-network",
@@ -3298,28 +3287,28 @@ export const iconsData: Array<{
       "web",
       "nodes",
       "connections",
-      "edges"
-    ]
+      "edges",
+    ],
   },
   {
     name: "chart-no-axes-column-decreasing",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph", "trending down"]
+    tags: ["statistics", "analytics", "diagram", "graph", "trending down"],
   },
   {
     name: "chart-no-axes-column-increasing",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph", "trending up"]
+    tags: ["statistics", "analytics", "diagram", "graph", "trending up"],
   },
   {
     name: "chart-no-axes-column",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph"]
+    tags: ["statistics", "analytics", "diagram", "graph"],
   },
   {
     name: "chart-no-axes-combined",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph", "trending up"]
+    tags: ["statistics", "analytics", "diagram", "graph", "trending up"],
   },
   {
     name: "chart-no-axes-gantt",
@@ -3341,18 +3330,18 @@ export const iconsData: Array<{
       "work",
       "agile",
       "code",
-      "coding"
-    ]
+      "coding",
+    ],
   },
   {
     name: "chart-pie",
     categories: ["charts", "files"],
-    tags: ["statistics", "analytics", "diagram", "presentation"]
+    tags: ["statistics", "analytics", "diagram", "presentation"],
   },
   {
     name: "chart-scatter",
     categories: ["charts"],
-    tags: ["statistics", "analytics", "diagram", "graph"]
+    tags: ["statistics", "analytics", "diagram", "graph"],
   },
   {
     name: "chart-spline",
@@ -3368,48 +3357,48 @@ export const iconsData: Array<{
       "polynomial",
       "quadratic",
       "function",
-      "interpolation"
-    ]
+      "interpolation",
+    ],
   },
   {
     name: "check-check",
     categories: ["notifications"],
-    tags: ["done", "received", "double", "todo", "tick", "complete", "task"]
+    tags: ["done", "received", "double", "todo", "tick", "complete", "task"],
   },
   {
     name: "check",
     categories: ["notifications"],
-    tags: ["done", "todo", "tick", "complete", "task"]
+    tags: ["done", "todo", "tick", "complete", "task"],
   },
   {
     name: "chef-hat",
     categories: ["food-beverage"],
-    tags: ["cooking", "food", "kitchen", "restaurant"]
+    tags: ["cooking", "food", "kitchen", "restaurant"],
   },
   {
     name: "cherry",
     categories: ["food-beverage"],
-    tags: ["fruit", "food"]
+    tags: ["fruit", "food"],
   },
   {
     name: "chevron-down",
     categories: ["arrows", "navigation", "gaming"],
-    tags: ["backwards", "reverse", "slow", "dropdown"]
+    tags: ["backwards", "reverse", "slow", "dropdown"],
   },
   {
     name: "chevron-first",
     categories: ["arrows", "multimedia"],
-    tags: ["previous", "music"]
+    tags: ["previous", "music"],
   },
   {
     name: "chevron-last",
     categories: ["arrows", "multimedia"],
-    tags: ["skip", "next", "music"]
+    tags: ["skip", "next", "music"],
   },
   {
     name: "chevron-left",
     categories: ["arrows", "navigation"],
-    tags: ["back", "previous", "less than", "fewer", "menu", "<"]
+    tags: ["back", "previous", "less than", "fewer", "menu", "<"],
   },
   {
     name: "chevron-right",
@@ -3426,8 +3415,8 @@ export const iconsData: Array<{
       "terminal",
       "prompt",
       "shell",
-      ">"
-    ]
+      ">",
+    ],
   },
   {
     name: "chevron-up",
@@ -3444,18 +3433,18 @@ export const iconsData: Array<{
       "ahead",
       "fast",
       "^",
-      "dropdown"
-    ]
+      "dropdown",
+    ],
   },
   {
     name: "chevrons-down-up",
     categories: ["arrows"],
-    tags: ["collapse", "fold", "vertical"]
+    tags: ["collapse", "fold", "vertical"],
   },
   {
     name: "chevrons-down",
     categories: ["arrows", "navigation", "gaming"],
-    tags: ["backwards", "reverse", "slower"]
+    tags: ["backwards", "reverse", "slower"],
   },
   {
     name: "chevrons-left-right-ellipsis",
@@ -3485,68 +3474,68 @@ export const iconsData: Array<{
       "signal",
       "data",
       "input",
-      "output"
-    ]
+      "output",
+    ],
   },
   {
     name: "chevrons-left-right",
     categories: ["arrows"],
-    tags: ["expand", "horizontal", "unfold"]
+    tags: ["expand", "horizontal", "unfold"],
   },
   {
     name: "chevrons-left",
     categories: ["arrows", "navigation", "gaming"],
-    tags: ["turn", "corner"]
+    tags: ["turn", "corner"],
   },
   {
     name: "chevrons-right-left",
     categories: ["arrows"],
-    tags: ["collapse", "fold", "horizontal"]
+    tags: ["collapse", "fold", "horizontal"],
   },
   {
     name: "chevrons-right",
     categories: ["arrows", "navigation", "gaming"],
-    tags: ["turn", "corner"]
+    tags: ["turn", "corner"],
   },
   {
     name: "chevrons-up-down",
     categories: ["arrows"],
-    tags: ["expand", "unfold", "vertical"]
+    tags: ["expand", "unfold", "vertical"],
   },
   {
     name: "chevrons-up",
     categories: ["arrows", "navigation", "gaming"],
-    tags: ["forward", "ahead", "faster", "speed", "boost"]
+    tags: ["forward", "ahead", "faster", "speed", "boost"],
   },
   {
     name: "chrome",
     categories: ["brands"],
-    tags: ["browser", "logo"]
+    tags: ["browser", "logo"],
   },
   {
     name: "church",
     categories: ["buildings", "navigation"],
-    tags: ["temple", "building"]
+    tags: ["temple", "building"],
   },
   {
     name: "cigarette-off",
     categories: ["travel", "transportation", "medical"],
-    tags: ["smoking", "no-smoking"]
+    tags: ["smoking", "no-smoking"],
   },
   {
     name: "cigarette",
     categories: ["travel", "transportation", "medical"],
-    tags: ["smoking"]
+    tags: ["smoking"],
   },
   {
     name: "circle-alert",
     categories: ["notifications"],
-    tags: ["warning", "alert", "danger", "exclamation mark"]
+    tags: ["warning", "alert", "danger", "exclamation mark"],
   },
   {
     name: "circle-arrow-down",
     categories: ["arrows", "navigation", "gaming"],
-    tags: ["backwards", "reverse", "direction", "south", "sign", "button"]
+    tags: ["backwards", "reverse", "direction", "south", "sign", "button"],
   },
   {
     name: "circle-arrow-left",
@@ -3559,18 +3548,18 @@ export const iconsData: Array<{
       "sign",
       "turn",
       "button",
-      "<-"
-    ]
+      "<-",
+    ],
   },
   {
     name: "circle-arrow-out-down-left",
     categories: ["arrows", "navigation"],
-    tags: ["outwards", "direction", "south-west", "diagonal"]
+    tags: ["outwards", "direction", "south-west", "diagonal"],
   },
   {
     name: "circle-arrow-out-down-right",
     categories: ["arrows", "navigation"],
-    tags: ["outwards", "direction", "south-east", "diagonal"]
+    tags: ["outwards", "direction", "south-east", "diagonal"],
   },
   {
     name: "circle-arrow-out-up-left",
@@ -3582,13 +3571,13 @@ export const iconsData: Array<{
       "diagonal",
       "keyboard",
       "button",
-      "escape"
-    ]
+      "escape",
+    ],
   },
   {
     name: "circle-arrow-out-up-right",
     categories: ["arrows", "navigation"],
-    tags: ["outwards", "direction", "north-east", "diagonal"]
+    tags: ["outwards", "direction", "north-east", "diagonal"],
   },
   {
     name: "circle-arrow-right",
@@ -3601,43 +3590,43 @@ export const iconsData: Array<{
       "sign",
       "turn",
       "button",
-      "->"
-    ]
+      "->",
+    ],
   },
   {
     name: "circle-arrow-up",
     categories: ["arrows", "navigation", "gaming"],
-    tags: ["forward", "direction", "north", "sign", "button"]
+    tags: ["forward", "direction", "north", "sign", "button"],
   },
   {
     name: "circle-check-big",
     categories: ["notifications"],
-    tags: ["done", "todo", "tick", "complete", "task"]
+    tags: ["done", "todo", "tick", "complete", "task"],
   },
   {
     name: "circle-check",
     categories: ["notifications"],
-    tags: ["done", "todo", "tick", "complete", "task"]
+    tags: ["done", "todo", "tick", "complete", "task"],
   },
   {
     name: "circle-chevron-down",
     categories: ["arrows", "navigation"],
-    tags: ["back", "menu"]
+    tags: ["back", "menu"],
   },
   {
     name: "circle-chevron-left",
     categories: ["arrows", "navigation"],
-    tags: ["back", "previous", "less than", "fewer", "menu", "<"]
+    tags: ["back", "previous", "less than", "fewer", "menu", "<"],
   },
   {
     name: "circle-chevron-right",
     categories: ["arrows", "navigation"],
-    tags: ["back", "more than", "greater", "menu", ">"]
+    tags: ["back", "more than", "greater", "menu", ">"],
   },
   {
     name: "circle-chevron-up",
     categories: ["arrows", "navigation"],
-    tags: ["caret", "ahead", "menu", "^"]
+    tags: ["caret", "ahead", "menu", "^"],
   },
   {
     name: "circle-dashed",
@@ -3650,18 +3639,18 @@ export const iconsData: Array<{
       "draft",
       "code",
       "coding",
-      "version control"
-    ]
+      "version control",
+    ],
   },
   {
     name: "circle-divide",
     categories: ["math"],
-    tags: ["calculate", "math", "÷", "/"]
+    tags: ["calculate", "math", "÷", "/"],
   },
   {
     name: "circle-dollar-sign",
     categories: ["finance"],
-    tags: ["monetization", "marketing", "currency", "money", "payment"]
+    tags: ["monetization", "marketing", "currency", "money", "payment"],
   },
   {
     name: "circle-dot-dashed",
@@ -3674,8 +3663,8 @@ export const iconsData: Array<{
       "draft",
       "code",
       "coding",
-      "version control"
-    ]
+      "version control",
+    ],
   },
   {
     name: "circle-dot",
@@ -3690,8 +3679,8 @@ export const iconsData: Array<{
       "version control",
       "choices",
       "multiple choice",
-      "choose"
-    ]
+      "choose",
+    ],
   },
   {
     name: "circle-ellipsis",
@@ -3717,18 +3706,18 @@ export const iconsData: Array<{
       "overflow",
       "dots",
       "…",
-      "..."
-    ]
+      "...",
+    ],
   },
   {
     name: "circle-equal",
     categories: ["math"],
-    tags: ["calculate", "shape", "="]
+    tags: ["calculate", "shape", "="],
   },
   {
     name: "circle-fading-arrow-up",
     categories: ["arrows", "development"],
-    tags: ["north", "up", "upgrade", "improve", "circle", "button"]
+    tags: ["north", "up", "upgrade", "improve", "circle", "button"],
   },
   {
     name: "circle-fading-plus",
@@ -3741,8 +3730,8 @@ export const iconsData: Array<{
       "meta",
       "snapchat",
       "sharing",
-      "content"
-    ]
+      "content",
+    ],
   },
   {
     name: "circle-gauge",
@@ -3754,13 +3743,13 @@ export const iconsData: Array<{
       "speed",
       "pressure",
       "measure",
-      "level"
-    ]
+      "level",
+    ],
   },
   {
     name: "circle-help",
     categories: ["accessibility", "text", "notifications"],
-    tags: ["question mark"]
+    tags: ["question mark"],
   },
   {
     name: "circle-minus",
@@ -3777,8 +3766,8 @@ export const iconsData: Array<{
       "coding",
       "minimum",
       "downgrade",
-      "-"
-    ]
+      "-",
+    ],
   },
   {
     name: "circle-off",
@@ -3800,23 +3789,23 @@ export const iconsData: Array<{
       "incorrect",
       "mistake",
       "wrong",
-      "failure"
-    ]
+      "failure",
+    ],
   },
   {
     name: "circle-parking-off",
     categories: ["transportation", "navigation"],
-    tags: ["parking lot", "car park", "no parking"]
+    tags: ["parking lot", "car park", "no parking"],
   },
   {
     name: "circle-parking",
     categories: ["transportation", "navigation"],
-    tags: ["parking lot", "car park"]
+    tags: ["parking lot", "car park"],
   },
   {
     name: "circle-pause",
     categories: ["multimedia"],
-    tags: ["music", "audio", "stop"]
+    tags: ["music", "audio", "stop"],
   },
   {
     name: "circle-percent",
@@ -3829,13 +3818,13 @@ export const iconsData: Array<{
       "offer",
       "marketing",
       "sticker",
-      "price tag"
-    ]
+      "price tag",
+    ],
   },
   {
     name: "circle-play",
     categories: ["multimedia"],
-    tags: ["music", "start", "run"]
+    tags: ["music", "start", "run"],
   },
   {
     name: "circle-plus",
@@ -3861,8 +3850,8 @@ export const iconsData: Array<{
       "concatenate",
       "code",
       "coding",
-      "+"
-    ]
+      "+",
+    ],
   },
   {
     name: "circle-power",
@@ -3879,8 +3868,8 @@ export const iconsData: Array<{
       "restart",
       "button",
       "keyboard",
-      "troubleshoot"
-    ]
+      "troubleshoot",
+    ],
   },
   {
     name: "circle-slash-2",
@@ -3898,8 +3887,8 @@ export const iconsData: Array<{
       "division",
       "half",
       "split",
-      "/"
-    ]
+      "/",
+    ],
   },
   {
     name: "circle-slash",
@@ -3925,28 +3914,28 @@ export const iconsData: Array<{
       "divide",
       "division",
       "or",
-      "/"
-    ]
+      "/",
+    ],
   },
   {
     name: "circle-small",
     categories: ["shapes", "medical"],
-    tags: ["shape", "bullet", "gender", "genderless"]
+    tags: ["shape", "bullet", "gender", "genderless"],
   },
   {
     name: "circle-stop",
     categories: ["multimedia"],
-    tags: ["media", "music"]
+    tags: ["media", "music"],
   },
   {
     name: "circle-user-round",
     categories: ["account"],
-    tags: ["person", "account", "contact"]
+    tags: ["person", "account", "contact"],
   },
   {
     name: "circle-user",
     categories: ["account"],
-    tags: ["person", "account", "contact"]
+    tags: ["person", "account", "contact"],
   },
   {
     name: "circle-x",
@@ -3965,23 +3954,23 @@ export const iconsData: Array<{
       "failure",
       "linter",
       "multiply",
-      "multiplication"
-    ]
+      "multiplication",
+    ],
   },
   {
     name: "circle",
     categories: ["shapes"],
-    tags: ["off", "zero", "record", "shape"]
+    tags: ["off", "zero", "record", "shape"],
   },
   {
     name: "circuit-board",
     categories: ["science", "development"],
-    tags: ["computing", "electricity", "electronics"]
+    tags: ["computing", "electricity", "electronics"],
   },
   {
     name: "citrus",
     categories: ["food-beverage"],
-    tags: ["lemon", "orange", "grapefruit", "fruit"]
+    tags: ["lemon", "orange", "grapefruit", "fruit"],
   },
   {
     name: "clapperboard",
@@ -3997,23 +3986,23 @@ export const iconsData: Array<{
       "television",
       "tv",
       "show",
-      "entertainment"
-    ]
+      "entertainment",
+    ],
   },
   {
     name: "clipboard-check",
     categories: ["text"],
-    tags: ["copied", "pasted", "done", "todo", "tick", "complete", "task"]
+    tags: ["copied", "pasted", "done", "todo", "tick", "complete", "task"],
   },
   {
     name: "clipboard-copy",
     categories: ["text", "arrows"],
-    tags: ["copy", "paste"]
+    tags: ["copy", "paste"],
   },
   {
     name: "clipboard-list",
     categories: ["text"],
-    tags: ["copy", "paste", "tasks"]
+    tags: ["copy", "paste", "tasks"],
   },
   {
     name: "clipboard-minus",
@@ -4026,23 +4015,23 @@ export const iconsData: Array<{
       "document",
       "medical",
       "report",
-      "doctor"
-    ]
+      "doctor",
+    ],
   },
   {
     name: "clipboard-paste",
     categories: ["text", "arrows"],
-    tags: ["copy", "paste"]
+    tags: ["copy", "paste"],
   },
   {
     name: "clipboard-pen-line",
     categories: ["text"],
-    tags: ["paste"]
+    tags: ["paste"],
   },
   {
     name: "clipboard-pen",
     categories: ["text"],
-    tags: ["paste", "signature"]
+    tags: ["paste", "signature"],
   },
   {
     name: "clipboard-plus",
@@ -4056,88 +4045,88 @@ export const iconsData: Array<{
       "document",
       "medical",
       "report",
-      "doctor"
-    ]
+      "doctor",
+    ],
   },
   {
     name: "clipboard-type",
     categories: ["text"],
-    tags: ["paste", "format", "text"]
+    tags: ["paste", "format", "text"],
   },
   {
     name: "clipboard-x",
     categories: ["text"],
-    tags: ["copy", "paste", "discard", "remove"]
+    tags: ["copy", "paste", "discard", "remove"],
   },
   {
     name: "clipboard",
     categories: ["text"],
-    tags: ["copy", "paste"]
+    tags: ["copy", "paste"],
   },
   {
     name: "clock-1",
     categories: ["time"],
-    tags: ["time", "watch", "alarm"]
+    tags: ["time", "watch", "alarm"],
   },
   {
     name: "clock-10",
     categories: ["time"],
-    tags: ["time", "watch", "alarm"]
+    tags: ["time", "watch", "alarm"],
   },
   {
     name: "clock-11",
     categories: ["time"],
-    tags: ["time", "watch", "alarm"]
+    tags: ["time", "watch", "alarm"],
   },
   {
     name: "clock-12",
     categories: ["time"],
-    tags: ["time", "watch", "alarm", "noon", "midnight"]
+    tags: ["time", "watch", "alarm", "noon", "midnight"],
   },
   {
     name: "clock-2",
     categories: ["time"],
-    tags: ["time", "watch", "alarm"]
+    tags: ["time", "watch", "alarm"],
   },
   {
     name: "clock-3",
     categories: ["time"],
-    tags: ["time", "watch", "alarm"]
+    tags: ["time", "watch", "alarm"],
   },
   {
     name: "clock-4",
     categories: ["time"],
-    tags: ["time", "watch", "alarm"]
+    tags: ["time", "watch", "alarm"],
   },
   {
     name: "clock-5",
     categories: ["time"],
-    tags: ["time", "watch", "alarm"]
+    tags: ["time", "watch", "alarm"],
   },
   {
     name: "clock-6",
     categories: ["time"],
-    tags: ["time", "watch", "alarm"]
+    tags: ["time", "watch", "alarm"],
   },
   {
     name: "clock-7",
     categories: ["time"],
-    tags: ["time", "watch", "alarm"]
+    tags: ["time", "watch", "alarm"],
   },
   {
     name: "clock-8",
     categories: ["time"],
-    tags: ["time", "watch", "alarm"]
+    tags: ["time", "watch", "alarm"],
   },
   {
     name: "clock-9",
     categories: ["time"],
-    tags: ["time", "watch", "alarm"]
+    tags: ["time", "watch", "alarm"],
   },
   {
     name: "clock-alert",
     categories: ["time"],
-    tags: ["time", "watch", "alarm", "warning", "wrong"]
+    tags: ["time", "watch", "alarm", "warning", "wrong"],
   },
   {
     name: "clock-arrow-down",
@@ -4153,8 +4142,8 @@ export const iconsData: Array<{
       "increasing",
       "decreasing",
       "rising",
-      "falling"
-    ]
+      "falling",
+    ],
   },
   {
     name: "clock-arrow-up",
@@ -4170,13 +4159,13 @@ export const iconsData: Array<{
       "increasing",
       "decreasing",
       "rising",
-      "falling"
-    ]
+      "falling",
+    ],
   },
   {
     name: "clock",
     categories: ["time"],
-    tags: ["time", "watch", "alarm"]
+    tags: ["time", "watch", "alarm"],
   },
   {
     name: "cloud-alert",
@@ -4189,128 +4178,128 @@ export const iconsData: Array<{
       "error",
       "sync",
       "network",
-      "exclamation"
-    ]
+      "exclamation",
+    ],
   },
   {
     name: "cloud-cog",
     categories: ["development"],
-    tags: ["computing", "ai", "cluster", "network"]
+    tags: ["computing", "ai", "cluster", "network"],
   },
   {
     name: "cloud-download",
     categories: ["arrows", "files"],
-    tags: ["import"]
+    tags: ["import"],
   },
   {
     name: "cloud-drizzle",
     categories: ["weather"],
-    tags: ["weather", "shower"]
+    tags: ["weather", "shower"],
   },
   {
     name: "cloud-fog",
     categories: ["weather"],
-    tags: ["weather", "mist"]
+    tags: ["weather", "mist"],
   },
   {
     name: "cloud-hail",
     categories: ["weather"],
-    tags: ["weather", "rainfall"]
+    tags: ["weather", "rainfall"],
   },
   {
     name: "cloud-lightning",
     categories: ["weather"],
-    tags: ["weather", "bolt"]
+    tags: ["weather", "bolt"],
   },
   {
     name: "cloud-moon-rain",
     categories: ["weather"],
-    tags: ["weather", "partly", "night", "rainfall"]
+    tags: ["weather", "partly", "night", "rainfall"],
   },
   {
     name: "cloud-moon",
     categories: ["weather"],
-    tags: ["weather", "night"]
+    tags: ["weather", "night"],
   },
   {
     name: "cloud-off",
     categories: ["connectivity", "weather"],
-    tags: ["disconnect"]
+    tags: ["disconnect"],
   },
   {
     name: "cloud-rain-wind",
     categories: ["weather"],
-    tags: ["weather", "rainfall"]
+    tags: ["weather", "rainfall"],
   },
   {
     name: "cloud-rain",
     categories: ["weather"],
-    tags: ["weather", "rainfall"]
+    tags: ["weather", "rainfall"],
   },
   {
     name: "cloud-snow",
     categories: ["weather"],
-    tags: ["weather", "blizzard"]
+    tags: ["weather", "blizzard"],
   },
   {
     name: "cloud-sun-rain",
     categories: ["weather"],
-    tags: ["weather", "partly", "rainfall"]
+    tags: ["weather", "partly", "rainfall"],
   },
   {
     name: "cloud-sun",
     categories: ["weather"],
-    tags: ["weather", "partly"]
+    tags: ["weather", "partly"],
   },
   {
     name: "cloud-upload",
     categories: ["arrows", "files"],
-    tags: ["file"]
+    tags: ["file"],
   },
   {
     name: "cloud",
     categories: ["weather"],
-    tags: ["weather"]
+    tags: ["weather"],
   },
   {
     name: "cloudy",
     categories: ["weather"],
-    tags: ["weather", "clouds"]
+    tags: ["weather", "clouds"],
   },
   {
     name: "clover",
     categories: ["gaming"],
-    tags: ["leaf", "luck", "plant"]
+    tags: ["leaf", "luck", "plant"],
   },
   {
     name: "club",
     categories: ["shapes", "gaming"],
-    tags: ["shape", "suit", "playing", "cards"]
+    tags: ["shape", "suit", "playing", "cards"],
   },
   {
     name: "code-xml",
     categories: ["text", "development"],
-    tags: ["source", "programming", "html", "xml"]
+    tags: ["source", "programming", "html", "xml"],
   },
   {
     name: "code",
     categories: ["text", "development"],
-    tags: ["source", "programming", "html", "xml"]
+    tags: ["source", "programming", "html", "xml"],
   },
   {
     name: "codepen",
     categories: ["brands", "development"],
-    tags: ["logo"]
+    tags: ["logo"],
   },
   {
     name: "codesandbox",
     categories: ["brands", "development"],
-    tags: ["logo"]
+    tags: ["logo"],
   },
   {
     name: "coffee",
     categories: ["food-beverage"],
-    tags: ["drink", "cup", "mug", "tea", "cafe", "hot", "beverage"]
+    tags: ["drink", "cup", "mug", "tea", "cafe", "hot", "beverage"],
   },
   {
     name: "cog",
@@ -4327,13 +4316,13 @@ export const iconsData: Array<{
       "fixed",
       "build",
       "construction",
-      "parts"
-    ]
+      "parts",
+    ],
   },
   {
     name: "coins",
     categories: ["gaming"],
-    tags: ["money", "cash", "finance", "gamble"]
+    tags: ["money", "cash", "finance", "gamble"],
   },
   {
     name: "columns-2",
@@ -4360,8 +4349,8 @@ export const iconsData: Array<{
       "reflow",
       "typography",
       "pagination",
-      "pages"
-    ]
+      "pages",
+    ],
   },
   {
     name: "columns-3",
@@ -4389,8 +4378,8 @@ export const iconsData: Array<{
       "reflow",
       "typography",
       "pagination",
-      "pages"
-    ]
+      "pages",
+    ],
   },
   {
     name: "columns-4",
@@ -4431,8 +4420,8 @@ export const iconsData: Array<{
       "justice",
       "law",
       "enforcement",
-      "grill"
-    ]
+      "grill",
+    ],
   },
   {
     name: "combine",
@@ -4446,33 +4435,33 @@ export const iconsData: Array<{
       "cluster",
       "combine",
       "gather",
-      "merge"
-    ]
+      "merge",
+    ],
   },
   {
     name: "command",
     categories: ["development"],
-    tags: ["keyboard", "key", "mac", "cmd", "button"]
+    tags: ["keyboard", "key", "mac", "cmd", "button"],
   },
   {
     name: "compass",
     categories: ["navigation", "travel"],
-    tags: ["direction", "north", "east", "south", "west", "safari", "browser"]
+    tags: ["direction", "north", "east", "south", "west", "safari", "browser"],
   },
   {
     name: "component",
     categories: ["design", "development"],
-    tags: ["design", "element", "group", "module", "part", "symbol"]
+    tags: ["design", "element", "group", "module", "part", "symbol"],
   },
   {
     name: "computer",
     categories: ["devices", "development", "gaming"],
-    tags: ["pc", "chassis", "codespaces", "github"]
+    tags: ["pc", "chassis", "codespaces", "github"],
   },
   {
     name: "concierge-bell",
     categories: ["travel"],
-    tags: ["reception", "bell", "porter"]
+    tags: ["reception", "bell", "porter"],
   },
   {
     name: "cone",
@@ -4486,13 +4475,13 @@ export const iconsData: Array<{
       "funnel",
       "hopper",
       "spotlight",
-      "searchlight"
-    ]
+      "searchlight",
+    ],
   },
   {
     name: "construction",
     categories: ["development"],
-    tags: ["roadwork", "maintenance", "blockade", "barricade"]
+    tags: ["roadwork", "maintenance", "blockade", "barricade"],
   },
   {
     name: "contact-round",
@@ -4504,8 +4493,8 @@ export const iconsData: Array<{
       "friend",
       "acquaintance",
       "listing",
-      "networking"
-    ]
+      "networking",
+    ],
   },
   {
     name: "contact",
@@ -4517,8 +4506,8 @@ export const iconsData: Array<{
       "friend",
       "acquaintance",
       "listing",
-      "networking"
-    ]
+      "networking",
+    ],
   },
   {
     name: "container",
@@ -4532,18 +4521,18 @@ export const iconsData: Array<{
       "environment",
       "devops",
       "code",
-      "coding"
-    ]
+      "coding",
+    ],
   },
   {
     name: "contrast",
     categories: ["photography", "accessibility", "design"],
-    tags: ["display", "accessibility"]
+    tags: ["display", "accessibility"],
   },
   {
     name: "cookie",
     categories: ["account", "food-beverage"],
-    tags: ["biscuit", "privacy", "legal", "food"]
+    tags: ["biscuit", "privacy", "legal", "food"],
   },
   {
     name: "cooking-pot",
@@ -4560,13 +4549,13 @@ export const iconsData: Array<{
       "lunch",
       "breakfast",
       "meal",
-      "eat"
-    ]
+      "eat",
+    ],
   },
   {
     name: "copy-check",
     categories: ["text", "notifications"],
-    tags: ["clone", "duplicate", "done", "multiple"]
+    tags: ["clone", "duplicate", "done", "multiple"],
   },
   {
     name: "copy-minus",
@@ -4579,13 +4568,13 @@ export const iconsData: Array<{
       "collapse",
       "subtract",
       "multiple",
-      "-"
-    ]
+      "-",
+    ],
   },
   {
     name: "copy-plus",
     categories: ["text", "math"],
-    tags: ["clone", "duplicate", "add", "multiple", "expand", "+"]
+    tags: ["clone", "duplicate", "add", "multiple", "expand", "+"],
   },
   {
     name: "copy-slash",
@@ -4605,8 +4594,8 @@ export const iconsData: Array<{
       "division",
       "split",
       "or",
-      "/"
-    ]
+      "/",
+    ],
   },
   {
     name: "copy-x",
@@ -4620,63 +4609,63 @@ export const iconsData: Array<{
       "multiple",
       "multiply",
       "multiplication",
-      "times"
-    ]
+      "times",
+    ],
   },
   {
     name: "copy",
     categories: ["text"],
-    tags: ["clone", "duplicate", "multiple"]
+    tags: ["clone", "duplicate", "multiple"],
   },
   {
     name: "copyleft",
     categories: [],
-    tags: ["licence"]
+    tags: ["licence"],
   },
   {
     name: "copyright",
     categories: [],
-    tags: ["licence", "license"]
+    tags: ["licence", "license"],
   },
   {
     name: "corner-down-left",
     categories: ["arrows"],
-    tags: ["arrow", "return"]
+    tags: ["arrow", "return"],
   },
   {
     name: "corner-down-right",
     categories: ["arrows", "text", "development"],
-    tags: ["arrow", "indent", "tab"]
+    tags: ["arrow", "indent", "tab"],
   },
   {
     name: "corner-left-down",
     categories: ["arrows"],
-    tags: ["arrow"]
+    tags: ["arrow"],
   },
   {
     name: "corner-left-up",
     categories: ["arrows"],
-    tags: ["arrow"]
+    tags: ["arrow"],
   },
   {
     name: "corner-right-down",
     categories: ["arrows"],
-    tags: ["arrow"]
+    tags: ["arrow"],
   },
   {
     name: "corner-right-up",
     categories: ["arrows"],
-    tags: ["arrow"]
+    tags: ["arrow"],
   },
   {
     name: "corner-up-left",
     categories: ["arrows"],
-    tags: ["arrow"]
+    tags: ["arrow"],
   },
   {
     name: "corner-up-right",
     categories: ["arrows"],
-    tags: ["arrow"]
+    tags: ["arrow"],
   },
   {
     name: "cpu",
@@ -4692,38 +4681,38 @@ export const iconsData: Array<{
       "ram",
       "specs",
       "gigahertz",
-      "ghz"
-    ]
+      "ghz",
+    ],
   },
   {
     name: "creative-commons",
     categories: [],
-    tags: ["licence", "license"]
+    tags: ["licence", "license"],
   },
   {
     name: "credit-card",
     categories: ["account", "finance"],
-    tags: ["bank", "purchase", "payment", "cc"]
+    tags: ["bank", "purchase", "payment", "cc"],
   },
   {
     name: "croissant",
     categories: ["food-beverage"],
-    tags: ["bakery", "cooking", "food", "pastry"]
+    tags: ["bakery", "cooking", "food", "pastry"],
   },
   {
     name: "crop",
     categories: ["photography", "design"],
-    tags: ["photo", "image"]
+    tags: ["photo", "image"],
   },
   {
     name: "cross",
     categories: ["shapes"],
-    tags: ["healthcare", "first aid"]
+    tags: ["healthcare", "first aid"],
   },
   {
     name: "crosshair",
     categories: ["photography"],
-    tags: ["aim", "target"]
+    tags: ["aim", "target"],
   },
   {
     name: "crown",
@@ -4736,8 +4725,8 @@ export const iconsData: Array<{
       "king",
       "ruler",
       "winner",
-      "favourite"
-    ]
+      "favourite",
+    ],
   },
   {
     name: "cuboid",
@@ -4749,18 +4738,18 @@ export const iconsData: Array<{
       "storage",
       "geometry",
       "rectangular",
-      "hexahedron"
-    ]
+      "hexahedron",
+    ],
   },
   {
     name: "cup-soda",
     categories: ["food-beverage"],
-    tags: ["beverage", "cup", "drink", "soda", "straw", "water"]
+    tags: ["beverage", "cup", "drink", "soda", "straw", "water"],
   },
   {
     name: "currency",
     categories: ["finance"],
-    tags: ["finance", "money"]
+    tags: ["finance", "money"],
   },
   {
     name: "cylinder",
@@ -4772,13 +4761,13 @@ export const iconsData: Array<{
       "container",
       "storage",
       "tin",
-      "pot"
-    ]
+      "pot",
+    ],
   },
   {
     name: "dam",
     categories: ["buildings", "sustainability"],
-    tags: ["electricity", "energy", "water"]
+    tags: ["electricity", "energy", "water"],
   },
   {
     name: "database-backup",
@@ -4792,8 +4781,8 @@ export const iconsData: Array<{
       "timemachine",
       "rotate",
       "arrow",
-      "left"
-    ]
+      "left",
+    ],
   },
   {
     name: "database-zap",
@@ -4805,18 +4794,18 @@ export const iconsData: Array<{
       "bytes",
       "servers",
       "power",
-      "crash"
-    ]
+      "crash",
+    ],
   },
   {
     name: "database",
     categories: ["devices", "development"],
-    tags: ["storage", "memory", "container", "tin", "pot", "bytes", "servers"]
+    tags: ["storage", "memory", "container", "tin", "pot", "bytes", "servers"],
   },
   {
     name: "delete",
     categories: ["text", "arrows"],
-    tags: ["backspace", "remove"]
+    tags: ["backspace", "remove"],
   },
   {
     name: "dessert",
@@ -4837,8 +4826,8 @@ export const iconsData: Array<{
       "dollop",
       "sugar",
       "food",
-      "sweet"
-    ]
+      "sweet",
+    ],
   },
   {
     name: "diameter",
@@ -4852,8 +4841,8 @@ export const iconsData: Array<{
       "height",
       "size",
       "calculate",
-      "measure"
-    ]
+      "measure",
+    ],
   },
   {
     name: "diamond-minus",
@@ -4881,8 +4870,8 @@ export const iconsData: Array<{
       "code",
       "coding",
       "minimum",
-      "downgrade"
-    ]
+      "downgrade",
+    ],
   },
   {
     name: "diamond-percent",
@@ -4895,8 +4884,8 @@ export const iconsData: Array<{
       "offer",
       "marketing",
       "sticker",
-      "price tag"
-    ]
+      "price tag",
+    ],
   },
   {
     name: "diamond-plus",
@@ -4919,8 +4908,8 @@ export const iconsData: Array<{
       "maximum",
       "upgrade",
       "extra",
-      "+"
-    ]
+      "+",
+    ],
   },
   {
     name: "diamond",
@@ -4933,43 +4922,43 @@ export const iconsData: Array<{
       "shape",
       "suit",
       "playing",
-      "cards"
-    ]
+      "cards",
+    ],
   },
   {
     name: "dice-1",
     categories: ["gaming"],
-    tags: ["dice", "random", "tabletop", "1", "board", "game"]
+    tags: ["dice", "random", "tabletop", "1", "board", "game"],
   },
   {
     name: "dice-2",
     categories: ["gaming"],
-    tags: ["dice", "random", "tabletop", "2", "board", "game"]
+    tags: ["dice", "random", "tabletop", "2", "board", "game"],
   },
   {
     name: "dice-3",
     categories: ["gaming"],
-    tags: ["dice", "random", "tabletop", "3", "board", "game"]
+    tags: ["dice", "random", "tabletop", "3", "board", "game"],
   },
   {
     name: "dice-4",
     categories: ["gaming"],
-    tags: ["dice", "random", "tabletop", "4", "board", "game"]
+    tags: ["dice", "random", "tabletop", "4", "board", "game"],
   },
   {
     name: "dice-5",
     categories: ["gaming"],
-    tags: ["dice", "random", "tabletop", "5", "board", "game"]
+    tags: ["dice", "random", "tabletop", "5", "board", "game"],
   },
   {
     name: "dice-6",
     categories: ["gaming"],
-    tags: ["dice", "random", "tabletop", "6", "board", "game"]
+    tags: ["dice", "random", "tabletop", "6", "board", "game"],
   },
   {
     name: "dices",
     categories: ["gaming"],
-    tags: ["dice", "random", "tabletop", "board", "game"]
+    tags: ["dice", "random", "tabletop", "board", "game"],
   },
   {
     name: "diff",
@@ -4981,8 +4970,8 @@ export const iconsData: Array<{
       "plus",
       "minus",
       "plus-minus",
-      "math"
-    ]
+      "math",
+    ],
   },
   {
     name: "disc-2",
@@ -4998,8 +4987,8 @@ export const iconsData: Array<{
       "dj",
       "spin",
       "rotate",
-      "rpm"
-    ]
+      "rpm",
+    ],
   },
   {
     name: "disc-3",
@@ -5015,8 +5004,8 @@ export const iconsData: Array<{
       "dj",
       "spin",
       "rotate",
-      "rpm"
-    ]
+      "rpm",
+    ],
   },
   {
     name: "disc-album",
@@ -5039,8 +5028,8 @@ export const iconsData: Array<{
       "spin",
       "rotate",
       "rpm",
-      "dj"
-    ]
+      "dj",
+    ],
   },
   {
     name: "disc",
@@ -5063,13 +5052,13 @@ export const iconsData: Array<{
       "spin",
       "rotate",
       "rpm",
-      "dj"
-    ]
+      "dj",
+    ],
   },
   {
     name: "divide",
     categories: ["math", "development"],
-    tags: ["calculate", "math", "division", "operator", "code", "÷", "/"]
+    tags: ["calculate", "math", "division", "operator", "code", "÷", "/"],
   },
   {
     name: "dna-off",
@@ -5080,13 +5069,13 @@ export const iconsData: Array<{
       "helix",
       "heredity",
       "chromosome",
-      "nucleic acid"
-    ]
+      "nucleic acid",
+    ],
   },
   {
     name: "dna",
     categories: ["medical"],
-    tags: ["gene", "gmo", "helix", "heredity", "chromosome", "nucleic acid"]
+    tags: ["gene", "gmo", "helix", "heredity", "chromosome", "nucleic acid"],
   },
   {
     name: "dock",
@@ -5100,18 +5089,18 @@ export const iconsData: Array<{
       "bottom",
       "line",
       "macos",
-      "osx"
-    ]
+      "osx",
+    ],
   },
   {
     name: "dog",
     categories: ["animals"],
-    tags: ["animal", "pet", "puppy", "hound", "canine"]
+    tags: ["animal", "pet", "puppy", "hound", "canine"],
   },
   {
     name: "dollar-sign",
     categories: ["finance"],
-    tags: ["currency", "money", "payment"]
+    tags: ["currency", "money", "payment"],
   },
   {
     name: "donut",
@@ -5128,8 +5117,8 @@ export const iconsData: Array<{
       "sugar",
       "dessert",
       "hollow",
-      "ring"
-    ]
+      "ring",
+    ],
   },
   {
     name: "door-closed",
@@ -5142,8 +5131,8 @@ export const iconsData: Array<{
       "egress",
       "gate",
       "gateway",
-      "emergency exit"
-    ]
+      "emergency exit",
+    ],
   },
   {
     name: "door-open",
@@ -5156,8 +5145,8 @@ export const iconsData: Array<{
       "egress",
       "gate",
       "gateway",
-      "emergency exit"
-    ]
+      "emergency exit",
+    ],
   },
   {
     name: "dot",
@@ -5178,13 +5167,13 @@ export const iconsData: Array<{
       "typography",
       "type",
       "center",
-      "."
-    ]
+      ".",
+    ],
   },
   {
     name: "download",
     categories: ["arrows", "files"],
-    tags: ["import", "export", "save"]
+    tags: ["import", "export", "save"],
   },
   {
     name: "drafting-compass",
@@ -5200,18 +5189,18 @@ export const iconsData: Array<{
       "arc",
       "curve",
       "draw",
-      "sketch"
-    ]
+      "sketch",
+    ],
   },
   {
     name: "drama",
     categories: ["multimedia"],
-    tags: ["drama", "masks", "theater", "theatre", "entertainment", "show"]
+    tags: ["drama", "masks", "theater", "theatre", "entertainment", "show"],
   },
   {
     name: "dribbble",
     categories: ["brands", "social", "design"],
-    tags: ["design", "social"]
+    tags: ["design", "social"],
   },
   {
     name: "drill",
@@ -5224,8 +5213,8 @@ export const iconsData: Array<{
       "diy",
       "toolbox",
       "build",
-      "construction"
-    ]
+      "construction",
+    ],
   },
   {
     name: "droplet-off",
@@ -5239,8 +5228,8 @@ export const iconsData: Array<{
       "moisture",
       "damp",
       "bead",
-      "globule"
-    ]
+      "globule",
+    ],
   },
   {
     name: "droplet",
@@ -5254,8 +5243,8 @@ export const iconsData: Array<{
       "moisture",
       "damp",
       "bead",
-      "globule"
-    ]
+      "globule",
+    ],
   },
   {
     name: "droplets",
@@ -5269,8 +5258,8 @@ export const iconsData: Array<{
       "moisture",
       "damp",
       "bead",
-      "globule"
-    ]
+      "globule",
+    ],
   },
   {
     name: "drum",
@@ -5293,18 +5282,18 @@ export const iconsData: Array<{
       "audio",
       "sound",
       "noise",
-      "loud"
-    ]
+      "loud",
+    ],
   },
   {
     name: "drumstick",
     categories: ["food-beverage"],
-    tags: ["food", "chicken", "meat"]
+    tags: ["food", "chicken", "meat"],
   },
   {
     name: "dumbbell",
     categories: ["navigation", "sports"],
-    tags: ["barbell", "weight", "workout", "gym"]
+    tags: ["barbell", "weight", "workout", "gym"],
   },
   {
     name: "ear-off",
@@ -5317,13 +5306,13 @@ export const iconsData: Array<{
       "noise",
       "silence",
       "audio",
-      "accessibility"
-    ]
+      "accessibility",
+    ],
   },
   {
     name: "ear",
     categories: ["medical", "accessibility"],
-    tags: ["hearing", "noise", "audio", "accessibility"]
+    tags: ["hearing", "noise", "audio", "accessibility"],
   },
   {
     name: "earth-lock",
@@ -5338,13 +5327,13 @@ export const iconsData: Array<{
       "security",
       "encryption",
       "protection",
-      "connection"
-    ]
+      "connection",
+    ],
   },
   {
     name: "earth",
     categories: ["navigation"],
-    tags: ["world", "browser", "language", "translate", "globe"]
+    tags: ["world", "browser", "language", "translate", "globe"],
   },
   {
     name: "eclipse",
@@ -5353,7 +5342,7 @@ export const iconsData: Array<{
       "design",
       "development",
       "accessibility",
-      "photography"
+      "photography",
     ],
     tags: [
       "lunar",
@@ -5378,18 +5367,18 @@ export const iconsData: Array<{
       "contrast",
       "brightness",
       "blend",
-      "shade"
-    ]
+      "shade",
+    ],
   },
   {
     name: "egg-fried",
     categories: ["food-beverage"],
-    tags: ["food", "breakfast"]
+    tags: ["food", "breakfast"],
   },
   {
     name: "egg-off",
     categories: ["food-beverage"],
-    tags: ["egg free", "vegan", "hatched", "bad egg"]
+    tags: ["egg free", "vegan", "hatched", "bad egg"],
   },
   {
     name: "egg",
@@ -5406,8 +5395,8 @@ export const iconsData: Array<{
       "breakfast",
       "brunch",
       "morning",
-      "easter"
-    ]
+      "easter",
+    ],
   },
   {
     name: "ellipsis-vertical",
@@ -5422,8 +5411,8 @@ export const iconsData: Array<{
       "overflow",
       "dots",
       "…",
-      "..."
-    ]
+      "...",
+    ],
   },
   {
     name: "ellipsis",
@@ -5449,28 +5438,28 @@ export const iconsData: Array<{
       "overflow",
       "dots",
       "…",
-      "..."
-    ]
+      "...",
+    ],
   },
   {
     name: "equal-approximately",
     categories: ["math"],
-    tags: ["about", "calculate", "math", "operater"]
+    tags: ["about", "calculate", "math", "operater"],
   },
   {
     name: "equal-not",
     categories: ["math", "development"],
-    tags: ["calculate", "off", "math", "operator", "code", "≠"]
+    tags: ["calculate", "off", "math", "operator", "code", "≠"],
   },
   {
     name: "equal",
     categories: ["math", "development"],
-    tags: ["calculate", "math", "operator", "assignment", "code", "="]
+    tags: ["calculate", "math", "operator", "assignment", "code", "="],
   },
   {
     name: "eraser",
     categories: ["text"],
-    tags: ["pencil", "drawing", "undo", "delete", "clear"]
+    tags: ["pencil", "drawing", "undo", "delete", "clear"],
   },
   {
     name: "ethernet-port",
@@ -5500,23 +5489,23 @@ export const iconsData: Array<{
       "signal",
       "data",
       "input",
-      "output"
-    ]
+      "output",
+    ],
   },
   {
     name: "euro",
     categories: ["finance"],
-    tags: ["currency", "money", "payment"]
+    tags: ["currency", "money", "payment"],
   },
   {
     name: "expand",
     categories: ["text", "arrows"],
-    tags: ["scale", "fullscreen", "maximize", "minimize", "contract"]
+    tags: ["scale", "fullscreen", "maximize", "minimize", "contract"],
   },
   {
     name: "external-link",
     categories: ["arrows", "text", "social"],
-    tags: ["outbound", "open", "share"]
+    tags: ["outbound", "open", "share"],
   },
   {
     name: "eye-closed",
@@ -5530,8 +5519,8 @@ export const iconsData: Array<{
       "mask",
       "hidden",
       "visibility",
-      "vision"
-    ]
+      "vision",
+    ],
   },
   {
     name: "eye-off",
@@ -5545,8 +5534,8 @@ export const iconsData: Array<{
       "mask",
       "hidden",
       "visibility",
-      "vision"
-    ]
+      "vision",
+    ],
   },
   {
     name: "eye",
@@ -5563,13 +5552,13 @@ export const iconsData: Array<{
       "visibility",
       "vision",
       "preview",
-      "read"
-    ]
+      "read",
+    ],
   },
   {
     name: "facebook",
     categories: ["social", "brands"],
-    tags: ["logo", "social"]
+    tags: ["logo", "social"],
   },
   {
     name: "factory",
@@ -5580,23 +5569,23 @@ export const iconsData: Array<{
       "energy",
       "industry",
       "manufacture",
-      "sector"
-    ]
+      "sector",
+    ],
   },
   {
     name: "fan",
     categories: ["home"],
-    tags: ["air", "cooler", "ventilation", "ventilator", "blower"]
+    tags: ["air", "cooler", "ventilation", "ventilator", "blower"],
   },
   {
     name: "fast-forward",
     categories: ["multimedia", "arrows"],
-    tags: ["music"]
+    tags: ["music"],
   },
   {
     name: "feather",
     categories: ["gaming"],
-    tags: ["logo"]
+    tags: ["logo"],
   },
   {
     name: "fence",
@@ -5610,8 +5599,8 @@ export const iconsData: Array<{
       "suburban",
       "garden",
       "property",
-      "territory"
-    ]
+      "territory",
+    ],
   },
   {
     name: "ferris-wheel",
@@ -5624,48 +5613,48 @@ export const iconsData: Array<{
       "entertainment",
       "amusement park",
       "theme park",
-      "funfair"
-    ]
+      "funfair",
+    ],
   },
   {
     name: "figma",
     categories: ["brands", "design"],
-    tags: ["logo", "design", "tool"]
+    tags: ["logo", "design", "tool"],
   },
   {
     name: "file-archive",
     categories: ["files"],
-    tags: ["zip", "package", "archive"]
+    tags: ["zip", "package", "archive"],
   },
   {
     name: "file-audio-2",
     categories: ["files"],
-    tags: ["music", "audio", "sound", "headphones"]
+    tags: ["music", "audio", "sound", "headphones"],
   },
   {
     name: "file-audio",
     categories: ["files"],
-    tags: ["music", "audio", "sound", "headphones"]
+    tags: ["music", "audio", "sound", "headphones"],
   },
   {
     name: "file-axis-3d",
     categories: ["design", "files"],
-    tags: ["model", "3d", "axis", "coordinates"]
+    tags: ["model", "3d", "axis", "coordinates"],
   },
   {
     name: "file-badge-2",
     categories: ["files"],
-    tags: ["award", "achievement", "badge", "rosette", "prize", "winner"]
+    tags: ["award", "achievement", "badge", "rosette", "prize", "winner"],
   },
   {
     name: "file-badge",
     categories: ["files"],
-    tags: ["award", "achievement", "badge", "rosette", "prize", "winner"]
+    tags: ["award", "achievement", "badge", "rosette", "prize", "winner"],
   },
   {
     name: "file-box",
     categories: ["files"],
-    tags: ["box", "package", "model"]
+    tags: ["box", "package", "model"],
   },
   {
     name: "file-chart-column-increasing",
@@ -5676,43 +5665,43 @@ export const iconsData: Array<{
       "diagram",
       "graph",
       "presentation",
-      "trending up"
-    ]
+      "trending up",
+    ],
   },
   {
     name: "file-chart-column",
     categories: ["files"],
-    tags: ["statistics", "analytics", "diagram", "graph", "presentation"]
+    tags: ["statistics", "analytics", "diagram", "graph", "presentation"],
   },
   {
     name: "file-chart-line",
     categories: ["files"],
-    tags: ["statistics", "analytics", "diagram", "graph", "presentation"]
+    tags: ["statistics", "analytics", "diagram", "graph", "presentation"],
   },
   {
     name: "file-chart-pie",
     categories: ["files"],
-    tags: ["statistics", "analytics", "diagram", "graph", "presentation"]
+    tags: ["statistics", "analytics", "diagram", "graph", "presentation"],
   },
   {
     name: "file-check-2",
     categories: ["files"],
-    tags: ["done", "document", "todo", "tick", "complete", "task"]
+    tags: ["done", "document", "todo", "tick", "complete", "task"],
   },
   {
     name: "file-check",
     categories: ["files"],
-    tags: ["done", "document", "todo", "tick", "complete", "task"]
+    tags: ["done", "document", "todo", "tick", "complete", "task"],
   },
   {
     name: "file-clock",
     categories: ["files", "time"],
-    tags: ["history", "log", "clock"]
+    tags: ["history", "log", "clock"],
   },
   {
     name: "file-code-2",
     categories: ["files", "development"],
-    tags: ["script", "document", "html", "xml", "property list", "plist"]
+    tags: ["script", "document", "html", "xml", "property list", "plist"],
   },
   {
     name: "file-code",
@@ -5724,83 +5713,83 @@ export const iconsData: Array<{
       "html",
       "xml",
       "property list",
-      "plist"
-    ]
+      "plist",
+    ],
   },
   {
     name: "file-cog",
     categories: ["files"],
-    tags: ["executable", "settings", "cog", "edit", "gear"]
+    tags: ["executable", "settings", "cog", "edit", "gear"],
   },
   {
     name: "file-diff",
     categories: ["files", "development"],
-    tags: ["diff", "patch"]
+    tags: ["diff", "patch"],
   },
   {
     name: "file-digit",
     categories: ["files", "development"],
-    tags: ["number", "document"]
+    tags: ["number", "document"],
   },
   {
     name: "file-down",
     categories: ["files", "arrows"],
-    tags: ["download", "import", "export"]
+    tags: ["download", "import", "export"],
   },
   {
     name: "file-heart",
     categories: ["files"],
-    tags: ["heart", "favourite", "bookmark", "quick link"]
+    tags: ["heart", "favourite", "bookmark", "quick link"],
   },
   {
     name: "file-image",
     categories: ["files"],
-    tags: ["image", "graphics", "photo", "picture"]
+    tags: ["image", "graphics", "photo", "picture"],
   },
   {
     name: "file-input",
     categories: ["files", "arrows"],
-    tags: ["document"]
+    tags: ["document"],
   },
   {
     name: "file-json-2",
     categories: ["files", "development"],
-    tags: ["code", "json", "curly braces", "curly brackets"]
+    tags: ["code", "json", "curly braces", "curly brackets"],
   },
   {
     name: "file-json",
     categories: ["files", "development"],
-    tags: ["code", "json", "curly braces", "curly brackets"]
+    tags: ["code", "json", "curly braces", "curly brackets"],
   },
   {
     name: "file-key-2",
     categories: ["files", "security"],
-    tags: ["key", "private", "public", "security"]
+    tags: ["key", "private", "public", "security"],
   },
   {
     name: "file-key",
     categories: ["files", "security"],
-    tags: ["key", "private", "public", "security"]
+    tags: ["key", "private", "public", "security"],
   },
   {
     name: "file-lock-2",
     categories: ["files", "security"],
-    tags: ["lock", "password", "security"]
+    tags: ["lock", "password", "security"],
   },
   {
     name: "file-lock",
     categories: ["files", "security"],
-    tags: ["lock", "password", "security"]
+    tags: ["lock", "password", "security"],
   },
   {
     name: "file-minus-2",
     categories: ["files"],
-    tags: ["document"]
+    tags: ["document"],
   },
   {
     name: "file-minus",
     categories: ["files"],
-    tags: ["delete", "remove", "erase", "document"]
+    tags: ["delete", "remove", "erase", "document"],
   },
   {
     name: "file-music",
@@ -5819,53 +5808,53 @@ export const iconsData: Array<{
       "notes",
       "chord",
       "midi",
-      "octave"
-    ]
+      "octave",
+    ],
   },
   {
     name: "file-output",
     categories: ["files", "arrows"],
-    tags: ["document"]
+    tags: ["document"],
   },
   {
     name: "file-pen-line",
     categories: ["files"],
-    tags: ["edit"]
+    tags: ["edit"],
   },
   {
     name: "file-pen",
     categories: ["files"],
-    tags: ["signature"]
+    tags: ["signature"],
   },
   {
     name: "file-plus-2",
     categories: ["files"],
-    tags: ["add", "create", "new", "document"]
+    tags: ["add", "create", "new", "document"],
   },
   {
     name: "file-plus",
     categories: ["files"],
-    tags: ["add", "create", "new", "document"]
+    tags: ["add", "create", "new", "document"],
   },
   {
     name: "file-question",
     categories: ["files"],
-    tags: ["readme", "help", "question"]
+    tags: ["readme", "help", "question"],
   },
   {
     name: "file-scan",
     categories: ["files"],
-    tags: ["scan", "code", "qr-code"]
+    tags: ["scan", "code", "qr-code"],
   },
   {
     name: "file-search-2",
     categories: ["files"],
-    tags: ["lost", "document", "find", "browser"]
+    tags: ["lost", "document", "find", "browser"],
   },
   {
     name: "file-search",
     categories: ["files"],
-    tags: ["lost", "document", "find", "browser"]
+    tags: ["lost", "document", "find", "browser"],
   },
   {
     name: "file-sliders",
@@ -5882,13 +5871,13 @@ export const iconsData: Array<{
       "system",
       "admin",
       "edit",
-      "executable"
-    ]
+      "executable",
+    ],
   },
   {
     name: "file-spreadsheet",
     categories: ["files"],
-    tags: ["spreadsheet", "sheet", "table"]
+    tags: ["spreadsheet", "sheet", "table"],
   },
   {
     name: "file-stack",
@@ -5900,38 +5889,38 @@ export const iconsData: Array<{
       "documents",
       "revisions",
       "version control",
-      "history"
-    ]
+      "history",
+    ],
   },
   {
     name: "file-symlink",
     categories: ["files"],
-    tags: ["symlink", "symbolic", "link"]
+    tags: ["symlink", "symbolic", "link"],
   },
   {
     name: "file-terminal",
     categories: ["files", "development"],
-    tags: ["terminal", "bash", "script", "executable"]
+    tags: ["terminal", "bash", "script", "executable"],
   },
   {
     name: "file-text",
     categories: ["files", "text"],
-    tags: ["data", "txt", "pdf", "document"]
+    tags: ["data", "txt", "pdf", "document"],
   },
   {
     name: "file-type-2",
     categories: ["files", "text"],
-    tags: ["font", "text", "typography", "type"]
+    tags: ["font", "text", "typography", "type"],
   },
   {
     name: "file-type",
     categories: ["files", "text"],
-    tags: ["font", "text", "typography", "type"]
+    tags: ["font", "text", "typography", "type"],
   },
   {
     name: "file-up",
     categories: ["files", "arrows"],
-    tags: ["upload", "import", "export"]
+    tags: ["upload", "import", "export"],
   },
   {
     name: "file-user",
@@ -5948,28 +5937,28 @@ export const iconsData: Array<{
       "resume",
       "cv",
       "curriculum vitae",
-      "application form"
-    ]
+      "application form",
+    ],
   },
   {
     name: "file-video-2",
     categories: ["files"],
-    tags: ["movie", "video", "film"]
+    tags: ["movie", "video", "film"],
   },
   {
     name: "file-video",
     categories: ["files"],
-    tags: ["movie", "video", "film"]
+    tags: ["movie", "video", "film"],
   },
   {
     name: "file-volume-2",
     categories: ["files"],
-    tags: ["audio", "music", "volume"]
+    tags: ["audio", "music", "volume"],
   },
   {
     name: "file-volume",
     categories: ["files"],
-    tags: ["audio", "music", "volume"]
+    tags: ["audio", "music", "volume"],
   },
   {
     name: "file-warning",
@@ -5980,48 +5969,48 @@ export const iconsData: Array<{
       "alert",
       "danger",
       "protected",
-      "exclamation mark"
-    ]
+      "exclamation mark",
+    ],
   },
   {
     name: "file-x-2",
     categories: ["files"],
-    tags: ["lost", "delete", "remove", "document"]
+    tags: ["lost", "delete", "remove", "document"],
   },
   {
     name: "file-x",
     categories: ["files"],
-    tags: ["lost", "delete", "remove", "document"]
+    tags: ["lost", "delete", "remove", "document"],
   },
   {
     name: "file",
     categories: ["files"],
-    tags: ["document"]
+    tags: ["document"],
   },
   {
     name: "files",
     categories: ["files"],
-    tags: ["multiple", "copy", "documents"]
+    tags: ["multiple", "copy", "documents"],
   },
   {
     name: "film",
     categories: ["photography", "multimedia"],
-    tags: ["movie", "video", "reel", "camera", "cinema", "entertainment"]
+    tags: ["movie", "video", "reel", "camera", "cinema", "entertainment"],
   },
   {
     name: "filter-x",
     categories: ["layout"],
-    tags: ["funnel", "hopper"]
+    tags: ["funnel", "hopper"],
   },
   {
     name: "filter",
     categories: ["layout"],
-    tags: ["funnel", "hopper"]
+    tags: ["funnel", "hopper"],
   },
   {
     name: "fingerprint",
     categories: ["account", "security", "medical", "devices"],
-    tags: ["2fa", "authentication", "biometric", "identity", "security"]
+    tags: ["2fa", "authentication", "biometric", "identity", "security"],
   },
   {
     name: "fire-extinguisher",
@@ -6045,8 +6034,8 @@ export const iconsData: Array<{
       "cylinder",
       "safety",
       "equipment",
-      "amenities"
-    ]
+      "amenities",
+    ],
   },
   {
     name: "fish-off",
@@ -6064,8 +6053,8 @@ export const iconsData: Array<{
       "marine",
       "allergy",
       "intolerance",
-      "diet"
-    ]
+      "diet",
+    ],
   },
   {
     name: "fish-symbol",
@@ -6078,8 +6067,8 @@ export const iconsData: Array<{
       "seafood",
       "pet",
       "sea",
-      "marine"
-    ]
+      "marine",
+    ],
   },
   {
     name: "fish",
@@ -6092,28 +6081,28 @@ export const iconsData: Array<{
       "seafood",
       "pet",
       "sea",
-      "marine"
-    ]
+      "marine",
+    ],
   },
   {
     name: "flag-off",
     categories: ["account", "social"],
-    tags: ["unflag"]
+    tags: ["unflag"],
   },
   {
     name: "flag-triangle-left",
     categories: ["development"],
-    tags: ["report", "timeline"]
+    tags: ["report", "timeline"],
   },
   {
     name: "flag-triangle-right",
     categories: ["development"],
-    tags: ["report", "timeline"]
+    tags: ["report", "timeline"],
   },
   {
     name: "flag",
     categories: ["account", "social"],
-    tags: ["report"]
+    tags: ["report"],
   },
   {
     name: "flame-kindling",
@@ -6127,8 +6116,8 @@ export const iconsData: Array<{
       "warmth",
       "wood",
       "twigs",
-      "sticks"
-    ]
+      "sticks",
+    ],
   },
   {
     name: "flame",
@@ -6145,18 +6134,18 @@ export const iconsData: Array<{
       "department",
       "brigade",
       "station",
-      "emergency"
-    ]
+      "emergency",
+    ],
   },
   {
     name: "flashlight-off",
     categories: ["photography", "devices"],
-    tags: ["torch"]
+    tags: ["torch"],
   },
   {
     name: "flashlight",
     categories: ["photography", "devices"],
-    tags: ["torch"]
+    tags: ["torch"],
   },
   {
     name: "flask-conical-off",
@@ -6168,88 +6157,88 @@ export const iconsData: Array<{
       "lab",
       "chemistry",
       "experiment",
-      "test"
-    ]
+      "test",
+    ],
   },
   {
     name: "flask-conical",
     categories: ["science", "gaming"],
-    tags: ["beaker", "erlenmeyer", "lab", "chemistry", "experiment", "test"]
+    tags: ["beaker", "erlenmeyer", "lab", "chemistry", "experiment", "test"],
   },
   {
     name: "flask-round",
     categories: ["science", "gaming"],
-    tags: ["beaker", "lab", "chemistry", "experiment", "test"]
+    tags: ["beaker", "lab", "chemistry", "experiment", "test"],
   },
   {
     name: "flip-horizontal-2",
     categories: ["design", "photography"],
-    tags: ["reflect", "mirror", "alignment", "dashed"]
+    tags: ["reflect", "mirror", "alignment", "dashed"],
   },
   {
     name: "flip-horizontal",
     categories: ["design", "photography"],
-    tags: ["reflect", "mirror", "alignment", "dashed"]
+    tags: ["reflect", "mirror", "alignment", "dashed"],
   },
   {
     name: "flip-vertical-2",
     categories: ["design", "photography"],
-    tags: ["reflect", "mirror", "alignment", "dashed"]
+    tags: ["reflect", "mirror", "alignment", "dashed"],
   },
   {
     name: "flip-vertical",
     categories: ["design", "photography"],
-    tags: ["reflect", "mirror", "alignment", "dashed"]
+    tags: ["reflect", "mirror", "alignment", "dashed"],
   },
   {
     name: "flower-2",
     categories: ["nature", "sustainability", "seasons"],
-    tags: ["sustainability", "nature", "plant"]
+    tags: ["sustainability", "nature", "plant"],
   },
   {
     name: "flower",
     categories: ["nature", "gaming", "sustainability"],
-    tags: ["sustainability", "nature", "plant", "spring"]
+    tags: ["sustainability", "nature", "plant", "spring"],
   },
   {
     name: "focus",
     categories: ["photography"],
-    tags: ["camera", "lens", "photo", "dashed"]
+    tags: ["camera", "lens", "photo", "dashed"],
   },
   {
     name: "fold-horizontal",
     categories: ["arrows", "layout"],
-    tags: ["arrow", "collapse", "fold", "vertical", "dashed"]
+    tags: ["arrow", "collapse", "fold", "vertical", "dashed"],
   },
   {
     name: "fold-vertical",
     categories: ["arrows", "layout"],
-    tags: ["arrow", "collapse", "fold", "vertical", "dashed"]
+    tags: ["arrow", "collapse", "fold", "vertical", "dashed"],
   },
   {
     name: "folder-archive",
     categories: ["files"],
-    tags: ["archive", "zip", "package"]
+    tags: ["archive", "zip", "package"],
   },
   {
     name: "folder-check",
     categories: ["files"],
-    tags: ["done", "directory", "todo", "tick", "complete", "task"]
+    tags: ["done", "directory", "todo", "tick", "complete", "task"],
   },
   {
     name: "folder-clock",
     categories: ["files", "time"],
-    tags: ["history", "directory", "clock"]
+    tags: ["history", "directory", "clock"],
   },
   {
     name: "folder-closed",
     categories: ["files"],
-    tags: ["directory", "closed"]
+    tags: ["directory", "closed"],
   },
   {
     name: "folder-code",
     categories: ["files", "development"],
-    tags: ["directory", "coding", "develop", "software"]
+    tags: ["directory", "coding", "develop", "software"],
   },
   {
     name: "folder-cog",
@@ -6261,8 +6250,8 @@ export const iconsData: Array<{
       "preferences",
       "cog",
       "edit",
-      "gear"
-    ]
+      "gear",
+    ],
   },
   {
     name: "folder-dot",
@@ -6284,33 +6273,33 @@ export const iconsData: Array<{
       "settings",
       "system",
       "admin",
-      "edit"
-    ]
+      "edit",
+    ],
   },
   {
     name: "folder-down",
     categories: ["files", "arrows"],
-    tags: ["directory", "download", "import", "export"]
+    tags: ["directory", "download", "import", "export"],
   },
   {
     name: "folder-git-2",
     categories: ["files"],
-    tags: ["directory", "root", "project", "git", "repo"]
+    tags: ["directory", "root", "project", "git", "repo"],
   },
   {
     name: "folder-git",
     categories: ["files"],
-    tags: ["directory", "root", "project", "git", "repo"]
+    tags: ["directory", "root", "project", "git", "repo"],
   },
   {
     name: "folder-heart",
     categories: ["files"],
-    tags: ["directory", "heart", "favourite", "bookmark", "quick link"]
+    tags: ["directory", "heart", "favourite", "bookmark", "quick link"],
   },
   {
     name: "folder-input",
     categories: ["files", "arrows"],
-    tags: ["directory", "import", "export"]
+    tags: ["directory", "import", "export"],
   },
   {
     name: "folder-kanban",
@@ -6332,68 +6321,68 @@ export const iconsData: Array<{
       "coding",
       "directory",
       "project",
-      "root"
-    ]
+      "root",
+    ],
   },
   {
     name: "folder-key",
     categories: ["files", "security"],
-    tags: ["directory", "key", "private", "security", "protected"]
+    tags: ["directory", "key", "private", "security", "protected"],
   },
   {
     name: "folder-lock",
     categories: ["files", "security"],
-    tags: ["directory", "lock", "private", "security", "protected"]
+    tags: ["directory", "lock", "private", "security", "protected"],
   },
   {
     name: "folder-minus",
     categories: ["files"],
-    tags: ["directory", "remove", "delete"]
+    tags: ["directory", "remove", "delete"],
   },
   {
     name: "folder-open-dot",
     categories: ["files", "development"],
-    tags: ["directory", "root", "project", "active", "current", "pinned"]
+    tags: ["directory", "root", "project", "active", "current", "pinned"],
   },
   {
     name: "folder-open",
     categories: ["files"],
-    tags: ["directory"]
+    tags: ["directory"],
   },
   {
     name: "folder-output",
     categories: ["files", "arrows"],
-    tags: ["directory", "import", "export"]
+    tags: ["directory", "import", "export"],
   },
   {
     name: "folder-pen",
     categories: ["files"],
-    tags: ["directory", "rename"]
+    tags: ["directory", "rename"],
   },
   {
     name: "folder-plus",
     categories: ["files"],
-    tags: ["directory", "add", "create", "new"]
+    tags: ["directory", "add", "create", "new"],
   },
   {
     name: "folder-root",
     categories: ["files", "development"],
-    tags: ["directory", "root", "project", "git", "repo"]
+    tags: ["directory", "root", "project", "git", "repo"],
   },
   {
     name: "folder-search-2",
     categories: ["files"],
-    tags: ["directory", "search", "find", "lost", "browser"]
+    tags: ["directory", "search", "find", "lost", "browser"],
   },
   {
     name: "folder-search",
     categories: ["files"],
-    tags: ["directory", "search", "find", "lost", "browser"]
+    tags: ["directory", "search", "find", "lost", "browser"],
   },
   {
     name: "folder-symlink",
     categories: ["files"],
-    tags: ["directory", "symlink", "symbolic", "link"]
+    tags: ["directory", "symlink", "symbolic", "link"],
   },
   {
     name: "folder-sync",
@@ -6405,73 +6394,73 @@ export const iconsData: Array<{
       "refresh",
       "reconnect",
       "transfer",
-      "backup"
-    ]
+      "backup",
+    ],
   },
   {
     name: "folder-tree",
     categories: ["files"],
-    tags: ["directory", "tree", "browser"]
+    tags: ["directory", "tree", "browser"],
   },
   {
     name: "folder-up",
     categories: ["files", "arrows"],
-    tags: ["directory", "upload", "import", "export"]
+    tags: ["directory", "upload", "import", "export"],
   },
   {
     name: "folder-x",
     categories: ["files"],
-    tags: ["directory", "remove", "delete"]
+    tags: ["directory", "remove", "delete"],
   },
   {
     name: "folder",
     categories: ["files"],
-    tags: ["directory"]
+    tags: ["directory"],
   },
   {
     name: "folders",
     categories: ["files"],
-    tags: ["multiple", "copy", "directories"]
+    tags: ["multiple", "copy", "directories"],
   },
   {
     name: "footprints",
     categories: ["navigation"],
-    tags: ["steps", "walking", "foot", "feet", "trail", "shoe"]
+    tags: ["steps", "walking", "foot", "feet", "trail", "shoe"],
   },
   {
     name: "forklift",
     categories: ["transportation"],
-    tags: ["vehicle", "transport", "logistics"]
+    tags: ["vehicle", "transport", "logistics"],
   },
   {
     name: "forward",
     categories: ["mail"],
-    tags: ["send", "share", "email"]
+    tags: ["send", "share", "email"],
   },
   {
     name: "frame",
     categories: ["design", "photography"],
-    tags: ["logo", "design", "tool"]
+    tags: ["logo", "design", "tool"],
   },
   {
     name: "framer",
     categories: ["brands", "design"],
-    tags: ["logo", "design", "tool"]
+    tags: ["logo", "design", "tool"],
   },
   {
     name: "frown",
     categories: ["emoji", "account"],
-    tags: ["emoji", "face", "bad", "sad", "emotion"]
+    tags: ["emoji", "face", "bad", "sad", "emotion"],
   },
   {
     name: "fuel",
     categories: ["transportation", "navigation"],
-    tags: ["filling-station", "gas", "petrol", "tank"]
+    tags: ["filling-station", "gas", "petrol", "tank"],
   },
   {
     name: "fullscreen",
     categories: ["layout", "multimedia", "design", "photography"],
-    tags: ["expand", "zoom", "preview", "focus", "camera", "lens", "image"]
+    tags: ["expand", "zoom", "preview", "focus", "camera", "lens", "image"],
   },
   {
     name: "gallery-horizontal-end",
@@ -6481,7 +6470,7 @@ export const iconsData: Array<{
       "development",
       "photography",
       "multimedia",
-      "files"
+      "files",
     ],
     tags: [
       "carousel",
@@ -6494,8 +6483,8 @@ export const iconsData: Array<{
       "history",
       "versions",
       "backup",
-      "time machine"
-    ]
+      "time machine",
+    ],
   },
   {
     name: "gallery-horizontal",
@@ -6504,7 +6493,7 @@ export const iconsData: Array<{
       "design",
       "development",
       "photography",
-      "multimedia"
+      "multimedia",
     ],
     tags: [
       "carousel",
@@ -6513,8 +6502,8 @@ export const iconsData: Array<{
       "scroll",
       "swipe",
       "album",
-      "portfolio"
-    ]
+      "portfolio",
+    ],
   },
   {
     name: "gallery-thumbnails",
@@ -6523,9 +6512,9 @@ export const iconsData: Array<{
       "design",
       "development",
       "photography",
-      "multimedia"
+      "multimedia",
     ],
-    tags: ["carousel", "pictures", "images", "album", "portfolio", "preview"]
+    tags: ["carousel", "pictures", "images", "album", "portfolio", "preview"],
   },
   {
     name: "gallery-vertical-end",
@@ -6535,7 +6524,7 @@ export const iconsData: Array<{
       "development",
       "photography",
       "multimedia",
-      "files"
+      "files",
     ],
     tags: [
       "carousel",
@@ -6548,8 +6537,8 @@ export const iconsData: Array<{
       "history",
       "versions",
       "backup",
-      "time machine"
-    ]
+      "time machine",
+    ],
   },
   {
     name: "gallery-vertical",
@@ -6558,7 +6547,7 @@ export const iconsData: Array<{
       "design",
       "development",
       "photography",
-      "multimedia"
+      "multimedia",
     ],
     tags: [
       "carousel",
@@ -6567,18 +6556,18 @@ export const iconsData: Array<{
       "scroll",
       "swipe",
       "album",
-      "portfolio"
-    ]
+      "portfolio",
+    ],
   },
   {
     name: "gamepad-2",
     categories: ["gaming", "devices"],
-    tags: ["console"]
+    tags: ["console"],
   },
   {
     name: "gamepad",
     categories: ["gaming", "devices"],
-    tags: ["console"]
+    tags: ["console"],
   },
   {
     name: "gauge",
@@ -6590,13 +6579,13 @@ export const iconsData: Array<{
       "speed",
       "pressure",
       "measure",
-      "level"
-    ]
+      "level",
+    ],
   },
   {
     name: "gavel",
     categories: ["navigation", "tools"],
-    tags: ["hammer", "mallet"]
+    tags: ["hammer", "mallet"],
   },
   {
     name: "gem",
@@ -6614,113 +6603,113 @@ export const iconsData: Array<{
       "wedding",
       "proposal",
       "marriage",
-      "rubygems"
-    ]
+      "rubygems",
+    ],
   },
   {
     name: "ghost",
     categories: ["gaming"],
-    tags: ["pac-man", "spooky"]
+    tags: ["pac-man", "spooky"],
   },
   {
     name: "gift",
     categories: ["gaming", "account"],
-    tags: ["present", "box", "birthday", "party"]
+    tags: ["present", "box", "birthday", "party"],
   },
   {
     name: "git-branch-plus",
     categories: ["development"],
-    tags: ["add", "create", "+"]
+    tags: ["add", "create", "+"],
   },
   {
     name: "git-branch",
     categories: ["development"],
-    tags: ["code", "version control"]
+    tags: ["code", "version control"],
   },
   {
     name: "git-commit-horizontal",
     categories: ["development", "navigation"],
-    tags: ["code", "version control", "waypoint", "stop", "station"]
+    tags: ["code", "version control", "waypoint", "stop", "station"],
   },
   {
     name: "git-commit-vertical",
     categories: ["development", "navigation"],
-    tags: ["code", "version control", "waypoint", "stop", "station"]
+    tags: ["code", "version control", "waypoint", "stop", "station"],
   },
   {
     name: "git-compare-arrows",
     categories: ["development", "arrows"],
-    tags: ["code", "version control", "diff"]
+    tags: ["code", "version control", "diff"],
   },
   {
     name: "git-compare",
     categories: ["development"],
-    tags: ["code", "version control", "diff"]
+    tags: ["code", "version control", "diff"],
   },
   {
     name: "git-fork",
     categories: ["development"],
-    tags: ["code", "version control"]
+    tags: ["code", "version control"],
   },
   {
     name: "git-graph",
     categories: ["development"],
-    tags: ["code", "version control", "commit graph", "commits", "gitlens"]
+    tags: ["code", "version control", "commit graph", "commits", "gitlens"],
   },
   {
     name: "git-merge",
     categories: ["development"],
-    tags: ["code", "version control"]
+    tags: ["code", "version control"],
   },
   {
     name: "git-pull-request-arrow",
     categories: ["development", "arrows"],
-    tags: ["code", "version control", "open"]
+    tags: ["code", "version control", "open"],
   },
   {
     name: "git-pull-request-closed",
     categories: ["development"],
-    tags: ["code", "version control", "rejected", "closed", "cancelled", "x"]
+    tags: ["code", "version control", "rejected", "closed", "cancelled", "x"],
   },
   {
     name: "git-pull-request-create-arrow",
     categories: ["development", "arrows"],
-    tags: ["code", "version control", "open", "plus", "add", "+"]
+    tags: ["code", "version control", "open", "plus", "add", "+"],
   },
   {
     name: "git-pull-request-create",
     categories: ["development"],
-    tags: ["code", "version control", "open", "plus", "add", "+"]
+    tags: ["code", "version control", "open", "plus", "add", "+"],
   },
   {
     name: "git-pull-request-draft",
     categories: ["development"],
-    tags: ["code", "version control", "open", "draft", "dashed"]
+    tags: ["code", "version control", "open", "draft", "dashed"],
   },
   {
     name: "git-pull-request",
     categories: ["development"],
-    tags: ["code", "version control", "open"]
+    tags: ["code", "version control", "open"],
   },
   {
     name: "github",
     categories: ["brands", "development"],
-    tags: ["logo", "version control"]
+    tags: ["logo", "version control"],
   },
   {
     name: "gitlab",
     categories: ["brands", "development"],
-    tags: ["logo", "version control"]
+    tags: ["logo", "version control"],
   },
   {
     name: "glass-water",
     categories: ["food-beverage"],
-    tags: ["beverage", "drink", "glass", "water"]
+    tags: ["beverage", "drink", "glass", "water"],
   },
   {
     name: "glasses",
     categories: ["accessibility"],
-    tags: ["glasses", "spectacles"]
+    tags: ["glasses", "spectacles"],
   },
   {
     name: "globe-lock",
@@ -6735,23 +6724,23 @@ export const iconsData: Array<{
       "security",
       "encryption",
       "protection",
-      "connection"
-    ]
+      "connection",
+    ],
   },
   {
     name: "globe",
     categories: ["navigation"],
-    tags: ["world", "browser", "language", "translate"]
+    tags: ["world", "browser", "language", "translate"],
   },
   {
     name: "goal",
     categories: ["gaming"],
-    tags: ["flag", "bullseye"]
+    tags: ["flag", "bullseye"],
   },
   {
     name: "grab",
     categories: ["cursors", "design", "layout"],
-    tags: ["hand"]
+    tags: ["hand"],
   },
   {
     name: "graduation-cap",
@@ -6769,13 +6758,13 @@ export const iconsData: Array<{
       "diploma",
       "bachlor's",
       "master's",
-      "doctorate"
-    ]
+      "doctorate",
+    ],
   },
   {
     name: "grape",
     categories: ["food-beverage"],
-    tags: ["fruit", "wine", "food"]
+    tags: ["fruit", "wine", "food"],
   },
   {
     name: "grid-2x2-check",
@@ -6796,8 +6785,8 @@ export const iconsData: Array<{
       "distance",
       "surface area",
       "square meter",
-      "acre"
-    ]
+      "acre",
+    ],
   },
   {
     name: "grid-2x2-plus",
@@ -6818,8 +6807,8 @@ export const iconsData: Array<{
       "distance",
       "surface area",
       "square meter",
-      "acre"
-    ]
+      "acre",
+    ],
   },
   {
     name: "grid-2x2-x",
@@ -6840,8 +6829,8 @@ export const iconsData: Array<{
       "distance",
       "surface area",
       "square meter",
-      "acre"
-    ]
+      "acre",
+    ],
   },
   {
     name: "grid-2x2",
@@ -6863,28 +6852,28 @@ export const iconsData: Array<{
       "square meter",
       "acre",
       "window",
-      "skylight"
-    ]
+      "skylight",
+    ],
   },
   {
     name: "grid-3x3",
     categories: ["text", "layout", "design"],
-    tags: ["table", "rows", "columns"]
+    tags: ["table", "rows", "columns"],
   },
   {
     name: "grip-horizontal",
     categories: ["layout"],
-    tags: ["grab", "dots", "handle", "move", "drag"]
+    tags: ["grab", "dots", "handle", "move", "drag"],
   },
   {
     name: "grip-vertical",
     categories: ["layout"],
-    tags: ["grab", "dots", "handle", "move", "drag"]
+    tags: ["grab", "dots", "handle", "move", "drag"],
   },
   {
     name: "grip",
     categories: ["layout"],
-    tags: ["grab", "dots", "handle", "move", "drag"]
+    tags: ["grab", "dots", "handle", "move", "drag"],
   },
   {
     name: "group",
@@ -6897,8 +6886,8 @@ export const iconsData: Array<{
       "collection",
       "cluster",
       "gather",
-      "dashed"
-    ]
+      "dashed",
+    ],
   },
   {
     name: "guitar",
@@ -6919,8 +6908,8 @@ export const iconsData: Array<{
       "music",
       "audio",
       "sound",
-      "noise"
-    ]
+      "noise",
+    ],
   },
   {
     name: "ham",
@@ -6934,13 +6923,13 @@ export const iconsData: Array<{
       "hock",
       "knuckle",
       "gammon",
-      "cured"
-    ]
+      "cured",
+    ],
   },
   {
     name: "hammer",
     categories: ["tools", "home"],
-    tags: ["mallet", "nails", "diy", "toolbox", "build", "construction"]
+    tags: ["mallet", "nails", "diy", "toolbox", "build", "construction"],
   },
   {
     name: "hand-coins",
@@ -6959,23 +6948,23 @@ export const iconsData: Array<{
       "allowance",
       "pocket money",
       "handout",
-      "pennies"
-    ]
+      "pennies",
+    ],
   },
   {
     name: "hand-heart",
     categories: ["social"],
-    tags: ["love", "like", "emotion"]
+    tags: ["love", "like", "emotion"],
   },
   {
     name: "hand-helping",
     categories: ["emoji"],
-    tags: ["agreement", "help", "proposal", "charity", "begging", "terms"]
+    tags: ["agreement", "help", "proposal", "charity", "begging", "terms"],
   },
   {
     name: "hand-metal",
     categories: ["emoji", "multimedia"],
-    tags: ["rock"]
+    tags: ["rock"],
   },
   {
     name: "hand-platter",
@@ -6990,13 +6979,13 @@ export const iconsData: Array<{
       "dining",
       "meal",
       "course",
-      "luxury"
-    ]
+      "luxury",
+    ],
   },
   {
     name: "hand",
     categories: ["cursors", "accessibility"],
-    tags: ["wave", "move", "mouse", "grab"]
+    tags: ["wave", "move", "mouse", "grab"],
   },
   {
     name: "handshake",
@@ -7010,8 +6999,8 @@ export const iconsData: Array<{
       "cooperation",
       "friendship",
       "union",
-      "terms"
-    ]
+      "terms",
+    ],
   },
   {
     name: "hard-drive-download",
@@ -7024,8 +7013,8 @@ export const iconsData: Array<{
       "ssd",
       "disk",
       "hard disk",
-      "save"
-    ]
+      "save",
+    ],
   },
   {
     name: "hard-drive-upload",
@@ -7038,28 +7027,28 @@ export const iconsData: Array<{
       "ssd",
       "disk",
       "hard disk",
-      "save"
-    ]
+      "save",
+    ],
   },
   {
     name: "hard-drive",
     categories: ["development", "devices"],
-    tags: ["computer", "server", "memory", "data", "ssd", "disk", "hard disk"]
+    tags: ["computer", "server", "memory", "data", "ssd", "disk", "hard disk"],
   },
   {
     name: "hard-hat",
     categories: ["tools"],
-    tags: ["helmet", "construction", "safety", "savety"]
+    tags: ["helmet", "construction", "safety", "savety"],
   },
   {
     name: "hash",
     categories: ["text", "social"],
-    tags: ["hashtag", "number", "pound"]
+    tags: ["hashtag", "number", "pound"],
   },
   {
     name: "haze",
     categories: ["weather"],
-    tags: ["mist", "fog"]
+    tags: ["mist", "fog"],
   },
   {
     name: "hdmi-port",
@@ -7079,43 +7068,43 @@ export const iconsData: Array<{
       "av",
       "data",
       "input",
-      "output"
-    ]
+      "output",
+    ],
   },
   {
     name: "heading-1",
     categories: ["text"],
-    tags: ["h1", "html", "markup", "markdown"]
+    tags: ["h1", "html", "markup", "markdown"],
   },
   {
     name: "heading-2",
     categories: ["text"],
-    tags: ["h2", "html", "markup", "markdown"]
+    tags: ["h2", "html", "markup", "markdown"],
   },
   {
     name: "heading-3",
     categories: ["text"],
-    tags: ["h3", "html", "markup", "markdown"]
+    tags: ["h3", "html", "markup", "markdown"],
   },
   {
     name: "heading-4",
     categories: ["text"],
-    tags: ["h4", "html", "markup", "markdown"]
+    tags: ["h4", "html", "markup", "markdown"],
   },
   {
     name: "heading-5",
     categories: ["text"],
-    tags: ["h5", "html", "markup", "markdown"]
+    tags: ["h5", "html", "markup", "markdown"],
   },
   {
     name: "heading-6",
     categories: ["text"],
-    tags: ["h6", "html", "markup", "markdown"]
+    tags: ["h6", "html", "markup", "markdown"],
   },
   {
     name: "heading",
     categories: ["text"],
-    tags: ["h1", "html", "markup", "markdown"]
+    tags: ["h1", "html", "markup", "markdown"],
   },
   {
     name: "headphone-off",
@@ -7124,14 +7113,14 @@ export const iconsData: Array<{
       "connectivity",
       "communication",
       "devices",
-      "gaming"
+      "gaming",
     ],
-    tags: ["music", "audio", "sound", "mute", "off"]
+    tags: ["music", "audio", "sound", "mute", "off"],
   },
   {
     name: "headphones",
     categories: ["multimedia", "connectivity", "devices", "files", "gaming"],
-    tags: ["music", "audio", "sound"]
+    tags: ["music", "audio", "sound"],
   },
   {
     name: "headset",
@@ -7148,13 +7137,13 @@ export const iconsData: Array<{
       "phone",
       "telephone",
       "voip",
-      "video"
-    ]
+      "video",
+    ],
   },
   {
     name: "heart-crack",
     categories: ["emoji"],
-    tags: ["heartbreak", "sadness", "emotion"]
+    tags: ["heartbreak", "sadness", "emotion"],
   },
   {
     name: "heart-handshake",
@@ -7167,13 +7156,13 @@ export const iconsData: Array<{
       "terms",
       "emotion",
       "together",
-      "handshake"
-    ]
+      "handshake",
+    ],
   },
   {
     name: "heart-off",
     categories: ["social", "multimedia"],
-    tags: ["unlike", "dislike", "hate", "emotion"]
+    tags: ["unlike", "dislike", "hate", "emotion"],
   },
   {
     name: "heart-pulse",
@@ -7186,8 +7175,8 @@ export const iconsData: Array<{
       "blood pressure",
       "cardiac",
       "systole",
-      "diastole"
-    ]
+      "diastole",
+    ],
   },
   {
     name: "heart",
@@ -7197,9 +7186,9 @@ export const iconsData: Array<{
       "multimedia",
       "emoji",
       "gaming",
-      "shapes"
+      "shapes",
     ],
-    tags: ["like", "love", "emotion", "suit", "playing", "cards"]
+    tags: ["like", "love", "emotion", "suit", "playing", "cards"],
   },
   {
     name: "heater",
@@ -7212,18 +7201,18 @@ export const iconsData: Array<{
       "stove",
       "electric",
       "electronics",
-      "amenities"
-    ]
+      "amenities",
+    ],
   },
   {
     name: "hexagon",
     categories: ["shapes", "brands", "development"],
-    tags: ["shape", "node.js", "logo"]
+    tags: ["shape", "node.js", "logo"],
   },
   {
     name: "highlighter",
     categories: ["text", "design"],
-    tags: ["mark", "text"]
+    tags: ["mark", "text"],
   },
   {
     name: "history",
@@ -7238,8 +7227,8 @@ export const iconsData: Array<{
       "time machine",
       "backup",
       "rotate",
-      "ccw"
-    ]
+      "ccw",
+    ],
   },
   {
     name: "hop-off",
@@ -7251,13 +7240,13 @@ export const iconsData: Array<{
       "hop free",
       "allergy",
       "intolerance",
-      "diet"
-    ]
+      "diet",
+    ],
   },
   {
     name: "hop",
     categories: ["food-beverage"],
-    tags: ["beer", "brewery", "drink"]
+    tags: ["beer", "brewery", "drink"],
   },
   {
     name: "hospital",
@@ -7273,18 +7262,18 @@ export const iconsData: Array<{
       "ward",
       "building",
       "medical",
-      "vet"
-    ]
+      "vet",
+    ],
   },
   {
     name: "hotel",
     categories: ["buildings", "navigation", "travel"],
-    tags: ["building", "hostel", "motel", "inn"]
+    tags: ["building", "hostel", "motel", "inn"],
   },
   {
     name: "hourglass",
     categories: ["time", "gaming"],
-    tags: ["timer", "time", "sandglass"]
+    tags: ["timer", "time", "sandglass"],
   },
   {
     name: "house-plug",
@@ -7296,8 +7285,8 @@ export const iconsData: Array<{
       "residence",
       "architecture",
       "autarky",
-      "energy"
-    ]
+      "energy",
+    ],
   },
   {
     name: "house-plus",
@@ -7310,73 +7299,73 @@ export const iconsData: Array<{
       "addition",
       "building",
       "residence",
-      "architecture"
-    ]
+      "architecture",
+    ],
   },
   {
     name: "house-wifi",
     categories: ["home", "buildings", "connectivity"],
-    tags: ["home", "living", "building", "wifi", "connectivity"]
+    tags: ["home", "living", "building", "wifi", "connectivity"],
   },
   {
     name: "house",
     categories: ["buildings", "home"],
-    tags: ["home", "living", "building", "residence", "architecture"]
+    tags: ["home", "living", "building", "residence", "architecture"],
   },
   {
     name: "ice-cream-bowl",
     categories: ["food-beverage"],
-    tags: ["gelato", "food", "dessert", "dish", "restaurant", "course", "meal"]
+    tags: ["gelato", "food", "dessert", "dish", "restaurant", "course", "meal"],
   },
   {
     name: "ice-cream-cone",
     categories: ["food-beverage"],
-    tags: ["gelato", "food"]
+    tags: ["gelato", "food"],
   },
   {
     name: "id-card",
     categories: ["security", "account"],
-    tags: ["card", "badge", "identity", "authentication", "secure"]
+    tags: ["card", "badge", "identity", "authentication", "secure"],
   },
   {
     name: "image-down",
     categories: ["photography", "text", "multimedia", "files"],
-    tags: ["picture", "photo", "download", "save", "export"]
+    tags: ["picture", "photo", "download", "save", "export"],
   },
   {
     name: "image-minus",
     categories: ["photography", "multimedia", "files"],
-    tags: ["remove", "delete"]
+    tags: ["remove", "delete"],
   },
   {
     name: "image-off",
     categories: ["photography", "multimedia", "files"],
-    tags: ["picture", "photo"]
+    tags: ["picture", "photo"],
   },
   {
     name: "image-play",
     categories: ["photography", "text", "multimedia", "files"],
-    tags: ["picture", "gif", "photo"]
+    tags: ["picture", "gif", "photo"],
   },
   {
     name: "image-plus",
     categories: ["photography", "multimedia", "files"],
-    tags: ["add", "create", "picture"]
+    tags: ["add", "create", "picture"],
   },
   {
     name: "image-up",
     categories: ["photography", "text", "multimedia", "files"],
-    tags: ["picture", "photo", "upload", "import"]
+    tags: ["picture", "photo", "upload", "import"],
   },
   {
     name: "image-upscale",
     categories: ["photography", "multimedia"],
-    tags: ["resize", "picture", "sharpen", "increase"]
+    tags: ["resize", "picture", "sharpen", "increase"],
   },
   {
     name: "image",
     categories: ["photography", "text", "multimedia", "files"],
-    tags: ["picture", "photo"]
+    tags: ["picture", "photo"],
   },
   {
     name: "images",
@@ -7390,78 +7379,78 @@ export const iconsData: Array<{
       "album",
       "collection",
       "slideshow",
-      "showcase"
-    ]
+      "showcase",
+    ],
   },
   {
     name: "import",
     categories: ["arrows", "files"],
-    tags: ["save"]
+    tags: ["save"],
   },
   {
     name: "inbox",
     categories: ["account", "mail"],
-    tags: ["email"]
+    tags: ["email"],
   },
   {
     name: "indent-decrease",
     categories: ["text", "development"],
-    tags: ["text", "tab"]
+    tags: ["text", "tab"],
   },
   {
     name: "indent-increase",
     categories: ["text", "development"],
-    tags: ["text", "tab"]
+    tags: ["text", "tab"],
   },
   {
     name: "indian-rupee",
     categories: ["finance"],
-    tags: ["currency", "money", "payment"]
+    tags: ["currency", "money", "payment"],
   },
   {
     name: "infinity",
     categories: ["multimedia"],
-    tags: ["unlimited", "forever", "loop", "math"]
+    tags: ["unlimited", "forever", "loop", "math"],
   },
   {
     name: "info",
     categories: ["accessibility", "notifications"],
-    tags: ["help"]
+    tags: ["help"],
   },
   {
     name: "inspection-panel",
     categories: ["tools"],
-    tags: ["access", "cover", "tile", "metal", "materials", "screws"]
+    tags: ["access", "cover", "tile", "metal", "materials", "screws"],
   },
   {
     name: "instagram",
     categories: ["brands", "social", "photography"],
-    tags: ["logo", "camera", "social"]
+    tags: ["logo", "camera", "social"],
   },
   {
     name: "italic",
     categories: ["text"],
-    tags: ["oblique", "text", "format"]
+    tags: ["oblique", "text", "format"],
   },
   {
     name: "iteration-ccw",
     categories: ["arrows", "design"],
-    tags: ["arrow", "right"]
+    tags: ["arrow", "right"],
   },
   {
     name: "iteration-cw",
     categories: ["arrows", "design"],
-    tags: ["arrow", "left"]
+    tags: ["arrow", "left"],
   },
   {
     name: "japanese-yen",
     categories: ["finance"],
-    tags: ["currency", "money", "payment"]
+    tags: ["currency", "money", "payment"],
   },
   {
     name: "joystick",
     categories: ["gaming", "devices"],
-    tags: ["game", "console", "control stick"]
+    tags: ["game", "console", "control stick"],
   },
   {
     name: "kanban",
@@ -7480,18 +7469,25 @@ export const iconsData: Array<{
       "work",
       "agile",
       "code",
-      "coding"
-    ]
+      "coding",
+    ],
   },
   {
     name: "key-round",
     categories: ["security", "account"],
-    tags: ["password", "login", "authentication", "secure", "unlock"]
+    tags: ["password", "login", "authentication", "secure", "unlock"],
   },
   {
     name: "key-square",
     categories: ["security", "account"],
-    tags: ["password", "login", "authentication", "secure", "unlock", "car key"]
+    tags: [
+      "password",
+      "login",
+      "authentication",
+      "secure",
+      "unlock",
+      "car key",
+    ],
   },
   {
     name: "key",
@@ -7504,8 +7500,8 @@ export const iconsData: Array<{
       "unlock",
       "keychain",
       "key ring",
-      "fob"
-    ]
+      "fob",
+    ],
   },
   {
     name: "keyboard-music",
@@ -7532,48 +7528,48 @@ export const iconsData: Array<{
       "piano",
       "play",
       "performance",
-      "concert"
-    ]
+      "concert",
+    ],
   },
   {
     name: "keyboard-off",
     categories: ["devices", "text", "development"],
-    tags: ["unkeys", "layout", "spell", "settings", "mouse"]
+    tags: ["unkeys", "layout", "spell", "settings", "mouse"],
   },
   {
     name: "keyboard",
     categories: ["text", "devices", "development"],
-    tags: ["layout", "spell", "settings", "mouse"]
+    tags: ["layout", "spell", "settings", "mouse"],
   },
   {
     name: "lamp-ceiling",
     categories: ["home"],
-    tags: ["lighting", "household", "home", "furniture"]
+    tags: ["lighting", "household", "home", "furniture"],
   },
   {
     name: "lamp-desk",
     categories: ["home"],
-    tags: ["lighting", "household", "office", "desk", "home", "furniture"]
+    tags: ["lighting", "household", "office", "desk", "home", "furniture"],
   },
   {
     name: "lamp-floor",
     categories: ["home"],
-    tags: ["lighting", "household", "floor", "home", "furniture"]
+    tags: ["lighting", "household", "floor", "home", "furniture"],
   },
   {
     name: "lamp-wall-down",
     categories: ["home"],
-    tags: ["lighting", "household", "wall", "home", "furniture"]
+    tags: ["lighting", "household", "wall", "home", "furniture"],
   },
   {
     name: "lamp-wall-up",
     categories: ["home"],
-    tags: ["lighting", "household", "wall", "home", "furniture"]
+    tags: ["lighting", "household", "wall", "home", "furniture"],
   },
   {
     name: "lamp",
     categories: ["home"],
-    tags: ["lighting", "household", "home", "furniture"]
+    tags: ["lighting", "household", "home", "furniture"],
   },
   {
     name: "land-plot",
@@ -7592,8 +7588,8 @@ export const iconsData: Array<{
       "isometric",
       "flag",
       "golf course",
-      "hole"
-    ]
+      "hole",
+    ],
   },
   {
     name: "landmark",
@@ -7605,13 +7601,13 @@ export const iconsData: Array<{
       "finance",
       "money",
       "government",
-      "institution"
-    ]
+      "institution",
+    ],
   },
   {
     name: "languages",
     categories: ["text"],
-    tags: ["translate"]
+    tags: ["translate"],
   },
   {
     name: "laptop-minimal-check",
@@ -7625,33 +7621,33 @@ export const iconsData: Array<{
       "todo",
       "tick",
       "complete",
-      "task"
-    ]
+      "task",
+    ],
   },
   {
     name: "laptop-minimal",
     categories: ["devices"],
-    tags: ["computer", "screen", "remote"]
+    tags: ["computer", "screen", "remote"],
   },
   {
     name: "laptop",
     categories: ["devices"],
-    tags: ["computer", "screen", "remote"]
+    tags: ["computer", "screen", "remote"],
   },
   {
     name: "lasso-select",
     categories: ["arrows", "design", "cursors"],
-    tags: ["select", "cursor"]
+    tags: ["select", "cursor"],
   },
   {
     name: "lasso",
     categories: ["design", "cursors"],
-    tags: ["select", "cursor"]
+    tags: ["select", "cursor"],
   },
   {
     name: "laugh",
     categories: ["emoji"],
-    tags: ["emoji", "face", "happy", "good", "emotion"]
+    tags: ["emoji", "face", "happy", "good", "emotion"],
   },
   {
     name: "layers-2",
@@ -7666,33 +7662,33 @@ export const iconsData: Array<{
       "copy",
       "duplicate",
       "double",
-      "shortcuts"
-    ]
+      "shortcuts",
+    ],
   },
   {
     name: "layers",
     categories: ["design", "layout"],
-    tags: ["stack", "pile", "pages", "sheets", "paperwork", "copies", "copy"]
+    tags: ["stack", "pile", "pages", "sheets", "paperwork", "copies", "copy"],
   },
   {
     name: "layout-dashboard",
     categories: ["design", "layout"],
-    tags: ["masonry", "brick"]
+    tags: ["masonry", "brick"],
   },
   {
     name: "layout-grid",
     categories: ["design", "layout"],
-    tags: ["app", "home", "start"]
+    tags: ["app", "home", "start"],
   },
   {
     name: "layout-list",
     categories: ["design", "layout", "photography", "text"],
-    tags: ["todo", "tasks", "items", "pending", "image", "photo"]
+    tags: ["todo", "tasks", "items", "pending", "image", "photo"],
   },
   {
     name: "layout-panel-left",
     categories: ["design", "layout"],
-    tags: ["app", "home", "start", "grid"]
+    tags: ["app", "home", "start", "grid"],
   },
   {
     name: "layout-panel-top",
@@ -7704,33 +7700,33 @@ export const iconsData: Array<{
       "section",
       "grid",
       "template",
-      "structure"
-    ]
+      "structure",
+    ],
   },
   {
     name: "layout-template",
     categories: ["layout"],
-    tags: ["window", "webpage", "block", "section"]
+    tags: ["window", "webpage", "block", "section"],
   },
   {
     name: "leaf",
     categories: ["nature", "sustainability", "seasons"],
-    tags: ["sustainability", "nature", "energy", "plant", "autumn"]
+    tags: ["sustainability", "nature", "energy", "plant", "autumn"],
   },
   {
     name: "leafy-green",
     categories: ["food-beverage", "emoji", "sustainability"],
-    tags: ["salad", "lettuce", "vegetable", "chard", "cabbage", "bok choy"]
+    tags: ["salad", "lettuce", "vegetable", "chard", "cabbage", "bok choy"],
   },
   {
     name: "lectern",
     categories: ["communication", "multimedia"],
-    tags: ["pulpit", "podium", "stand"]
+    tags: ["pulpit", "podium", "stand"],
   },
   {
     name: "letter-text",
     categories: ["text"],
-    tags: ["drop cap", "text", "format", "typography", "letter", "font size"]
+    tags: ["drop cap", "text", "format", "typography", "letter", "font size"],
   },
   {
     name: "library-big",
@@ -7739,7 +7735,7 @@ export const iconsData: Array<{
       "photography",
       "multimedia",
       "navigation",
-      "development"
+      "development",
     ],
     tags: [
       "books",
@@ -7764,8 +7760,8 @@ export const iconsData: Array<{
       "records",
       "albums",
       "music",
-      "package"
-    ]
+      "package",
+    ],
   },
   {
     name: "library",
@@ -7774,7 +7770,7 @@ export const iconsData: Array<{
       "photography",
       "multimedia",
       "navigation",
-      "development"
+      "development",
     ],
     tags: [
       "books",
@@ -7799,8 +7795,8 @@ export const iconsData: Array<{
       "records",
       "albums",
       "music",
-      "package"
-    ]
+      "package",
+    ],
   },
   {
     name: "life-buoy",
@@ -7816,48 +7812,48 @@ export const iconsData: Array<{
       "raft",
       "inflatable",
       "wheel",
-      "donut"
-    ]
+      "donut",
+    ],
   },
   {
     name: "ligature",
     categories: ["text"],
-    tags: ["text", "font", "typography", "alternates", "alternatives"]
+    tags: ["text", "font", "typography", "alternates", "alternatives"],
   },
   {
     name: "lightbulb-off",
     categories: ["photography"],
-    tags: ["lights"]
+    tags: ["lights"],
   },
   {
     name: "lightbulb",
     categories: ["photography"],
-    tags: ["idea", "bright", "lights"]
+    tags: ["idea", "bright", "lights"],
   },
   {
     name: "link-2-off",
     categories: ["text"],
-    tags: ["unchain", "chain"]
+    tags: ["unchain", "chain"],
   },
   {
     name: "link-2",
     categories: ["text", "account"],
-    tags: ["chain", "url"]
+    tags: ["chain", "url"],
   },
   {
     name: "link",
     categories: ["text", "account"],
-    tags: ["chain", "url"]
+    tags: ["chain", "url"],
   },
   {
     name: "linkedin",
     categories: ["social", "brands"],
-    tags: ["logo", "social media", "social"]
+    tags: ["logo", "social media", "social"],
   },
   {
     name: "list-check",
     categories: ["text"],
-    tags: ["done", "check", "tick", "complete", "list", "to-do", "bom"]
+    tags: ["done", "check", "tick", "complete", "list", "to-do", "bom"],
   },
   {
     name: "list-checks",
@@ -7870,8 +7866,8 @@ export const iconsData: Array<{
       "complete",
       "tasks",
       "items",
-      "pending"
-    ]
+      "pending",
+    ],
   },
   {
     name: "list-collapse",
@@ -7889,53 +7885,53 @@ export const iconsData: Array<{
       "more",
       "less",
       "fold",
-      "unfold"
-    ]
+      "unfold",
+    ],
   },
   {
     name: "list-end",
     categories: ["multimedia", "text"],
-    tags: ["queue", "bottom", "end", "playlist"]
+    tags: ["queue", "bottom", "end", "playlist"],
   },
   {
     name: "list-filter-plus",
     categories: ["text", "layout"],
-    tags: ["filter", "plus", "options", "add"]
+    tags: ["filter", "plus", "options", "add"],
   },
   {
     name: "list-filter",
     categories: ["text"],
-    tags: ["options"]
+    tags: ["options"],
   },
   {
     name: "list-minus",
     categories: ["multimedia", "text"],
-    tags: ["playlist", "remove", "song", "subtract", "delete", "unqueue"]
+    tags: ["playlist", "remove", "song", "subtract", "delete", "unqueue"],
   },
   {
     name: "list-music",
     categories: ["multimedia"],
-    tags: ["playlist", "queue", "music", "audio", "playback"]
+    tags: ["playlist", "queue", "music", "audio", "playback"],
   },
   {
     name: "list-ordered",
     categories: ["text"],
-    tags: ["number", "order", "queue"]
+    tags: ["number", "order", "queue"],
   },
   {
     name: "list-plus",
     categories: ["multimedia", "text"],
-    tags: ["playlist", "add", "song", "track", "new"]
+    tags: ["playlist", "add", "song", "track", "new"],
   },
   {
     name: "list-restart",
     categories: ["multimedia", "text"],
-    tags: ["reset", "refresh", "reload", "playlist", "replay"]
+    tags: ["reset", "refresh", "reload", "playlist", "replay"],
   },
   {
     name: "list-start",
     categories: ["multimedia", "text"],
-    tags: ["queue", "top", "start", "next", "playlist"]
+    tags: ["queue", "top", "start", "next", "playlist"],
   },
   {
     name: "list-todo",
@@ -7948,28 +7944,28 @@ export const iconsData: Array<{
       "complete",
       "tasks",
       "items",
-      "pending"
-    ]
+      "pending",
+    ],
   },
   {
     name: "list-tree",
     categories: ["files", "text", "layout"],
-    tags: ["tree", "browser"]
+    tags: ["tree", "browser"],
   },
   {
     name: "list-video",
     categories: ["multimedia"],
-    tags: ["playlist", "video", "playback"]
+    tags: ["playlist", "video", "playback"],
   },
   {
     name: "list-x",
     categories: ["multimedia", "text"],
-    tags: ["playlist", "subtract", "remove", "delete", "unqueue"]
+    tags: ["playlist", "subtract", "remove", "delete", "unqueue"],
   },
   {
     name: "list",
     categories: ["text"],
-    tags: ["options"]
+    tags: ["options"],
   },
   {
     name: "loader-circle",
@@ -7982,8 +7978,8 @@ export const iconsData: Array<{
       "spinner",
       "spinning",
       "throbber",
-      "circle"
-    ]
+      "circle",
+    ],
   },
   {
     name: "loader-pinwheel",
@@ -7998,8 +7994,8 @@ export const iconsData: Array<{
       "spinning",
       "beach ball",
       "frozen",
-      "freeze"
-    ]
+      "freeze",
+    ],
   },
   {
     name: "loader",
@@ -8011,73 +8007,73 @@ export const iconsData: Array<{
       "progress",
       "spinner",
       "spinning",
-      "throbber"
-    ]
+      "throbber",
+    ],
   },
   {
     name: "locate-fixed",
     categories: ["navigation"],
-    tags: ["map", "gps", "location", "cross"]
+    tags: ["map", "gps", "location", "cross"],
   },
   {
     name: "locate-off",
     categories: ["navigation"],
-    tags: ["map", "gps", "location", "cross"]
+    tags: ["map", "gps", "location", "cross"],
   },
   {
     name: "locate",
     categories: ["navigation"],
-    tags: ["map", "gps", "location", "cross"]
+    tags: ["map", "gps", "location", "cross"],
   },
   {
     name: "lock-keyhole-open",
     categories: ["security"],
-    tags: ["security"]
+    tags: ["security"],
   },
   {
     name: "lock-keyhole",
     categories: ["security"],
-    tags: ["security", "password", "secure", "admin"]
+    tags: ["security", "password", "secure", "admin"],
   },
   {
     name: "lock-open",
     categories: ["security"],
-    tags: ["security"]
+    tags: ["security"],
   },
   {
     name: "lock",
     categories: ["security"],
-    tags: ["security", "password", "secure", "admin"]
+    tags: ["security", "password", "secure", "admin"],
   },
   {
     name: "log-in",
     categories: ["arrows", "account"],
-    tags: ["sign in", "arrow", "enter", "auth"]
+    tags: ["sign in", "arrow", "enter", "auth"],
   },
   {
     name: "log-out",
     categories: ["arrows", "account"],
-    tags: ["sign out", "arrow", "exit", "auth"]
+    tags: ["sign out", "arrow", "exit", "auth"],
   },
   {
     name: "logs",
     categories: ["text"],
-    tags: ["options", "list", "menu", "order", "queue", "tasks", "logs"]
+    tags: ["options", "list", "menu", "order", "queue", "tasks", "logs"],
   },
   {
     name: "lollipop",
     categories: ["food-beverage"],
-    tags: ["lolly", "candy", "sugar", "food", "sweet", "dessert", "spiral"]
+    tags: ["lolly", "candy", "sugar", "food", "sweet", "dessert", "spiral"],
   },
   {
     name: "luggage",
     categories: ["travel", "transportation"],
-    tags: ["baggage", "luggage", "travel", "suitcase"]
+    tags: ["baggage", "luggage", "travel", "suitcase"],
   },
   {
     name: "magnet",
     categories: ["design"],
-    tags: ["horseshoe", "lock", "science", "snap"]
+    tags: ["horseshoe", "lock", "science", "snap"],
   },
   {
     name: "mail-check",
@@ -8094,53 +8090,53 @@ export const iconsData: Array<{
       "todo",
       "tick",
       "complete",
-      "task"
-    ]
+      "task",
+    ],
   },
   {
     name: "mail-minus",
     categories: ["mail"],
-    tags: ["email", "message", "letter", "remove", "delete"]
+    tags: ["email", "message", "letter", "remove", "delete"],
   },
   {
     name: "mail-open",
     categories: ["mail"],
-    tags: ["email", "message", "letter", "read"]
+    tags: ["email", "message", "letter", "read"],
   },
   {
     name: "mail-plus",
     categories: ["mail"],
-    tags: ["email", "message", "letter", "add", "create", "new", "compose"]
+    tags: ["email", "message", "letter", "add", "create", "new", "compose"],
   },
   {
     name: "mail-question",
     categories: ["mail"],
-    tags: ["email", "message", "letter", "delivery", "undelivered"]
+    tags: ["email", "message", "letter", "delivery", "undelivered"],
   },
   {
     name: "mail-search",
     categories: ["mail"],
-    tags: ["email", "message", "letter", "search"]
+    tags: ["email", "message", "letter", "search"],
   },
   {
     name: "mail-warning",
     categories: ["mail"],
-    tags: ["email", "message", "letter", "delivery error", "exclamation mark"]
+    tags: ["email", "message", "letter", "delivery error", "exclamation mark"],
   },
   {
     name: "mail-x",
     categories: ["mail"],
-    tags: ["email", "message", "letter", "remove", "delete"]
+    tags: ["email", "message", "letter", "remove", "delete"],
   },
   {
     name: "mail",
     categories: ["text", "account", "mail"],
-    tags: ["email", "message", "letter", "unread"]
+    tags: ["email", "message", "letter", "unread"],
   },
   {
     name: "mailbox",
     categories: ["mail"],
-    tags: ["emails", "messages", "letters", "mailing list", "newsletter"]
+    tags: ["emails", "messages", "letters", "mailing list", "newsletter"],
   },
   {
     name: "mails",
@@ -8152,8 +8148,8 @@ export const iconsData: Array<{
       "multiple",
       "mailing list",
       "newsletter",
-      "copy"
-    ]
+      "copy",
+    ],
   },
   {
     name: "map-pin-check-inside",
@@ -8167,8 +8163,8 @@ export const iconsData: Array<{
       "tick",
       "complete",
       "task",
-      "added"
-    ]
+      "added",
+    ],
   },
   {
     name: "map-pin-check",
@@ -8182,8 +8178,8 @@ export const iconsData: Array<{
       "tick",
       "complete",
       "task",
-      "added"
-    ]
+      "added",
+    ],
   },
   {
     name: "map-pin-house",
@@ -8206,8 +8202,8 @@ export const iconsData: Array<{
       "destination",
       "geolocation",
       "place",
-      "landmark"
-    ]
+      "landmark",
+    ],
   },
   {
     name: "map-pin-minus-inside",
@@ -8219,8 +8215,8 @@ export const iconsData: Array<{
       "drop",
       "delete",
       "remove",
-      "erase"
-    ]
+      "erase",
+    ],
   },
   {
     name: "map-pin-minus",
@@ -8232,23 +8228,23 @@ export const iconsData: Array<{
       "drop",
       "delete",
       "remove",
-      "erase"
-    ]
+      "erase",
+    ],
   },
   {
     name: "map-pin-off",
     categories: ["navigation", "travel"],
-    tags: ["location", "waypoint", "marker", "remove"]
+    tags: ["location", "waypoint", "marker", "remove"],
   },
   {
     name: "map-pin-plus-inside",
     categories: ["navigation", "travel", "account"],
-    tags: ["location", "waypoint", "marker", "drop", "add", "create", "new"]
+    tags: ["location", "waypoint", "marker", "drop", "add", "create", "new"],
   },
   {
     name: "map-pin-plus",
     categories: ["navigation", "travel", "account"],
-    tags: ["location", "waypoint", "marker", "drop", "add", "create", "new"]
+    tags: ["location", "waypoint", "marker", "drop", "add", "create", "new"],
   },
   {
     name: "map-pin-x-inside",
@@ -8260,8 +8256,8 @@ export const iconsData: Array<{
       "drop",
       "delete",
       "remove",
-      "erase"
-    ]
+      "erase",
+    ],
   },
   {
     name: "map-pin-x",
@@ -8273,58 +8269,58 @@ export const iconsData: Array<{
       "drop",
       "delete",
       "remove",
-      "erase"
-    ]
+      "erase",
+    ],
   },
   {
     name: "map-pin",
     categories: ["navigation", "travel", "account"],
-    tags: ["location", "waypoint", "marker", "drop"]
+    tags: ["location", "waypoint", "marker", "drop"],
   },
   {
     name: "map-pinned",
     categories: ["navigation", "travel", "account"],
-    tags: ["location", "waypoint", "marker", "drop"]
+    tags: ["location", "waypoint", "marker", "drop"],
   },
   {
     name: "map-plus",
     categories: ["navigation"],
-    tags: ["location", "navigation", "travel", "new", "add", "create"]
+    tags: ["location", "navigation", "travel", "new", "add", "create"],
   },
   {
     name: "map",
     categories: ["text", "navigation"],
-    tags: ["location", "navigation", "travel"]
+    tags: ["location", "navigation", "travel"],
   },
   {
     name: "mars-stroke",
     categories: ["medical"],
-    tags: ["gender", "androgyne", "transgender"]
+    tags: ["gender", "androgyne", "transgender"],
   },
   {
     name: "mars",
     categories: ["medical"],
-    tags: ["gender", "sex", "male", "masculine", "man", "boy"]
+    tags: ["gender", "sex", "male", "masculine", "man", "boy"],
   },
   {
     name: "martini",
     categories: ["food-beverage"],
-    tags: ["cocktail", "alcohol", "beverage", "bar", "drink", "glass"]
+    tags: ["cocktail", "alcohol", "beverage", "bar", "drink", "glass"],
   },
   {
     name: "maximize-2",
     categories: ["arrows", "layout", "design"],
-    tags: ["fullscreen", "arrows", "expand"]
+    tags: ["fullscreen", "arrows", "expand"],
   },
   {
     name: "maximize",
     categories: ["layout", "design"],
-    tags: ["fullscreen", "expand", "dashed"]
+    tags: ["fullscreen", "expand", "dashed"],
   },
   {
     name: "medal",
     categories: ["sports", "gaming"],
-    tags: ["prize", "sports", "winner", "trophy", "award", "achievement"]
+    tags: ["prize", "sports", "winner", "trophy", "award", "achievement"],
   },
   {
     name: "megaphone-off",
@@ -8335,18 +8331,18 @@ export const iconsData: Array<{
       "alert",
       "notification",
       "disable",
-      "silent"
-    ]
+      "silent",
+    ],
   },
   {
     name: "megaphone",
     categories: ["multimedia", "notifications"],
-    tags: ["advertisement", "attention", "alert", "notification"]
+    tags: ["advertisement", "attention", "alert", "notification"],
   },
   {
     name: "meh",
     categories: ["emoji"],
-    tags: ["emoji", "face", "neutral", "emotion"]
+    tags: ["emoji", "face", "neutral", "emotion"],
   },
   {
     name: "memory-stick",
@@ -8361,18 +8357,18 @@ export const iconsData: Array<{
       "specs",
       "capacity",
       "gigabytes",
-      "gb"
-    ]
+      "gb",
+    ],
   },
   {
     name: "menu",
     categories: ["layout", "account"],
-    tags: ["bars", "navigation", "hamburger", "options"]
+    tags: ["bars", "navigation", "hamburger", "options"],
   },
   {
     name: "merge",
     categories: ["development", "arrows"],
-    tags: ["combine", "join", "unite"]
+    tags: ["combine", "join", "unite"],
   },
   {
     name: "message-circle-code",
@@ -8385,8 +8381,8 @@ export const iconsData: Array<{
       "feedback",
       "speech bubble",
       "code review",
-      "coding"
-    ]
+      "coding",
+    ],
   },
   {
     name: "message-circle-dashed",
@@ -8398,8 +8394,8 @@ export const iconsData: Array<{
       "dialog",
       "feedback",
       "speech bubble",
-      "draft"
-    ]
+      "draft",
+    ],
   },
   {
     name: "message-circle-heart",
@@ -8417,8 +8413,8 @@ export const iconsData: Array<{
       "valentine",
       "dating",
       "date",
-      "speech bubble"
-    ]
+      "speech bubble",
+    ],
   },
   {
     name: "message-circle-more",
@@ -8437,8 +8433,8 @@ export const iconsData: Array<{
       "etc",
       "et cetera",
       "...",
-      "…"
-    ]
+      "…",
+    ],
   },
   {
     name: "message-circle-off",
@@ -8457,8 +8453,8 @@ export const iconsData: Array<{
       "cancel",
       "silence",
       "mute",
-      "moderate"
-    ]
+      "moderate",
+    ],
   },
   {
     name: "message-circle-plus",
@@ -8470,8 +8466,8 @@ export const iconsData: Array<{
       "dialog",
       "feedback",
       "speech bubble",
-      "add"
-    ]
+      "add",
+    ],
   },
   {
     name: "message-circle-question",
@@ -8483,8 +8479,8 @@ export const iconsData: Array<{
       "dialog",
       "feedback",
       "speech bubble",
-      "help"
-    ]
+      "help",
+    ],
   },
   {
     name: "message-circle-reply",
@@ -8497,8 +8493,8 @@ export const iconsData: Array<{
       "feedback",
       "speech bubble",
       "reply",
-      "response"
-    ]
+      "response",
+    ],
   },
   {
     name: "message-circle-warning",
@@ -8517,8 +8513,8 @@ export const iconsData: Array<{
       "danger",
       "caution",
       "protected",
-      "exclamation mark"
-    ]
+      "exclamation mark",
+    ],
   },
   {
     name: "message-circle-x",
@@ -8537,8 +8533,8 @@ export const iconsData: Array<{
       "cancel",
       "silence",
       "mute",
-      "moderate"
-    ]
+      "moderate",
+    ],
   },
   {
     name: "message-circle",
@@ -8549,8 +8545,8 @@ export const iconsData: Array<{
       "conversation",
       "dialog",
       "feedback",
-      "speech bubble"
-    ]
+      "speech bubble",
+    ],
   },
   {
     name: "message-square-code",
@@ -8563,8 +8559,8 @@ export const iconsData: Array<{
       "feedback",
       "speech bubble",
       "code review",
-      "coding"
-    ]
+      "coding",
+    ],
   },
   {
     name: "message-square-dashed",
@@ -8576,8 +8572,8 @@ export const iconsData: Array<{
       "dialog",
       "feedback",
       "speech bubble",
-      "draft"
-    ]
+      "draft",
+    ],
   },
   {
     name: "message-square-diff",
@@ -8599,8 +8595,8 @@ export const iconsData: Array<{
       "code review",
       "coding",
       "version control",
-      "git"
-    ]
+      "git",
+    ],
   },
   {
     name: "message-square-dot",
@@ -8613,8 +8609,8 @@ export const iconsData: Array<{
       "conversation",
       "dialog",
       "feedback",
-      "speech bubble"
-    ]
+      "speech bubble",
+    ],
   },
   {
     name: "message-square-heart",
@@ -8632,8 +8628,8 @@ export const iconsData: Array<{
       "valentine",
       "dating",
       "date",
-      "speech bubble"
-    ]
+      "speech bubble",
+    ],
   },
   {
     name: "message-square-lock",
@@ -8646,8 +8642,8 @@ export const iconsData: Array<{
       "feedback",
       "speech bubble",
       "secure",
-      "encrypted"
-    ]
+      "encrypted",
+    ],
   },
   {
     name: "message-square-more",
@@ -8666,8 +8662,8 @@ export const iconsData: Array<{
       "etc",
       "et cetera",
       "...",
-      "…"
-    ]
+      "…",
+    ],
   },
   {
     name: "message-square-off",
@@ -8686,8 +8682,8 @@ export const iconsData: Array<{
       "cancel",
       "silence",
       "mute",
-      "moderate"
-    ]
+      "moderate",
+    ],
   },
   {
     name: "message-square-plus",
@@ -8699,8 +8695,8 @@ export const iconsData: Array<{
       "dialog",
       "feedback",
       "speech bubble",
-      "add"
-    ]
+      "add",
+    ],
   },
   {
     name: "message-square-quote",
@@ -8716,8 +8712,8 @@ export const iconsData: Array<{
       "quotation",
       "indent",
       "reply",
-      "response"
-    ]
+      "response",
+    ],
   },
   {
     name: "message-square-reply",
@@ -8730,8 +8726,8 @@ export const iconsData: Array<{
       "feedback",
       "speech bubble",
       "reply",
-      "response"
-    ]
+      "response",
+    ],
   },
   {
     name: "message-square-share",
@@ -8744,8 +8740,8 @@ export const iconsData: Array<{
       "feedback",
       "speech bubble",
       "network",
-      "forward"
-    ]
+      "forward",
+    ],
   },
   {
     name: "message-square-text",
@@ -8756,8 +8752,8 @@ export const iconsData: Array<{
       "conversation",
       "dialog",
       "feedback",
-      "speech bubble"
-    ]
+      "speech bubble",
+    ],
   },
   {
     name: "message-square-warning",
@@ -8776,8 +8772,8 @@ export const iconsData: Array<{
       "danger",
       "caution",
       "protected",
-      "exclamation mark"
-    ]
+      "exclamation mark",
+    ],
   },
   {
     name: "message-square-x",
@@ -8796,8 +8792,8 @@ export const iconsData: Array<{
       "cancel",
       "silence",
       "mute",
-      "moderate"
-    ]
+      "moderate",
+    ],
   },
   {
     name: "message-square",
@@ -8808,8 +8804,8 @@ export const iconsData: Array<{
       "conversation",
       "dialog",
       "feedback",
-      "speech bubble"
-    ]
+      "speech bubble",
+    ],
   },
   {
     name: "messages-square",
@@ -8822,13 +8818,13 @@ export const iconsData: Array<{
       "feedback",
       "speech bubbles",
       "copy",
-      "multiple"
-    ]
+      "multiple",
+    ],
   },
   {
     name: "mic-off",
     categories: ["devices", "communication", "connectivity", "multimedia"],
-    tags: ["record", "sound", "mute", "microphone"]
+    tags: ["record", "sound", "mute", "microphone"],
   },
   {
     name: "mic-vocal",
@@ -8843,13 +8839,13 @@ export const iconsData: Array<{
       "podcast",
       "karaoke",
       "singing",
-      "microphone"
-    ]
+      "microphone",
+    ],
   },
   {
     name: "mic",
     categories: ["devices", "communication", "connectivity", "multimedia"],
-    tags: ["record", "sound", "listen", "radio", "podcast", "microphone"]
+    tags: ["record", "sound", "listen", "radio", "podcast", "microphone"],
   },
   {
     name: "microchip",
@@ -8866,18 +8862,18 @@ export const iconsData: Array<{
       "specs",
       "gpu",
       "gigahertz",
-      "ghz"
-    ]
+      "ghz",
+    ],
   },
   {
     name: "microscope",
     categories: ["science", "medical"],
-    tags: ["medical", "education", "science", "imaging", "research"]
+    tags: ["medical", "education", "science", "imaging", "research"],
   },
   {
     name: "microwave",
     categories: ["food-beverage", "home"],
-    tags: ["oven", "cooker", "toaster oven", "bake"]
+    tags: ["oven", "cooker", "toaster oven", "bake"],
   },
   {
     name: "milestone",
@@ -8889,8 +8885,8 @@ export const iconsData: Array<{
       "east",
       "forward",
       "version control",
-      "waypoint"
-    ]
+      "waypoint",
+    ],
   },
   {
     name: "milk-off",
@@ -8903,23 +8899,23 @@ export const iconsData: Array<{
       "water",
       "allergy",
       "intolerance",
-      "diet"
-    ]
+      "diet",
+    ],
   },
   {
     name: "milk",
     categories: ["food-beverage"],
-    tags: ["lactose", "bottle", "beverage", "drink", "water", "diet"]
+    tags: ["lactose", "bottle", "beverage", "drink", "water", "diet"],
   },
   {
     name: "minimize-2",
     categories: ["arrows", "layout", "design"],
-    tags: ["exit fullscreen", "arrows", "close", "shrink"]
+    tags: ["exit fullscreen", "arrows", "close", "shrink"],
   },
   {
     name: "minimize",
     categories: ["layout", "design"],
-    tags: ["exit fullscreen", "close", "shrink"]
+    tags: ["exit fullscreen", "close", "shrink"],
   },
   {
     name: "minus",
@@ -8946,8 +8942,8 @@ export const iconsData: Array<{
       "code",
       "coding",
       "minimum",
-      "downgrade"
-    ]
+      "downgrade",
+    ],
   },
   {
     name: "monitor-check",
@@ -8960,8 +8956,8 @@ export const iconsData: Array<{
       "running",
       "active",
       "virtual machine",
-      "vm"
-    ]
+      "vm",
+    ],
   },
   {
     name: "monitor-cog",
@@ -8982,8 +8978,8 @@ export const iconsData: Array<{
       "system",
       "control panel",
       "network",
-      "computing"
-    ]
+      "computing",
+    ],
   },
   {
     name: "monitor-dot",
@@ -8996,18 +8992,18 @@ export const iconsData: Array<{
       "running",
       "active",
       "virtual machine",
-      "vm"
-    ]
+      "vm",
+    ],
   },
   {
     name: "monitor-down",
     categories: ["connectivity", "devices"],
-    tags: ["tv", "screen", "display", "desktop", "download"]
+    tags: ["tv", "screen", "display", "desktop", "download"],
   },
   {
     name: "monitor-off",
     categories: ["connectivity", "devices"],
-    tags: ["share"]
+    tags: ["share"],
   },
   {
     name: "monitor-pause",
@@ -9024,8 +9020,8 @@ export const iconsData: Array<{
       "hibernate",
       "boot",
       "virtual machine",
-      "vm"
-    ]
+      "vm",
+    ],
   },
   {
     name: "monitor-play",
@@ -9042,8 +9038,8 @@ export const iconsData: Array<{
       "start",
       "boot",
       "virtual machine",
-      "vm"
-    ]
+      "vm",
+    ],
   },
   {
     name: "monitor-smartphone",
@@ -9057,13 +9053,13 @@ export const iconsData: Array<{
       "desktop",
       "monitor",
       "responsive",
-      "screens"
-    ]
+      "screens",
+    ],
   },
   {
     name: "monitor-speaker",
     categories: ["connectivity", "devices"],
-    tags: ["devices", "connect", "cast"]
+    tags: ["devices", "connect", "cast"],
   },
   {
     name: "monitor-stop",
@@ -9079,8 +9075,8 @@ export const iconsData: Array<{
       "stop",
       "shutdown",
       "virtual machine",
-      "vm"
-    ]
+      "vm",
+    ],
   },
   {
     name: "monitor-up",
@@ -9092,8 +9088,8 @@ export const iconsData: Array<{
       "upload",
       "connect",
       "remote",
-      "screen share"
-    ]
+      "screen share",
+    ],
   },
   {
     name: "monitor-x",
@@ -9109,193 +9105,193 @@ export const iconsData: Array<{
       "stop",
       "suspend",
       "remove",
-      "delete"
-    ]
+      "delete",
+    ],
   },
   {
     name: "monitor",
     categories: ["connectivity", "devices"],
-    tags: ["tv", "screen", "display", "virtual machine", "vm"]
+    tags: ["tv", "screen", "display", "virtual machine", "vm"],
   },
   {
     name: "moon-star",
     categories: ["accessibility", "weather"],
-    tags: ["dark", "night", "star"]
+    tags: ["dark", "night", "star"],
   },
   {
     name: "moon",
     categories: ["accessibility"],
-    tags: ["dark", "night"]
+    tags: ["dark", "night"],
   },
   {
     name: "mountain-snow",
     categories: ["nature"],
-    tags: ["alpine", "climb", "snow"]
+    tags: ["alpine", "climb", "snow"],
   },
   {
     name: "mountain",
     categories: ["nature", "gaming"],
-    tags: ["climb", "hike", "rock"]
+    tags: ["climb", "hike", "rock"],
   },
   {
     name: "mouse-off",
     categories: ["devices"],
-    tags: ["device", "scroll", "click", "disabled"]
+    tags: ["device", "scroll", "click", "disabled"],
   },
   {
     name: "mouse-pointer-2",
     categories: ["arrows", "cursors"],
-    tags: ["click", "select"]
+    tags: ["click", "select"],
   },
   {
     name: "mouse-pointer-ban",
     categories: ["arrows", "cursors"],
-    tags: ["wait", "busy", "loading", "blocked", "frozen", "freeze"]
+    tags: ["wait", "busy", "loading", "blocked", "frozen", "freeze"],
   },
   {
     name: "mouse-pointer-click",
     categories: ["arrows", "cursors"],
-    tags: ["click", "select"]
+    tags: ["click", "select"],
   },
   {
     name: "mouse-pointer",
     categories: ["arrows", "cursors"],
-    tags: ["click", "select"]
+    tags: ["click", "select"],
   },
   {
     name: "mouse",
     categories: ["devices"],
-    tags: ["device", "scroll", "click"]
+    tags: ["device", "scroll", "click"],
   },
   {
     name: "move-3d",
     categories: ["design"],
-    tags: ["arrows", "axis", "gizmo", "coordinates", "transform", "translate"]
+    tags: ["arrows", "axis", "gizmo", "coordinates", "transform", "translate"],
   },
   {
     name: "move-diagonal-2",
     categories: ["arrows", "cursors"],
-    tags: ["double", "arrow"]
+    tags: ["double", "arrow"],
   },
   {
     name: "move-diagonal",
     categories: ["arrows", "cursors"],
-    tags: ["double", "arrow"]
+    tags: ["double", "arrow"],
   },
   {
     name: "move-down-left",
     categories: ["arrows"],
-    tags: ["arrow", "direction"]
+    tags: ["arrow", "direction"],
   },
   {
     name: "move-down-right",
     categories: ["arrows"],
-    tags: ["arrow", "direction"]
+    tags: ["arrow", "direction"],
   },
   {
     name: "move-down",
     categories: ["arrows"],
-    tags: ["arrow", "direction", "downwards", "south"]
+    tags: ["arrow", "direction", "downwards", "south"],
   },
   {
     name: "move-horizontal",
     categories: ["arrows", "cursors"],
-    tags: ["double", "arrow"]
+    tags: ["double", "arrow"],
   },
   {
     name: "move-left",
     categories: ["arrows"],
-    tags: ["arrow", "direction", "back", "west"]
+    tags: ["arrow", "direction", "back", "west"],
   },
   {
     name: "move-right",
     categories: ["arrows"],
-    tags: ["arrow", "direction", "trend flat", "east"]
+    tags: ["arrow", "direction", "trend flat", "east"],
   },
   {
     name: "move-up-left",
     categories: ["arrows"],
-    tags: ["arrow", "direction"]
+    tags: ["arrow", "direction"],
   },
   {
     name: "move-up-right",
     categories: ["arrows"],
-    tags: ["arrow", "direction"]
+    tags: ["arrow", "direction"],
   },
   {
     name: "move-up",
     categories: ["arrows"],
-    tags: ["arrow", "direction", "upwards", "north"]
+    tags: ["arrow", "direction", "upwards", "north"],
   },
   {
     name: "move-vertical",
     categories: ["arrows", "cursors"],
-    tags: ["double", "arrow"]
+    tags: ["double", "arrow"],
   },
   {
     name: "move",
     categories: ["arrows", "cursors"],
-    tags: ["arrows"]
+    tags: ["arrows"],
   },
   {
     name: "music-2",
     categories: ["multimedia", "files"],
-    tags: ["quaver", "eighth note", "note"]
+    tags: ["quaver", "eighth note", "note"],
   },
   {
     name: "music-3",
     categories: ["multimedia", "files"],
-    tags: ["crotchet", "minim", "quarter note", "half note", "note"]
+    tags: ["crotchet", "minim", "quarter note", "half note", "note"],
   },
   {
     name: "music-4",
     categories: ["multimedia", "files"],
-    tags: ["semiquaver", "sixteenth note", "note"]
+    tags: ["semiquaver", "sixteenth note", "note"],
   },
   {
     name: "music",
     categories: ["multimedia", "files"],
-    tags: ["note", "quaver", "eighth note"]
+    tags: ["note", "quaver", "eighth note"],
   },
   {
     name: "navigation-2-off",
     categories: ["navigation"],
-    tags: ["location", "travel"]
+    tags: ["location", "travel"],
   },
   {
     name: "navigation-2",
     categories: ["navigation"],
-    tags: ["location", "travel"]
+    tags: ["location", "travel"],
   },
   {
     name: "navigation-off",
     categories: ["navigation"],
-    tags: ["location", "travel"]
+    tags: ["location", "travel"],
   },
   {
     name: "navigation",
     categories: ["navigation"],
-    tags: ["location", "travel"]
+    tags: ["location", "travel"],
   },
   {
     name: "network",
     categories: ["development"],
-    tags: ["tree"]
+    tags: ["tree"],
   },
   {
     name: "newspaper",
     categories: ["multimedia", "communication"],
-    tags: ["news", "feed", "home", "magazine", "article", "headline"]
+    tags: ["news", "feed", "home", "magazine", "article", "headline"],
   },
   {
     name: "nfc",
     categories: ["communication", "finance", "devices"],
-    tags: ["contactless", "payment", "near-field communication"]
+    tags: ["contactless", "payment", "near-field communication"],
   },
   {
     name: "non-binary",
     categories: ["medical"],
-    tags: ["gender", "nonbinary", "enby"]
+    tags: ["gender", "nonbinary", "enby"],
   },
   {
     name: "notebook-pen",
@@ -9325,8 +9321,8 @@ export const iconsData: Array<{
       "research",
       "homework",
       "eraser",
-      "rubber"
-    ]
+      "rubber",
+    ],
   },
   {
     name: "notebook-tabs",
@@ -9351,8 +9347,8 @@ export const iconsData: Array<{
       "organiser",
       "planner",
       "diary",
-      "stationery"
-    ]
+      "stationery",
+    ],
   },
   {
     name: "notebook-text",
@@ -9382,8 +9378,8 @@ export const iconsData: Array<{
       "research",
       "homework",
       "lines",
-      "opened"
-    ]
+      "opened",
+    ],
   },
   {
     name: "notebook",
@@ -9414,8 +9410,8 @@ export const iconsData: Array<{
       "student",
       "study",
       "homework",
-      "research"
-    ]
+      "research",
+    ],
   },
   {
     name: "notepad-text-dashed",
@@ -9433,8 +9429,8 @@ export const iconsData: Array<{
       "written",
       "draft",
       "template",
-      "lines"
-    ]
+      "lines",
+    ],
   },
   {
     name: "notepad-text",
@@ -9464,23 +9460,23 @@ export const iconsData: Array<{
       "homework",
       "research",
       "lines",
-      "opened"
-    ]
+      "opened",
+    ],
   },
   {
     name: "nut-off",
     categories: ["food-beverage"],
-    tags: ["hazelnut", "acorn", "food", "allergy", "intolerance", "diet"]
+    tags: ["hazelnut", "acorn", "food", "allergy", "intolerance", "diet"],
   },
   {
     name: "nut",
     categories: ["food-beverage"],
-    tags: ["hazelnut", "acorn", "food", "diet"]
+    tags: ["hazelnut", "acorn", "food", "diet"],
   },
   {
     name: "octagon-alert",
     categories: ["notifications", "shapes"],
-    tags: ["warning", "alert", "danger", "exclamation mark"]
+    tags: ["warning", "alert", "danger", "exclamation mark"],
   },
   {
     name: "octagon-minus",
@@ -9495,23 +9491,23 @@ export const iconsData: Array<{
       "-",
       "traffic",
       "halt",
-      "restricted"
-    ]
+      "restricted",
+    ],
   },
   {
     name: "octagon-pause",
     categories: ["multimedia", "shapes"],
-    tags: ["music", "audio", "stop"]
+    tags: ["music", "audio", "stop"],
   },
   {
     name: "octagon-x",
     categories: ["math", "notifications"],
-    tags: ["delete", "stop", "alert", "warning", "times", "clear", "math"]
+    tags: ["delete", "stop", "alert", "warning", "times", "clear", "math"],
   },
   {
     name: "octagon",
     categories: ["shapes"],
-    tags: ["stop", "shape"]
+    tags: ["stop", "shape"],
   },
   {
     name: "omega",
@@ -9529,23 +9525,23 @@ export const iconsData: Array<{
       "dynamical systems",
       "astronomy",
       "constellations",
-      "philosophy"
-    ]
+      "philosophy",
+    ],
   },
   {
     name: "option",
     categories: ["development"],
-    tags: ["keyboard", "key", "mac", "alt", "button"]
+    tags: ["keyboard", "key", "mac", "alt", "button"],
   },
   {
     name: "orbit",
     categories: ["science"],
-    tags: ["planet", "space", "physics", "satellites", "moons"]
+    tags: ["planet", "space", "physics", "satellites", "moons"],
   },
   {
     name: "origami",
     categories: ["animals", "design"],
-    tags: ["paper", "bird"]
+    tags: ["paper", "bird"],
   },
   {
     name: "package-2",
@@ -9559,8 +9555,8 @@ export const iconsData: Array<{
       "unopened",
       "undelivered",
       "archive",
-      "zip"
-    ]
+      "zip",
+    ],
   },
   {
     name: "package-check",
@@ -9573,13 +9569,13 @@ export const iconsData: Array<{
       "tick",
       "complete",
       "task",
-      "delivered"
-    ]
+      "delivered",
+    ],
   },
   {
     name: "package-minus",
     categories: ["development"],
-    tags: ["delete", "remove"]
+    tags: ["delete", "remove"],
   },
   {
     name: "package-open",
@@ -9592,23 +9588,23 @@ export const iconsData: Array<{
       "unarchive",
       "unzip",
       "opened",
-      "delivered"
-    ]
+      "delivered",
+    ],
   },
   {
     name: "package-plus",
     categories: ["development"],
-    tags: ["new", "add", "create"]
+    tags: ["new", "add", "create"],
   },
   {
     name: "package-search",
     categories: ["files", "development"],
-    tags: ["find", "product process"]
+    tags: ["find", "product process"],
   },
   {
     name: "package-x",
     categories: ["development"],
-    tags: ["delete", "remove"]
+    tags: ["delete", "remove"],
   },
   {
     name: "package",
@@ -9624,18 +9620,18 @@ export const iconsData: Array<{
       "packed",
       "archive",
       "zip",
-      "module"
-    ]
+      "module",
+    ],
   },
   {
     name: "paint-bucket",
     categories: ["design", "tools"],
-    tags: ["fill", "paint", "bucket", "color", "colour"]
+    tags: ["fill", "paint", "bucket", "color", "colour"],
   },
   {
     name: "paint-roller",
     categories: ["text", "design", "home", "tools"],
-    tags: ["brush", "color", "colour", "decoration", "diy"]
+    tags: ["brush", "color", "colour", "decoration", "diy"],
   },
   {
     name: "paintbrush-vertical",
@@ -9647,8 +9643,8 @@ export const iconsData: Array<{
       "color",
       "colour",
       "decoration",
-      "diy"
-    ]
+      "diy",
+    ],
   },
   {
     name: "paintbrush",
@@ -9660,8 +9656,8 @@ export const iconsData: Array<{
       "color",
       "colour",
       "decoration",
-      "diy"
-    ]
+      "diy",
+    ],
   },
   {
     name: "palette",
@@ -9674,58 +9670,58 @@ export const iconsData: Array<{
       "paint",
       "watercolor",
       "watercolour",
-      "artist"
-    ]
+      "artist",
+    ],
   },
   {
     name: "panel-bottom-close",
     categories: ["layout", "arrows"],
-    tags: ["drawer", "dock", "hide", "chevron", "down"]
+    tags: ["drawer", "dock", "hide", "chevron", "down"],
   },
   {
     name: "panel-bottom-dashed",
     categories: ["layout"],
-    tags: ["drawer", "dock", "show", "reveal"]
+    tags: ["drawer", "dock", "show", "reveal"],
   },
   {
     name: "panel-bottom-open",
     categories: ["layout", "arrows"],
-    tags: ["drawer", "dock", "show", "reveal", "chevron", "up"]
+    tags: ["drawer", "dock", "show", "reveal", "chevron", "up"],
   },
   {
     name: "panel-bottom",
     categories: ["layout"],
-    tags: ["drawer", "dock"]
+    tags: ["drawer", "dock"],
   },
   {
     name: "panel-left-close",
     categories: ["layout", "arrows"],
-    tags: ["primary", "drawer", "hide", "chevron", "<"]
+    tags: ["primary", "drawer", "hide", "chevron", "<"],
   },
   {
     name: "panel-left-dashed",
     categories: ["layout"],
-    tags: ["sidebar", "primary", "drawer", "show", "reveal"]
+    tags: ["sidebar", "primary", "drawer", "show", "reveal"],
   },
   {
     name: "panel-left-open",
     categories: ["layout", "arrows"],
-    tags: ["primary", "drawer", "show", "reveal", "chevron", "right", ">"]
+    tags: ["primary", "drawer", "show", "reveal", "chevron", "right", ">"],
   },
   {
     name: "panel-left",
     categories: ["layout"],
-    tags: ["primary", "drawer"]
+    tags: ["primary", "drawer"],
   },
   {
     name: "panel-right-close",
     categories: ["layout", "arrows"],
-    tags: ["sidebar", "secondary", "drawer", "hide", "chevron", ">"]
+    tags: ["sidebar", "secondary", "drawer", "hide", "chevron", ">"],
   },
   {
     name: "panel-right-dashed",
     categories: ["layout"],
-    tags: ["sidebar", "secondary", "drawer", "show", "reveal"]
+    tags: ["sidebar", "secondary", "drawer", "show", "reveal"],
   },
   {
     name: "panel-right-open",
@@ -9738,43 +9734,43 @@ export const iconsData: Array<{
       "reveal",
       "chevron",
       "left",
-      "<"
-    ]
+      "<",
+    ],
   },
   {
     name: "panel-right",
     categories: ["layout"],
-    tags: ["sidebar", "secondary", "drawer"]
+    tags: ["sidebar", "secondary", "drawer"],
   },
   {
     name: "panel-top-close",
     categories: ["layout", "arrows"],
-    tags: ["menu bar", "drawer", "hide", "chevron", "up"]
+    tags: ["menu bar", "drawer", "hide", "chevron", "up"],
   },
   {
     name: "panel-top-dashed",
     categories: ["layout"],
-    tags: ["menu bar", "drawer", "show", "reveal"]
+    tags: ["menu bar", "drawer", "show", "reveal"],
   },
   {
     name: "panel-top-open",
     categories: ["layout", "arrows"],
-    tags: ["menu bar", "drawer", "show", "reveal", "chevron", "down"]
+    tags: ["menu bar", "drawer", "show", "reveal", "chevron", "down"],
   },
   {
     name: "panel-top",
     categories: ["layout", "design", "development"],
-    tags: ["drawer", "browser", "webpage"]
+    tags: ["drawer", "browser", "webpage"],
   },
   {
     name: "panels-left-bottom",
     categories: ["layout"],
-    tags: ["drawers", "sidebar", "primary"]
+    tags: ["drawers", "sidebar", "primary"],
   },
   {
     name: "panels-right-bottom",
     categories: ["layout"],
-    tags: ["drawers", "sidebar", "secondary"]
+    tags: ["drawers", "sidebar", "secondary"],
   },
   {
     name: "panels-top-left",
@@ -9787,13 +9783,13 @@ export const iconsData: Array<{
       "window",
       "webpage",
       "projects",
-      "overview"
-    ]
+      "overview",
+    ],
   },
   {
     name: "paperclip",
     categories: ["text", "design", "files", "mail"],
-    tags: ["attachment", "file"]
+    tags: ["attachment", "file"],
   },
   {
     name: "parentheses",
@@ -9813,13 +9809,13 @@ export const iconsData: Array<{
       "formula",
       "function",
       "(",
-      ")"
-    ]
+      ")",
+    ],
   },
   {
     name: "parking-meter",
     categories: ["transportation", "navigation"],
-    tags: ["driving", "car park", "pay", "sidewalk", "pavement"]
+    tags: ["driving", "car park", "pay", "sidewalk", "pavement"],
   },
   {
     name: "party-popper",
@@ -9835,23 +9831,31 @@ export const iconsData: Array<{
       "excitement",
       "exciting",
       "excites",
-      "confetti"
-    ]
+      "confetti",
+    ],
   },
   {
     name: "pause",
     categories: ["multimedia"],
-    tags: ["music", "stop"]
+    tags: ["music", "stop"],
   },
   {
     name: "paw-print",
     categories: ["animals"],
-    tags: ["pets", "vets", "veterinarian", "domesticated", "cat", "dog", "bear"]
+    tags: [
+      "pets",
+      "vets",
+      "veterinarian",
+      "domesticated",
+      "cat",
+      "dog",
+      "bear",
+    ],
   },
   {
     name: "pc-case",
     categories: ["devices", "gaming"],
-    tags: ["computer", "chassis"]
+    tags: ["computer", "chassis"],
   },
   {
     name: "pen-line",
@@ -9868,8 +9872,8 @@ export const iconsData: Array<{
       "marker",
       "felt tip",
       "stationery",
-      "artist"
-    ]
+      "artist",
+    ],
   },
   {
     name: "pen-off",
@@ -9894,13 +9898,13 @@ export const iconsData: Array<{
       "marker",
       "felt tip",
       "stationery",
-      "artist"
-    ]
+      "artist",
+    ],
   },
   {
     name: "pen-tool",
     categories: ["text", "design", "cursors"],
-    tags: ["vector", "drawing", "path"]
+    tags: ["vector", "drawing", "path"],
   },
   {
     name: "pen",
@@ -9917,8 +9921,8 @@ export const iconsData: Array<{
       "marker",
       "felt tip",
       "stationery",
-      "artist"
-    ]
+      "artist",
+    ],
   },
   {
     name: "pencil-line",
@@ -9937,8 +9941,8 @@ export const iconsData: Array<{
       "marker",
       "felt tip",
       "stationery",
-      "artist"
-    ]
+      "artist",
+    ],
   },
   {
     name: "pencil-off",
@@ -9961,8 +9965,8 @@ export const iconsData: Array<{
       "writer",
       "writing",
       "stationery",
-      "artist"
-    ]
+      "artist",
+    ],
   },
   {
     name: "pencil-ruler",
@@ -9994,8 +9998,8 @@ export const iconsData: Array<{
       "dimensions",
       "depth",
       "breadth",
-      "extent"
-    ]
+      "extent",
+    ],
   },
   {
     name: "pencil",
@@ -10010,13 +10014,13 @@ export const iconsData: Array<{
       "writer",
       "writing",
       "stationery",
-      "artist"
-    ]
+      "artist",
+    ],
   },
   {
     name: "pentagon",
     categories: ["shapes"],
-    tags: ["shape"]
+    tags: ["shape"],
   },
   {
     name: "percent",
@@ -10030,53 +10034,53 @@ export const iconsData: Array<{
       "sale",
       "discount",
       "offer",
-      "marketing"
-    ]
+      "marketing",
+    ],
   },
   {
     name: "person-standing",
     categories: ["accessibility", "people"],
-    tags: ["people", "human", "accessibility", "stick figure"]
+    tags: ["people", "human", "accessibility", "stick figure"],
   },
   {
     name: "philippine-peso",
     categories: ["finance"],
-    tags: ["currency", "peso", "money", "php"]
+    tags: ["currency", "peso", "money", "php"],
   },
   {
     name: "phone-call",
     categories: ["connectivity", "devices", "communication"],
-    tags: ["ring"]
+    tags: ["ring"],
   },
   {
     name: "phone-forwarded",
     categories: ["arrows", "connectivity", "devices", "communication"],
-    tags: ["call"]
+    tags: ["call"],
   },
   {
     name: "phone-incoming",
     categories: ["arrows", "connectivity", "devices", "communication"],
-    tags: ["call"]
+    tags: ["call"],
   },
   {
     name: "phone-missed",
     categories: ["connectivity", "devices", "communication"],
-    tags: ["call"]
+    tags: ["call"],
   },
   {
     name: "phone-off",
     categories: ["connectivity", "devices", "communication"],
-    tags: ["call", "mute"]
+    tags: ["call", "mute"],
   },
   {
     name: "phone-outgoing",
     categories: ["arrows", "connectivity", "devices", "communication"],
-    tags: ["call"]
+    tags: ["call"],
   },
   {
     name: "phone",
     categories: ["text", "connectivity", "devices", "communication"],
-    tags: ["call"]
+    tags: ["call"],
   },
   {
     name: "pi",
@@ -10089,8 +10093,8 @@ export const iconsData: Array<{
       "symbol",
       "trigonometry",
       "geometry",
-      "formula"
-    ]
+      "formula",
+    ],
   },
   {
     name: "piano",
@@ -10109,8 +10113,8 @@ export const iconsData: Array<{
       "play",
       "pianist",
       "performance",
-      "concert"
-    ]
+      "concert",
+    ],
   },
   {
     name: "pickaxe",
@@ -10126,8 +10130,8 @@ export const iconsData: Array<{
       "advancement",
       "crafting",
       "building",
-      "creation"
-    ]
+      "creation",
+    ],
   },
   {
     name: "picture-in-picture-2",
@@ -10140,8 +10144,8 @@ export const iconsData: Array<{
       "always on top",
       "window",
       "inset",
-      "multitask"
-    ]
+      "multitask",
+    ],
   },
   {
     name: "picture-in-picture",
@@ -10154,13 +10158,13 @@ export const iconsData: Array<{
       "always on top",
       "window",
       "inset",
-      "multitask"
-    ]
+      "multitask",
+    ],
   },
   {
     name: "piggy-bank",
     categories: ["finance"],
-    tags: ["money", "savings"]
+    tags: ["money", "savings"],
   },
   {
     name: "pilcrow-left",
@@ -10175,8 +10179,8 @@ export const iconsData: Array<{
       "type",
       "text",
       "prose",
-      "symbol"
-    ]
+      "symbol",
+    ],
   },
   {
     name: "pilcrow-right",
@@ -10191,8 +10195,8 @@ export const iconsData: Array<{
       "type",
       "text",
       "prose",
-      "symbol"
-    ]
+      "symbol",
+    ],
   },
   {
     name: "pilcrow",
@@ -10206,8 +10210,8 @@ export const iconsData: Array<{
       "type",
       "text",
       "prose",
-      "symbol"
-    ]
+      "symbol",
+    ],
   },
   {
     name: "pill-bottle",
@@ -10224,8 +10228,8 @@ export const iconsData: Array<{
       "container",
       "healthcare",
       "pharmaceutical",
-      "tablet"
-    ]
+      "tablet",
+    ],
   },
   {
     name: "pill",
@@ -10236,53 +10240,53 @@ export const iconsData: Array<{
       "drug",
       "prescription",
       "tablet",
-      "pharmacy"
-    ]
+      "pharmacy",
+    ],
   },
   {
     name: "pin-off",
     categories: ["navigation"],
-    tags: ["unpin", "map", "unlock", "unfix", "unsave", "remove"]
+    tags: ["unpin", "map", "unlock", "unfix", "unsave", "remove"],
   },
   {
     name: "pin",
     categories: ["navigation", "account"],
-    tags: ["save", "map", "lock", "fix"]
+    tags: ["save", "map", "lock", "fix"],
   },
   {
     name: "pipette",
     categories: ["text", "design", "science"],
-    tags: ["eye dropper", "color picker", "lab", "chemistry"]
+    tags: ["eye dropper", "color picker", "lab", "chemistry"],
   },
   {
     name: "pizza",
     categories: ["food-beverage"],
-    tags: ["pie", "quiche", "food"]
+    tags: ["pie", "quiche", "food"],
   },
   {
     name: "plane-landing",
     categories: ["transportation", "travel"],
-    tags: ["arrival", "plane", "trip", "airplane", "landing"]
+    tags: ["arrival", "plane", "trip", "airplane", "landing"],
   },
   {
     name: "plane-takeoff",
     categories: ["transportation", "travel"],
-    tags: ["departure", "plane", "trip", "airplane", "takeoff"]
+    tags: ["departure", "plane", "trip", "airplane", "takeoff"],
   },
   {
     name: "plane",
     categories: ["transportation", "travel"],
-    tags: ["plane", "trip", "airplane"]
+    tags: ["plane", "trip", "airplane"],
   },
   {
     name: "play",
     categories: ["arrows", "multimedia"],
-    tags: ["music", "audio", "video", "start", "run"]
+    tags: ["music", "audio", "video", "start", "run"],
   },
   {
     name: "plug-2",
     categories: ["devices", "development"],
-    tags: ["electricity", "energy", "socket", "outlet"]
+    tags: ["electricity", "energy", "socket", "outlet"],
   },
   {
     name: "plug-zap",
@@ -10294,13 +10298,13 @@ export const iconsData: Array<{
       "charge",
       "charging",
       "battery",
-      "connect"
-    ]
+      "connect",
+    ],
   },
   {
     name: "plug",
     categories: ["devices", "development"],
-    tags: ["electricity", "energy", "electronics", "socket", "outlet"]
+    tags: ["electricity", "energy", "electronics", "socket", "outlet"],
   },
   {
     name: "plus",
@@ -10322,8 +10326,8 @@ export const iconsData: Array<{
       "maximum",
       "upgrade",
       "extra",
-      "+"
-    ]
+      "+",
+    ],
   },
   {
     name: "pocket-knife",
@@ -10336,13 +10340,13 @@ export const iconsData: Array<{
       "blade",
       "cutter",
       "gadget",
-      "corkscrew"
-    ]
+      "corkscrew",
+    ],
   },
   {
     name: "pocket",
     categories: ["brands"],
-    tags: ["logo", "save"]
+    tags: ["logo", "save"],
   },
   {
     name: "podcast",
@@ -10355,18 +10359,18 @@ export const iconsData: Array<{
       "voice",
       "subscribe",
       "subscription",
-      "stream"
-    ]
+      "stream",
+    ],
   },
   {
     name: "pointer-off",
     categories: ["cursors"],
-    tags: ["mouse"]
+    tags: ["mouse"],
   },
   {
     name: "pointer",
     categories: ["cursors"],
-    tags: ["mouse"]
+    tags: ["mouse"],
   },
   {
     name: "popcorn",
@@ -10379,23 +10383,23 @@ export const iconsData: Array<{
       "sweet",
       "sugar",
       "candy",
-      "snack"
-    ]
+      "snack",
+    ],
   },
   {
     name: "popsicle",
     categories: ["food-beverage"],
-    tags: ["ice lolly", "ice cream", "sweet", "food"]
+    tags: ["ice lolly", "ice cream", "sweet", "food"],
   },
   {
     name: "pound-sterling",
     categories: ["finance"],
-    tags: ["currency", "money", "payment"]
+    tags: ["currency", "money", "payment"],
   },
   {
     name: "power-off",
     categories: ["connectivity"],
-    tags: ["on", "off", "device", "switch"]
+    tags: ["on", "off", "device", "switch"],
   },
   {
     name: "power",
@@ -10412,8 +10416,8 @@ export const iconsData: Array<{
       "restart",
       "button",
       "keyboard",
-      "troubleshoot"
-    ]
+      "troubleshoot",
+    ],
   },
   {
     name: "presentation",
@@ -10422,7 +10426,7 @@ export const iconsData: Array<{
       "photography",
       "devices",
       "communication",
-      "design"
+      "design",
     ],
     tags: [
       "screen",
@@ -10438,18 +10442,18 @@ export const iconsData: Array<{
       "office",
       "meeting",
       "project",
-      "planning"
-    ]
+      "planning",
+    ],
   },
   {
     name: "printer-check",
     categories: ["devices"],
-    tags: ["fax", "office", "device", "success", "printed"]
+    tags: ["fax", "office", "device", "success", "printed"],
   },
   {
     name: "printer",
     categories: ["devices"],
-    tags: ["fax", "office", "device"]
+    tags: ["fax", "office", "device"],
   },
   {
     name: "projector",
@@ -10464,8 +10468,8 @@ export const iconsData: Array<{
       "office",
       "meeting",
       "project",
-      "planning"
-    ]
+      "planning",
+    ],
   },
   {
     name: "proportions",
@@ -10488,13 +10492,13 @@ export const iconsData: Array<{
       "monitor",
       "orientation",
       "portrait",
-      "landscape"
-    ]
+      "landscape",
+    ],
   },
   {
     name: "puzzle",
     categories: ["development", "gaming"],
-    tags: ["component", "module", "part", "piece"]
+    tags: ["component", "module", "part", "piece"],
   },
   {
     name: "pyramid",
@@ -10509,18 +10513,18 @@ export const iconsData: Array<{
       "ancient",
       "egyptian",
       "landmark",
-      "tourism"
-    ]
+      "tourism",
+    ],
   },
   {
     name: "qr-code",
     categories: ["development", "social"],
-    tags: ["barcode", "scan", "link", "url", "information", "digital"]
+    tags: ["barcode", "scan", "link", "url", "information", "digital"],
   },
   {
     name: "quote",
     categories: ["text"],
-    tags: ["quotation"]
+    tags: ["quotation"],
   },
   {
     name: "rabbit",
@@ -10534,13 +10538,13 @@ export const iconsData: Array<{
       "hare",
       "fast",
       "speed",
-      "hop"
-    ]
+      "hop",
+    ],
   },
   {
     name: "radar",
     categories: ["navigation", "security", "communication"],
-    tags: ["scan", "sonar", "detect", "find", "locate"]
+    tags: ["scan", "sonar", "detect", "find", "locate"],
   },
   {
     name: "radiation",
@@ -10554,8 +10558,8 @@ export const iconsData: Array<{
       "physics",
       "particle",
       "element",
-      "molecule"
-    ]
+      "molecule",
+    ],
   },
   {
     name: "radical",
@@ -10567,23 +10571,23 @@ export const iconsData: Array<{
       "operator",
       "root",
       "square",
-      "symbol"
-    ]
+      "symbol",
+    ],
   },
   {
     name: "radio-receiver",
     categories: ["devices"],
-    tags: ["device", "music", "connect"]
+    tags: ["device", "music", "connect"],
   },
   {
     name: "radio-tower",
     categories: ["devices", "multimedia", "social"],
-    tags: ["signal", "broadcast", "connectivity", "live", "frequency"]
+    tags: ["signal", "broadcast", "connectivity", "live", "frequency"],
   },
   {
     name: "radio",
     categories: ["devices", "multimedia", "social"],
-    tags: ["signal", "broadcast", "connectivity", "live", "frequency"]
+    tags: ["signal", "broadcast", "connectivity", "live", "frequency"],
   },
   {
     name: "radius",
@@ -10596,13 +10600,13 @@ export const iconsData: Array<{
       "radii",
       "calculate",
       "measure",
-      "size"
-    ]
+      "size",
+    ],
   },
   {
     name: "rail-symbol",
     categories: ["transportation", "navigation"],
-    tags: ["railway", "train", "track", "line"]
+    tags: ["railway", "train", "track", "line"],
   },
   {
     name: "rainbow",
@@ -10615,8 +10619,8 @@ export const iconsData: Array<{
       "prism",
       "arc",
       "clear",
-      "sunshine"
-    ]
+      "sunshine",
+    ],
   },
   {
     name: "rat",
@@ -10629,8 +10633,8 @@ export const iconsData: Array<{
       "pet",
       "pest",
       "plague",
-      "disease"
-    ]
+      "disease",
+    ],
   },
   {
     name: "ratio",
@@ -10654,8 +10658,8 @@ export const iconsData: Array<{
       "monitor",
       "orientation",
       "portrait",
-      "landscape"
-    ]
+      "landscape",
+    ],
   },
   {
     name: "receipt-cent",
@@ -10671,13 +10675,13 @@ export const iconsData: Array<{
       "dollar",
       "usd",
       "$",
-      "¢"
-    ]
+      "¢",
+    ],
   },
   {
     name: "receipt-euro",
     categories: ["finance", "travel"],
-    tags: ["bill", "voucher", "slip", "check", "counterfoil", "currency", "€"]
+    tags: ["bill", "voucher", "slip", "check", "counterfoil", "currency", "€"],
   },
   {
     name: "receipt-indian-rupee",
@@ -10690,8 +10694,8 @@ export const iconsData: Array<{
       "counterfoil",
       "currency",
       "inr",
-      "₹"
-    ]
+      "₹",
+    ],
   },
   {
     name: "receipt-japanese-yen",
@@ -10704,8 +10708,8 @@ export const iconsData: Array<{
       "counterfoil",
       "currency",
       "jpy",
-      "¥"
-    ]
+      "¥",
+    ],
   },
   {
     name: "receipt-pound-sterling",
@@ -10719,8 +10723,8 @@ export const iconsData: Array<{
       "british",
       "currency",
       "gbp",
-      "£"
-    ]
+      "£",
+    ],
   },
   {
     name: "receipt-russian-ruble",
@@ -10733,8 +10737,8 @@ export const iconsData: Array<{
       "counterfoil",
       "currency",
       "rub",
-      "₽"
-    ]
+      "₽",
+    ],
   },
   {
     name: "receipt-swiss-franc",
@@ -10747,8 +10751,8 @@ export const iconsData: Array<{
       "counterfoil",
       "currency",
       "chf",
-      "₣"
-    ]
+      "₣",
+    ],
   },
   {
     name: "receipt-text",
@@ -10763,8 +10767,8 @@ export const iconsData: Array<{
       "small print",
       "terms",
       "conditions",
-      "contract"
-    ]
+      "contract",
+    ],
   },
   {
     name: "receipt",
@@ -10778,8 +10782,8 @@ export const iconsData: Array<{
       "currency",
       "dollar",
       "usd",
-      "$"
-    ]
+      "$",
+    ],
   },
   {
     name: "rectangle-ellipsis",
@@ -10811,38 +10815,38 @@ export const iconsData: Array<{
       "overflow",
       "dots",
       "…",
-      "..."
-    ]
+      "...",
+    ],
   },
   {
     name: "rectangle-horizontal",
     categories: ["shapes", "design"],
-    tags: ["rectangle", "aspect ratio", "16:9", "horizontal", "shape"]
+    tags: ["rectangle", "aspect ratio", "16:9", "horizontal", "shape"],
   },
   {
     name: "rectangle-vertical",
     categories: ["shapes", "design"],
-    tags: ["rectangle", "aspect ratio", "9:16", "vertical", "shape"]
+    tags: ["rectangle", "aspect ratio", "9:16", "vertical", "shape"],
   },
   {
     name: "recycle",
     categories: ["sustainability"],
-    tags: ["sustainability", "salvage", "arrows"]
+    tags: ["sustainability", "salvage", "arrows"],
   },
   {
     name: "redo-2",
     categories: ["text", "arrows"],
-    tags: ["undo", "rerun", "history"]
+    tags: ["undo", "rerun", "history"],
   },
   {
     name: "redo-dot",
     categories: ["text", "arrows"],
-    tags: ["redo", "history", "step", "over", "forward"]
+    tags: ["redo", "history", "step", "over", "forward"],
   },
   {
     name: "redo",
     categories: ["text", "arrows"],
-    tags: ["undo", "rerun", "history"]
+    tags: ["undo", "rerun", "history"],
   },
   {
     name: "refresh-ccw-dot",
@@ -10858,8 +10862,8 @@ export const iconsData: Array<{
       "issue",
       "code",
       "coding",
-      "version control"
-    ]
+      "version control",
+    ],
   },
   {
     name: "refresh-ccw",
@@ -10872,8 +10876,8 @@ export const iconsData: Array<{
       "synchronise",
       "synchronize",
       "circular",
-      "cycle"
-    ]
+      "cycle",
+    ],
   },
   {
     name: "refresh-cw-off",
@@ -10892,8 +10896,8 @@ export const iconsData: Array<{
       "stop",
       "error",
       "disconnect",
-      "ignore"
-    ]
+      "ignore",
+    ],
   },
   {
     name: "refresh-cw",
@@ -10906,8 +10910,8 @@ export const iconsData: Array<{
       "synchronize",
       "arrows",
       "circular",
-      "cycle"
-    ]
+      "cycle",
+    ],
   },
   {
     name: "refrigerator",
@@ -10919,13 +10923,13 @@ export const iconsData: Array<{
       "cooler",
       "icebox",
       "chiller",
-      "cold storage"
-    ]
+      "cold storage",
+    ],
   },
   {
     name: "regex",
     categories: ["text", "development"],
-    tags: ["search", "text", "code"]
+    tags: ["search", "text", "code"],
   },
   {
     name: "remove-formatting",
@@ -10939,63 +10943,63 @@ export const iconsData: Array<{
       "remove",
       "delete",
       "times",
-      "clear"
-    ]
+      "clear",
+    ],
   },
   {
     name: "repeat-1",
     categories: ["multimedia"],
-    tags: ["replay"]
+    tags: ["replay"],
   },
   {
     name: "repeat-2",
     categories: ["arrows", "social", "multimedia"],
-    tags: ["arrows", "retweet", "repost", "share", "repeat", "loop"]
+    tags: ["arrows", "retweet", "repost", "share", "repeat", "loop"],
   },
   {
     name: "repeat",
     categories: ["arrows", "multimedia"],
-    tags: ["loop", "arrows"]
+    tags: ["loop", "arrows"],
   },
   {
     name: "replace-all",
     categories: ["text"],
-    tags: ["search", "substitute", "swap", "change"]
+    tags: ["search", "substitute", "swap", "change"],
   },
   {
     name: "replace",
     categories: ["text"],
-    tags: ["search", "substitute", "swap", "change"]
+    tags: ["search", "substitute", "swap", "change"],
   },
   {
     name: "reply-all",
     categories: ["mail"],
-    tags: ["email"]
+    tags: ["email"],
   },
   {
     name: "reply",
     categories: ["mail"],
-    tags: ["email"]
+    tags: ["email"],
   },
   {
     name: "rewind",
     categories: ["arrows", "multimedia"],
-    tags: ["music"]
+    tags: ["music"],
   },
   {
     name: "ribbon",
     categories: ["social", "medical", "emoji"],
-    tags: ["awareness", "strip", "band", "tape", "strap", "cordon"]
+    tags: ["awareness", "strip", "band", "tape", "strap", "cordon"],
   },
   {
     name: "rocket",
     categories: ["gaming", "development"],
-    tags: ["release", "boost", "launch", "space", "version"]
+    tags: ["release", "boost", "launch", "space", "version"],
   },
   {
     name: "rocking-chair",
     categories: ["home"],
-    tags: ["chair", "furniture", "seat"]
+    tags: ["chair", "furniture", "seat"],
   },
   {
     name: "roller-coaster",
@@ -11005,13 +11009,13 @@ export const iconsData: Array<{
       "entertainment",
       "amusement park",
       "theme park",
-      "funfair"
-    ]
+      "funfair",
+    ],
   },
   {
     name: "rotate-3d",
     categories: ["design"],
-    tags: ["gizmo", "transform", "orientation", "orbit", "axis"]
+    tags: ["gizmo", "transform", "orientation", "orbit", "axis"],
   },
   {
     name: "rotate-ccw-square",
@@ -11024,8 +11028,8 @@ export const iconsData: Array<{
       "90",
       "45",
       "degrees",
-      "°"
-    ]
+      "°",
+    ],
   },
   {
     name: "rotate-ccw",
@@ -11044,18 +11048,18 @@ export const iconsData: Array<{
       "redo",
       "retry",
       "rewind",
-      "reverse"
-    ]
+      "reverse",
+    ],
   },
   {
     name: "rotate-cw-square",
     categories: ["layout", "design", "photography", "tools", "arrows"],
-    tags: ["right", "clockwise", "rotate", "image", "90", "45", "degrees", "°"]
+    tags: ["right", "clockwise", "rotate", "image", "90", "45", "degrees", "°"],
   },
   {
     name: "rotate-cw",
     categories: ["arrows", "design", "photography"],
-    tags: ["arrow", "right", "clockwise", "refresh", "reload", "rerun", "redo"]
+    tags: ["arrow", "right", "clockwise", "refresh", "reload", "rerun", "redo"],
   },
   {
     name: "route-off",
@@ -11071,18 +11075,18 @@ export const iconsData: Array<{
       "clear",
       "cancelled",
       "closed",
-      "blocked"
-    ]
+      "blocked",
+    ],
   },
   {
     name: "route",
     categories: ["navigation"],
-    tags: ["path", "journey", "planner", "points", "stops", "stations"]
+    tags: ["path", "journey", "planner", "points", "stops", "stations"],
   },
   {
     name: "router",
     categories: ["development", "devices", "connectivity", "home"],
-    tags: ["computer", "server", "cloud"]
+    tags: ["computer", "server", "cloud"],
   },
   {
     name: "rows-2",
@@ -11103,8 +11107,8 @@ export const iconsData: Array<{
       "center",
       "middle",
       "even",
-      "drawer"
-    ]
+      "drawer",
+    ],
   },
   {
     name: "rows-3",
@@ -11124,8 +11128,8 @@ export const iconsData: Array<{
       "center",
       "middle",
       "even",
-      "drawers"
-    ]
+      "drawers",
+    ],
   },
   {
     name: "rows-4",
@@ -11146,8 +11150,8 @@ export const iconsData: Array<{
       "middle",
       "even",
       "drawers",
-      "grill"
-    ]
+      "grill",
+    ],
   },
   {
     name: "rss",
@@ -11173,8 +11177,8 @@ export const iconsData: Array<{
       "inbox",
       "newsletter",
       "weblog",
-      "podcast"
-    ]
+      "podcast",
+    ],
   },
   {
     name: "ruler",
@@ -11198,18 +11202,18 @@ export const iconsData: Array<{
       "depth",
       "breadth",
       "extent",
-      "stationery"
-    ]
+      "stationery",
+    ],
   },
   {
     name: "russian-ruble",
     categories: ["finance"],
-    tags: ["currency", "money", "payment"]
+    tags: ["currency", "money", "payment"],
   },
   {
     name: "sailboat",
     categories: ["transportation", "travel"],
-    tags: ["ship", "boat", "harbor", "harbour", "dock"]
+    tags: ["ship", "boat", "harbor", "harbour", "dock"],
   },
   {
     name: "salad",
@@ -11223,53 +11227,53 @@ export const iconsData: Array<{
       "meal",
       "side",
       "vegetables",
-      "health"
-    ]
+      "health",
+    ],
   },
   {
     name: "sandwich",
     categories: ["food-beverage"],
-    tags: ["food", "snack", "dish", "restaurant", "lunch", "meal"]
+    tags: ["food", "snack", "dish", "restaurant", "lunch", "meal"],
   },
   {
     name: "satellite-dish",
     categories: ["connectivity", "devices", "multimedia"],
-    tags: ["antenna", "receiver", "dish aerial", "saucer"]
+    tags: ["antenna", "receiver", "dish aerial", "saucer"],
   },
   {
     name: "satellite",
     categories: ["connectivity", "science"],
-    tags: ["space station", "orbit", "transmitter"]
+    tags: ["space station", "orbit", "transmitter"],
   },
   {
     name: "save-all",
     categories: ["text", "files"],
-    tags: ["floppy disks", "copy"]
+    tags: ["floppy disks", "copy"],
   },
   {
     name: "save-off",
     categories: ["text", "files"],
-    tags: ["floppy disk", "unsalvageable"]
+    tags: ["floppy disk", "unsalvageable"],
   },
   {
     name: "save",
     categories: ["text", "files"],
-    tags: ["floppy disk"]
+    tags: ["floppy disk"],
   },
   {
     name: "scale-3d",
     categories: ["design"],
-    tags: ["gizmo", "transform", "size", "axis"]
+    tags: ["gizmo", "transform", "size", "axis"],
   },
   {
     name: "scale",
     categories: ["navigation"],
-    tags: ["balance", "legal", "license", "right", "rule", "law"]
+    tags: ["balance", "legal", "license", "right", "rule", "law"],
   },
   {
     name: "scaling",
     categories: ["design"],
-    tags: ["scale", "resize", "design"]
+    tags: ["scale", "resize", "design"],
   },
   {
     name: "scan-barcode",
@@ -11284,8 +11288,8 @@ export const iconsData: Array<{
       "product",
       "packaging",
       "retail",
-      "consumer"
-    ]
+      "consumer",
+    ],
   },
   {
     name: "scan-eye",
@@ -11295,7 +11299,7 @@ export const iconsData: Array<{
       "accessibility",
       "security",
       "devices",
-      "account"
+      "account",
     ],
     tags: [
       "preview",
@@ -11314,8 +11318,8 @@ export const iconsData: Array<{
       "identification",
       "authentication",
       "access",
-      "login"
-    ]
+      "login",
+    ],
   },
   {
     name: "scan-face",
@@ -11328,8 +11332,8 @@ export const iconsData: Array<{
       "2fa",
       "access",
       "login",
-      "dashed"
-    ]
+      "dashed",
+    ],
   },
   {
     name: "scan-heart",
@@ -11341,8 +11345,8 @@ export const iconsData: Array<{
       "monitoring",
       "healthiness",
       "screening",
-      "dashed"
-    ]
+      "dashed",
+    ],
   },
   {
     name: "scan-line",
@@ -11359,8 +11363,8 @@ export const iconsData: Array<{
       "retail",
       "consumer",
       "qr-code",
-      "dashed"
-    ]
+      "dashed",
+    ],
   },
   {
     name: "scan-qr-code",
@@ -11372,8 +11376,8 @@ export const iconsData: Array<{
       "url",
       "information",
       "digital",
-      "scanner"
-    ]
+      "scanner",
+    ],
   },
   {
     name: "scan-search",
@@ -11386,13 +11390,13 @@ export const iconsData: Array<{
       "gallery",
       "image",
       "focus",
-      "lens"
-    ]
+      "lens",
+    ],
   },
   {
     name: "scan-text",
     categories: ["text", "devices"],
-    tags: ["recognition", "read", "translate", "copy", "lines"]
+    tags: ["recognition", "read", "translate", "copy", "lines"],
   },
   {
     name: "scan",
@@ -11415,8 +11419,8 @@ export const iconsData: Array<{
       "bounds",
       "area",
       "square",
-      "dashed"
-    ]
+      "dashed",
+    ],
   },
   {
     name: "school",
@@ -11444,8 +11448,8 @@ export const iconsData: Array<{
       "tutorial",
       "homework",
       "assignment",
-      "exam"
-    ]
+      "exam",
+    ],
   },
   {
     name: "scissors-line-dashed",
@@ -11458,23 +11462,23 @@ export const iconsData: Array<{
       "stationery",
       "crafts",
       "instructions",
-      "diagram"
-    ]
+      "diagram",
+    ],
   },
   {
     name: "scissors",
     categories: ["text", "design", "tools"],
-    tags: ["cut", "snip", "chop", "stationery", "crafts"]
+    tags: ["cut", "snip", "chop", "stationery", "crafts"],
   },
   {
     name: "screen-share-off",
     categories: ["connectivity", "devices", "communication"],
-    tags: ["desktop", "disconnect", "monitor"]
+    tags: ["desktop", "disconnect", "monitor"],
   },
   {
     name: "screen-share",
     categories: ["connectivity", "devices", "communication"],
-    tags: ["host", "desktop", "monitor"]
+    tags: ["host", "desktop", "monitor"],
   },
   {
     name: "scroll-text",
@@ -11491,8 +11495,8 @@ export const iconsData: Array<{
       "script",
       "story",
       "code",
-      "coding"
-    ]
+      "coding",
+    ],
   },
   {
     name: "scroll",
@@ -11509,8 +11513,8 @@ export const iconsData: Array<{
       "script",
       "story",
       "code",
-      "coding"
-    ]
+      "coding",
+    ],
   },
   {
     name: "search-check",
@@ -11523,8 +11527,8 @@ export const iconsData: Array<{
       "found",
       "correct",
       "complete",
-      "tick"
-    ]
+      "tick",
+    ],
   },
   {
     name: "search-code",
@@ -11536,8 +11540,8 @@ export const iconsData: Array<{
       "magnifying glass",
       "grep",
       "chevrons",
-      "<>"
-    ]
+      "<>",
+    ],
   },
   {
     name: "search-slash",
@@ -11551,8 +11555,8 @@ export const iconsData: Array<{
       "clear",
       "cancel",
       "abort",
-      "/"
-    ]
+      "/",
+    ],
   },
   {
     name: "search-x",
@@ -11565,13 +11569,13 @@ export const iconsData: Array<{
       "stop",
       "clear",
       "cancel",
-      "abort"
-    ]
+      "abort",
+    ],
   },
   {
     name: "search",
     categories: ["text", "social"],
-    tags: ["find", "scan", "magnifier", "magnifying glass"]
+    tags: ["find", "scan", "magnifier", "magnifying glass"],
   },
   {
     name: "section",
@@ -11584,8 +11588,8 @@ export const iconsData: Array<{
       "type",
       "text",
       "prose",
-      "symbol"
-    ]
+      "symbol",
+    ],
   },
   {
     name: "send-horizontal",
@@ -11596,8 +11600,8 @@ export const iconsData: Array<{
       "mail",
       "paper airplane",
       "paper aeroplane",
-      "submit"
-    ]
+      "submit",
+    ],
   },
   {
     name: "send-to-back",
@@ -11611,8 +11615,8 @@ export const iconsData: Array<{
       "backwards",
       "overlap",
       "layer",
-      "order"
-    ]
+      "order",
+    ],
   },
   {
     name: "send",
@@ -11623,48 +11627,48 @@ export const iconsData: Array<{
       "mail",
       "paper airplane",
       "paper aeroplane",
-      "submit"
-    ]
+      "submit",
+    ],
   },
   {
     name: "separator-horizontal",
     categories: ["text", "arrows", "layout"],
-    tags: ["move", "split"]
+    tags: ["move", "split"],
   },
   {
     name: "separator-vertical",
     categories: ["text", "arrows", "layout"],
-    tags: ["move", "split"]
+    tags: ["move", "split"],
   },
   {
     name: "server-cog",
     categories: ["development", "devices"],
-    tags: ["cloud", "storage", "computing", "cog", "gear"]
+    tags: ["cloud", "storage", "computing", "cog", "gear"],
   },
   {
     name: "server-crash",
     categories: ["development", "devices"],
-    tags: ["cloud", "storage", "problem", "error"]
+    tags: ["cloud", "storage", "problem", "error"],
   },
   {
     name: "server-off",
     categories: ["development", "devices"],
-    tags: ["cloud", "storage"]
+    tags: ["cloud", "storage"],
   },
   {
     name: "server",
     categories: ["development", "devices"],
-    tags: ["cloud", "storage"]
+    tags: ["cloud", "storage"],
   },
   {
     name: "settings-2",
     categories: ["account"],
-    tags: ["cog", "edit", "gear", "preferences"]
+    tags: ["cog", "edit", "gear", "preferences"],
   },
   {
     name: "settings",
     categories: ["account"],
-    tags: ["cog", "edit", "gear", "preferences"]
+    tags: ["cog", "edit", "gear", "preferences"],
   },
   {
     name: "shapes",
@@ -11679,23 +11683,23 @@ export const iconsData: Array<{
       "collection",
       "toy",
       "blocks",
-      "learning"
-    ]
+      "learning",
+    ],
   },
   {
     name: "share-2",
     categories: ["account", "social"],
-    tags: ["network", "connections"]
+    tags: ["network", "connections"],
   },
   {
     name: "share",
     categories: ["account", "social"],
-    tags: ["network", "connections"]
+    tags: ["network", "connections"],
   },
   {
     name: "sheet",
     categories: ["text", "files"],
-    tags: ["spreadsheets", "table", "excel"]
+    tags: ["spreadsheets", "table", "excel"],
   },
   {
     name: "shell",
@@ -11706,7 +11710,7 @@ export const iconsData: Array<{
       "science",
       "travel",
       "food-beverage",
-      "home"
+      "home",
     ],
     tags: [
       "beach",
@@ -11734,8 +11738,8 @@ export const iconsData: Array<{
       "spiral",
       "spinner",
       "hypnotise",
-      "hypnosis"
-    ]
+      "hypnosis",
+    ],
   },
   {
     name: "shield-alert",
@@ -11744,7 +11748,7 @@ export const iconsData: Array<{
       "security",
       "development",
       "notifications",
-      "gaming"
+      "gaming",
     ],
     tags: [
       "unshielded",
@@ -11810,8 +11814,8 @@ export const iconsData: Array<{
       "inactive",
       "error",
       "exclamation mark",
-      "!"
-    ]
+      "!",
+    ],
   },
   {
     name: "shield-ban",
@@ -11874,8 +11878,8 @@ export const iconsData: Array<{
       "eliminated",
       "disabled",
       "inactive",
-      "/"
-    ]
+      "/",
+    ],
   },
   {
     name: "shield-check",
@@ -11933,8 +11937,8 @@ export const iconsData: Array<{
       "ticked",
       "checked",
       "crest",
-      "bravery"
-    ]
+      "bravery",
+    ],
   },
   {
     name: "shield-ellipsis",
@@ -11966,8 +11970,8 @@ export const iconsData: Array<{
       "more",
       "etc",
       "...",
-      "…"
-    ]
+      "…",
+    ],
   },
   {
     name: "shield-half",
@@ -12026,8 +12030,8 @@ export const iconsData: Array<{
       "ranking",
       "army",
       "cadet",
-      "scout"
-    ]
+      "scout",
+    ],
   },
   {
     name: "shield-minus",
@@ -12060,8 +12064,8 @@ export const iconsData: Array<{
       "decommission",
       "downgraded",
       "minimum",
-      "-"
-    ]
+      "-",
+    ],
   },
   {
     name: "shield-off",
@@ -12111,8 +12115,8 @@ export const iconsData: Array<{
       "injured",
       "hit",
       "expired",
-      "eliminated"
-    ]
+      "eliminated",
+    ],
   },
   {
     name: "shield-plus",
@@ -12158,8 +12162,8 @@ export const iconsData: Array<{
       "verification",
       "crest",
       "medic",
-      "+"
-    ]
+      "+",
+    ],
   },
   {
     name: "shield-question",
@@ -12208,8 +12212,8 @@ export const iconsData: Array<{
       "inactive",
       "crest",
       "question mark",
-      "?"
-    ]
+      "?",
+    ],
   },
   {
     name: "shield-x",
@@ -12274,8 +12278,8 @@ export const iconsData: Array<{
       "deceased",
       "expired",
       "eliminated",
-      "exterminated"
-    ]
+      "exterminated",
+    ],
   },
   {
     name: "shield",
@@ -12322,8 +12326,8 @@ export const iconsData: Array<{
       "military",
       "army",
       "cadet",
-      "scout"
-    ]
+      "scout",
+    ],
   },
   {
     name: "ship-wheel",
@@ -12342,8 +12346,8 @@ export const iconsData: Array<{
       "tanker",
       "vessel",
       "navy",
-      "trip"
-    ]
+      "trip",
+    ],
   },
   {
     name: "ship",
@@ -12360,18 +12364,18 @@ export const iconsData: Array<{
       "tanker",
       "vessel",
       "navy",
-      "trip"
-    ]
+      "trip",
+    ],
   },
   {
     name: "shirt",
     categories: ["shopping"],
-    tags: ["t-shirt", "shopping", "store", "clothing", "clothes"]
+    tags: ["t-shirt", "shopping", "store", "clothing", "clothes"],
   },
   {
     name: "shopping-bag",
     categories: ["shopping"],
-    tags: ["ecommerce", "cart", "purchase", "store"]
+    tags: ["ecommerce", "cart", "purchase", "store"],
   },
   {
     name: "shopping-basket",
@@ -12383,8 +12387,8 @@ export const iconsData: Array<{
       "purchase",
       "products",
       "items",
-      "ingredients"
-    ]
+      "ingredients",
+    ],
   },
   {
     name: "shopping-cart",
@@ -12398,53 +12402,53 @@ export const iconsData: Array<{
       "purchase",
       "products",
       "items",
-      "ingredients"
-    ]
+      "ingredients",
+    ],
   },
   {
     name: "shovel",
     categories: ["nature", "tools", "gaming"],
-    tags: ["dig", "spade", "treasure"]
+    tags: ["dig", "spade", "treasure"],
   },
   {
     name: "shower-head",
     categories: ["home", "travel"],
-    tags: ["shower", "bath", "bathroom", "amenities", "services"]
+    tags: ["shower", "bath", "bathroom", "amenities", "services"],
   },
   {
     name: "shrink",
     categories: ["layout", "arrows"],
-    tags: ["scale", "fullscreen"]
+    tags: ["scale", "fullscreen"],
   },
   {
     name: "shrub",
     categories: ["nature"],
-    tags: ["forest", "undergrowth", "park", "nature"]
+    tags: ["forest", "undergrowth", "park", "nature"],
   },
   {
     name: "shuffle",
     categories: ["multimedia", "arrows"],
-    tags: ["music", "random", "reorder"]
+    tags: ["music", "random", "reorder"],
   },
   {
     name: "sigma",
     categories: ["text", "math", "science"],
-    tags: ["sum", "calculate", "formula", "math", "enumeration", "enumerate"]
+    tags: ["sum", "calculate", "formula", "math", "enumeration", "enumerate"],
   },
   {
     name: "signal-high",
     categories: ["connectivity"],
-    tags: ["connection", "wireless", "gsm", "phone", "2g", "3g", "4g", "5g"]
+    tags: ["connection", "wireless", "gsm", "phone", "2g", "3g", "4g", "5g"],
   },
   {
     name: "signal-low",
     categories: ["connectivity"],
-    tags: ["connection", "wireless", "gsm", "phone", "2g", "3g", "4g", "5g"]
+    tags: ["connection", "wireless", "gsm", "phone", "2g", "3g", "4g", "5g"],
   },
   {
     name: "signal-medium",
     categories: ["connectivity"],
-    tags: ["connection", "wireless", "gsm", "phone", "2g", "3g", "4g", "5g"]
+    tags: ["connection", "wireless", "gsm", "phone", "2g", "3g", "4g", "5g"],
   },
   {
     name: "signal-zero",
@@ -12458,13 +12462,13 @@ export const iconsData: Array<{
       "3g",
       "4g",
       "5g",
-      "lost"
-    ]
+      "lost",
+    ],
   },
   {
     name: "signal",
     categories: ["connectivity"],
-    tags: ["connection", "wireless", "gsm", "phone", "2g", "3g", "4g", "5g"]
+    tags: ["connection", "wireless", "gsm", "phone", "2g", "3g", "4g", "5g"],
   },
   {
     name: "signature",
@@ -12489,18 +12493,18 @@ export const iconsData: Array<{
       "authentic",
       "approval",
       "verification",
-      "unique"
-    ]
+      "unique",
+    ],
   },
   {
     name: "signpost-big",
     categories: ["arrows", "navigation", "development", "gaming"],
-    tags: ["bidirectional", "left", "right", "east", "west"]
+    tags: ["bidirectional", "left", "right", "east", "west"],
   },
   {
     name: "signpost",
     categories: ["arrows", "navigation", "development", "gaming"],
-    tags: ["bidirectional", "left", "right", "east", "west"]
+    tags: ["bidirectional", "left", "right", "east", "west"],
   },
   {
     name: "siren",
@@ -12512,63 +12516,63 @@ export const iconsData: Array<{
       "security",
       "alert",
       "alarm",
-      "light"
-    ]
+      "light",
+    ],
   },
   {
     name: "skip-back",
     categories: ["multimedia", "arrows"],
-    tags: ["arrow", "previous", "music"]
+    tags: ["arrow", "previous", "music"],
   },
   {
     name: "skip-forward",
     categories: ["multimedia", "arrows"],
-    tags: ["arrow", "skip", "next", "music"]
+    tags: ["arrow", "skip", "next", "music"],
   },
   {
     name: "skull",
     categories: ["gaming"],
-    tags: ["death", "danger", "bone"]
+    tags: ["death", "danger", "bone"],
   },
   {
     name: "slack",
     categories: ["account", "social", "brands", "development"],
-    tags: ["logo"]
+    tags: ["logo"],
   },
   {
     name: "slash",
     categories: ["development", "math"],
-    tags: ["divide", "division", "or", "/"]
+    tags: ["divide", "division", "or", "/"],
   },
   {
     name: "slice",
     categories: ["design"],
-    tags: ["cutter", "scalpel", "knife"]
+    tags: ["cutter", "scalpel", "knife"],
   },
   {
     name: "sliders-horizontal",
     categories: ["account"],
-    tags: ["settings", "filters", "controls"]
+    tags: ["settings", "filters", "controls"],
   },
   {
     name: "sliders-vertical",
     categories: ["account"],
-    tags: ["settings", "controls"]
+    tags: ["settings", "controls"],
   },
   {
     name: "smartphone-charging",
     categories: ["connectivity", "devices"],
-    tags: ["phone", "cellphone", "device", "power", "screen"]
+    tags: ["phone", "cellphone", "device", "power", "screen"],
   },
   {
     name: "smartphone-nfc",
     categories: ["communication", "finance", "devices"],
-    tags: ["contactless", "payment", "near-field communication", "screen"]
+    tags: ["contactless", "payment", "near-field communication", "screen"],
   },
   {
     name: "smartphone",
     categories: ["connectivity", "devices"],
-    tags: ["phone", "cellphone", "device", "screen"]
+    tags: ["phone", "cellphone", "device", "screen"],
   },
   {
     name: "smile-plus",
@@ -12581,43 +12585,43 @@ export const iconsData: Array<{
       "emotion",
       "react",
       "reaction",
-      "add"
-    ]
+      "add",
+    ],
   },
   {
     name: "smile",
     categories: ["emoji", "account"],
-    tags: ["emoji", "face", "happy", "good", "emotion"]
+    tags: ["emoji", "face", "happy", "good", "emotion"],
   },
   {
     name: "snail",
     categories: ["animals", "food-beverage"],
-    tags: ["animal", "insect", "slow", "speed", "delicacy", "spiral"]
+    tags: ["animal", "insect", "slow", "speed", "delicacy", "spiral"],
   },
   {
     name: "snowflake",
     categories: ["weather", "seasons"],
-    tags: ["cold", "weather", "freeze", "snow", "winter"]
+    tags: ["cold", "weather", "freeze", "snow", "winter"],
   },
   {
     name: "sofa",
     categories: ["home"],
-    tags: ["armchair", "furniture", "leisure", "lounge", "loveseat", "couch"]
+    tags: ["armchair", "furniture", "leisure", "lounge", "loveseat", "couch"],
   },
   {
     name: "soup",
     categories: ["food-beverage"],
-    tags: ["food", "dish", "restaurant", "course", "meal", "bowl", "starter"]
+    tags: ["food", "dish", "restaurant", "course", "meal", "bowl", "starter"],
   },
   {
     name: "space",
     categories: ["text"],
-    tags: ["text", "selection", "letters", "characters", "font", "typography"]
+    tags: ["text", "selection", "letters", "characters", "font", "typography"],
   },
   {
     name: "spade",
     categories: ["shapes", "gaming"],
-    tags: ["shape", "suit", "playing", "cards"]
+    tags: ["shape", "suit", "playing", "cards"],
   },
   {
     name: "sparkle",
@@ -12631,13 +12635,13 @@ export const iconsData: Array<{
       "shiny",
       "glitter",
       "twinkle",
-      "celebration"
-    ]
+      "celebration",
+    ],
   },
   {
     name: "sparkles",
     categories: ["cursors", "multimedia", "gaming", "weather"],
-    tags: ["stars", "effect", "filter", "night", "magic"]
+    tags: ["stars", "effect", "filter", "night", "magic"],
   },
   {
     name: "speaker",
@@ -12651,8 +12655,8 @@ export const iconsData: Array<{
       "bass",
       "production",
       "producer",
-      "dj"
-    ]
+      "dj",
+    ],
   },
   {
     name: "speech",
@@ -12664,8 +12668,8 @@ export const iconsData: Array<{
       "human",
       "accessibility",
       "people",
-      "sound"
-    ]
+      "sound",
+    ],
   },
   {
     name: "spell-check-2",
@@ -12679,8 +12683,8 @@ export const iconsData: Array<{
       "correction",
       "code",
       "linter",
-      "a"
-    ]
+      "a",
+    ],
   },
   {
     name: "spell-check",
@@ -12694,18 +12698,18 @@ export const iconsData: Array<{
       "correction",
       "code",
       "linter",
-      "a"
-    ]
+      "a",
+    ],
   },
   {
     name: "spline",
     categories: ["design"],
-    tags: ["path", "pen", "tool", "shape", "curve", "draw"]
+    tags: ["path", "pen", "tool", "shape", "curve", "draw"],
   },
   {
     name: "split",
     categories: ["development", "arrows"],
-    tags: ["break", "disband", "divide", "separate", "branch", "disunite"]
+    tags: ["break", "disband", "divide", "separate", "branch", "disunite"],
   },
   {
     name: "spray-can",
@@ -12718,13 +12722,13 @@ export const iconsData: Array<{
       "aerosol",
       "deodorant",
       "shaving foam",
-      "air freshener"
-    ]
+      "air freshener",
+    ],
   },
   {
     name: "sprout",
     categories: ["nature", "gaming", "sustainability"],
-    tags: ["leaf", "nature", "plant"]
+    tags: ["leaf", "nature", "plant"],
   },
   {
     name: "square-activity",
@@ -12756,8 +12760,8 @@ export const iconsData: Array<{
       "waveform",
       "synthesizer",
       "synthesiser",
-      "music"
-    ]
+      "music",
+    ],
   },
   {
     name: "square-arrow-down-left",
@@ -12769,8 +12773,8 @@ export const iconsData: Array<{
       "sign",
       "turn",
       "keyboard",
-      "button"
-    ]
+      "button",
+    ],
   },
   {
     name: "square-arrow-down-right",
@@ -12782,8 +12786,8 @@ export const iconsData: Array<{
       "sign",
       "turn",
       "keyboard",
-      "button"
-    ]
+      "button",
+    ],
   },
   {
     name: "square-arrow-down",
@@ -12795,8 +12799,8 @@ export const iconsData: Array<{
       "south",
       "sign",
       "keyboard",
-      "button"
-    ]
+      "button",
+    ],
   },
   {
     name: "square-arrow-left",
@@ -12809,23 +12813,23 @@ export const iconsData: Array<{
       "sign",
       "keyboard",
       "button",
-      "<-"
-    ]
+      "<-",
+    ],
   },
   {
     name: "square-arrow-out-down-left",
     categories: ["arrows", "navigation"],
-    tags: ["outwards", "direction", "south-west", "diagonal"]
+    tags: ["outwards", "direction", "south-west", "diagonal"],
   },
   {
     name: "square-arrow-out-down-right",
     categories: ["arrows", "navigation"],
-    tags: ["outwards", "direction", "south-east", "diagonal"]
+    tags: ["outwards", "direction", "south-east", "diagonal"],
   },
   {
     name: "square-arrow-out-up-left",
     categories: ["arrows", "navigation"],
-    tags: ["outwards", "direction", "north-west", "diagonal"]
+    tags: ["outwards", "direction", "north-west", "diagonal"],
   },
   {
     name: "square-arrow-out-up-right",
@@ -12838,8 +12842,8 @@ export const iconsData: Array<{
       "share",
       "open",
       "external",
-      "link"
-    ]
+      "link",
+    ],
   },
   {
     name: "square-arrow-right",
@@ -12852,13 +12856,13 @@ export const iconsData: Array<{
       "sign",
       "keyboard",
       "button",
-      "->"
-    ]
+      "->",
+    ],
   },
   {
     name: "square-arrow-up-left",
     categories: ["arrows", "navigation"],
-    tags: ["direction", "north-west", "diagonal", "sign", "keyboard", "button"]
+    tags: ["direction", "north-west", "diagonal", "sign", "keyboard", "button"],
   },
   {
     name: "square-arrow-up-right",
@@ -12870,13 +12874,13 @@ export const iconsData: Array<{
       "sign",
       "keyboard",
       "button",
-      "share"
-    ]
+      "share",
+    ],
   },
   {
     name: "square-arrow-up",
     categories: ["arrows", "navigation"],
-    tags: ["forward", "direction", "north", "sign", "keyboard", "button"]
+    tags: ["forward", "direction", "north", "sign", "keyboard", "button"],
   },
   {
     name: "square-asterisk",
@@ -12890,13 +12894,13 @@ export const iconsData: Array<{
       "multiplication",
       "glob pattern",
       "wildcard",
-      "*"
-    ]
+      "*",
+    ],
   },
   {
     name: "square-bottom-dashed-scissors",
     categories: ["text", "design", "tools", "files", "development"],
-    tags: ["cut", "snippet", "chop", "stationery", "crafts"]
+    tags: ["cut", "snippet", "chop", "stationery", "crafts"],
   },
   {
     name: "square-chart-gantt",
@@ -12920,23 +12924,23 @@ export const iconsData: Array<{
       "code",
       "coding",
       "toolbar",
-      "button"
-    ]
+      "button",
+    ],
   },
   {
     name: "square-check-big",
     categories: ["notifications"],
-    tags: ["done", "todo", "tick", "complete", "task"]
+    tags: ["done", "todo", "tick", "complete", "task"],
   },
   {
     name: "square-check",
     categories: ["notifications"],
-    tags: ["done", "todo", "tick", "complete", "task"]
+    tags: ["done", "todo", "tick", "complete", "task"],
   },
   {
     name: "square-chevron-down",
     categories: ["arrows", "navigation"],
-    tags: ["back", "menu", "panel"]
+    tags: ["back", "menu", "panel"],
   },
   {
     name: "square-chevron-left",
@@ -12950,8 +12954,8 @@ export const iconsData: Array<{
       "panel",
       "button",
       "keyboard",
-      "<"
-    ]
+      "<",
+    ],
   },
   {
     name: "square-chevron-right",
@@ -12970,8 +12974,8 @@ export const iconsData: Array<{
       "prompt",
       "shell",
       "console",
-      ">"
-    ]
+      ">",
+    ],
   },
   {
     name: "square-chevron-up",
@@ -12989,13 +12993,13 @@ export const iconsData: Array<{
       "ahead",
       "menu",
       "panel",
-      "^"
-    ]
+      "^",
+    ],
   },
   {
     name: "square-code",
     categories: ["text", "development"],
-    tags: ["gist", "source", "programming", "html", "xml", "coding"]
+    tags: ["gist", "source", "programming", "html", "xml", "coding"],
   },
   {
     name: "square-dashed-bottom-code",
@@ -13007,8 +13011,8 @@ export const iconsData: Array<{
       "shape",
       "snippet",
       "code",
-      "coding"
-    ]
+      "coding",
+    ],
   },
   {
     name: "square-dashed-bottom",
@@ -13020,8 +13024,8 @@ export const iconsData: Array<{
       "shape",
       "snippet",
       "code",
-      "coding"
-    ]
+      "coding",
+    ],
   },
   {
     name: "square-dashed-kanban",
@@ -13043,8 +13047,8 @@ export const iconsData: Array<{
       "template",
       "boilerplate",
       "code",
-      "coding"
-    ]
+      "coding",
+    ],
   },
   {
     name: "square-dashed-mouse-pointer",
@@ -13060,8 +13064,8 @@ export const iconsData: Array<{
       "selector",
       "target",
       "dom",
-      "node"
-    ]
+      "node",
+    ],
   },
   {
     name: "square-dashed",
@@ -13073,28 +13077,28 @@ export const iconsData: Array<{
       "marquee",
       "tool",
       "dashed",
-      "box"
-    ]
+      "box",
+    ],
   },
   {
     name: "square-divide",
     categories: ["math"],
-    tags: ["calculate", "math", "÷", "/"]
+    tags: ["calculate", "math", "÷", "/"],
   },
   {
     name: "square-dot",
     categories: ["development"],
-    tags: ["git", "diff", "modified", "."]
+    tags: ["git", "diff", "modified", "."],
   },
   {
     name: "square-equal",
     categories: ["math"],
-    tags: ["calculate", "="]
+    tags: ["calculate", "="],
   },
   {
     name: "square-function",
     categories: ["development", "math"],
-    tags: ["programming", "code", "automation", "math"]
+    tags: ["programming", "code", "automation", "math"],
   },
   {
     name: "square-kanban",
@@ -13115,8 +13119,8 @@ export const iconsData: Array<{
       "code",
       "coding",
       "toolbar",
-      "button"
-    ]
+      "button",
+    ],
   },
   {
     name: "square-library",
@@ -13125,7 +13129,7 @@ export const iconsData: Array<{
       "photography",
       "multimedia",
       "navigation",
-      "development"
+      "development",
     ],
     tags: [
       "books",
@@ -13150,18 +13154,18 @@ export const iconsData: Array<{
       "records",
       "albums",
       "music",
-      "package"
-    ]
+      "package",
+    ],
   },
   {
     name: "square-m",
     categories: ["transportation", "navigation"],
-    tags: ["metro", "subway", "underground", "track", "line"]
+    tags: ["metro", "subway", "underground", "track", "line"],
   },
   {
     name: "square-menu",
     categories: ["layout"],
-    tags: ["bars", "navigation", "hamburger", "options", "menu bar", "panel"]
+    tags: ["bars", "navigation", "hamburger", "options", "menu bar", "panel"],
   },
   {
     name: "square-minus",
@@ -13188,8 +13192,8 @@ export const iconsData: Array<{
       "code",
       "coding",
       "minimum",
-      "downgrade"
-    ]
+      "downgrade",
+    ],
   },
   {
     name: "square-mouse-pointer",
@@ -13205,18 +13209,18 @@ export const iconsData: Array<{
       "selector",
       "target",
       "dom",
-      "node"
-    ]
+      "node",
+    ],
   },
   {
     name: "square-parking-off",
     categories: ["transportation", "navigation"],
-    tags: ["parking lot", "car park", "no parking"]
+    tags: ["parking lot", "car park", "no parking"],
   },
   {
     name: "square-parking",
     categories: ["transportation", "navigation"],
-    tags: ["parking lot", "car park"]
+    tags: ["parking lot", "car park"],
   },
   {
     name: "square-pen",
@@ -13235,8 +13239,8 @@ export const iconsData: Array<{
       "marker",
       "felt tip",
       "stationery",
-      "artist"
-    ]
+      "artist",
+    ],
   },
   {
     name: "square-percent",
@@ -13249,8 +13253,8 @@ export const iconsData: Array<{
       "offer",
       "marketing",
       "sticker",
-      "price tag"
-    ]
+      "price tag",
+    ],
   },
   {
     name: "square-pi",
@@ -13263,8 +13267,8 @@ export const iconsData: Array<{
       "symbol",
       "trigonometry",
       "geometry",
-      "formula"
-    ]
+      "formula",
+    ],
   },
   {
     name: "square-pilcrow",
@@ -13278,13 +13282,13 @@ export const iconsData: Array<{
       "type",
       "text",
       "prose",
-      "symbol"
-    ]
+      "symbol",
+    ],
   },
   {
     name: "square-play",
     categories: ["arrows", "multimedia"],
-    tags: ["music", "audio", "video", "start", "run"]
+    tags: ["music", "audio", "video", "start", "run"],
   },
   {
     name: "square-plus",
@@ -13308,8 +13312,8 @@ export const iconsData: Array<{
       "concatenate",
       "code",
       "coding",
-      "+"
-    ]
+      "+",
+    ],
   },
   {
     name: "square-power",
@@ -13326,8 +13330,8 @@ export const iconsData: Array<{
       "restart",
       "button",
       "keyboard",
-      "troubleshoot"
-    ]
+      "troubleshoot",
+    ],
   },
   {
     name: "square-radical",
@@ -13339,8 +13343,8 @@ export const iconsData: Array<{
       "operator",
       "root",
       "square",
-      "symbol"
-    ]
+      "symbol",
+    ],
   },
   {
     name: "square-scissors",
@@ -13352,13 +13356,13 @@ export const iconsData: Array<{
       "stationery",
       "crafts",
       "toolbar",
-      "button"
-    ]
+      "button",
+    ],
   },
   {
     name: "square-sigma",
     categories: ["text", "math"],
-    tags: ["sum", "calculate", "formula", "math", "enumeration", "enumerate"]
+    tags: ["sum", "calculate", "formula", "math", "enumeration", "enumerate"],
   },
   {
     name: "square-slash",
@@ -13371,23 +13375,23 @@ export const iconsData: Array<{
       "division",
       "shortcut",
       "or",
-      "/"
-    ]
+      "/",
+    ],
   },
   {
     name: "square-split-horizontal",
     categories: ["layout"],
-    tags: ["split", "divide"]
+    tags: ["split", "divide"],
   },
   {
     name: "square-split-vertical",
     categories: ["layout"],
-    tags: ["split", "divide"]
+    tags: ["split", "divide"],
   },
   {
     name: "square-square",
     categories: ["layout"],
-    tags: ["float", "center", "rectangle"]
+    tags: ["float", "center", "rectangle"],
   },
   {
     name: "square-stack",
@@ -13401,23 +13405,23 @@ export const iconsData: Array<{
       "revisions",
       "version control",
       "backup",
-      "history"
-    ]
+      "history",
+    ],
   },
   {
     name: "square-terminal",
     categories: ["development"],
-    tags: ["code", "command line", "prompt", "shell"]
+    tags: ["code", "command line", "prompt", "shell"],
   },
   {
     name: "square-user-round",
     categories: ["account"],
-    tags: ["person", "account", "contact"]
+    tags: ["person", "account", "contact"],
   },
   {
     name: "square-user",
     categories: ["account"],
-    tags: ["person", "account", "contact"]
+    tags: ["person", "account", "contact"],
   },
   {
     name: "square-x",
@@ -13431,18 +13435,18 @@ export const iconsData: Array<{
       "clear",
       "math",
       "multiply",
-      "multiplication"
-    ]
+      "multiplication",
+    ],
   },
   {
     name: "square",
     categories: ["shapes"],
-    tags: ["rectangle", "aspect ratio", "1:1", "shape"]
+    tags: ["rectangle", "aspect ratio", "1:1", "shape"],
   },
   {
     name: "squircle",
     categories: ["shapes"],
-    tags: ["shape"]
+    tags: ["shape"],
   },
   {
     name: "squirrel",
@@ -13456,23 +13460,23 @@ export const iconsData: Array<{
       "retrieve",
       "updates",
       "storage",
-      "stash"
-    ]
+      "stash",
+    ],
   },
   {
     name: "stamp",
     categories: ["design", "cursors", "tools"],
-    tags: ["mark", "print", "clone", "loyalty", "library"]
+    tags: ["mark", "print", "clone", "loyalty", "library"],
   },
   {
     name: "star-half",
     categories: ["social", "multimedia"],
-    tags: ["bookmark", "favorite", "like", "review", "rating"]
+    tags: ["bookmark", "favorite", "like", "review", "rating"],
   },
   {
     name: "star-off",
     categories: ["multimedia", "social"],
-    tags: ["dislike", "unlike", "remove", "unrate"]
+    tags: ["dislike", "unlike", "remove", "unrate"],
   },
   {
     name: "star",
@@ -13483,29 +13487,29 @@ export const iconsData: Array<{
       "multimedia",
       "weather",
       "emoji",
-      "gaming"
+      "gaming",
     ],
-    tags: ["bookmark", "favorite", "like", "review", "rating"]
+    tags: ["bookmark", "favorite", "like", "review", "rating"],
   },
   {
     name: "step-back",
     categories: ["multimedia", "arrows"],
-    tags: ["arrow", "previous", "music", "left", "reverse"]
+    tags: ["arrow", "previous", "music", "left", "reverse"],
   },
   {
     name: "step-forward",
     categories: ["multimedia", "arrows"],
-    tags: ["arrow", "next", "music", "right", "continue"]
+    tags: ["arrow", "next", "music", "right", "continue"],
   },
   {
     name: "stethoscope",
     categories: ["science", "medical"],
-    tags: ["phonendoscope", "medical", "heart", "lungs", "sound"]
+    tags: ["phonendoscope", "medical", "heart", "lungs", "sound"],
   },
   {
     name: "sticker",
     categories: ["social"],
-    tags: ["reaction", "emotion", "smile", "happy", "feedback"]
+    tags: ["reaction", "emotion", "smile", "happy", "feedback"],
   },
   {
     name: "sticky-note",
@@ -13526,43 +13530,43 @@ export const iconsData: Array<{
       "paper",
       "sheet",
       "stationary",
-      "office"
-    ]
+      "office",
+    ],
   },
   {
     name: "store",
     categories: ["buildings", "navigation", "shopping"],
-    tags: ["shop", "supermarket", "stand", "boutique", "building"]
+    tags: ["shop", "supermarket", "stand", "boutique", "building"],
   },
   {
     name: "stretch-horizontal",
     categories: ["layout"],
-    tags: ["items", "flex", "justify", "distribute"]
+    tags: ["items", "flex", "justify", "distribute"],
   },
   {
     name: "stretch-vertical",
     categories: ["layout"],
-    tags: ["items", "flex", "justify", "distribute"]
+    tags: ["items", "flex", "justify", "distribute"],
   },
   {
     name: "strikethrough",
     categories: ["text"],
-    tags: ["cross out", "delete", "remove", "format"]
+    tags: ["cross out", "delete", "remove", "format"],
   },
   {
     name: "subscript",
     categories: ["text"],
-    tags: ["text"]
+    tags: ["text"],
   },
   {
     name: "sun-dim",
     categories: ["accessibility", "weather"],
-    tags: ["brightness", "dim", "low", "brightness low"]
+    tags: ["brightness", "dim", "low", "brightness low"],
   },
   {
     name: "sun-medium",
     categories: ["accessibility", "weather"],
-    tags: ["brightness", "medium"]
+    tags: ["brightness", "medium"],
   },
   {
     name: "sun-moon",
@@ -13577,8 +13581,8 @@ export const iconsData: Array<{
       "theme",
       "auto theme",
       "system theme",
-      "appearance"
-    ]
+      "appearance",
+    ],
   },
   {
     name: "sun-snow",
@@ -13589,28 +13593,28 @@ export const iconsData: Array<{
       "temperature",
       "hot",
       "cold",
-      "seasons"
-    ]
+      "seasons",
+    ],
   },
   {
     name: "sun",
     categories: ["accessibility", "weather", "seasons", "sustainability"],
-    tags: ["brightness", "weather", "light", "summer"]
+    tags: ["brightness", "weather", "light", "summer"],
   },
   {
     name: "sunrise",
     categories: ["arrows", "weather", "time"],
-    tags: ["weather", "time", "morning", "day"]
+    tags: ["weather", "time", "morning", "day"],
   },
   {
     name: "sunset",
     categories: ["arrows", "weather"],
-    tags: ["weather", "time", "evening", "night"]
+    tags: ["weather", "time", "evening", "night"],
   },
   {
     name: "superscript",
     categories: ["text"],
-    tags: ["text", "exponent"]
+    tags: ["text", "exponent"],
   },
   {
     name: "swatch-book",
@@ -13630,28 +13634,28 @@ export const iconsData: Array<{
       "palette",
       "samples",
       "textile",
-      "carpet"
-    ]
+      "carpet",
+    ],
   },
   {
     name: "swiss-franc",
     categories: ["finance"],
-    tags: ["currency", "money", "payment"]
+    tags: ["currency", "money", "payment"],
   },
   {
     name: "switch-camera",
     categories: ["communication", "devices"],
-    tags: ["photo", "selfie", "front", "back"]
+    tags: ["photo", "selfie", "front", "back"],
   },
   {
     name: "sword",
     categories: ["gaming", "tools"],
-    tags: ["battle", "challenge", "game", "war", "weapon"]
+    tags: ["battle", "challenge", "game", "war", "weapon"],
   },
   {
     name: "swords",
     categories: ["gaming", "tools"],
-    tags: ["battle", "challenge", "game", "war", "weapon"]
+    tags: ["battle", "challenge", "game", "war", "weapon"],
   },
   {
     name: "syringe",
@@ -13663,23 +13667,23 @@ export const iconsData: Array<{
       "pump",
       "plunger",
       "nozzle",
-      "blood"
-    ]
+      "blood",
+    ],
   },
   {
     name: "table-2",
     categories: ["text", "files"],
-    tags: ["spreadsheet", "grid"]
+    tags: ["spreadsheet", "grid"],
   },
   {
     name: "table-cells-merge",
     categories: ["text", "files"],
-    tags: ["spreadsheet", "grid", "row"]
+    tags: ["spreadsheet", "grid", "row"],
   },
   {
     name: "table-cells-split",
     categories: ["text", "files"],
-    tags: ["spreadsheet", "grid", "row"]
+    tags: ["spreadsheet", "grid", "row"],
   },
   {
     name: "table-columns-split",
@@ -13691,8 +13695,8 @@ export const iconsData: Array<{
       "break",
       "divide",
       "separate",
-      "segment"
-    ]
+      "segment",
+    ],
   },
   {
     name: "table-of-contents",
@@ -13710,8 +13714,8 @@ export const iconsData: Array<{
       "documentation",
       "manual",
       "knowledge base",
-      "faq"
-    ]
+      "faq",
+    ],
   },
   {
     name: "table-properties",
@@ -13723,8 +13727,8 @@ export const iconsData: Array<{
       "grid",
       "dictionary",
       "object",
-      "hash"
-    ]
+      "hash",
+    ],
   },
   {
     name: "table-rows-split",
@@ -13736,23 +13740,23 @@ export const iconsData: Array<{
       "break",
       "divide",
       "separate",
-      "segment"
-    ]
+      "segment",
+    ],
   },
   {
     name: "table",
     categories: ["text", "files"],
-    tags: ["spreadsheet", "grid"]
+    tags: ["spreadsheet", "grid"],
   },
   {
     name: "tablet-smartphone",
     categories: ["devices", "design", "development", "tools"],
-    tags: ["responsive", "screens", "browser", "testing", "mobile"]
+    tags: ["responsive", "screens", "browser", "testing", "mobile"],
   },
   {
     name: "tablet",
     categories: ["devices"],
-    tags: ["device"]
+    tags: ["device"],
   },
   {
     name: "tablets",
@@ -13763,18 +13767,18 @@ export const iconsData: Array<{
       "drug",
       "prescription",
       "pills",
-      "pharmacy"
-    ]
+      "pharmacy",
+    ],
   },
   {
     name: "tag",
     categories: ["account"],
-    tags: ["label", "badge", "ticket", "mark"]
+    tags: ["label", "badge", "ticket", "mark"],
   },
   {
     name: "tags",
     categories: ["account"],
-    tags: ["labels", "badges", "tickets", "marks", "copy", "multiple"]
+    tags: ["labels", "badges", "tickets", "marks", "copy", "multiple"],
   },
   {
     name: "tally-1",
@@ -13790,8 +13794,8 @@ export const iconsData: Array<{
       "bar",
       "prison",
       "cell",
-      "sentence"
-    ]
+      "sentence",
+    ],
   },
   {
     name: "tally-2",
@@ -13808,8 +13812,8 @@ export const iconsData: Array<{
       "bars",
       "prison",
       "cell",
-      "sentence"
-    ]
+      "sentence",
+    ],
   },
   {
     name: "tally-3",
@@ -13826,8 +13830,8 @@ export const iconsData: Array<{
       "bars",
       "prison",
       "cell",
-      "sentence"
-    ]
+      "sentence",
+    ],
   },
   {
     name: "tally-4",
@@ -13843,8 +13847,8 @@ export const iconsData: Array<{
       "bars",
       "prison",
       "cell",
-      "sentence"
-    ]
+      "sentence",
+    ],
   },
   {
     name: "tally-5",
@@ -13862,8 +13866,8 @@ export const iconsData: Array<{
       "cell",
       "sentence",
       "slash",
-      "/"
-    ]
+      "/",
+    ],
   },
   {
     name: "tangent",
@@ -13874,8 +13878,8 @@ export const iconsData: Array<{
       "circle",
       "geometry",
       "trigonometry",
-      "bezier curve"
-    ]
+      "bezier curve",
+    ],
   },
   {
     name: "target",
@@ -13887,8 +13891,8 @@ export const iconsData: Array<{
       "projects",
       "overview",
       "work",
-      "productivity"
-    ]
+      "productivity",
+    ],
   },
   {
     name: "telescope",
@@ -13904,8 +13908,8 @@ export const iconsData: Array<{
       "focus",
       "stargazing",
       "observe",
-      "view"
-    ]
+      "view",
+    ],
   },
   {
     name: "tent-tree",
@@ -13917,8 +13921,8 @@ export const iconsData: Array<{
       "retreat",
       "nomadic",
       "wilderness",
-      "outdoors"
-    ]
+      "outdoors",
+    ],
   },
   {
     name: "tent",
@@ -13936,13 +13940,13 @@ export const iconsData: Array<{
       "native american",
       "indian",
       "wilderness",
-      "outdoors"
-    ]
+      "outdoors",
+    ],
   },
   {
     name: "terminal",
     categories: ["development"],
-    tags: ["code", "command line", "prompt", "shell"]
+    tags: ["code", "command line", "prompt", "shell"],
   },
   {
     name: "test-tube-diagonal",
@@ -13957,8 +13961,8 @@ export const iconsData: Array<{
       "lab",
       "chemistry",
       "experiment",
-      "test"
-    ]
+      "test",
+    ],
   },
   {
     name: "test-tube",
@@ -13973,8 +13977,8 @@ export const iconsData: Array<{
       "lab",
       "chemistry",
       "experiment",
-      "test"
-    ]
+      "test",
+    ],
   },
   {
     name: "test-tubes",
@@ -13989,23 +13993,23 @@ export const iconsData: Array<{
       "lab",
       "chemistry",
       "experiment",
-      "test"
-    ]
+      "test",
+    ],
   },
   {
     name: "text-cursor-input",
     categories: ["text", "layout"],
-    tags: ["select"]
+    tags: ["select"],
   },
   {
     name: "text-cursor",
     categories: ["text", "cursors"],
-    tags: ["select"]
+    tags: ["select"],
   },
   {
     name: "text-quote",
     categories: ["text"],
-    tags: ["blockquote", "quotation", "indent", "reply", "response"]
+    tags: ["blockquote", "quotation", "indent", "reply", "response"],
   },
   {
     name: "text-search",
@@ -14019,23 +14023,23 @@ export const iconsData: Array<{
       "document",
       "scan",
       "magnifier",
-      "magnifying glass"
-    ]
+      "magnifying glass",
+    ],
   },
   {
     name: "text-select",
     categories: ["text", "cursors"],
-    tags: ["find", "search", "selection", "dashed"]
+    tags: ["find", "search", "selection", "dashed"],
   },
   {
     name: "text",
     categories: ["text", "files", "cursors"],
-    tags: ["find", "search", "data", "txt", "pdf", "document"]
+    tags: ["find", "search", "data", "txt", "pdf", "document"],
   },
   {
     name: "theater",
     categories: ["buildings", "social"],
-    tags: ["theater", "theatre", "entertainment", "podium", "stage", "musical"]
+    tags: ["theater", "theatre", "entertainment", "podium", "stage", "musical"],
   },
   {
     name: "thermometer-snowflake",
@@ -14047,28 +14051,28 @@ export const iconsData: Array<{
       "weather",
       "cold",
       "freeze",
-      "freezing"
-    ]
+      "freezing",
+    ],
   },
   {
     name: "thermometer-sun",
     categories: ["weather"],
-    tags: ["temperature", "celsius", "fahrenheit", "weather", "warm", "hot"]
+    tags: ["temperature", "celsius", "fahrenheit", "weather", "warm", "hot"],
   },
   {
     name: "thermometer",
     categories: ["weather"],
-    tags: ["temperature", "celsius", "fahrenheit", "weather"]
+    tags: ["temperature", "celsius", "fahrenheit", "weather"],
   },
   {
     name: "thumbs-down",
     categories: ["account", "social", "emoji"],
-    tags: ["dislike", "bad", "emotion"]
+    tags: ["dislike", "bad", "emotion"],
   },
   {
     name: "thumbs-up",
     categories: ["account", "social", "emoji"],
-    tags: ["like", "good", "emotion"]
+    tags: ["like", "good", "emotion"],
   },
   {
     name: "ticket-check",
@@ -14088,8 +14092,8 @@ export const iconsData: Array<{
       "verified",
       "certified",
       "checked",
-      "used"
-    ]
+      "used",
+    ],
   },
   {
     name: "ticket-minus",
@@ -14106,8 +14110,8 @@ export const iconsData: Array<{
       "unbook",
       "subtract",
       "decrease",
-      "-"
-    ]
+      "-",
+    ],
   },
   {
     name: "ticket-percent",
@@ -14124,8 +14128,8 @@ export const iconsData: Array<{
       "show",
       "book",
       "purchase",
-      "%"
-    ]
+      "%",
+    ],
   },
   {
     name: "ticket-plus",
@@ -14140,8 +14144,8 @@ export const iconsData: Array<{
       "book",
       "purchase",
       "add",
-      "+"
-    ]
+      "+",
+    ],
   },
   {
     name: "ticket-slash",
@@ -14173,8 +14177,8 @@ export const iconsData: Array<{
       "delete",
       "remove",
       "clear",
-      "error"
-    ]
+      "error",
+    ],
   },
   {
     name: "ticket-x",
@@ -14203,8 +14207,8 @@ export const iconsData: Array<{
       "remove",
       "clear",
       "error",
-      "x"
-    ]
+      "x",
+    ],
   },
   {
     name: "ticket",
@@ -14217,8 +14221,8 @@ export const iconsData: Array<{
       "concert",
       "show",
       "perforated",
-      "dashed"
-    ]
+      "dashed",
+    ],
   },
   {
     name: "tickets-plane",
@@ -14235,8 +14239,8 @@ export const iconsData: Array<{
       "passenger",
       "pass",
       "check-in",
-      "airport"
-    ]
+      "airport",
+    ],
   },
   {
     name: "tickets",
@@ -14251,43 +14255,43 @@ export const iconsData: Array<{
       "concert",
       "show",
       "perforated",
-      "dashed"
-    ]
+      "dashed",
+    ],
   },
   {
     name: "timer-off",
     categories: ["time"],
-    tags: ["time", "timer", "stopwatch"]
+    tags: ["time", "timer", "stopwatch"],
   },
   {
     name: "timer-reset",
     categories: ["time"],
-    tags: ["time", "timer", "stopwatch"]
+    tags: ["time", "timer", "stopwatch"],
   },
   {
     name: "timer",
     categories: ["time"],
-    tags: ["time", "timer", "stopwatch"]
+    tags: ["time", "timer", "stopwatch"],
   },
   {
     name: "toggle-left",
     categories: ["layout", "account", "development"],
-    tags: ["on", "off", "switch", "boolean"]
+    tags: ["on", "off", "switch", "boolean"],
   },
   {
     name: "toggle-right",
     categories: ["layout", "account", "development"],
-    tags: ["on", "off", "switch", "boolean"]
+    tags: ["on", "off", "switch", "boolean"],
   },
   {
     name: "toilet",
     categories: ["devices", "home"],
-    tags: ["toilet", "potty", "bathroom", "washroom"]
+    tags: ["toilet", "potty", "bathroom", "washroom"],
   },
   {
     name: "tornado",
     categories: ["weather"],
-    tags: ["weather", "wind", "storm", "hurricane"]
+    tags: ["weather", "wind", "storm", "hurricane"],
   },
   {
     name: "torus",
@@ -14304,38 +14308,38 @@ export const iconsData: Array<{
       "treat",
       "sweet",
       "sugar",
-      "dessert"
-    ]
+      "dessert",
+    ],
   },
   {
     name: "touchpad-off",
     categories: ["devices"],
-    tags: ["trackpad", "cursor"]
+    tags: ["trackpad", "cursor"],
   },
   {
     name: "touchpad",
     categories: ["devices"],
-    tags: ["trackpad", "cursor"]
+    tags: ["trackpad", "cursor"],
   },
   {
     name: "tower-control",
     categories: ["travel", "transportation"],
-    tags: ["airport", "travel", "tower", "transportation", "lighthouse"]
+    tags: ["airport", "travel", "tower", "transportation", "lighthouse"],
   },
   {
     name: "toy-brick",
     categories: ["gaming", "development"],
-    tags: ["lego", "block", "addon", "plugin", "integration"]
+    tags: ["lego", "block", "addon", "plugin", "integration"],
   },
   {
     name: "tractor",
     categories: ["transportation", "sustainability", "food-beverage"],
-    tags: ["farming", "farmer", "ranch", "harvest", "equipment", "vehicle"]
+    tags: ["farming", "farmer", "ranch", "harvest", "equipment", "vehicle"],
   },
   {
     name: "traffic-cone",
     categories: ["transportation"],
-    tags: ["roadworks", "tarmac", "safety", "block"]
+    tags: ["roadworks", "tarmac", "safety", "block"],
   },
   {
     name: "train-front-tunnel",
@@ -14349,8 +14353,8 @@ export const iconsData: Array<{
       "bullet",
       "fast",
       "track",
-      "line"
-    ]
+      "line",
+    ],
   },
   {
     name: "train-front",
@@ -14364,13 +14368,13 @@ export const iconsData: Array<{
       "bullet",
       "fast",
       "track",
-      "line"
-    ]
+      "line",
+    ],
   },
   {
     name: "train-track",
     categories: ["transportation", "navigation"],
-    tags: ["railway", "line"]
+    tags: ["railway", "line"],
   },
   {
     name: "tram-front",
@@ -14382,53 +14386,53 @@ export const iconsData: Array<{
       "underground",
       "track",
       "line",
-      "tourism"
-    ]
+      "tourism",
+    ],
   },
   {
     name: "transgender",
     categories: ["medical", "accessibility"],
-    tags: ["gender", "inclusive"]
+    tags: ["gender", "inclusive"],
   },
   {
     name: "trash-2",
     categories: ["files", "mail"],
-    tags: ["garbage", "delete", "remove", "bin"]
+    tags: ["garbage", "delete", "remove", "bin"],
   },
   {
     name: "trash",
     categories: ["files", "mail"],
-    tags: ["garbage", "delete", "remove", "bin"]
+    tags: ["garbage", "delete", "remove", "bin"],
   },
   {
     name: "tree-deciduous",
     categories: ["nature", "sustainability"],
-    tags: ["tree", "forest", "park", "nature"]
+    tags: ["tree", "forest", "park", "nature"],
   },
   {
     name: "tree-palm",
     categories: ["nature", "sustainability"],
-    tags: ["vacation", "leisure", "island"]
+    tags: ["vacation", "leisure", "island"],
   },
   {
     name: "tree-pine",
     categories: ["nature", "sustainability"],
-    tags: ["tree", "pine", "forest", "park", "nature"]
+    tags: ["tree", "pine", "forest", "park", "nature"],
   },
   {
     name: "trees",
     categories: ["nature", "sustainability"],
-    tags: ["tree", "forest", "park", "nature"]
+    tags: ["tree", "forest", "park", "nature"],
   },
   {
     name: "trello",
     categories: ["account", "brands", "development"],
-    tags: ["logo", "brand"]
+    tags: ["logo", "brand"],
   },
   {
     name: "trending-down",
     categories: ["charts", "arrows"],
-    tags: ["statistics"]
+    tags: ["statistics"],
   },
   {
     name: "trending-up-down",
@@ -14443,23 +14447,23 @@ export const iconsData: Array<{
       "variable",
       "prediction",
       "dynamic",
-      "volatile"
-    ]
+      "volatile",
+    ],
   },
   {
     name: "trending-up",
     categories: ["charts", "arrows"],
-    tags: ["statistics"]
+    tags: ["statistics"],
   },
   {
     name: "triangle-alert",
     categories: ["notifications", "shapes", "development"],
-    tags: ["warning", "alert", "danger", "exclamation mark", "linter"]
+    tags: ["warning", "alert", "danger", "exclamation mark", "linter"],
   },
   {
     name: "triangle-dashed",
     categories: ["shapes"],
-    tags: ["equilateral", "delta", "shape", "pyramid", "hierarchy", "dashed"]
+    tags: ["equilateral", "delta", "shape", "pyramid", "hierarchy", "dashed"],
   },
   {
     name: "triangle-right",
@@ -14474,13 +14478,13 @@ export const iconsData: Array<{
       "ramp",
       "slope",
       "incline",
-      "increase"
-    ]
+      "increase",
+    ],
   },
   {
     name: "triangle",
     categories: ["shapes"],
-    tags: ["equilateral", "delta", "shape", "pyramid", "hierarchy"]
+    tags: ["equilateral", "delta", "shape", "pyramid", "hierarchy"],
   },
   {
     name: "trophy",
@@ -14493,18 +14497,18 @@ export const iconsData: Array<{
       "award",
       "champion",
       "celebration",
-      "victory"
-    ]
+      "victory",
+    ],
   },
   {
     name: "truck",
     categories: ["transportation"],
-    tags: ["delivery", "van", "shipping", "haulage", "lorry"]
+    tags: ["delivery", "van", "shipping", "haulage", "lorry"],
   },
   {
     name: "turtle",
     categories: ["animals"],
-    tags: ["animal", "pet", "tortoise", "slow", "speed"]
+    tags: ["animal", "pet", "tortoise", "slow", "speed"],
   },
   {
     name: "tv-minimal-play",
@@ -14533,8 +14537,8 @@ export const iconsData: Array<{
       "entertainment",
       "showtime",
       "channels",
-      "catchup"
-    ]
+      "catchup",
+    ],
   },
   {
     name: "tv-minimal",
@@ -14557,8 +14561,8 @@ export const iconsData: Array<{
       "entertainment",
       "showtime",
       "channels",
-      "catchup"
-    ]
+      "catchup",
+    ],
   },
   {
     name: "tv",
@@ -14592,18 +14596,18 @@ export const iconsData: Array<{
       "transmission",
       "signal",
       "connection",
-      "connectivity"
-    ]
+      "connectivity",
+    ],
   },
   {
     name: "twitch",
     categories: ["brands", "social", "account", "gaming"],
-    tags: ["logo", "social"]
+    tags: ["logo", "social"],
   },
   {
     name: "twitter",
     categories: ["brands", "social", "account"],
-    tags: ["logo", "social"]
+    tags: ["logo", "social"],
   },
   {
     name: "type-outline",
@@ -14616,13 +14620,13 @@ export const iconsData: Array<{
       "profile",
       "contour",
       "stroke",
-      "line"
-    ]
+      "line",
+    ],
   },
   {
     name: "type",
     categories: ["text"],
-    tags: ["text", "font", "typography"]
+    tags: ["text", "font", "typography"],
   },
   {
     name: "umbrella-off",
@@ -14634,18 +14638,18 @@ export const iconsData: Array<{
       "uninsured",
       "antivirus",
       "unprotected",
-      "risky"
-    ]
+      "risky",
+    ],
   },
   {
     name: "umbrella",
     categories: ["weather"],
-    tags: ["rain", "weather"]
+    tags: ["rain", "weather"],
   },
   {
     name: "underline",
     categories: ["text"],
-    tags: ["text", "format"]
+    tags: ["text", "format"],
   },
   {
     name: "undo-2",
@@ -14659,28 +14663,28 @@ export const iconsData: Array<{
       "reverse",
       "revert",
       "direction",
-      "u-turn"
-    ]
+      "u-turn",
+    ],
   },
   {
     name: "undo-dot",
     categories: ["text", "arrows"],
-    tags: ["redo", "history", "step", "back"]
+    tags: ["redo", "history", "step", "back"],
   },
   {
     name: "undo",
     categories: ["text", "arrows"],
-    tags: ["redo", "rerun", "history"]
+    tags: ["redo", "rerun", "history"],
   },
   {
     name: "unfold-horizontal",
     categories: ["arrows", "layout"],
-    tags: ["arrow", "collapse", "fold", "vertical", "dashed"]
+    tags: ["arrow", "collapse", "fold", "vertical", "dashed"],
   },
   {
     name: "unfold-vertical",
     categories: ["arrows", "layout"],
-    tags: ["arrow", "expand", "vertical", "dashed"]
+    tags: ["arrow", "expand", "vertical", "dashed"],
   },
   {
     name: "ungroup",
@@ -14692,23 +14696,23 @@ export const iconsData: Array<{
       "units",
       "collection",
       "cluster",
-      "separate"
-    ]
+      "separate",
+    ],
   },
   {
     name: "university",
     categories: ["buildings", "navigation"],
-    tags: ["building", "education", "childhood", "school"]
+    tags: ["building", "education", "childhood", "school"],
   },
   {
     name: "unlink-2",
     categories: ["text"],
-    tags: ["url", "unchain"]
+    tags: ["url", "unchain"],
   },
   {
     name: "unlink",
     categories: ["text"],
-    tags: ["url", "unchain"]
+    tags: ["url", "unchain"],
   },
   {
     name: "unplug",
@@ -14719,68 +14723,91 @@ export const iconsData: Array<{
       "electronics",
       "socket",
       "outlet",
-      "disconnect"
-    ]
+      "disconnect",
+    ],
   },
   {
     name: "upload",
     categories: ["arrows", "files"],
-    tags: ["file"]
+    tags: ["file"],
   },
   {
     name: "usb",
     categories: ["devices", "multimedia", "home"],
-    tags: ["universal", "serial", "bus", "controller", "connector", "interface"]
+    tags: [
+      "universal",
+      "serial",
+      "bus",
+      "controller",
+      "connector",
+      "interface",
+    ],
   },
   {
     name: "user-check",
     categories: ["account"],
-    tags: ["followed", "subscribed", "done", "todo", "tick", "complete", "task"]
+    tags: [
+      "followed",
+      "subscribed",
+      "done",
+      "todo",
+      "tick",
+      "complete",
+      "task",
+    ],
   },
   {
     name: "user-cog",
     categories: ["account"],
-    tags: ["settings", "edit", "cog", "gear"]
+    tags: ["settings", "edit", "cog", "gear"],
   },
   {
     name: "user-minus",
     categories: ["account"],
-    tags: ["delete", "remove", "unfollow", "unsubscribe"]
+    tags: ["delete", "remove", "unfollow", "unsubscribe"],
   },
   {
     name: "user-pen",
     categories: ["account"],
-    tags: ["person", "account", "contact", "profile", "edit", "change"]
+    tags: ["person", "account", "contact", "profile", "edit", "change"],
   },
   {
     name: "user-plus",
     categories: ["account"],
-    tags: ["new", "add", "create", "follow", "subscribe"]
+    tags: ["new", "add", "create", "follow", "subscribe"],
   },
   {
     name: "user-round-check",
     categories: ["account"],
-    tags: ["followed", "subscribed", "done", "todo", "tick", "complete", "task"]
+    tags: [
+      "followed",
+      "subscribed",
+      "done",
+      "todo",
+      "tick",
+      "complete",
+      "task",
+    ],
   },
   {
     name: "user-round-cog",
     categories: ["account"],
-    tags: ["settings", "edit", "cog", "gear"]
+    tags: ["settings", "edit", "cog", "gear"],
   },
   {
     name: "user-round-minus",
     categories: ["account"],
-    tags: ["delete", "remove", "unfollow", "unsubscribe"]
+    tags: ["delete", "remove", "unfollow", "unsubscribe"],
   },
   {
     name: "user-round-pen",
     categories: ["account"],
-    tags: ["person", "account", "contact", "profile", "edit", "change"]
+    tags: ["person", "account", "contact", "profile", "edit", "change"],
   },
   {
     name: "user-round-plus",
     categories: ["account"],
-    tags: ["new", "add", "create", "follow", "subscribe"]
+    tags: ["new", "add", "create", "follow", "subscribe"],
   },
   {
     name: "user-round-search",
@@ -14792,18 +14819,18 @@ export const iconsData: Array<{
       "find",
       "scan",
       "magnifier",
-      "magnifying glass"
-    ]
+      "magnifying glass",
+    ],
   },
   {
     name: "user-round-x",
     categories: ["account"],
-    tags: ["delete", "remove", "unfollow", "unsubscribe", "unavailable"]
+    tags: ["delete", "remove", "unfollow", "unsubscribe", "unavailable"],
   },
   {
     name: "user-round",
     categories: ["account"],
-    tags: ["person", "account", "contact"]
+    tags: ["person", "account", "contact"],
   },
   {
     name: "user-search",
@@ -14815,28 +14842,28 @@ export const iconsData: Array<{
       "find",
       "scan",
       "magnifier",
-      "magnifying glass"
-    ]
+      "magnifying glass",
+    ],
   },
   {
     name: "user-x",
     categories: ["account"],
-    tags: ["delete", "remove", "unfollow", "unsubscribe", "unavailable"]
+    tags: ["delete", "remove", "unfollow", "unsubscribe", "unavailable"],
   },
   {
     name: "user",
     categories: ["account"],
-    tags: ["person", "account", "contact"]
+    tags: ["person", "account", "contact"],
   },
   {
     name: "users-round",
     categories: ["account"],
-    tags: ["group", "people"]
+    tags: ["group", "people"],
   },
   {
     name: "users",
     categories: ["account"],
-    tags: ["group", "people"]
+    tags: ["group", "people"],
   },
   {
     name: "utensils-crossed",
@@ -14853,8 +14880,8 @@ export const iconsData: Array<{
       "meal",
       "breakfast",
       "dinner",
-      "supper"
-    ]
+      "supper",
+    ],
   },
   {
     name: "utensils",
@@ -14871,8 +14898,8 @@ export const iconsData: Array<{
       "meal",
       "breakfast",
       "dinner",
-      "supper"
-    ]
+      "supper",
+    ],
   },
   {
     name: "utility-pole",
@@ -14883,8 +14910,8 @@ export const iconsData: Array<{
       "transmission line",
       "telegraph pole",
       "power lines",
-      "phone"
-    ]
+      "phone",
+    ],
   },
   {
     name: "variable",
@@ -14902,8 +14929,8 @@ export const iconsData: Array<{
       "brackets",
       "parameter",
       "(",
-      ")"
-    ]
+      ")",
+    ],
   },
   {
     name: "vault",
@@ -14919,28 +14946,28 @@ export const iconsData: Array<{
       "secure",
       "storage",
       "valuables",
-      "bank"
-    ]
+      "bank",
+    ],
   },
   {
     name: "vegan",
     categories: ["food-beverage", "sustainability"],
-    tags: ["vegetarian", "fruitarian", "herbivorous", "animal rights", "diet"]
+    tags: ["vegetarian", "fruitarian", "herbivorous", "animal rights", "diet"],
   },
   {
     name: "venetian-mask",
     categories: ["account", "gaming"],
-    tags: ["mask", "masquerade", "impersonate", "secret", "incognito"]
+    tags: ["mask", "masquerade", "impersonate", "secret", "incognito"],
   },
   {
     name: "venus-and-mars",
     categories: ["medical"],
-    tags: ["gender", "sex", "intersex", "androgynous", "hermaphrodite"]
+    tags: ["gender", "sex", "intersex", "androgynous", "hermaphrodite"],
   },
   {
     name: "venus",
     categories: ["medical"],
-    tags: ["gender", "sex", "female", "feminine", "woman", "girl"]
+    tags: ["gender", "sex", "female", "feminine", "woman", "girl"],
   },
   {
     name: "vibrate-off",
@@ -14951,18 +14978,18 @@ export const iconsData: Array<{
       "rumble",
       "haptic feedback",
       "notifications",
-      "screen"
-    ]
+      "screen",
+    ],
   },
   {
     name: "vibrate",
     categories: ["devices", "connectivity", "account", "notifications"],
-    tags: ["smartphone", "notification", "rumble", "haptic feedback", "screen"]
+    tags: ["smartphone", "notification", "rumble", "haptic feedback", "screen"],
   },
   {
     name: "video-off",
     categories: ["devices", "communication", "connectivity", "photography"],
-    tags: ["camera", "movie", "film"]
+    tags: ["camera", "movie", "film"],
   },
   {
     name: "video",
@@ -14974,8 +15001,8 @@ export const iconsData: Array<{
       "recording",
       "motion picture",
       "camcorder",
-      "reel"
-    ]
+      "reel",
+    ],
   },
   {
     name: "videotape",
@@ -14984,7 +15011,7 @@ export const iconsData: Array<{
       "communication",
       "connectivity",
       "photography",
-      "files"
+      "files",
     ],
     tags: [
       "vhs",
@@ -14993,18 +15020,18 @@ export const iconsData: Array<{
       "recording",
       "motion picture",
       "showreel",
-      "cassette"
-    ]
+      "cassette",
+    ],
   },
   {
     name: "view",
     categories: ["design", "photography"],
-    tags: ["eye", "look"]
+    tags: ["eye", "look"],
   },
   {
     name: "voicemail",
     categories: ["connectivity", "devices", "social"],
-    tags: ["phone", "cassette", "tape", "reel", "recording", "audio"]
+    tags: ["phone", "cassette", "tape", "reel", "recording", "audio"],
   },
   {
     name: "volleyball",
@@ -15031,38 +15058,38 @@ export const iconsData: Array<{
       "sewing",
       "thread",
       "embroidery",
-      "textile"
-    ]
+      "textile",
+    ],
   },
   {
     name: "volume-1",
     categories: ["connectivity", "communication", "multimedia"],
-    tags: ["music", "sound", "speaker"]
+    tags: ["music", "sound", "speaker"],
   },
   {
     name: "volume-2",
     categories: ["connectivity", "communication", "multimedia"],
-    tags: ["music", "sound", "speaker"]
+    tags: ["music", "sound", "speaker"],
   },
   {
     name: "volume-off",
     categories: ["connectivity", "communication", "multimedia"],
-    tags: ["music", "sound", "mute", "speaker"]
+    tags: ["music", "sound", "mute", "speaker"],
   },
   {
     name: "volume-x",
     categories: ["connectivity", "communication", "multimedia"],
-    tags: ["music", "sound", "mute", "speaker"]
+    tags: ["music", "sound", "mute", "speaker"],
   },
   {
     name: "volume",
     categories: ["connectivity", "communication", "multimedia"],
-    tags: ["music", "sound", "mute", "speaker"]
+    tags: ["music", "sound", "mute", "speaker"],
   },
   {
     name: "vote",
     categories: ["social"],
-    tags: ["vote", "poll", "ballot", "political", "social", "check", "tick"]
+    tags: ["vote", "poll", "ballot", "political", "social", "check", "tick"],
   },
   {
     name: "wallet-cards",
@@ -15077,38 +15104,38 @@ export const iconsData: Array<{
       "shopping",
       "retail",
       "consumer",
-      "cc"
-    ]
+      "cc",
+    ],
   },
   {
     name: "wallet-minimal",
     categories: ["account", "finance"],
-    tags: ["finance", "pocket"]
+    tags: ["finance", "pocket"],
   },
   {
     name: "wallet",
     categories: ["account", "finance"],
-    tags: ["money", "finance", "pocket"]
+    tags: ["money", "finance", "pocket"],
   },
   {
     name: "wallpaper",
     categories: ["account", "devices"],
-    tags: ["cover", "lock screen"]
+    tags: ["cover", "lock screen"],
   },
   {
     name: "wand-sparkles",
     categories: ["design", "gaming", "cursors", "photography"],
-    tags: ["magic", "wizard", "magician"]
+    tags: ["magic", "wizard", "magician"],
   },
   {
     name: "wand",
     categories: ["design", "gaming", "cursors", "photography"],
-    tags: ["magic", "selection"]
+    tags: ["magic", "selection"],
   },
   {
     name: "warehouse",
     categories: ["buildings", "navigation"],
-    tags: ["storage", "logistics", "building"]
+    tags: ["storage", "logistics", "building"],
   },
   {
     name: "washing-machine",
@@ -15121,13 +15148,13 @@ export const iconsData: Array<{
       "clothes",
       "rinse",
       "spin",
-      "drum"
-    ]
+      "drum",
+    ],
   },
   {
     name: "watch",
     categories: ["time"],
-    tags: ["clock", "time"]
+    tags: ["clock", "time"],
   },
   {
     name: "waves-ladder",
@@ -15142,13 +15169,13 @@ export const iconsData: Array<{
       "🏊‍♂️",
       "🏊‍♀️",
       "🏊",
-      "🥽"
-    ]
+      "🥽",
+    ],
   },
   {
     name: "waves",
     categories: ["weather", "navigation", "multimedia", "sustainability"],
-    tags: ["water", "sea", "sound", "hertz", "wavelength", "vibrate"]
+    tags: ["water", "sea", "sound", "hertz", "wavelength", "vibrate"],
   },
   {
     name: "waypoints",
@@ -15168,23 +15195,23 @@ export const iconsData: Array<{
       "stations",
       "shared",
       "spread",
-      "viral"
-    ]
+      "viral",
+    ],
   },
   {
     name: "webcam",
     categories: ["connectivity", "devices", "communication"],
-    tags: ["camera", "security"]
+    tags: ["camera", "security"],
   },
   {
     name: "webhook-off",
     categories: ["development", "social", "account"],
-    tags: ["push api", "interface", "callback"]
+    tags: ["push api", "interface", "callback"],
   },
   {
     name: "webhook",
     categories: ["development", "social", "account"],
-    tags: ["push api", "interface", "callback"]
+    tags: ["push api", "interface", "callback"],
   },
   {
     name: "weight",
@@ -15197,8 +15224,8 @@ export const iconsData: Array<{
       "measure",
       "geometry",
       "scales",
-      "balance"
-    ]
+      "balance",
+    ],
   },
   {
     name: "wheat-off",
@@ -15210,53 +15237,53 @@ export const iconsData: Array<{
       "gluten free",
       "allergy",
       "intolerance",
-      "diet"
-    ]
+      "diet",
+    ],
   },
   {
     name: "wheat",
     categories: ["food-beverage"],
-    tags: ["corn", "cereal", "grain", "gluten"]
+    tags: ["corn", "cereal", "grain", "gluten"],
   },
   {
     name: "whole-word",
     categories: ["text"],
-    tags: ["text", "selection", "letters", "characters", "font", "typography"]
+    tags: ["text", "selection", "letters", "characters", "font", "typography"],
   },
   {
     name: "wifi-high",
     categories: ["connectivity", "devices"],
-    tags: ["connection", "signal", "wireless"]
+    tags: ["connection", "signal", "wireless"],
   },
   {
     name: "wifi-low",
     categories: ["connectivity", "devices"],
-    tags: ["connection", "signal", "wireless"]
+    tags: ["connection", "signal", "wireless"],
   },
   {
     name: "wifi-off",
     categories: ["connectivity", "devices"],
-    tags: ["disabled"]
+    tags: ["disabled"],
   },
   {
     name: "wifi-zero",
     categories: ["connectivity", "devices"],
-    tags: ["connection", "signal", "wireless"]
+    tags: ["connection", "signal", "wireless"],
   },
   {
     name: "wifi",
     categories: ["connectivity", "devices"],
-    tags: ["connection", "signal", "wireless"]
+    tags: ["connection", "signal", "wireless"],
   },
   {
     name: "wind-arrow-down",
     categories: ["weather", "sustainability"],
-    tags: ["weather", "air", "pressure", "blow"]
+    tags: ["weather", "air", "pressure", "blow"],
   },
   {
     name: "wind",
     categories: ["weather", "sustainability"],
-    tags: ["weather", "air", "blow"]
+    tags: ["weather", "air", "blow"],
   },
   {
     name: "wine-off",
@@ -15271,8 +15298,8 @@ export const iconsData: Array<{
       "abstaining",
       "teetotalism",
       "allergy",
-      "intolerance"
-    ]
+      "intolerance",
+    ],
   },
   {
     name: "wine",
@@ -15285,8 +15312,8 @@ export const iconsData: Array<{
       "glass",
       "sommelier",
       "vineyard",
-      "winery"
-    ]
+      "winery",
+    ],
   },
   {
     name: "workflow",
@@ -15299,8 +15326,8 @@ export const iconsData: Array<{
       "devops",
       "network",
       "node",
-      "connection"
-    ]
+      "connection",
+    ],
   },
   {
     name: "worm",
@@ -15315,13 +15342,13 @@ export const iconsData: Array<{
       "slither",
       "pest control",
       "computer virus",
-      "malware"
-    ]
+      "malware",
+    ],
   },
   {
     name: "wrap-text",
     categories: ["text", "arrows"],
-    tags: ["words", "lines", "break", "paragraph"]
+    tags: ["words", "lines", "break", "paragraph"],
   },
   {
     name: "wrench",
@@ -15333,8 +15360,8 @@ export const iconsData: Array<{
       "diy",
       "toolbox",
       "build",
-      "construction"
-    ]
+      "construction",
+    ],
   },
   {
     name: "x",
@@ -15348,32 +15375,32 @@ export const iconsData: Array<{
       "clear",
       "math",
       "multiply",
-      "multiplication"
-    ]
+      "multiplication",
+    ],
   },
   {
     name: "youtube",
     categories: ["multimedia", "social", "brands"],
-    tags: ["logo", "social", "video", "play"]
+    tags: ["logo", "social", "video", "play"],
   },
   {
     name: "zap-off",
     categories: ["connectivity", "devices", "photography", "weather"],
-    tags: ["flash", "camera", "lightning", "electricity", "energy"]
+    tags: ["flash", "camera", "lightning", "electricity", "energy"],
   },
   {
     name: "zap",
     categories: ["connectivity", "devices", "photography", "weather"],
-    tags: ["flash", "camera", "lightning", "electricity", "energy"]
+    tags: ["flash", "camera", "lightning", "electricity", "energy"],
   },
   {
     name: "zoom-in",
     categories: ["accessibility", "layout", "design", "text", "photography"],
-    tags: ["magnifying glass", "plus"]
+    tags: ["magnifying glass", "plus"],
   },
   {
     name: "zoom-out",
     categories: ["accessibility", "layout", "design", "text", "photography"],
-    tags: ["magnifying glass", "plus"]
-  }
+    tags: ["magnifying glass", "plus"],
+  },
 ];

@@ -1,20 +1,3 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -22,21 +5,21 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList
+  CommandList,
 } from "@/components/ui/command";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { fieldTypes } from "../fieldTypes";
+import { AnimateTransition } from "../fieldTypes/_shared";
+import { FieldPropArgs, FieldPropConfig } from "./_abstractProp";
 import { Check, ChevronDown } from "lucide-react";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useCallback, useMemo } from "react";
-import { fieldTypes } from "../fieldTypes";
-import { AnimateTransition } from "../fieldTypes/string";
-import { FieldPropArgs, FieldPropConfig } from "./_abstractProp";
 
 function ListObjectTypeProp({
   prop,
@@ -44,18 +27,18 @@ function ListObjectTypeProp({
   label,
   lockField,
   isLockedBySomeoneElse,
-  change
+  change,
 }: FieldPropArgs) {
   const handleChange = useCallback(
     (v: string) => {
       change(prop, v);
     },
-    [change, prop]
+    [change, prop],
   );
 
   const selectedType = useMemo(
     () => fieldTypes.find(t => t.key === value),
-    [value]
+    [value],
   );
 
   return (
@@ -99,7 +82,9 @@ function ListObjectTypeProp({
               <CommandGroup>
                 {fieldTypes
                   .filter(e =>
-                    ["number", "string", "user", "email", "url"].includes(e.key)
+                    ["number", "string", "user", "email", "url"].includes(
+                      e.key,
+                    ),
                   )
                   .map(fieldType => (
                     <CommandItem
@@ -115,7 +100,7 @@ function ListObjectTypeProp({
                       <Check
                         className={cn(
                           "ml-auto",
-                          value === fieldType.key ? "opacity-100" : "opacity-0"
+                          value === fieldType.key ? "opacity-100" : "opacity-0",
                         )}
                       />
                     </CommandItem>
@@ -132,6 +117,6 @@ function ListObjectTypeProp({
 const config: FieldPropConfig = {
   prop: "listObjectType",
   label: "Тип элементов",
-  component: ListObjectTypeProp
+  component: ListObjectTypeProp,
 };
 export default config;

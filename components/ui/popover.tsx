@@ -1,27 +1,9 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 "use client";
 
-import * as React from "react";
-import * as PopoverPrimitive from "@radix-ui/react-popover";
-
 import { cn } from "@/lib/utils";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { AnimatePresence, motion } from "framer-motion";
+import * as React from "react";
 
 const PopoverOpenContext = React.createContext(false);
 export const usePopoverOpen = () => React.useContext(PopoverOpenContext);
@@ -41,7 +23,7 @@ function Popover({
       if (!isControlled) setInternal(next);
       onOpenChange?.(next);
     },
-    [isControlled, onOpenChange]
+    [isControlled, onOpenChange],
   );
 
   return (
@@ -77,7 +59,7 @@ function PopoverContent({
   const intensity = 1.2;
   const initial = {
     opacity: 0.4,
-    scaleX: 0,
+    scaleX: 0.2,
     scaleY: 0,
     rotateX:
       side === "left" || side === "right"
@@ -99,8 +81,14 @@ function PopoverContent({
         : side === "left"
           ? 30 * intensity
           : -30 * intensity,
-    transformPerspective: 600
+    transformPerspective: 600,
   };
+  const transition = {
+    type: "spring",
+    duration: 0.3,
+    bounce: 0.2,
+    opacity: { duration: 0.1 },
+  } as const;
 
   return (
     <PopoverPrimitive.Portal forceMount>
@@ -123,29 +111,20 @@ function PopoverContent({
                 scaleY: 1,
                 rotateX: 0,
                 rotateY: 0,
-                transformPerspective: 600
               }}
               exit={{
                 ...initial,
                 transition: {
-                  type: "spring",
-                  duration: 0.3,
-                  bounce: 0.2,
+                  ...transition,
                   scaleX: { duration: 0.2 },
-                  scaleY: { duration: 0.2 }
-                }
+                  scaleY: { duration: 0.2 },
+                },
               }}
-              transition={{
-                type: "spring",
-                duration: 0.3,
-                bounce: 0.2,
-                rotateX: { duration: 0.3 },
-                rotateY: { duration: 0.3 }
-              }}
+              transition={transition}
               style={{ willChange: "transform, opacity" }}
               className={cn(
                 "text-popover-foreground bg-background/60 relative z-50 w-72 origin-(--radix-popover-content-transform-origin) rounded-md border p-4 shadow-md outline-hidden backdrop-blur-lg",
-                className
+                className,
               )}
             >
               {children}

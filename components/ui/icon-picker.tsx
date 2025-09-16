@@ -1,20 +1,3 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -22,18 +5,18 @@ import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { useVirtualizer, VirtualItem } from "@tanstack/react-virtual";
+import { iconsData } from "./icons-data";
+import { VirtualItem, useVirtualizer } from "@tanstack/react-virtual";
 import Fuse from "fuse.js";
 import { LucideIcon, LucideProps } from "lucide-react";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import * as React from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounceValue } from "usehooks-ts";
-import { iconsData } from "./icons-data";
 
 export type IconData = (typeof iconsData)[number];
 
@@ -122,10 +105,10 @@ const IconPicker = React.forwardRef<
       modal = false,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [selectedIcon, setSelectedIcon] = useState<IconName | undefined>(
-      defaultValue
+      defaultValue,
     );
     const [isOpen, setIsOpen] = useState(defaultOpen || false);
     const [search, setSearch] = useDebounceValue("", 100);
@@ -140,7 +123,7 @@ const IconPicker = React.forwardRef<
         keys: ["name", "tags", "categories"],
         threshold: 0.3,
         ignoreLocation: true,
-        includeScore: true
+        includeScore: true,
       });
     }, [iconsToUse]);
 
@@ -203,7 +186,7 @@ const IconPicker = React.forwardRef<
             type: "row",
             categoryIndex,
             rowIndex,
-            icons: rowIcons
+            icons: rowIcons,
           });
         });
       });
@@ -232,7 +215,7 @@ const IconPicker = React.forwardRef<
         virtualItems[index].type === "category" ? 25 : 40,
       paddingEnd: 2,
       gap: 10,
-      overscan: 5
+      overscan: 5,
     });
 
     const handleValueChange = useCallback(
@@ -242,7 +225,7 @@ const IconPicker = React.forwardRef<
         }
         onValueChange?.(icon);
       },
-      [value, onValueChange]
+      [value, onValueChange],
     );
 
     const handleOpenChange = useCallback(
@@ -262,7 +245,7 @@ const IconPicker = React.forwardRef<
           }, 1);
         }
       },
-      [open, onOpenChange, virtualizer, setSearch]
+      [open, onOpenChange, virtualizer, setSearch],
     );
 
     const handleIconClick = useCallback(
@@ -271,7 +254,7 @@ const IconPicker = React.forwardRef<
         setIsOpen(false);
         setSearch("");
       },
-      [handleValueChange, setSearch]
+      [handleValueChange, setSearch],
     );
 
     const handleSearchChange = useCallback(
@@ -284,7 +267,7 @@ const IconPicker = React.forwardRef<
 
         virtualizer.scrollToOffset(0);
       },
-      [virtualizer, setSearch]
+      [virtualizer, setSearch],
     );
 
     const scrollToCategory = useCallback(
@@ -294,11 +277,11 @@ const IconPicker = React.forwardRef<
         if (categoryIndex !== undefined && virtualizer) {
           virtualizer.scrollToIndex(categoryIndex, {
             align: "start",
-            behavior: "smooth"
+            behavior: "smooth",
           });
         }
       },
-      [categoryIndices, virtualizer]
+      [categoryIndices, virtualizer],
     );
 
     const categoryButtons = useMemo(() => {
@@ -326,14 +309,14 @@ const IconPicker = React.forwardRef<
           variant="outline"
           className={cn(
             "hover:bg-foreground/10 rounded-md border p-2 transition",
-            "flex items-center justify-center"
+            "flex items-center justify-center",
           )}
           onClick={() => handleIconClick(icon.name as IconName)}
         >
           <IconRenderer name={icon.name as IconName} />
         </Button>
       ),
-      [handleIconClick]
+      [handleIconClick],
     );
 
     const renderVirtualContent = useCallback(() => {
@@ -345,7 +328,7 @@ const IconPicker = React.forwardRef<
         <div
           className="relative w-full overscroll-contain"
           style={{
-            height: `${virtualizer.getTotalSize()}px`
+            height: `${virtualizer.getTotalSize()}px`,
           }}
         >
           {virtualizer.getVirtualItems().map((virtualItem: VirtualItem) => {
@@ -359,7 +342,7 @@ const IconPicker = React.forwardRef<
               left: 0,
               width: "100%",
               height: `${virtualItem.size}px`,
-              transform: `translateY(${virtualItem.start}px)`
+              transform: `translateY(${virtualItem.start}px)`,
             };
 
             if (item.type === "category") {
@@ -396,7 +379,7 @@ const IconPicker = React.forwardRef<
       virtualItems,
       categorizedIcons,
       filteredIcons,
-      renderIcon
+      renderIcon,
     ]);
 
     React.useEffect(() => {
@@ -465,7 +448,7 @@ const IconPicker = React.forwardRef<
         </PopoverContent>
       </Popover>
     );
-  }
+  },
 );
 IconPicker.displayName = "IconPicker";
 
@@ -476,7 +459,7 @@ interface IconProps extends Omit<LucideProps, "ref"> {
 const Icon = React.forwardRef<React.ComponentRef<LucideIcon>, IconProps>(
   ({ name, ...props }, ref) => {
     return <DynamicIcon name={name} {...props} ref={ref} />;
-  }
+  },
 );
 Icon.displayName = "Icon";
 

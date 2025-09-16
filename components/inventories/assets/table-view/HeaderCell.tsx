@@ -1,34 +1,17 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { Button } from "@/components/ui/button";
 import { TableHead } from "@/components/ui/table";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
-import { useHypershelf } from "@/stores/assets";
+import { useHypershelf } from "@/stores";
+import { SortButton } from "./SortButton";
+import { VisibilityButton } from "./VisibilityButton";
 import { useSortable } from "@dnd-kit/sortable";
-import { AnimatePresence, motion, Transition } from "framer-motion";
+import { AnimatePresence, Transition, motion } from "framer-motion";
 import { Ellipsis, GripVertical, X } from "lucide-react";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useMemo, useState } from "react";
 import { shallow } from "zustand/shallow";
 import { useStoreWithEqualityFn } from "zustand/traditional";
-import { SortButton } from "./SortButton";
-import { VisibilityButton } from "./VisibilityButton";
 
 const TRANSITION = { type: "spring", bounce: 0.2, duration: 0.3 } as Transition;
 
@@ -37,7 +20,7 @@ export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
     useSortable({ id: fieldId });
   const style = {
     transform: `translate3d(${transform?.x ?? 0}px, ${transform?.y ?? 0}px, 0)`,
-    transition
+    transition,
   };
   const fieldInfo = useStoreWithEqualityFn(
     useHypershelf,
@@ -47,10 +30,10 @@ export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
       return {
         type: field.type,
         name: field.name,
-        icon: field.extra?.icon
+        icon: field.extra?.icon,
       };
     },
-    shallow
+    shallow,
   );
   const canSort = useMemo(() => {
     return (
@@ -64,7 +47,7 @@ export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
         "ip",
         "user",
         "date",
-        "email"
+        "email",
       ].includes(fieldInfo?.type)
     );
   }, [fieldInfo?.type]);

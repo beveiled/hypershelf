@@ -1,28 +1,11 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 "use client";
 
 import {
   EditableKey,
   ExtraRootKeys,
+  NonSystemKeys,
   fieldTypes,
   getPropsForType,
-  NonSystemKeys
 } from "@/components/inventories/fields/fieldTypes";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -33,7 +16,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,7 +25,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList
+  CommandList,
 } from "@/components/ui/command";
 import { IconName } from "@/components/ui/icon-picker";
 import { Input } from "@/components/ui/input";
@@ -51,33 +34,33 @@ import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { FieldType } from "@/convex/fields";
 import { ValueType } from "@/convex/schema";
 import { cn } from "@/lib/utils";
+import { FieldPropType, fieldProps, getFieldProps } from "./fieldProps";
+import { AnimateTransition } from "./fieldTypes/_shared";
 import { useMutation } from "convex/react";
 import { WithoutSystemFields } from "convex/server";
 import { motion } from "framer-motion";
 import { Check, ChevronDown, Loader2Icon } from "lucide-react";
 import { DynamicIcon } from "lucide-react/dynamic";
 import React, {
-  memo,
   MemoExoticComponent,
+  memo,
   useCallback,
   useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
-import { fieldProps, FieldPropType, getFieldProps } from "./fieldProps";
-import { AnimateTransition } from "./fieldTypes/string";
 
 type FieldFormProps = {
   fieldId?: Id<"fields"> | null;
@@ -104,7 +87,7 @@ const ActionsRow = memo(
     fieldId,
     tooltipContent,
     onDelete,
-    isLockedBySomeoneElse
+    isLockedBySomeoneElse,
   }: {
     disabled: boolean;
     isSaving: boolean;
@@ -236,7 +219,7 @@ const ActionsRow = memo(
     a.onSave === b.onSave &&
     a.onCancel === b.onCancel &&
     a.onDelete === b.onDelete &&
-    a.isLockedBySomeoneElse === b.isLockedBySomeoneElse
+    a.isLockedBySomeoneElse === b.isLockedBySomeoneElse,
 );
 
 const TypeField = memo(
@@ -246,7 +229,7 @@ const TypeField = memo(
     onCommit,
     pendingType,
     lockField,
-    isLockedBySomeoneElse
+    isLockedBySomeoneElse,
   }: {
     value: string;
     onPending: (next: string | null) => void;
@@ -257,7 +240,7 @@ const TypeField = memo(
   }) {
     const selectedType = useMemo(
       () => fieldTypes.find(t => t.key === value),
-      [value]
+      [value],
     );
 
     return (
@@ -313,7 +296,7 @@ const TypeField = memo(
                       <Check
                         className={cn(
                           "ml-auto",
-                          value === fieldType.key ? "opacity-100" : "opacity-0"
+                          value === fieldType.key ? "opacity-100" : "opacity-0",
                         )}
                       />
                     </CommandItem>
@@ -356,7 +339,7 @@ const TypeField = memo(
     a.value === b.value &&
     a.pendingType === b.pendingType &&
     a.lockField === b.lockField &&
-    a.isLockedBySomeoneElse === b.isLockedBySomeoneElse
+    a.isLockedBySomeoneElse === b.isLockedBySomeoneElse,
 );
 
 export function FieldForm({
@@ -366,7 +349,7 @@ export function FieldForm({
   locked,
   onCancel,
   isLockedBySomeoneElse,
-  onDelete
+  onDelete,
 }: FieldFormProps) {
   const updateField = useMutation(api.fields.update);
   const createField = useMutation(api.fields.create);
@@ -384,7 +367,7 @@ export function FieldForm({
         if (!prev) return prev;
         const [root, child] = key.toString().split(".") as [
           string,
-          string | undefined
+          string | undefined,
         ];
         const isExtra = !["name", "type", "required", "hidden"].includes(root);
         if (isExtra) {
@@ -401,9 +384,9 @@ export function FieldForm({
                 [parent]: {
                   ...((prev.extra?.[parent] as Record<string, ValueType>) ??
                     {}),
-                  [child]: value
-                }
-              }
+                  [child]: value,
+                },
+              },
             };
           }
           if (prev.extra?.[parent] === value) return prev;
@@ -414,13 +397,13 @@ export function FieldForm({
         return { ...prev, [field]: value } as typeof prev;
       });
     },
-    []
+    [],
   );
 
   const extract = useCallback(
     (
       obj: WithoutSystemFields<Omit<FieldType, "slug">>,
-      key: string
+      key: string,
     ): ValueType => {
       const isExtra = !["name", "type", "required", "hidden"].includes(key);
       if (isExtra)
@@ -429,7 +412,7 @@ export function FieldForm({
         );
       return obj[key as NonSystemKeys] ?? "";
     },
-    []
+    [],
   );
 
   const onSave = useCallback(
@@ -444,7 +427,7 @@ export function FieldForm({
             type: values.type,
             required: values.required,
             extra: values.extra || {},
-            hidden: values.hidden || false
+            hidden: values.hidden || false,
           });
           if (res.success) onCancel();
         } else {
@@ -453,7 +436,7 @@ export function FieldForm({
             type: values.type,
             required: values.required,
             extra: values.extra || {},
-            hidden: values.hidden || false
+            hidden: values.hidden || false,
           });
           if (res.success && res.fieldId) onCancel();
         }
@@ -461,7 +444,7 @@ export function FieldForm({
         setIsSaving(false);
       }
     },
-    [values, onCancel, updateField, createField]
+    [values, onCancel, updateField, createField],
   );
 
   const typeExtras = getPropsForType(values.type);
@@ -480,7 +463,7 @@ export function FieldForm({
       if (hasExtras) setPendingType(next);
       else onChange("type", next);
     },
-    [values, onChange]
+    [values, onChange],
   );
 
   const onTypeCommit = useCallback(
@@ -488,7 +471,7 @@ export function FieldForm({
       onChange("type", next);
       setPendingType(null);
     },
-    [onChange]
+    [onChange],
   );
 
   const componentCache = useRef<
@@ -505,7 +488,7 @@ export function FieldForm({
   const listObjectExtraKeys =
     typeExtras.includes("listObjectExtra") && values.extra?.listObjectType
       ? getPropsForType(values.extra.listObjectType).filter(
-          k => !["icon", "description", "options", "placeholder"].includes(k)
+          k => !["icon", "description", "options", "placeholder"].includes(k),
         )
       : [];
 
@@ -522,7 +505,7 @@ export function FieldForm({
         lockField={stableLock}
         isLockedBySomeoneElse={isLockedBySomeoneElse}
       />
-    )
+    ),
   });
 
   baseFieldProps.forEach(f => {
@@ -539,7 +522,7 @@ export function FieldForm({
           isLockedBySomeoneElse={isLockedBySomeoneElse}
           change={onChange}
         />
-      )
+      ),
     });
   });
 
@@ -564,7 +547,7 @@ export function FieldForm({
           isLockedBySomeoneElse={isLockedBySomeoneElse}
           change={onChange}
         />
-      )
+      ),
     });
   });
 
@@ -590,7 +573,7 @@ export function FieldForm({
           pendingType !== null
             ? "Измени тип поля или отмени, прежде чем сохранять"
             : null,
-          needsListType ? "Нужно выбрать тип элементов списка" : null
+          needsListType ? "Нужно выбрать тип элементов списка" : null,
         ]
           .filter(Boolean)
           .join(" ")
@@ -610,7 +593,7 @@ export function FieldForm({
         onDelete={onDelete}
         isLockedBySomeoneElse={isLockedBySomeoneElse}
       />
-    )
+    ),
   });
 
   const total = fields.length;
@@ -625,12 +608,12 @@ export function FieldForm({
       exit="collapsed"
       variants={{
         open: { opacity: 1, height: "auto", marginTop: 16 },
-        collapsed: { opacity: 0, height: 0, marginTop: 0 }
+        collapsed: { opacity: 0, height: 0, marginTop: 0 },
       }}
       transition={{
         opacity: { duration: total * 0.03 + 0.15, type: "spring", bounce: 0.5 },
         height: { duration: 0.1, ease: "easeInOut" },
-        marginTop: { duration: total * 0.03, ease: "easeInOut" }
+        marginTop: { duration: total * 0.03, ease: "easeInOut" },
       }}
     >
       <motion.div
@@ -638,8 +621,8 @@ export function FieldForm({
         variants={{
           open: { transition: { staggerChildren: 0.07, delayChildren: 0.1 } },
           collapsed: {
-            transition: { staggerChildren: 0.03, staggerDirection: -1 }
-          }
+            transition: { staggerChildren: 0.03, staggerDirection: -1 },
+          },
         }}
       >
         {fields.map((f, idx) => (
@@ -650,12 +633,12 @@ export function FieldForm({
             animate={{
               opacity: 1,
               y: 0,
-              transition: { duration: 0.1, delay: idx * 0.03 }
+              transition: { duration: 0.1, delay: idx * 0.03 },
             }}
             exit={{
               opacity: 0,
               y: 10,
-              transition: { duration: 0.15, delay: (total - 1 - idx) * 0.03 }
+              transition: { duration: 0.15, delay: (total - 1 - idx) * 0.03 },
             }}
           >
             {f.render()}

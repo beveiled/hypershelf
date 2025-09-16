@@ -1,51 +1,34 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-import {
-  defaultKeymap,
-  history,
-  historyKeymap,
-  indentWithTab
-} from "@codemirror/commands";
-import {
-  defaultHighlightStyle,
-  indentOnInput,
-  syntaxHighlighting
-} from "@codemirror/language";
-import { languages } from "@codemirror/language-data";
-import { Compartment, EditorState } from "@codemirror/state";
-import {
-  placeholder as cmPlaceholder,
-  drawSelection,
-  EditorView,
-  keymap
-} from "@codemirror/view";
-import { Table } from "@lezer/markdown";
-import { motion } from "framer-motion";
-import { ArrowDownFromLine } from "lucide-react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { api } from "@/convex/_generated/api";
+import { cn } from "@/lib/utils";
+import { MarkdownCommandPalette } from "./command-palette";
 import config from "./markdoc";
 import { previewModeFacet } from "./preview-facet";
 import richEditor from "./rich-editor";
 import "./style.css";
+import {
+  defaultKeymap,
+  history,
+  historyKeymap,
+  indentWithTab,
+} from "@codemirror/commands";
+import {
+  defaultHighlightStyle,
+  indentOnInput,
+  syntaxHighlighting,
+} from "@codemirror/language";
+import { languages } from "@codemirror/language-data";
+import { Compartment, EditorState } from "@codemirror/state";
+import {
+  EditorView,
+  placeholder as cmPlaceholder,
+  drawSelection,
+  keymap,
+} from "@codemirror/view";
+import { Table } from "@lezer/markdown";
 import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { MarkdownCommandPalette } from "./command-palette";
-import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { ArrowDownFromLine } from "lucide-react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 export interface MarkdownEditorProps {
   value: string;
@@ -66,7 +49,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   className = "",
   placeholder,
   defaultExpanded = false,
-  preview = false
+  preview = false,
 }) => {
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const attachMetadata = useMutation(api.files.attachMetadata);
@@ -79,20 +62,20 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         const result = await fetch(uploadUrl, {
           method: "POST",
           headers: { "Content-Type": file.type },
-          body: file
+          body: file,
         });
         const { storageId } = await result.json();
         const { fileId } = await attachMetadata({
           storageId: storageId,
-          fileName: file.name
+          fileName: file.name,
         });
         urls.push(
-          `${process.env.NEXT_PUBLIC_CONVEX_SITE_URL!}/getfile?fileId=${fileId}`
+          `${process.env.NEXT_PUBLIC_CONVEX_SITE_URL!}/getfile?fileId=${fileId}`,
         );
       }
       return urls;
     },
-    [generateUploadUrl, attachMetadata]
+    [generateUploadUrl, attachMetadata],
   );
 
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
@@ -128,7 +111,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         previewCompartment.of(previewModeFacet.of(previewRef.current)),
         richEditor({
           markdoc: config,
-          lezer: { codeLanguages: languages, extensions: [Table] }
+          lezer: { codeLanguages: languages, extensions: [Table] },
         }),
         EditorView.lineWrapping,
         editableCompartment.of(EditorView.editable.of(!disabled)),
@@ -153,8 +136,8 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
             onFocusRef.current?.();
             setIsExpanded(true);
           }
-        })
-      ]
+        }),
+      ],
     });
 
     viewRef.current = new EditorView({ state, parent: containerRef.current });
@@ -173,8 +156,8 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         changes: {
           from: 0,
           to: viewRef.current.state.doc.length,
-          insert: value
-        }
+          insert: value,
+        },
       });
       valueRef.current = value;
     }
@@ -185,8 +168,8 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
     viewRef.current.dispatch({
       effects: editableCompartment.reconfigure(
-        EditorView.editable.of(!disabled)
-      )
+        EditorView.editable.of(!disabled),
+      ),
     });
     disabledRef.current = disabled;
   }, [disabled, editableCompartment]);
@@ -233,7 +216,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
       <div
         className={cn(
           "bg-input/30 border-input rounded-md border p-3",
-          className
+          className,
         )}
       >
         <motion.div
@@ -242,17 +225,17 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
           style={
             !isExpanded && !isInFocus
               ? {
-                  mask: "linear-gradient(to bottom,black 1.5rem,transparent 100%)"
+                  mask: "linear-gradient(to bottom,black 1.5rem,transparent 100%)",
                 }
               : {}
           }
           initial={{
             height: defaultExpanded ? "initial" : 80,
-            opacity: defaultExpanded ? 0.5 : 1
+            opacity: defaultExpanded ? 0.5 : 1,
           }}
           animate={{
             height: isExpanded || isInFocus || defaultExpanded ? "initial" : 80,
-            opacity: 1
+            opacity: 1,
           }}
           transition={{ type: "spring", stiffness: 500, damping: 35 }}
         >
@@ -263,7 +246,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
               transition={{ type: "spring", stiffness: 500, damping: 35 }}
               className={cn(
                 "hover:bg-input absolute right-2 z-10 cursor-pointer rounded-2xl p-1 shadow-md transition-colors hover:shadow-lg",
-                isExpanded ? "bottom-2" : "top-2"
+                isExpanded ? "bottom-2" : "top-2",
               )}
               onClick={() => setIsExpanded(!isExpanded)}
             >

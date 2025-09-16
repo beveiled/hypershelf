@@ -1,30 +1,13 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 import { useOS } from "@/lib/useOS";
 import { cn } from "@/lib/utils";
-import { cva, type VariantProps } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
 import {
   ArrowBigUp,
   ArrowRightToLine,
   Command,
   CornerDownLeft,
   Delete,
-  Option
+  Option,
 } from "lucide-react";
 import { useMemo } from "react";
 
@@ -35,19 +18,19 @@ const kbdVariants = cva(
       variant: {
         light: "border-background/20",
         dark: "border-input",
-        white: "border-input bg-white"
+        white: "border-input bg-white",
       },
       size: {
         sm: "px-1 text-[10px]",
         md: "px-1 py-0.5 text-xs",
-        lg: "px-1.5 py-0.5 text-sm"
-      }
+        lg: "px-1.5 py-0.5 text-sm",
+      },
     },
     defaultVariants: {
       variant: "dark",
-      size: "md"
-    }
-  }
+      size: "md",
+    },
+  },
 );
 
 export function Kbd({
@@ -69,7 +52,7 @@ export function Kbd({
       option: os === "macos" ? Option : "Alt",
       backspace: Delete,
       shift: ArrowBigUp,
-      tab: ArrowRightToLine
+      tab: ArrowRightToLine,
     };
   }, [os]);
 
@@ -91,7 +74,7 @@ export function Kbd({
               const iconSize = {
                 sm: "0.625rem",
                 md: "0.75rem",
-                lg: "1rem"
+                lg: "1rem",
               }[size || "md"];
               return (
                 <IconComponent style={{ width: iconSize, height: iconSize }} />

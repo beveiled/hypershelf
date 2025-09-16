@@ -1,20 +1,3 @@
-/*
-https://github.com/beveiled/hypershelf
-Copyright (C) 2025  Daniil Gazizullin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
 "use client";
 
 import { useHeaderContent } from "@/components/util/HeaderContext";
@@ -22,14 +5,14 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { ExtendedAssetType } from "@/convex/assets";
 import { ExtendedViewType, FieldType } from "@/convex/schema";
-import { useHypershelf } from "@/stores/assets";
-import { useQuery } from "convex/react";
-import { useEffect } from "react";
+import { useHypershelf } from "@/stores";
 import { useAssetLock } from "../useLock";
 import { HeaderMenu } from "./HeaderMenu";
-import { TableView } from "./table-view";
 import { TableSkeleton } from "./TableSkeleton";
 import { ViewSwitcher } from "./ViewSwitcher";
+import { TableView } from "./table-view";
+import { useQuery } from "convex/react";
+import { useEffect } from "react";
 
 function Header() {
   return (
@@ -53,13 +36,15 @@ export function AssetsInventory() {
   const setFields = useHypershelf(state => state.setFields);
   const setViewer = useHypershelf(state => state.setViewer);
   const setUsers = useHypershelf(state => state.setUsers);
+  const setViews = useHypershelf(state => state.setViews);
+  const setLocker = useHypershelf(state => state.setLocker);
   const setActiveViewId = useHypershelf(state => state.setActiveViewId);
   const init = useHypershelf(state => state.init);
 
   const activeViewId = useHypershelf(state => state.activeViewId);
   const loadingAssets = useHypershelf(state => state.loadingAssets);
   const viewsReady = useHypershelf(
-    state => Object.keys(state.views).length > 0
+    state => Object.keys(state.views).length > 0,
   );
 
   useEffect(() => {
@@ -74,7 +59,7 @@ export function AssetsInventory() {
     if (unstableFields) {
       const newFields: Record<Id<"fields">, FieldType> = {};
       unstableFields.forEach(
-        field => (newFields[field.field._id] = field.field)
+        field => (newFields[field.field._id] = field.field),
       );
       setFields(newFields);
     }
@@ -96,9 +81,9 @@ export function AssetsInventory() {
     if (unstableViews) {
       const newViews: Record<Id<"views">, ExtendedViewType> = {};
       unstableViews.forEach(view => (newViews[view._id] = view));
-      useHypershelf.setState({ views: newViews });
+      setViews(newViews);
     }
-  }, [unstableViews]);
+  }, [unstableViews, setViews]);
 
   useEffect(() => {
     if (activeViewId || !viewsReady) return;
@@ -107,11 +92,10 @@ export function AssetsInventory() {
 
   useEffect(
     () =>
-      useHypershelf.setState({
-        locker: { release: locker.releaseLock, acquire: locker.acquireLock }
-      }),
-    [locker]
+      setLocker({ release: locker.releaseLock, acquire: locker.acquireLock }),
+    [locker, setLocker],
   );
+
   useEffect(() => init(), [init]);
 
   const { setContent: setHeaderContent } = useHeaderContent();
