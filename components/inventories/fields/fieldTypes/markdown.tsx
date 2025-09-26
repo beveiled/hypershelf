@@ -249,12 +249,12 @@ function InlineMarkdown({
   );
 }
 
-const config: FieldPropConfig = {
+const config = {
   key: "markdown",
   label: "Маркдаун",
   icon: "text-select",
   fieldProps: ["placeholder", "mdPreset"],
   component: InlineMarkdown,
-};
+} as const satisfies FieldPropConfig;
 
 export default config;

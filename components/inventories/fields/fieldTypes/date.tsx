@@ -161,12 +161,12 @@ function InlineDate({
   );
 }
 
-const config: FieldPropConfig = {
+const config = {
   key: "date",
   label: "Дата",
   icon: "calendar",
   fieldProps: ["placeholder"],
   component: InlineDate,
-};
+} as const satisfies FieldPropConfig;
 
 export default config;

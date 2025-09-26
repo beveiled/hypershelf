@@ -3,15 +3,18 @@
 import { Footer } from "@/components/Footer";
 import Header from "@/components/Header";
 import { UpdateNotifier } from "@/components/UpdateNotifier";
+import { Button } from "@/components/ui/button";
 import { HeaderContentProvider } from "@/components/util/HeaderContext";
 import { LoadingProvider } from "@/components/util/LoadingContext";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { ExtendedFieldType } from "@/convex/schema";
+import { useBrowser } from "@/lib/hooks/useBrowser";
 import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { TRPCReactProvider } from "@/trpc/react";
 import { useQuery } from "convex/react";
+import { Annoyed } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -68,6 +71,61 @@ export default function ClientLayout({
     }
   }, [unstableAssets, setAssets]);
 
+  const browser = useBrowser();
+  const [ignore, setIgnore] = useState(false);
+
+  if (browser === "trident") {
+    return (
+      <div className="bg-background fixed top-0 right-0 bottom-0 left-0 m-auto flex h-fit w-md flex-col gap-4 rounded-md px-6 py-4 text-center shadow-[0_0_1rem_oklch(80%_0.188_70.08)]">
+        <Image
+          src="/images/trident-warning.png"
+          alt="Галина"
+          width={150}
+          height={150}
+          className="mx-auto"
+        />
+        <h1 className="text-2xl font-bold">Запахло ностальгией...</h1>
+        <p className="text-secondary-fg text-sm">
+          Hypershelf не поддерживает Internet Explorer.
+          <br />
+          Скачай Chrome.
+          <br />
+          Не надо брать пример с Галины!
+        </p>
+      </div>
+    );
+  }
+
+  if (browser === "gecko" && !ignore) {
+    return (
+      <div className="bg-background fixed top-0 right-0 bottom-0 left-0 m-auto flex h-fit w-md flex-col gap-4 rounded-md px-6 py-4 text-center shadow-[0_0_1rem_oklch(80%_0.188_70.08)]">
+        <Image
+          src="/images/gecko-warning.png"
+          alt="Галина"
+          width={150}
+          height={150}
+          className="mx-auto"
+        />
+        <h1 className="text-2xl font-bold">Огненные лисы!</h1>
+        <p className="text-secondary-fg text-sm">
+          Hypershelf ломается на многих сборках Firefox.
+          <br />
+          Пожалуйста, используй Chrome.
+          <br />
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setIgnore(true)}
+            className="mt-4"
+          >
+            <Annoyed />
+            Мне все равно
+          </Button>
+        </p>
+      </div>
+    );
+  }
+
   return (
     <TRPCReactProvider>
       <HeaderContentProvider>
@@ -76,7 +134,7 @@ export default function ClientLayout({
           {insecure ? (
             <div className="bg-background fixed top-0 right-0 bottom-0 left-0 m-auto flex h-fit w-md flex-col gap-4 rounded-md px-6 py-4 text-center shadow-[0_0_1rem_oklch(80%_0.188_70.08)]">
               <Image
-                src="/images/http.png"
+                src="/images/ssl-warning.png"
                 alt="Галина"
                 width={150}
                 height={150}

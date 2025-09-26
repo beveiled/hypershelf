@@ -24,15 +24,9 @@ export function VMNode({ data }: NodeProps<Node<VM, NodeType>>) {
       ),
   );
   const linksAvailable = useHypershelf(state => state.links.length > 0);
-  const invAvailable = useHypershelf(state => {
-    const hostnameField = Object.values(state.fields).find(
-      f => f.field.name.toLowerCase() === "hostname",
-    );
-    if (!hostnameField?.field?._id) return null;
-    return Object.values(state.assets).some(
-      a => a.asset.metadata?.[hostnameField.field._id] === data.hostname,
-    );
-  });
+  const invAvailable = useHypershelf(
+    state => !!state.lookupAsset({ hostname: data.hostname, ip: data.ip }),
+  );
 
   const reactFlowViewportRef = useRef<HTMLDivElement | null>(null);
 
@@ -59,7 +53,7 @@ export function VMNode({ data }: NodeProps<Node<VM, NodeType>>) {
     >
       <div
         className={cn(
-          "absolute top-1 right-1 w-2 h-2 rounded-full border border-card",
+          "absolute top-1 right-1 w-2.5 h-2.5 rounded-full border border-card",
           data.power ? "bg-green-500" : "bg-red-500",
         )}
       />
@@ -79,6 +73,7 @@ export function VMNode({ data }: NodeProps<Node<VM, NodeType>>) {
         {invAvailable && (
           <VMControlInventory
             hostname={data.hostname}
+            ip={data.ip}
             reactFlowViewportRef={reactFlowViewportRef}
           />
         )}

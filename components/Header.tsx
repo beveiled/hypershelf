@@ -43,7 +43,7 @@ function NavLink({
       <Link
         href={href}
         className={cn(
-          "group relative overflow-x-hidden block",
+          "group relative overflow-x-hidden block cursor-pointer",
           href === pathname && "text-brand",
         )}
         onClick={handleClick}

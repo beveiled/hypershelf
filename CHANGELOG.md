@@ -1,3 +1,10 @@
+# Hypershelf 0.7.8
+
+- Browser-specific warnings
+- Magic field types
+- MVP of network connection labels
+- Some more cleanup
+
 # Hypershelf 0.7.7
 
 - Added tRPC handling along with Convex

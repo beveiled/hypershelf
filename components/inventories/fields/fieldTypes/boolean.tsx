@@ -63,12 +63,12 @@ function InlineBoolean({
   );
 }
 
-const config: FieldPropConfig = {
+const config = {
   key: "boolean",
   label: "Да/Нет",
   icon: "square-check",
   fieldProps: [],
   component: InlineBoolean,
-};
+} as const satisfies FieldPropConfig;
 
 export default config;

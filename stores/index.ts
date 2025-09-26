@@ -21,6 +21,7 @@ const initialState: State = {
   lockedFields: {},
   expandedFieldId: null,
   loadingFields: true,
+  magicFields: {},
 
   hiding: true,
   sorting: {},

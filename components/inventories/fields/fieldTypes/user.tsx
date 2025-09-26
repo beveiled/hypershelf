@@ -160,12 +160,12 @@ function InlineUser({
   );
 }
 
-const config: FieldPropConfig = {
+const config = {
   key: "user",
   label: "Юзер",
   icon: "circle-user",
   fieldProps: ["placeholder"],
   component: InlineUser,
-};
+} as const satisfies FieldPropConfig;
 
 export default config;

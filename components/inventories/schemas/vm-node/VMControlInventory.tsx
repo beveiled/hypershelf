@@ -18,24 +18,16 @@ import { useStoreWithEqualityFn } from "zustand/traditional";
 
 export function VMControlInventory({
   hostname,
+  ip,
   reactFlowViewportRef,
 }: {
   hostname: string;
+  ip: string | undefined;
   reactFlowViewportRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const [open, isOpen] = useState(false);
   const invNode = useHypershelf(
-    useShallow(state => {
-      // TODO: segregate fields with magic types
-      const hostnameField = Object.values(state.fields).find(
-        f => f.field.name.toLowerCase() === "hostname",
-      );
-      if (!hostnameField?.field?._id) return null;
-      const asset = Object.values(state.assets).find(
-        a => a.asset.metadata?.[hostnameField.field._id] === hostname,
-      );
-      return asset;
-    }),
+    useShallow(state => state.lookupAsset({ hostname, ip })),
   );
   const fields = useStoreWithEqualityFn(
     useHypershelf,

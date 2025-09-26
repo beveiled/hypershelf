@@ -46,7 +46,11 @@ export const schemasSlice: ImmerStateCreator<SchemasSlice> = (set, get) => ({
 
           const linkId = [fromVm.id, toVm.id].sort().join("-");
           if (!addedLinks.has(linkId)) {
-            links.push({ from: fromVm.id, to: toVm.id });
+            links.push({
+              from: fromVm.id,
+              to: toVm.id,
+              label: neighbor.attributes?.map(a => String(a)) ?? [],
+            });
             addedLinks.add(linkId);
           }
         }

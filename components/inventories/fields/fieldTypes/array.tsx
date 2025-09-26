@@ -212,7 +212,7 @@ export function InlineArray({
   );
 }
 
-const config: FieldPropConfig = {
+const config = {
   key: "array",
   label: "Список",
   icon: "brackets",
@@ -224,6 +224,6 @@ const config: FieldPropConfig = {
     "listObjectExtra",
   ],
   component: InlineArray,
-};
+} as const satisfies FieldPropConfig;
 
 export default config;

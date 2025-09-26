@@ -1,3 +1,7 @@
+import {
+  MagicFieldTypes,
+  magicFieldTypesRaw,
+} from "@/components/inventories/fields/fieldTypes";
 import { Id } from "@/convex/_generated/dataModel";
 import { ExtendedFieldType, FieldType } from "@/convex/schema";
 import { validateFields } from "@/convex/utils";
@@ -52,6 +56,15 @@ export const fieldsSlice: ImmerStateCreator<FieldsSlice> = (set, get) => ({
         if (!state.fieldIds.includes(id)) {
           state.fieldIds.push(id);
         }
+        if (
+          magicFieldTypesRaw.some(mf => mf.key === field.field.type) &&
+          state.magicFields?.[field.field.type as MagicFieldTypes] !==
+            field.field._id
+        ) {
+          if (!state.magicFields) state.magicFields = {};
+          state.magicFields[field.field.type as MagicFieldTypes] =
+            field.field._id;
+        }
         if (!state.fields[id]) {
           state.fields[id] = field;
         } else {
@@ -95,6 +108,14 @@ export const fieldsSlice: ImmerStateCreator<FieldsSlice> = (set, get) => ({
       for (const id of state.fieldIds) {
         if (!incoming[id]) {
           delete state.fields[id];
+          if (state.magicFields) {
+            const magicFieldType = Object.entries(state.magicFields).find(
+              ([, fieldId]) => fieldId === id,
+            );
+            if (magicFieldType) {
+              delete state.magicFields[magicFieldType[0] as MagicFieldTypes];
+            }
+          }
           state.fieldIds.splice(state.fieldIds.indexOf(id), 1);
         }
       }

@@ -137,7 +137,12 @@ export const vsphereRouter = createTRPCRouter({
               id: h.id,
               hostname: h.hostname,
               neighbors: h.neighbors
-                ? h.neighbors.map(n => ({ id: n.id }))
+                ? h.neighbors.map(n => ({
+                    id: n.id,
+                    attributes: n.attributes
+                      ? n.attributes.map(a => String(a))
+                      : [],
+                  }))
                 : [],
             };
           })

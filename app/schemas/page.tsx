@@ -99,6 +99,7 @@ function Schemas({ topology }: { topology: { routers: Router[]; vms: VM[] } }) {
         style: { stroke: "#55f", strokeWidth: 1.5 },
         markerEnd: { type: "arrow", color: "#55f" },
         animated: true,
+        data: { label: link.label },
       })),
     );
   }, [links, setEdges]);

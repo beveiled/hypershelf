@@ -106,4 +106,26 @@ export const assetsSlice: ImmerStateCreator<AssetsSlice> = (set, get) => ({
     set(state => {
       state.assetsLocker = locker;
     }),
+  lookupAsset: ({ hostname, ip }) => {
+    const state = get();
+    if (hostname) {
+      const fieldId = state.magicFields?.["magic__hostname"];
+      const byHostname =
+        fieldId &&
+        Object.values(state.assets).find(
+          a => a.asset.metadata?.[fieldId] === hostname,
+        );
+      if (byHostname) return byHostname;
+    }
+    if (ip) {
+      const fieldId = state.magicFields?.["magic__ip"];
+      const byIP =
+        fieldId &&
+        Object.values(state.assets).find(
+          a => a.asset.metadata?.[fieldId] === ip,
+        );
+      if (byIP) return byIP;
+    }
+    return undefined;
+  },
 });

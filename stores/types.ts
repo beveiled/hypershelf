@@ -1,3 +1,4 @@
+import { MagicFieldTypes } from "@/components/inventories/fields/fieldTypes";
 import { Id } from "@/convex/_generated/dataModel";
 import {
   ExtendedAssetType,
@@ -6,6 +7,7 @@ import {
 } from "@/convex/schema";
 import { Router, VM } from "@/lib/integrations/vsphere";
 import { FolderTree } from "@/lib/integrations/vsphere/types";
+import { Link } from "@/lib/types/flow";
 import { StateCreator } from "zustand";
 
 export type LockedFields = Record<Id<"assets">, Record<Id<"fields">, string>>;
@@ -24,7 +26,11 @@ export type FieldsLocker = {
   release: (fieldId: Id<"fields">) => Promise<void>;
 };
 export type NetworkTopology = {
-  hosts: { hostname: string; id: string; neighbors: { id: string }[] }[];
+  hosts: {
+    hostname: string;
+    id: string;
+    neighbors: { id: string; attributes?: (string | number)[] }[];
+  }[];
 };
 
 export type State = {
@@ -38,6 +44,7 @@ export type State = {
   lockedFields: LockedFields;
   expandedFieldId: Id<"fields"> | null;
   loadingFields: boolean;
+  magicFields: { [key in MagicFieldTypes]?: Id<"fields"> };
 
   hiding: boolean;
   sorting: SortingDict;
@@ -52,7 +59,7 @@ export type State = {
   assetsLocker: AssetsLocker;
   fieldsLocker: FieldsLocker;
 
-  links: { from: string; to: string }[];
+  links: Link[];
   routers: Router[];
   vms: VM[];
   selectedVmNodesNetworkTopologyView: Record<string, boolean>;
@@ -73,6 +80,10 @@ export type AssetsSlice = {
   setAssets: (assets: AssetsDict) => void;
   revalidateLocks: () => void;
   setAssetsLocker: (locker: AssetsLocker) => void;
+  lookupAsset: (args: {
+    hostname?: string;
+    ip?: string;
+  }) => ExtendedAssetType | undefined;
 };
 
 export type FieldsSlice = {

@@ -1,3 +1,5 @@
+"use client";
+
 import { FolderPicker } from "./FolderPicker";
 import { NetworkViewToggle } from "./NetworkViewToggle";
 

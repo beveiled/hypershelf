@@ -1,34 +1,47 @@
 import { FieldType } from "@/convex/schema";
-import ArrayTypeConfig from "./array";
-import BooleanTypeConfig from "./boolean";
-import DateTypeConfig from "./date";
-import EmailTypeConfig from "./email";
-import IPTypeConfig from "./ip";
-import MarkdownTypeConfig from "./markdown";
-import NumberTypeConfig from "./number";
-import SelectTypeConfig from "./select";
-import StringTypeConfig from "./string";
-import URLTypeConfig from "./url";
-import UserTypeConfig from "./user";
+import { FieldPropConfig } from "./_abstractType";
+import arrayTypeConfig from "./array";
+import booleanTypeConfig from "./boolean";
+import dateTypeConfig from "./date";
+import emailTypeConfig from "./email";
+import ipTypeConfig from "./ip";
+import { magicHostnameConfig, magicIPConfig, magicMoidConfig } from "./magic";
+import markdownTypeConfig from "./markdown";
+import numberTypeConfig from "./number";
+import selectTypeConfig from "./select";
+import stringTypeConfig from "./string";
+import urlTypeConfig from "./url";
+import userTypeConfig from "./user";
 import { WithoutSystemFields } from "convex/server";
 
-export const fieldTypes = [
-  ArrayTypeConfig,
-  BooleanTypeConfig,
-  DateTypeConfig,
-  EmailTypeConfig,
-  IPTypeConfig,
-  MarkdownTypeConfig,
-  NumberTypeConfig,
-  SelectTypeConfig,
-  StringTypeConfig,
-  URLTypeConfig,
-  UserTypeConfig,
+const plainFieldTypesRaw = [
+  arrayTypeConfig,
+  booleanTypeConfig,
+  dateTypeConfig,
+  emailTypeConfig,
+  ipTypeConfig,
+  markdownTypeConfig,
+  numberTypeConfig,
+  selectTypeConfig,
+  stringTypeConfig,
+  urlTypeConfig,
+  userTypeConfig,
+];
+export const magicFieldTypesRaw = [
+  magicHostnameConfig,
+  magicIPConfig,
+  magicMoidConfig,
+];
+export const fieldTypes: FieldPropConfig[] = [
+  ...plainFieldTypesRaw,
+  ...magicFieldTypesRaw,
 ];
 
 export const getPropsForType = (type: string) =>
   fieldTypes.find(t => t.key === type)?.fieldProps ?? [];
 
+export type MagicFieldTypes = (typeof magicFieldTypesRaw)[number]["key"];
+export type PlainFieldTypes = (typeof plainFieldTypesRaw)[number]["key"];
 export type NonSystemKeys = "name" | "type" | "required" | "hidden";
 export type SystemKeys = Exclude<
   keyof WithoutSystemFields<FieldType>,

@@ -23,11 +23,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { FieldType } from "@/convex/schema";
-import { cn } from "@/lib/utils";
+import { cn, shallowPositional } from "@/lib/utils";
+import { useHypershelf } from "@/stores";
 import { AnimateTransition } from "./fieldTypes/_shared";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, Star } from "lucide-react";
 import { DynamicIcon } from "lucide-react/dynamic";
 import { useCallback, useMemo, useState } from "react";
+import { useStoreWithEqualityFn } from "zustand/traditional";
 
 export function FieldTypeProp({
   value,
@@ -59,6 +61,26 @@ export function FieldTypeProp({
     },
     [value, extra, onCommit],
   );
+  const nonAllocatedMagicFields = useStoreWithEqualityFn(
+    useHypershelf,
+    state => {
+      const usedFieldTypes = new Set(
+        Object.values(state.fields).map(f => f.field.type),
+      );
+      return fieldTypes
+        .filter(ft => ft.magic && !usedFieldTypes.has(ft.key))
+        .map(ft => ft.key);
+    },
+    shallowPositional,
+  );
+  const renderedFieldTypes = useMemo(() => {
+    return [
+      ...fieldTypes.filter(
+        ft => ft.magic && nonAllocatedMagicFields.includes(ft.key),
+      ),
+      ...fieldTypes.filter(ft => !ft.magic),
+    ];
+  }, [nonAllocatedMagicFields]);
 
   const selectedType = useMemo(
     () => fieldTypes.find(t => t.key === value),
@@ -80,7 +102,11 @@ export function FieldTypeProp({
               {selectedType ? (
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1.5">
-                    <DynamicIcon name={selectedType.icon as IconName} />
+                    {selectedType.magic ? (
+                      <Star className="text-yellow-400" />
+                    ) : (
+                      <DynamicIcon name={selectedType.icon as IconName} />
+                    )}
                     {selectedType.label}
                   </div>
                   <ChevronDown className="opacity-50" />
@@ -104,7 +130,7 @@ export function FieldTypeProp({
             <CommandList>
               <CommandEmpty>Не нашли ничего</CommandEmpty>
               <CommandGroup>
-                {fieldTypes.map(fieldType => (
+                {renderedFieldTypes.map(fieldType => (
                   <CommandItem
                     key={fieldType.key}
                     value={fieldType.key}
@@ -112,7 +138,11 @@ export function FieldTypeProp({
                     onSelect={val => onTypePending(val)}
                   >
                     <div className="flex items-center gap-1.5">
-                      <DynamicIcon name={fieldType.icon as IconName} />
+                      {fieldType.magic ? (
+                        <Star className="text-yellow-400" />
+                      ) : (
+                        <DynamicIcon name={fieldType.icon as IconName} />
+                      )}
                       {fieldType.label}
                     </div>
                     <Check
@@ -129,7 +159,7 @@ export function FieldTypeProp({
         </PopoverContent>
       </Popover>
       {pendingType && (
-        <Alert className="absolute top-full z-50 m-4 flex size-fit flex-col">
+        <Alert className="absolute top-full z-[51] m-4 flex size-fit flex-col">
           <AlertTitle>Изменить тип поля?</AlertTitle>
           <AlertDescription>
             Изменение типа поля удалит все расширенные настройки.
@@ -137,7 +167,10 @@ export function FieldTypeProp({
           <div className="mt-2 flex items-center gap-2">
             <ButtonWithKbd
               size="sm"
-              onClick={() => onCommit(pendingType)}
+              onClick={() => {
+                onCommit(pendingType);
+                setPendingType(null);
+              }}
               variant="destructive"
               keys={["Meta", "Enter"]}
             >

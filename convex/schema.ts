@@ -6,19 +6,7 @@ import { v } from "convex/values";
 
 export const fieldSchema = {
   name: v.string(),
-  type: v.union(
-    v.literal("string"),
-    v.literal("number"),
-    v.literal("boolean"),
-    v.literal("array"),
-    v.literal("select"),
-    v.literal("date"),
-    v.literal("email"),
-    v.literal("user"),
-    v.literal("url"),
-    v.literal("ip"),
-    v.literal("markdown"),
-  ),
+  type: v.string(),
   required: v.boolean(),
   hidden: v.optional(v.boolean()),
   extra: v.optional(

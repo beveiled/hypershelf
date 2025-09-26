@@ -74,6 +74,10 @@ export default function AssetsInventory() {
 
   const { setContent: setHeaderContent } = useHeaderContent();
 
+  // TODO: query builder
+  // TODO: add asset ui
+  // TODO: remove asset ui
+
   useEffect(() => {
     setHeaderContent(<Header />);
     return () => setHeaderContent(null);

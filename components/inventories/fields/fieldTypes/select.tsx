@@ -185,12 +185,12 @@ function InlineSelect({
   );
 }
 
-const config: FieldPropConfig = {
+const config = {
   key: "select",
   label: "Выбор",
   icon: "list-todo",
   fieldProps: ["options"],
   component: InlineSelect,
-};
+} as const satisfies FieldPropConfig;
 
 export default config;

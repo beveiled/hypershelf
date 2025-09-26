@@ -34,7 +34,7 @@ export type Router = {
 export type VM = {
   id: string;
   hostname: string;
-  ip: string;
+  ip: string | undefined;
   cpu: number;
   ram: number;
   power: boolean;
