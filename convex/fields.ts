@@ -1,10 +1,7 @@
-import { Doc } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 import { fieldSchema } from "./schema";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
-
-export type FieldType = Doc<"fields">;
 
 export const get = query({
   handler: async ctx => {
@@ -15,9 +12,14 @@ export const get = query({
 
     const fields = await ctx.db.query("fields").order("asc").collect();
     const editors = await Promise.all(
-      fields.map(f =>
-        f.editingBy ? ctx.db.get(f.editingBy) : Promise.resolve(null),
-      ),
+      fields.map(async f => {
+        if (!f.editingBy) return null;
+        const user = await ctx.db.get(f.editingBy);
+        return {
+          id: f.editingBy,
+          email: user?.email ?? "Unknown User",
+        };
+      }),
     );
 
     return {
@@ -119,7 +121,7 @@ export const update = mutation({
     }
 
     await ctx.db.patch(args.fieldId, {
-      name: args.name,
+      name: args.name.trim(),
       type: args.type,
       required: args.required,
       hidden: args.hidden || false,
@@ -128,40 +130,9 @@ export const update = mutation({
     return {
       success: true,
       _logs: [
-        `Field ${field.name} saved`,
+        `Field ${field.name.trim()} saved`,
         ...(!field.editingBy ? ["Warning: lock missing"] : []),
       ],
     };
-  },
-});
-
-export const makePersistent = mutation({
-  args: { fieldId: v.id("fields") },
-  handler: async (ctx, args) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      return {
-        success: false,
-        error: "Not authenticated",
-        _logs: ["Failed to make field persistent: not authenticated"],
-      };
-    }
-    const field = await ctx.db.get(args.fieldId);
-    if (!field) {
-      return {
-        success: false,
-        error: "Field not found",
-        _logs: ["Failed to make field persistent: field not found"],
-      };
-    }
-    if (field.persistent) {
-      return {
-        success: false,
-        error: "Field is already persistent",
-        _logs: [`Field ${field.name} is already persistent`],
-      };
-    }
-    await ctx.db.patch(args.fieldId, { persistent: true });
-    return { success: true, _logs: [`Field ${field.name} made persistent`] };
   },
 });

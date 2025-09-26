@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const signinSchema = z
   .object({
-    email: z.string().email({ message: "Invalid email address" }),
+    email: z.string().email({ message: "Нужна реальная почта" }),
     password: z
       .string()
       .min(10, { message: "Пароль должен быть как минимум 10 символов" })

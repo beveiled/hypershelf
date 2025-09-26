@@ -1,6 +1,7 @@
 import { TagInput } from "@/components/ui/tag-input";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { ValueType } from "@/convex/schema";
 import { validateField } from "@/convex/utils";
 import { cn, shallowPositional } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
@@ -21,9 +22,9 @@ export function InlineArray({
 }) {
   const fieldInfo = useHypershelf(
     useShallow(state => ({
-      type: state.fields?.[fieldId]?.type,
-      extra: state.fields?.[fieldId]?.extra,
-      required: state.fields?.[fieldId]?.required,
+      type: state.fields?.[fieldId]?.field?.type,
+      extra: state.fields?.[fieldId]?.field?.extra,
+      required: state.fields?.[fieldId]?.field?.required,
     })),
   );
   const { placeholder } = fieldInfo?.extra || {};
@@ -77,7 +78,7 @@ export function InlineArray({
         .then(() => setIsDirty(false))
         .finally(() => {
           setUpdating(false);
-          const locker = useHypershelf.getState().locker;
+          const locker = useHypershelf.getState().assetsLocker;
           locker.release(assetId, fieldId);
         });
     }
@@ -87,7 +88,7 @@ export function InlineArray({
     setVal(value);
     setError(null);
     setIsDirty(false);
-    const locker = useHypershelf.getState().locker;
+    const locker = useHypershelf.getState().assetsLocker;
     locker.release(assetId, fieldId);
   };
 
@@ -96,7 +97,7 @@ export function InlineArray({
       setVal(incoming);
       const dirty = !shallowPositional(incoming, value);
       setIsDirty(dirty);
-      const locker = useHypershelf.getState().locker;
+      const locker = useHypershelf.getState().assetsLocker;
       if (dirty) {
         locker.acquire(assetId, fieldId);
       } else {
@@ -151,12 +152,10 @@ export function InlineArray({
   );
 
   if (readonly) {
-    return (
-      <div
-        className={cn("select-none", !val && "text-muted-foreground/50 italic")}
-      >
-        {val || placeholder || "пусто"}
-      </div>
+    return val && val.length > 0 ? (
+      <div>{(val as ValueType[]).join(", ")}</div>
+    ) : (
+      <div className="text-muted-foreground/50 italic">пусто</div>
     );
   }
 

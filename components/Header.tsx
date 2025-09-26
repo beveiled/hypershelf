@@ -35,20 +35,29 @@ function NavLink({
   }, [pathname]);
 
   return (
-    <Link
-      href={href}
-      className="group relative overflow-x-hidden"
-      onClick={handleClick}
+    <motion.div
+      initial={{ scale: 1 }}
+      whileTap={{ scale: 0.92 }}
+      transition={{ type: "spring", bounce: 0.3, duration: 0.3 }}
     >
-      {children}
-      <div
-        className={cn("bg-brand absolute bottom-0 left-0 h-[1px] w-full", {
-          "animate-load": isNavigating,
-          "origin-left scale-x-0 transform transition-transform duration-100 group-hover:scale-x-100":
-            !isNavigating,
-        })}
-      />
-    </Link>
+      <Link
+        href={href}
+        className={cn(
+          "group relative overflow-x-hidden block",
+          href === pathname && "text-brand",
+        )}
+        onClick={handleClick}
+      >
+        {children}
+        <div
+          className={cn("bg-brand absolute bottom-0 left-0 h-[1px] w-full", {
+            "animate-load": isNavigating,
+            "origin-left scale-x-0 transform transition-transform duration-100 group-hover:scale-x-100":
+              !isNavigating,
+          })}
+        />
+      </Link>
+    </motion.div>
   );
 }
 

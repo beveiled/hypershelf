@@ -19,15 +19,21 @@ function Unset({ required }: { required?: boolean }) {
 export function FieldRenderer({
   assetId,
   fieldId,
+  readonly = false,
 }: {
   assetId: Id<"assets">;
   fieldId: Id<"fields">;
+  readonly?: boolean;
 }) {
   const value = useHypershelf(
     state => state.assets?.[assetId]?.asset?.metadata?.[fieldId],
   );
-  const fieldType = useHypershelf(state => state.fields?.[fieldId]?.type);
-  const isRequired = useHypershelf(state => state.fields?.[fieldId]?.required);
+  const fieldType = useHypershelf(
+    state => state.fields?.[fieldId]?.field?.type,
+  );
+  const isRequired = useHypershelf(
+    state => state.fields?.[fieldId]?.field?.required,
+  );
   const users = useHypershelf(state => state.users);
 
   if (!fieldType || !users) return null;
@@ -35,7 +41,11 @@ export function FieldRenderer({
   for (const fieldTypeRenderer of fieldTypes) {
     if (fieldType === fieldTypeRenderer.key) {
       return (
-        <fieldTypeRenderer.component assetId={assetId} fieldId={fieldId} />
+        <fieldTypeRenderer.component
+          assetId={assetId}
+          fieldId={fieldId}
+          readonly={readonly}
+        />
       );
     }
   }

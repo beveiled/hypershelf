@@ -1,4 +1,5 @@
-import { FieldPropConfig, PropBooleanInput } from "./_abstractProp";
+import { FieldPropConfig } from "./_abstractProp";
+import { PropBooleanInput } from "./_shared";
 
 const config: FieldPropConfig = {
   prop: "hidden",

@@ -28,9 +28,9 @@ export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
       const field = state.fields?.[fieldId];
       if (!field) return null;
       return {
-        type: field.type,
-        name: field.name,
-        icon: field.extra?.icon,
+        type: field.field.type,
+        name: field.field.name,
+        icon: field.field.extra?.icon,
       };
     },
     shallow,

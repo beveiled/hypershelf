@@ -73,6 +73,28 @@ services:
       start_period: 10s
     network_mode: host
 
+  redis:
+    image: redis:latest
+    command:
+      [
+        "redis-server",
+        "--save",
+        "60",
+        "1",
+        "--loglevel",
+        "warning",
+        "--requirepass",
+        "${REDIS_PASSWORD}",
+      ]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a ${REDIS_PASSWORD} ping | grep PONG"]
+      interval: 5s
+      start_period: 10s
+    network_mode: host
+
 volumes:
   data:
   pg_data:
+  redis_data:

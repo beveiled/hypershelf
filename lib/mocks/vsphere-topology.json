@@ -1,0 +1,781 @@
+{
+  "routers": [
+    {
+      "id": "group-v100000",
+      "name": "example_router_2",
+      "parent": "group-v100002"
+    },
+    {
+      "id": "group-v100001",
+      "name": "example_router_1",
+      "parent": "group-v100002"
+    },
+    {
+      "id": "group-v100002",
+      "name": "Example",
+      "parent": null
+    },
+    {
+      "id": "group-v100003",
+      "name": "example_router_3",
+      "parent": "group-v100002"
+    },
+    {
+      "id": "group-v100004",
+      "name": "example_router_4",
+      "parent": "group-v100002"
+    },
+    {
+      "id": "group-v100005",
+      "name": "example_router_5",
+      "parent": "group-v100002"
+    },
+    {
+      "id": "group-v100006",
+      "name": "example_router_6",
+      "parent": "group-v100002"
+    },
+    {
+      "id": "group-v100007",
+      "name": "example_router_7",
+      "parent": "group-v100002"
+    },
+    {
+      "id": "group-v100008",
+      "name": "example_router_8",
+      "parent": "group-v100002"
+    },
+    {
+      "id": "group-v100009",
+      "name": "example_router_9",
+      "parent": "group-v100002"
+    }
+  ],
+  "vms": [
+    {
+      "id": "vm-200001",
+      "hostname": "portal.vm.local",
+      "ip": "10.100.10.15",
+      "cpu": 4,
+      "ram": 8,
+      "ssd": 100,
+      "power": true,
+      "parent": "group-v100000",
+      "os": "Microsoft Windows Server 2019 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "20 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        { "icon": "usb", "label": "USB 2.0 Controller", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "256 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-200002",
+      "hostname": "pharmacy.vm.local",
+      "ip": "10.100.10.14",
+      "cpu": 4,
+      "ram": 8,
+      "ssd": 100,
+      "power": true,
+      "parent": "group-v100001",
+      "os": "Microsoft Windows Server 2016 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "100 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "16 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-200003",
+      "hostname": "shop.vm.local",
+      "ip": "",
+      "cpu": 2,
+      "ram": 4,
+      "ssd": 100,
+      "power": false,
+      "parent": "group-v100002",
+      "os": "CentOS 7 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "150 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "16 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-200004",
+      "hostname": "smth.vm.local",
+      "ip": "",
+      "cpu": 6,
+      "ram": 4,
+      "ssd": 100,
+      "power": false,
+      "parent": "group-v100002",
+      "os": "Ubuntu Linux (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "80 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "16 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-200005",
+      "hostname": "verylonghostname.vm.local",
+      "ip": "",
+      "cpu": 2,
+      "ram": 2,
+      "ssd": 100,
+      "power": false,
+      "parent": "group-v100002",
+      "os": "Debian GNU/Linux 10 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "40 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "64 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-200006",
+      "hostname": "veryveryverylonghostname.vm-long.local",
+      "ip": "",
+      "cpu": 8,
+      "ram": 16,
+      "ssd": 100,
+      "power": false,
+      "parent": "group-v100002",
+      "os": "Red Hat Enterprise Linux 8 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "40 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "64 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-200007",
+      "hostname": "short.vm.local",
+      "ip": "",
+      "cpu": 2,
+      "ram": 4,
+      "ssd": 100,
+      "power": false,
+      "parent": "group-v100002",
+      "os": "Ubuntu Linux (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "20 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "64 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-200008",
+      "hostname": "medium.vm.local",
+      "ip": "",
+      "cpu": 4,
+      "ram": 8,
+      "ssd": 100,
+      "power": false,
+      "parent": "group-v100002",
+      "os": "Debian GNU/Linux 11 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "20 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "64 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-200009",
+      "hostname": "police.vm.local",
+      "ip": "",
+      "cpu": 4,
+      "ram": 8,
+      "ssd": 100,
+      "power": false,
+      "parent": "group-v100002",
+      "os": "Microsoft Windows Server 2019 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "35 GB" }]
+        },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "4 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000010",
+      "hostname": "fire.vm.local",
+      "ip": "",
+      "cpu": 2,
+      "ram": 4,
+      "ssd": 100,
+      "power": false,
+      "parent": "group-v100002",
+      "os": "Microsoft Windows Server 2016 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "20 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "64 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000011",
+      "hostname": "conf.vm.local",
+      "ip": "",
+      "cpu": 4,
+      "ram": 4,
+      "ssd": 100,
+      "power": false,
+      "parent": "group-v100002",
+      "os": "Ubuntu Linux (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "80 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "16 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000012",
+      "hostname": "db.vm.local",
+      "ip": "",
+      "cpu": 8,
+      "ram": 16,
+      "ssd": 100,
+      "power": false,
+      "parent": "group-v100002",
+      "os": "Oracle Linux 8 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "80 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "16 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000013",
+      "hostname": "university.vm.local",
+      "ip": "10.100.10.16",
+      "cpu": 4,
+      "ram": 8,
+      "ssd": 200,
+      "power": true,
+      "parent": "group-v100003",
+      "os": "Red Hat Enterprise Linux 8 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "80 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "16 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000014",
+      "hostname": "hospital.vm.local",
+      "ip": "10.100.10.17",
+      "cpu": 6,
+      "ram": 12,
+      "ssd": 250,
+      "power": true,
+      "parent": "group-v100004",
+      "os": "Microsoft Windows Server 2019 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "20 GB" }]
+        },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "256 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000015",
+      "hostname": "bank.vm.local",
+      "ip": "10.100.10.18",
+      "cpu": 8,
+      "ram": 16,
+      "ssd": 300,
+      "power": true,
+      "parent": "group-v100005",
+      "os": "Red Hat Enterprise Linux 7 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "1000 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "4 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000016",
+      "hostname": "library.vm.local",
+      "ip": "10.100.10.19",
+      "cpu": 4,
+      "ram": 8,
+      "ssd": 150,
+      "power": true,
+      "parent": "group-v100006",
+      "os": "Ubuntu Linux (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "1000 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "4 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000017",
+      "hostname": "airport.vm.local",
+      "ip": "10.100.10.20",
+      "cpu": 8,
+      "ram": 16,
+      "ssd": 300,
+      "power": true,
+      "parent": "group-v100007",
+      "os": "Microsoft Windows Server 2019 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "1200 GB" }]
+        },
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "300 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "4 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000018",
+      "hostname": "factory.vm.local",
+      "ip": "10.100.10.21",
+      "cpu": 6,
+      "ram": 12,
+      "ssd": 250,
+      "power": true,
+      "parent": "group-v100008",
+      "os": "Red Hat Enterprise Linux 8 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "50 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "4 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000019",
+      "hostname": "school.vm.local",
+      "ip": "10.100.10.22",
+      "cpu": 4,
+      "ram": 8,
+      "ssd": 200,
+      "power": true,
+      "parent": "group-v100009",
+      "os": "Ubuntu Linux (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "600 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "4 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000020",
+      "hostname": "cinema.vm.local",
+      "ip": "10.100.10.23",
+      "cpu": 2,
+      "ram": 4,
+      "ssd": 120,
+      "power": false,
+      "parent": "group-v100006",
+      "os": "Debian GNU/Linux 10 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "400 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "4 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000021",
+      "hostname": "station.vm.local",
+      "ip": "10.100.10.24",
+      "cpu": 6,
+      "ram": 8,
+      "ssd": 200,
+      "power": true,
+      "parent": "group-v100007",
+      "os": "Microsoft Windows Server 2016 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "2048 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "4 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000022",
+      "hostname": "warehouse.vm.local",
+      "ip": "10.100.10.25",
+      "cpu": 8,
+      "ram": 16,
+      "ssd": 500,
+      "power": false,
+      "parent": "group-v100008",
+      "os": "CentOS 7 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "2000 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "4 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000023",
+      "hostname": "museum.vm.local",
+      "ip": "10.100.10.26",
+      "cpu": 4,
+      "ram": 8,
+      "ssd": 150,
+      "power": true,
+      "parent": "group-v100009",
+      "os": "Ubuntu Linux (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "50 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "64 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    },
+    {
+      "id": "vm-2000024",
+      "hostname": "stadium.vm.local",
+      "ip": "10.100.10.27",
+      "cpu": 12,
+      "ram": 24,
+      "ssd": 600,
+      "power": true,
+      "parent": "group-v100009",
+      "os": "Red Hat Enterprise Linux 8 (64-bit)",
+      "vsphereUrl": "https://example.com",
+      "devices": [
+        {
+          "icon": "hard-drive",
+          "label": "SSD",
+          "props": [{ "label": "Capacity", "value": "53 GB" }]
+        },
+        { "icon": "disc-3", "label": "CD/DVD Drive", "props": [] },
+        { "icon": "usb", "label": "USB 3.0 Controller", "props": [] },
+        {
+          "icon": "gpu",
+          "label": "Video Card",
+          "props": [
+            { "label": "Video Memory", "value": "32 MB" },
+            { "label": "GPU Memory", "value": "256 MB" }
+          ]
+        },
+        { "icon": "mouse", "label": "Mouse", "props": [] },
+        { "icon": "keyboard", "label": "Keyboard", "props": [] }
+      ]
+    }
+  ]
+}

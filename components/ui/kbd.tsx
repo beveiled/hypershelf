@@ -1,9 +1,13 @@
-import { useOS } from "@/lib/useOS";
+import { useOS } from "@/lib/hooks/useOS";
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
 import {
   ArrowBigUp,
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
   ArrowRightToLine,
+  ArrowUp,
   Command,
   CornerDownLeft,
   Delete,
@@ -53,6 +57,10 @@ export function Kbd({
       backspace: Delete,
       shift: ArrowBigUp,
       tab: ArrowRightToLine,
+      arrowleft: ArrowLeft,
+      arrowright: ArrowRight,
+      arrowdown: ArrowDown,
+      arrowup: ArrowUp,
     };
   }, [os]);
 

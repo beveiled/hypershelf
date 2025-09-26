@@ -47,7 +47,7 @@ function PopoverTrigger({
   return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
 }
 
-function PopoverContent({
+function PopoverContentNoPortal({
   className,
   align = "center",
   side = "bottom",
@@ -91,47 +91,56 @@ function PopoverContent({
   } as const;
 
   return (
-    <PopoverPrimitive.Portal forceMount>
-      <AnimatePresence>
-        {open && (
-          <PopoverPrimitive.Content
-            data-slot="popover-content"
-            align={align}
-            sideOffset={sideOffset}
-            side={side}
-            {...props}
-            asChild
+    <AnimatePresence>
+      {open && (
+        <PopoverPrimitive.Content
+          data-slot="popover-content"
+          align={align}
+          sideOffset={sideOffset}
+          side={side}
+          forceMount={true}
+          {...props}
+          asChild
+        >
+          <motion.div
+            key="select-content"
+            initial={initial}
+            animate={{
+              opacity: 1,
+              scaleX: 1,
+              scaleY: 1,
+              rotateX: 0,
+              rotateY: 0,
+            }}
+            exit={{
+              ...initial,
+              transition: {
+                ...transition,
+                scaleX: { duration: 0.2 },
+                scaleY: { duration: 0.2 },
+              },
+            }}
+            transition={transition}
+            style={{ willChange: "transform, opacity" }}
+            className={cn(
+              "text-popover-foreground bg-background/60 relative z-50 w-72 origin-(--radix-popover-content-transform-origin) rounded-md border p-4 shadow-md outline-hidden backdrop-blur-lg",
+              className,
+            )}
           >
-            <motion.div
-              key="select-content"
-              initial={initial}
-              animate={{
-                opacity: 1,
-                scaleX: 1,
-                scaleY: 1,
-                rotateX: 0,
-                rotateY: 0,
-              }}
-              exit={{
-                ...initial,
-                transition: {
-                  ...transition,
-                  scaleX: { duration: 0.2 },
-                  scaleY: { duration: 0.2 },
-                },
-              }}
-              transition={transition}
-              style={{ willChange: "transform, opacity" }}
-              className={cn(
-                "text-popover-foreground bg-background/60 relative z-50 w-72 origin-(--radix-popover-content-transform-origin) rounded-md border p-4 shadow-md outline-hidden backdrop-blur-lg",
-                className,
-              )}
-            >
-              {children}
-            </motion.div>
-          </PopoverPrimitive.Content>
-        )}
-      </AnimatePresence>
+            {children}
+          </motion.div>
+        </PopoverPrimitive.Content>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function PopoverContent({
+  ...props
+}: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+  return (
+    <PopoverPrimitive.Portal forceMount>
+      <PopoverContentNoPortal {...props} />
     </PopoverPrimitive.Portal>
   );
 }
@@ -142,4 +151,10 @@ function PopoverAnchor({
   return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />;
 }
 
-export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor };
+export {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverContentNoPortal,
+  PopoverAnchor,
+};

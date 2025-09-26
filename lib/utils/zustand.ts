@@ -1,16 +1,12 @@
-import { ExtendedAssetType } from "@/convex/assets";
-import { AssetType, FieldType } from "@/convex/schema";
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { AssetType, ExtendedAssetType, FieldType } from "@/convex/schema";
 
-export const cn = (...inputs: ClassValue[]) => {
-  return twMerge(clsx(inputs));
-};
-
-export const shallowPositional = (a: string[], b: string[]) => {
+export const shallowPositional = (
+  a: (string | object)[],
+  b: (string | object)[],
+) => {
   if (a.length !== b.length) return false;
   for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) return false;
+    if (!Object.is(a[i], b[i])) return false;
   }
   return true;
 };
@@ -73,6 +69,7 @@ export const assetsEqual = (a: ExtendedAssetType, b: ExtendedAssetType) => {
 
 export const fieldsEqual = (a: FieldType, b: FieldType) => {
   const compare_keys = ["_id", "slug", "name", "type", "required"];
+  if (a.editingBy !== b.editingBy) return false;
   for (const key of compare_keys) {
     if (!Object.is(a[key as keyof FieldType], b[key as keyof FieldType]))
       return false;

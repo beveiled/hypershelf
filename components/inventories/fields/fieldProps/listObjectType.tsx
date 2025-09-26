@@ -22,19 +22,13 @@ import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useCallback, useMemo } from "react";
 
 function ListObjectTypeProp({
-  prop,
   value,
+  setValue,
   label,
   lockField,
-  isLockedBySomeoneElse,
-  change,
+  disabled,
 }: FieldPropArgs) {
-  const handleChange = useCallback(
-    (v: string) => {
-      change(prop, v);
-    },
-    [change, prop],
-  );
+  const handleChange = useCallback((v: string) => setValue(v), [setValue]);
 
   const selectedType = useMemo(
     () => fieldTypes.find(t => t.key === value),
@@ -49,7 +43,7 @@ function ListObjectTypeProp({
           <Button
             variant="outline"
             role="combobox"
-            disabled={isLockedBySomeoneElse}
+            disabled={disabled}
             onClick={lockField}
           >
             <AnimateTransition postfix="field-type-changer">
@@ -75,7 +69,7 @@ function ListObjectTypeProp({
             <CommandInput
               placeholder="Поиск..."
               className="h-9"
-              disabled={isLockedBySomeoneElse}
+              disabled={disabled}
             />
             <CommandList>
               <CommandEmpty>Не нашли ничего</CommandEmpty>
@@ -90,7 +84,7 @@ function ListObjectTypeProp({
                     <CommandItem
                       key={fieldType.key}
                       value={fieldType.key}
-                      disabled={isLockedBySomeoneElse}
+                      disabled={disabled}
                       onSelect={handleChange}
                     >
                       <div className="flex items-center gap-1.5">

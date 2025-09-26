@@ -26,10 +26,10 @@ function MarkdownEditorPortal({
   open: boolean;
 }) {
   const placeholder = useHypershelf(
-    state => state.fields?.[fieldId]?.extra?.placeholder || "",
+    state => state.fields?.[fieldId]?.field?.extra?.placeholder || "",
   );
   const mdPreset = useHypershelf(
-    state => state.fields?.[fieldId]?.extra?.mdPreset ?? null,
+    state => state.fields?.[fieldId]?.field?.extra?.mdPreset ?? null,
   );
   const value = useHypershelf(
     state => state.assets?.[assetId]?.asset?.metadata?.[fieldId],
@@ -55,7 +55,7 @@ function MarkdownEditorPortal({
           value: newValue,
         }).finally(() => {
           setUpdating(false);
-          const locker = useHypershelf.getState().locker;
+          const locker = useHypershelf.getState().assetsLocker;
           locker.release(assetId, fieldId);
           onClose();
         });
@@ -65,7 +65,7 @@ function MarkdownEditorPortal({
   );
 
   const handleClose = useCallback(() => {
-    const locker = useHypershelf.getState().locker;
+    const locker = useHypershelf.getState().assetsLocker;
     locker.release(assetId, fieldId);
     onClose();
   }, [assetId, fieldId, onClose]);
@@ -209,24 +209,29 @@ function InlineMarkdown({
           variant="ghost"
           size="sm"
           onClick={() => setOpen(true)}
-          disabled={!!lockedBy || readonly}
+          disabled={!!lockedBy}
           className={cn(
-            lockedBy && "!opacity-100",
-            (readonly || lockedBy) && "cursor-not-allowed",
+            lockedBy && "!opacity-100 cursor-not-allowed",
+            readonly && "h-auto p-0.5",
           )}
         >
           {!isEmpty ? (
             <div className="flex items-center gap-1.5">
-              <Eye className="size-4" />
-              Открыть
+              <Eye className={cn(readonly ? "size-3" : "size-4")} />
+              {!readonly && "Открыть"}
             </div>
           ) : (
             <span className="text-muted-foreground/50 italic">пусто</span>
           )}
         </Button>
         {!isEmpty && (
-          <Button variant="ghost" size="sm">
-            <Download className="size-4" />
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={true}
+            className={cn(readonly && "h-auto p-0.5")}
+          >
+            <Download className={cn(readonly ? "size-3" : "size-4")} />
           </Button>
         )}
         {createPortal(

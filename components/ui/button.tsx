@@ -67,4 +67,36 @@ function Button(props: ButtonProps) {
   );
 }
 
-export { Button, buttonVariants };
+function IconButton({
+  children,
+  selected,
+  onClick,
+  className,
+  ...props
+}: HTMLMotionProps<"button"> & { selected: boolean; onClick: () => void } & {
+  children: React.ReactNode;
+}) {
+  return (
+    <motion.button
+      className={cn(
+        "group relative overflow-x-hidden cursor-pointer aspect-square transition-colors duration-200 ease-in-out text-muted-foreground hover:text-foreground",
+        className,
+      )}
+      {...props}
+      onClick={onClick}
+      initial={{ scale: 1 }}
+      whileTap={{ scale: 0.92 }}
+      transition={{ type: "spring", bounce: 0.3, duration: 0.3 }}
+    >
+      {children}
+      <div
+        className={cn(
+          "bg-brand absolute bottom-0 left-0 h-[1px] w-full origin-left scale-x-0 transform transition-transform duration-100",
+          !selected && "group-hover:scale-x-100",
+        )}
+      />
+    </motion.button>
+  );
+}
+
+export { Button, IconButton, buttonVariants };

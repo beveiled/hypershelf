@@ -30,7 +30,7 @@ function InlineBoolean({
         value: !value,
       }).finally(() => {
         setUpdating(false);
-        const locker = useHypershelf.getState().locker;
+        const locker = useHypershelf.getState().assetsLocker;
         locker.release(assetId, fieldId);
       });
     }, 0);
@@ -38,9 +38,9 @@ function InlineBoolean({
 
   if (readonly) {
     return value ? (
-      <CircleCheck className="size-5 text-green-500" />
+      <CircleCheck className="size-4 text-green-500" />
     ) : (
-      <CirclePlus className="size-5 rotate-45 text-red-500" />
+      <CirclePlus className="size-4 rotate-45 text-red-500" />
     );
   }
 

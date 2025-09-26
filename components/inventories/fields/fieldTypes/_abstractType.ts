@@ -12,5 +12,6 @@ export type FieldPropConfig = {
   }: {
     assetId: Id<"assets">;
     fieldId: Id<"fields">;
+    readonly?: boolean;
   }) => React.ReactNode;
 };

@@ -4,18 +4,21 @@ import { FieldPropArgs, FieldPropConfig } from "./_abstractProp";
 import { useCallback } from "react";
 
 function IconProp({
-  prop,
   value,
+  setValue,
   label,
   lockField,
-  isLockedBySomeoneElse,
-  change,
+  disabled,
 }: FieldPropArgs) {
   const handleChange = useCallback(
-    (icon: IconName) => {
-      change(prop, icon);
+    (icon: IconName) => setValue(icon),
+    [setValue],
+  );
+  const handleOpenChange = useCallback(
+    (open: boolean) => {
+      if (open) lockField();
     },
-    [change, prop],
+    [lockField],
   );
 
   return (
@@ -24,8 +27,8 @@ function IconProp({
       <IconPicker
         value={(value as IconName) || ""}
         onValueChange={handleChange}
-        onOpenChange={lockField}
-        disabled={isLockedBySomeoneElse}
+        onOpenChange={handleOpenChange}
+        disabled={disabled}
       />
     </div>
   );

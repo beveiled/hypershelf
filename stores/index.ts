@@ -1,5 +1,6 @@
 import { assetsSlice } from "./slices/assets";
 import { fieldsSlice } from "./slices/fields";
+import { schemasSlice } from "./slices/schemas";
 import { sharedSlice } from "./slices/shared";
 import { tableSlice } from "./slices/table";
 import { usersSlice } from "./slices/users";
@@ -18,6 +19,8 @@ const initialState: State = {
   fieldIds: [],
   fields: {},
   lockedFields: {},
+  expandedFieldId: null,
+  loadingFields: true,
 
   hiding: true,
   sorting: {},
@@ -29,10 +32,22 @@ const initialState: State = {
 
   users: {},
   viewer: null,
-  locker: {
+  assetsLocker: {
     acquire: async () => false,
     release: async () => {},
   },
+  fieldsLocker: {
+    acquire: async () => false,
+    release: async () => {},
+  },
+
+  links: [],
+  routers: [],
+  vms: [],
+  selectedVmNodesNetworkTopologyView: {},
+  topologyFetchTime: null,
+  folderTree: { id: "root", name: "Root", children: [] },
+  rootMoid: null,
 };
 
 export const useHypershelf = create<State & Actions>()(
@@ -45,6 +60,7 @@ export const useHypershelf = create<State & Actions>()(
       ...tableSlice(...args),
       ...viewsSlice(...args),
       ...sharedSlice(...args),
+      ...schemasSlice(...args),
     })),
   ),
 );

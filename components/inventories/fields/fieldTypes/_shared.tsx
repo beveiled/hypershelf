@@ -121,7 +121,7 @@ export function ActionsRow({
           )}
           {error && showButton && <div className="h-1" />}
           {showButton && (
-            <div className="flex w-full items-center gap-1">
+            <div className="flex w-full items-center gap-2">
               <ButtonWithKbd
                 variant="outline"
                 size="sm"
@@ -173,9 +173,9 @@ export function InlineString({
 }) {
   const fieldInfo = useHypershelf(
     useShallow(state => ({
-      type: state.fields?.[fieldId]?.type,
-      extra: state.fields?.[fieldId]?.extra,
-      required: state.fields?.[fieldId]?.required,
+      type: state.fields?.[fieldId]?.field?.type,
+      extra: state.fields?.[fieldId]?.field?.extra,
+      required: state.fields?.[fieldId]?.field?.required,
     })),
   );
   const { placeholder } = fieldInfo?.extra || {};
@@ -228,7 +228,7 @@ export function InlineString({
         .then(() => setIsDirty(false))
         .finally(() => {
           setUpdating(false);
-          const locker = useHypershelf.getState().locker;
+          const locker = useHypershelf.getState().assetsLocker;
           locker.release(assetId, fieldId);
         });
     }
@@ -238,7 +238,7 @@ export function InlineString({
     setVal(value?.toString() || "");
     setError(null);
     setIsDirty(false);
-    const locker = useHypershelf.getState().locker;
+    const locker = useHypershelf.getState().assetsLocker;
     locker.release(assetId, fieldId);
   };
 
@@ -248,7 +248,7 @@ export function InlineString({
       setVal(newValue);
       const dirty = newValue !== (value?.toString() || "");
       setIsDirty(dirty);
-      const locker = useHypershelf.getState().locker;
+      const locker = useHypershelf.getState().assetsLocker;
       if (dirty) {
         locker.acquire(assetId, fieldId);
       } else {

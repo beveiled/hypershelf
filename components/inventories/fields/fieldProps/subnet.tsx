@@ -30,18 +30,15 @@ function SubnetInput({
 }
 
 function SubnetProp({
-  prop,
   value,
+  setValue,
   label,
   lockField,
-  isLockedBySomeoneElse,
-  change,
+  disabled,
 }: FieldPropArgs) {
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      change(prop, e.target.value);
-    },
-    [change, prop],
+    (e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value.trim()),
+    [setValue],
   );
 
   return (
@@ -51,7 +48,7 @@ function SubnetProp({
         value={value?.toString() || ""}
         onChange={handleChange}
         onFocus={lockField}
-        disabled={isLockedBySomeoneElse}
+        disabled={disabled}
       />
     </div>
   );

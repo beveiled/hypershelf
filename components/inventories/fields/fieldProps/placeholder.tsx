@@ -1,4 +1,5 @@
-import { FieldPropConfig, PropStringInput } from "./_abstractProp";
+import { FieldPropConfig } from "./_abstractProp";
+import { PropStringInput } from "./_shared";
 
 const config: FieldPropConfig = {
   prop: "placeholder",

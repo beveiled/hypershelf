@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
 export function TableSkeleton() {
   return (
@@ -17,9 +18,12 @@ export function TableSkeleton() {
             {Array.from({ length: 10 }).map((_, index) => (
               <TableHead
                 key={index}
-                className={index > 0 ? "border-border border-l" : ""}
+                className={cn(
+                  "h-4 w-16",
+                  index > 0 && "border-border border-l",
+                )}
               >
-                <Skeleton className="h-4 w-16 rounded-md" />
+                <Skeleton className="h-4 w-full rounded-md" />
               </TableHead>
             ))}
           </TableRow>
@@ -30,9 +34,12 @@ export function TableSkeleton() {
               {Array.from({ length: 10 }).map((_, cellIndex) => (
                 <TableCell
                   key={cellIndex}
-                  className={cellIndex > 0 ? "border-border border-l" : ""}
+                  className={cn(
+                    "h-4 w-16",
+                    cellIndex > 0 && "border-border border-l",
+                  )}
                 >
-                  <Skeleton className="bg-accent/60 h-4 w-16 rounded" />
+                  <Skeleton className="bg-accent/60 h-4 w-full rounded" />
                 </TableCell>
               ))}
             </TableRow>

@@ -27,7 +27,7 @@ function InlineDate({
   readonly?: boolean;
 }) {
   const { placeholder } =
-    useHypershelf(state => state.fields?.[fieldId]?.extra || {}) || {};
+    useHypershelf(state => state.fields?.[fieldId]?.field?.extra || {}) || {};
   const value = useHypershelf(
     state => state.assets?.[assetId]?.asset?.metadata?.[fieldId],
   );
@@ -57,13 +57,8 @@ function InlineDate({
 
   if (readonly) {
     return (
-      <div
-        className={cn(
-          "select-none",
-          !date && "text-muted-foreground/50 italic",
-        )}
-      >
-        {date ? format(date, "PPP", { locale: ru }) : placeholder || "пусто"}
+      <div className={cn(!date && "text-muted-foreground/50 italic")}>
+        {date ? format(date, "PPP", { locale: ru }) : "пусто"}
       </div>
     );
   }
@@ -83,7 +78,7 @@ function InlineDate({
       value: selectedDate.toISOString(),
     }).finally(() => {
       setUpdating(false);
-      const locker = useHypershelf.getState().locker;
+      const locker = useHypershelf.getState().assetsLocker;
       locker.release(assetId, fieldId);
     });
   };
@@ -91,7 +86,7 @@ function InlineDate({
   const handleOpenChange = (open: boolean) => {
     if (updating) return;
     setPopoverOpen(open);
-    const locker = useHypershelf.getState().locker;
+    const locker = useHypershelf.getState().assetsLocker;
     if (open) {
       locker.acquire(assetId, fieldId);
     } else {

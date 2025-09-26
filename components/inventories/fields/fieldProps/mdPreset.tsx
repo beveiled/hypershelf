@@ -4,18 +4,15 @@ import { FieldPropArgs, FieldPropConfig } from "./_abstractProp";
 import { useCallback } from "react";
 
 function MarkdownPresetProp({
-  prop,
   value,
+  setValue,
   label,
   lockField,
-  isLockedBySomeoneElse,
-  change,
+  disabled,
 }: FieldPropArgs) {
   const handleChange = useCallback(
-    (content: string) => {
-      change(prop, content);
-    },
-    [change, prop],
+    (content: string) => setValue(content),
+    [setValue],
   );
 
   return (
@@ -25,7 +22,7 @@ function MarkdownPresetProp({
         value={value?.toString() || ""}
         onChange={handleChange}
         onFocus={lockField}
-        disabled={isLockedBySomeoneElse}
+        disabled={disabled}
       />
     </div>
   );

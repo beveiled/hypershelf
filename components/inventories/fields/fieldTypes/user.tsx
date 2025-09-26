@@ -32,7 +32,7 @@ function InlineUser({
   readonly?: boolean;
 }) {
   const { placeholder } =
-    useHypershelf(state => state.fields?.[fieldId]?.extra || {}) || {};
+    useHypershelf(state => state.fields?.[fieldId]?.field?.extra || {}) || {};
   const value = useHypershelf(
     state => state.assets?.[assetId]?.asset?.metadata?.[fieldId],
   );
@@ -48,8 +48,12 @@ function InlineUser({
 
   if (readonly) {
     return (
-      <div className="select-none">
-        {value ? users[value] || placeholder : placeholder || "пусто"}
+      <div
+        className={cn(
+          (!value || !users[value]) && "text-muted-foreground/50 italic",
+        )}
+      >
+        {value ? users[value] || "пусто" : "пусто"}
       </div>
     );
   }
@@ -68,7 +72,7 @@ function InlineUser({
       value: selectedUser,
     }).finally(() => {
       setUpdating(false);
-      const locker = useHypershelf.getState().locker;
+      const locker = useHypershelf.getState().assetsLocker;
       locker.release(assetId, fieldId);
     });
   };
@@ -76,7 +80,7 @@ function InlineUser({
   const handleOpenChange = (open: boolean) => {
     if (updating) return;
     setPopoverOpen(open);
-    const locker = useHypershelf.getState().locker;
+    const locker = useHypershelf.getState().assetsLocker;
     if (open) {
       locker.acquire(assetId, fieldId);
     } else {
@@ -108,7 +112,9 @@ function InlineUser({
               {value ? (
                 users[value]
               ) : (
-                <span className="text-muted-foreground/50 italic">пусто</span>
+                <span className="text-muted-foreground/50 italic">
+                  {placeholder || "пусто"}
+                </span>
               )}
             </AnimateTransition>
           </Button>

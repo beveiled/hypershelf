@@ -4,18 +4,15 @@ import { FieldPropArgs, FieldPropConfig } from "./_abstractProp";
 import { useCallback } from "react";
 
 function OptionsProp({
-  prop,
   value,
+  setValue,
   label,
   lockField,
-  isLockedBySomeoneElse,
-  change,
+  disabled,
 }: FieldPropArgs) {
   const handleChange = useCallback(
-    (opts: string[]) => {
-      change(prop, opts);
-    },
-    [change, prop],
+    (opts: string[]) => setValue(opts),
+    [setValue],
   );
 
   return (
@@ -25,7 +22,7 @@ function OptionsProp({
         options={(value as string[] | undefined) || []}
         onChange={handleChange}
         onFocus={lockField}
-        disabled={isLockedBySomeoneElse}
+        disabled={disabled}
       />
     </div>
   );

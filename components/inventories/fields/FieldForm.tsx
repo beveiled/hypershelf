@@ -4,362 +4,71 @@ import {
   EditableKey,
   ExtraRootKeys,
   NonSystemKeys,
-  fieldTypes,
   getPropsForType,
 } from "@/components/inventories/fields/fieldTypes";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertDialog,
-  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { IconName } from "@/components/ui/icon-picker";
-import { Input } from "@/components/ui/input";
-import { ButtonWithKbd } from "@/components/ui/kbd-button";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { FieldType } from "@/convex/fields";
-import { ValueType } from "@/convex/schema";
+import { FieldType, ValueType } from "@/convex/schema";
 import { cn } from "@/lib/utils";
-import { FieldPropType, fieldProps, getFieldProps } from "./fieldProps";
-import { AnimateTransition } from "./fieldTypes/_shared";
+import { useHypershelf } from "@/stores";
+import { ActionsRow } from "./ActionsRow";
+import { FieldTypeProp } from "./FieldTypeProp";
+import { fieldProps, getFieldProps } from "./fieldProps";
 import { useMutation } from "convex/react";
 import { WithoutSystemFields } from "convex/server";
-import { motion } from "framer-motion";
-import { Check, ChevronDown, Loader2Icon } from "lucide-react";
-import { DynamicIcon } from "lucide-react/dynamic";
-import React, {
-  MemoExoticComponent,
-  memo,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { HTMLMotionProps, motion } from "framer-motion";
+import { Plus } from "lucide-react";
+import { useCallback, useState } from "react";
 
-type FieldFormProps = {
-  fieldId?: Id<"fields"> | null;
-  initialValues: WithoutSystemFields<Omit<FieldType, "slug">>;
-  lockField?: () => void;
-  locked: boolean;
-  onCancel: () => void;
-  isLockedBySomeoneElse: boolean;
-  onDelete?: () => void;
+const defaultNewField: WithoutSystemFields<Omit<FieldType, "slug">> = {
+  name: "",
+  type: "string",
+  required: false,
+  extra: {},
 };
-
-type FieldConfig = {
-  id: string;
-  full?: boolean;
-  render: () => React.ReactNode;
-};
-
-const ActionsRow = memo(
-  function ActionsRow({
-    disabled,
-    isSaving,
-    onSave,
-    onCancel,
-    fieldId,
-    tooltipContent,
-    onDelete,
-    isLockedBySomeoneElse,
-  }: {
-    disabled: boolean;
-    isSaving: boolean;
-    onSave: (id: Id<"fields"> | null | undefined) => void;
-    onCancel: () => void;
-    fieldId?: Id<"fields"> | null;
-    tooltipContent: string | null;
-    onDelete?: () => void;
-    isLockedBySomeoneElse: boolean;
-  }) {
-    const [fieldName, setFieldName] = useState("");
-    const [isDeleting, setIsDeleting] = useState(false);
-    return (
-      <div className="col-span-full mt-4 flex gap-2">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span>
-              <Button
-                type="submit"
-                variant="default"
-                size="sm"
-                onClick={() => onSave(fieldId)}
-                disabled={disabled}
-              >
-                {isSaving && <Loader2Icon className="animate-spin" />}
-                Сохранить
-              </Button>
-            </span>
-          </TooltipTrigger>
-          {!isSaving && tooltipContent && (
-            <TooltipContent>
-              <p>{tooltipContent}</p>
-            </TooltipContent>
-          )}
-        </Tooltip>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={onCancel}
-          disabled={isSaving}
-        >
-          Отмена
-        </Button>
-        {onDelete && (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="destructive"
-                size="sm"
-                disabled={isLockedBySomeoneElse || isSaving}
-              >
-                Удалить
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="border-red-500">
-              <AlertDialogHeader>
-                <AlertDialogTitle>Подтверждение удаления</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Нужно ввести название поля, чтобы подтвердить удаление
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <div className="mt-4">
-                <Input
-                  placeholder="Введи название поля"
-                  value={fieldName}
-                  onChange={e => setFieldName(e.target.value)}
-                  onKeyDown={e => {
-                    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-                      e.preventDefault();
-                      if (
-                        !isLockedBySomeoneElse &&
-                        !isSaving &&
-                        !isDeleting &&
-                        fieldName.trim()
-                      ) {
-                        setIsDeleting(true);
-                        onDelete();
-                        setIsDeleting(false);
-                      }
-                    }
-                  }}
-                  autoFocus
-                  disabled={isLockedBySomeoneElse || isSaving || isDeleting}
-                />
-              </div>
-              <AlertDialogFooter>
-                <AlertDialogCancel asChild>
-                  <ButtonWithKbd variant="outline" keys={["Esc"]}>
-                    Отмена
-                  </ButtonWithKbd>
-                </AlertDialogCancel>
-                <ButtonWithKbd
-                  variant="destructive"
-                  onClick={() => {
-                    setIsDeleting(true);
-                    onDelete();
-                    setIsDeleting(false);
-                  }}
-                  disabled={
-                    isLockedBySomeoneElse ||
-                    isSaving ||
-                    isDeleting ||
-                    !fieldName.trim()
-                  }
-                  keys={["Meta", "Enter"]}
-                  showKbd={
-                    !isLockedBySomeoneElse &&
-                    !isSaving &&
-                    !isDeleting &&
-                    !!fieldName.trim()
-                  }
-                >
-                  {isDeleting && <Loader2Icon className="animate-spin" />}
-                  Удалить
-                </ButtonWithKbd>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
-      </div>
-    );
-  },
-  (a, b) =>
-    a.disabled === b.disabled &&
-    a.isSaving === b.isSaving &&
-    a.tooltipContent === b.tooltipContent &&
-    a.fieldId === b.fieldId &&
-    a.onSave === b.onSave &&
-    a.onCancel === b.onCancel &&
-    a.onDelete === b.onDelete &&
-    a.isLockedBySomeoneElse === b.isLockedBySomeoneElse,
-);
-
-const TypeField = memo(
-  function TypeField({
-    value,
-    onPending,
-    onCommit,
-    pendingType,
-    lockField,
-    isLockedBySomeoneElse,
-  }: {
-    value: string;
-    onPending: (next: string | null) => void;
-    onCommit: (next: string) => void;
-    pendingType: string | null;
-    lockField?: () => void;
-    isLockedBySomeoneElse: boolean;
-  }) {
-    const selectedType = useMemo(
-      () => fieldTypes.find(t => t.key === value),
-      [value],
-    );
-
-    return (
-      <div className="relative flex flex-col gap-1">
-        <Label className="block text-xs font-medium">Тип</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              disabled={isLockedBySomeoneElse || pendingType !== null}
-              onClick={lockField}
-            >
-              <AnimateTransition postfix="field-type-changer">
-                {selectedType ? (
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1.5">
-                      <DynamicIcon name={selectedType.icon as IconName} />
-                      {selectedType.label}
-                    </div>
-                    <ChevronDown className="opacity-50" />
-                  </div>
-                ) : (
-                  <span className="text-muted-foreground/50 italic">пусто</span>
-                )}
-              </AnimateTransition>
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-fit p-0">
-            <Command
-              className="!bg-transparent !backdrop-blur-none"
-              value={value}
-            >
-              <CommandInput
-                placeholder="Поиск..."
-                className="h-9"
-                disabled={isLockedBySomeoneElse || pendingType !== null}
-              />
-              <CommandList>
-                <CommandEmpty>Не нашли ничего</CommandEmpty>
-                <CommandGroup>
-                  {fieldTypes.map(fieldType => (
-                    <CommandItem
-                      key={fieldType.key}
-                      value={fieldType.key}
-                      disabled={isLockedBySomeoneElse || pendingType !== null}
-                      onSelect={val => onPending(val)}
-                    >
-                      <div className="flex items-center gap-1.5">
-                        <DynamicIcon name={fieldType.icon as IconName} />
-                        {fieldType.label}
-                      </div>
-                      <Check
-                        className={cn(
-                          "ml-auto",
-                          value === fieldType.key ? "opacity-100" : "opacity-0",
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-        {pendingType && (
-          <Alert className="absolute top-full z-50 m-4 flex size-fit flex-col">
-            <AlertTitle>Изменить тип поля?</AlertTitle>
-            <AlertDescription>
-              Изменение типа поля удалит все расширенные настройки.
-            </AlertDescription>
-            <div className="mt-2 flex items-center gap-2">
-              <ButtonWithKbd
-                size="sm"
-                onClick={() => onCommit(pendingType)}
-                variant="destructive"
-                keys={["Meta", "Enter"]}
-              >
-                Изменить
-              </ButtonWithKbd>
-              <ButtonWithKbd
-                variant="outline"
-                size="sm"
-                onClick={() => onPending(null)}
-                keys={["Esc"]}
-              >
-                Отмена
-              </ButtonWithKbd>
-            </div>
-          </Alert>
-        )}
-      </div>
-    );
-  },
-  (a, b) =>
-    a.value === b.value &&
-    a.pendingType === b.pendingType &&
-    a.lockField === b.lockField &&
-    a.isLockedBySomeoneElse === b.isLockedBySomeoneElse,
-);
 
 export function FieldForm({
   fieldId,
-  initialValues,
-  lockField,
-  locked,
-  onCancel,
-  isLockedBySomeoneElse,
-  onDelete,
-}: FieldFormProps) {
+  onComplete,
+  className,
+  ...props
+}: HTMLMotionProps<"form"> & {
+  fieldId?: Id<"fields">;
+  onComplete?: () => void;
+}) {
   const updateField = useMutation(api.fields.update);
   const createField = useMutation(api.fields.create);
 
-  const [pendingType, setPendingType] = useState<string | null>(null);
-  const [values, setValues] =
-    useState<WithoutSystemFields<Omit<FieldType, "slug">>>(initialValues);
-  const [isSaving, setIsSaving] = useState(false);
+  const locker = useHypershelf(state => state.fieldsLocker);
+  const stableLock = useCallback(
+    () => fieldId && locker.acquire(fieldId),
+    [locker, fieldId],
+  );
+  const disabled = useHypershelf(
+    state =>
+      !!(
+        fieldId &&
+        state.fields[fieldId]?.editingBy &&
+        state.fields[fieldId]?.editingBy?.id !== state.viewer
+      ),
+  );
+  const setExpandedFieldId = useHypershelf(state => state.setExpandedFieldId);
 
-  const stableLock = useCallback(() => lockField?.(), [lockField]);
+  const [pendingType, setPendingType] = useState<string | null>(null);
+  const [values, setValues] = useState<
+    WithoutSystemFields<Omit<FieldType, "slug">>
+  >(
+    (fieldId ? useHypershelf.getState().fields?.[fieldId]?.field : null) ||
+      defaultNewField,
+  );
+  const [isSaving, setIsSaving] = useState(false);
 
   const onChange = useCallback(
     <K extends EditableKey>(key: K, value: ValueType) => {
@@ -429,7 +138,12 @@ export function FieldForm({
             extra: values.extra || {},
             hidden: values.hidden || false,
           });
-          if (res.success) onCancel();
+          if (res.success) {
+            setExpandedFieldId(null);
+            onComplete?.();
+            const locker = useHypershelf.getState().fieldsLocker;
+            locker.release(id);
+          }
         } else {
           const res = await createField({
             name: values.name,
@@ -438,33 +152,19 @@ export function FieldForm({
             extra: values.extra || {},
             hidden: values.hidden || false,
           });
-          if (res.success && res.fieldId) onCancel();
+          if (res.success && res.fieldId) {
+            setExpandedFieldId(null);
+            onComplete?.();
+          }
         }
       } finally {
         setIsSaving(false);
       }
     },
-    [values, onCancel, updateField, createField],
+    [values, setExpandedFieldId, updateField, createField, onComplete],
   );
 
   const typeExtras = getPropsForType(values.type);
-
-  const onTypePending = useCallback(
-    (next: string | null) => {
-      if (next === null) {
-        setPendingType(null);
-        return;
-      }
-      const extras = getPropsForType(values.type);
-      const hasExtras = extras.some(k => {
-        const v = values.extra?.[k as keyof typeof values.extra];
-        return Array.isArray(v) ? v.length > 0 : v != null && v !== "";
-      });
-      if (hasExtras) setPendingType(next);
-      else onChange("type", next);
-    },
-    [values, onChange],
-  );
 
   const onTypeCommit = useCallback(
     (next: string) => {
@@ -473,15 +173,6 @@ export function FieldForm({
     },
     [onChange],
   );
-
-  const componentCache = useRef<
-    Record<string, MemoExoticComponent<FieldPropType>>
-  >({});
-
-  const getWrappedComponent = useCallback((id: string, C: FieldPropType) => {
-    if (!componentCache.current[id]) componentCache.current[id] = memo(C);
-    return componentCache.current[id];
-  }, []);
 
   const baseFieldProps = getFieldProps(typeExtras);
 
@@ -492,72 +183,13 @@ export function FieldForm({
         )
       : [];
 
-  const fields: FieldConfig[] = [];
-
-  fields.push({
-    id: "type",
-    render: () => (
-      <TypeField
-        value={values.type}
-        onPending={onTypePending}
-        onCommit={onTypeCommit}
-        pendingType={pendingType}
-        lockField={stableLock}
-        isLockedBySomeoneElse={isLockedBySomeoneElse}
-      />
-    ),
-  });
-
-  baseFieldProps.forEach(f => {
-    const Comp = getWrappedComponent(f.prop, f.component);
-    fields.push({
-      id: f.prop,
-      full: "full" in f ? f.full : false,
-      render: () => (
-        <Comp
-          value={extract(values, f.prop)}
-          prop={f.prop}
-          label={f.label}
-          lockField={stableLock}
-          isLockedBySomeoneElse={isLockedBySomeoneElse}
-          change={onChange}
-        />
-      ),
-    });
-  });
-
-  listObjectExtraKeys.forEach(rawKey => {
-    const prop = fieldProps.find(p => p.prop === rawKey);
-    if (!prop) return;
-    const label = `Элементы: ${prop.label}`;
-    const value =
-      values.extra?.listObjectExtra?.[
-        rawKey as keyof NonNullable<
-          NonNullable<FieldType["extra"]>["listObjectExtra"]
-        >
-      ] ?? "";
-    fields.push({
-      id: `listObjectExtra-${rawKey}`,
-      render: () => (
-        <prop.component
-          prop={`listObjectExtra-${rawKey}` as EditableKey}
-          label={label}
-          value={value}
-          lockField={stableLock}
-          isLockedBySomeoneElse={isLockedBySomeoneElse}
-          change={onChange}
-        />
-      ),
-    });
-  });
-
   const invalidName = values.name.trim() === "";
   const invalidType = values.type.trim() === "";
   const needsListType =
     values.type === "array" && !values.extra?.listObjectType;
+
   const disabledSave =
-    isLockedBySomeoneElse ||
-    !locked ||
+    disabled ||
     isSaving ||
     invalidName ||
     invalidType ||
@@ -579,28 +211,9 @@ export function FieldForm({
           .join(" ")
       : null;
 
-  fields.push({
-    id: "actions",
-    full: true,
-    render: () => (
-      <ActionsRow
-        disabled={disabledSave}
-        isSaving={isSaving}
-        onSave={onSave}
-        onCancel={onCancel}
-        fieldId={fieldId}
-        tooltipContent={tooltipContent}
-        onDelete={onDelete}
-        isLockedBySomeoneElse={isLockedBySomeoneElse}
-      />
-    ),
-  });
-
-  const total = fields.length;
-
   return (
     <motion.form
-      className="grid max-h-[70vh] grid-cols-1 gap-4 overflow-y-scroll px-2 md:grid-cols-2"
+      className={cn("grid grid-cols-1 gap-4 px-2 md:grid-cols-2", className)}
       onClick={e => e.stopPropagation()}
       onSubmit={e => e.preventDefault()}
       initial="collapsed"
@@ -611,10 +224,11 @@ export function FieldForm({
         collapsed: { opacity: 0, height: 0, marginTop: 0 },
       }}
       transition={{
-        opacity: { duration: total * 0.03 + 0.15, type: "spring", bounce: 0.5 },
-        height: { duration: 0.1, ease: "easeInOut" },
-        marginTop: { duration: total * 0.03, ease: "easeInOut" },
+        opacity: { duration: 0.45, type: "spring", bounce: 0.5 },
+        height: { duration: 0.3, ease: "easeInOut" },
+        marginTop: { duration: 0.3, ease: "easeInOut" },
       }}
+      {...props}
     >
       <motion.div
         className="contents"
@@ -625,26 +239,84 @@ export function FieldForm({
           },
         }}
       >
-        {fields.map((f, idx) => (
-          <motion.div
-            key={f.id}
-            className={f.full ? "col-span-full" : ""}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.1, delay: idx * 0.03 },
-            }}
-            exit={{
-              opacity: 0,
-              y: 10,
-              transition: { duration: 0.15, delay: (total - 1 - idx) * 0.03 },
-            }}
-          >
-            {f.render()}
-          </motion.div>
+        <FieldTypeProp
+          value={values.type}
+          onCommit={onTypeCommit}
+          lockField={stableLock}
+          disabled={disabled}
+          extra={values.extra}
+        />
+        {baseFieldProps.map(f => (
+          <div key={f.prop} className={cn(f.full && "col-span-full")}>
+            <f.component
+              value={extract(values, f.prop)}
+              label={f.label}
+              lockField={stableLock}
+              disabled={disabled}
+              setValue={(value: ValueType) => onChange(f.prop, value)}
+            />
+          </div>
         ))}
+        {listObjectExtraKeys.map(rawKey => {
+          const prop = fieldProps.find(p => p.prop === rawKey);
+          if (!prop) return null;
+          const label = `Элементы: ${prop.label}`;
+          const value =
+            values.extra?.listObjectExtra?.[
+              rawKey as keyof NonNullable<
+                NonNullable<FieldType["extra"]>["listObjectExtra"]
+              >
+            ] ?? "";
+          const editableProp = `listObjectExtra-${rawKey}` as EditableKey;
+          return (
+            <prop.component
+              key={editableProp}
+              label={label}
+              value={value}
+              setValue={(v: ValueType) => onChange(editableProp, v)}
+              lockField={stableLock}
+              disabled={disabled}
+            />
+          );
+        })}
+        <ActionsRow
+          onSave={() => onSave(fieldId)}
+          fieldId={fieldId}
+          tooltipContent={tooltipContent}
+          disabled={disabledSave}
+          isSaving={isSaving}
+          onComplete={onComplete}
+        />
       </motion.div>
     </motion.form>
+  );
+}
+
+export function NewFieldForm() {
+  const [open, setOpen] = useState(false);
+  const onComplete = useCallback(() => setOpen(false), []);
+
+  return (
+    <>
+      <Button
+        variant="outline"
+        className="mx-auto w-lg sm:w-full"
+        onClick={() => setOpen(true)}
+      >
+        <Plus />
+        Создать новое поле
+      </Button>
+      <AlertDialog open={open} onOpenChange={() => {}}>
+        <AlertDialogContent className="max-w-[calc(100vw-1rem)] sm:!max-w-2xl max-h-[calc(100vh-6rem)] overflow-y-auto">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-title relative text-left text-2xl font-extrabold">
+              New Field
+              <div className="bg-brand absolute bottom-0 left-0 h-1 w-8"></div>
+            </AlertDialogTitle>
+          </AlertDialogHeader>
+          <FieldForm onComplete={onComplete} initial="open" exit="open" />
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

@@ -1,6 +1,7 @@
+import { api } from "./_generated/api";
 import { Doc } from "./_generated/dataModel";
 import { authTables } from "@convex-dev/auth/server";
-import { defineSchema, defineTable } from "convex/server";
+import { FunctionReturnType, defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export const fieldSchema = {
@@ -61,6 +62,7 @@ const fieldSchemaInternal = {
   editing: v.optional(v.boolean()),
   editingBy: v.optional(v.id("users")),
   editingLockExpires: v.optional(v.number()),
+  /** @deprecated Not used anymore */
   persistent: v.optional(v.boolean()),
 };
 
@@ -166,3 +168,10 @@ export type ExtendedViewType = ViewType & {
   global: boolean;
 };
 export type ValueType = string | number | boolean | undefined | string[];
+
+export type ExtendedFieldType = FunctionReturnType<
+  typeof api.fields.get
+>["fields"][number];
+export type ExtendedAssetType = FunctionReturnType<
+  typeof api.assets.get
+>["assets"][number];

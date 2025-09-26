@@ -1,4 +1,5 @@
-import { FieldPropConfig, PropNumberInput } from "./_abstractProp";
+import { FieldPropConfig } from "./_abstractProp";
+import { PropNumberInput } from "./_shared";
 
 const config: FieldPropConfig = {
   prop: "minValue",

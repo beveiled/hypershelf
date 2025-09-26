@@ -16,6 +16,11 @@ export const sharedSlice: ImmerStateCreator<SharedSlice> = (set, get) => ({
       } else if (storedHiding === "1") {
         state.hiding = true;
       }
+
+      const storedRootMoid = localStorage.getItem("rootMoid");
+      if (storedRootMoid) {
+        state.rootMoid = storedRootMoid;
+      }
     });
   },
 });

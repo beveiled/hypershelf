@@ -1,6 +1,5 @@
 import { Id } from "@/convex/_generated/dataModel";
-import { ExtendedAssetType } from "@/convex/assets";
-import { AssetType } from "@/convex/schema";
+import { AssetType, ExtendedAssetType } from "@/convex/schema";
 import { assetsEqual } from "@/lib/utils";
 import { AssetsSlice, ImmerStateCreator } from "../types";
 import { shallow } from "zustand/shallow";
@@ -93,16 +92,18 @@ export const assetsSlice: ImmerStateCreator<AssetsSlice> = (set, get) => ({
           delete state.assets[id];
           delete state.assetErrors[id];
           delete state.lockedFields[id];
-          delete state.assetIds[state.assetIds.indexOf(id)];
+          state.assetIds.splice(state.assetIds.indexOf(id), 1);
         }
       }
-      if (state.loadingAssets) state.loadingAssets = false;
     });
     get().revalidateErrors();
     get().revalidateLocks();
-  },
-  setLocker: locker =>
     set(state => {
-      state.locker = locker;
+      if (state.loadingAssets) state.loadingAssets = false;
+    });
+  },
+  setAssetsLocker: locker =>
+    set(state => {
+      state.assetsLocker = locker;
     }),
 });

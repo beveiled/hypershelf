@@ -1,18 +1,30 @@
 import { Id } from "@/convex/_generated/dataModel";
-import { ExtendedAssetType } from "@/convex/assets";
-import { ExtendedViewType, FieldType } from "@/convex/schema";
+import {
+  ExtendedAssetType,
+  ExtendedFieldType,
+  ExtendedViewType,
+} from "@/convex/schema";
+import { Router, VM } from "@/lib/integrations/vsphere";
+import { FolderTree } from "@/lib/integrations/vsphere/types";
 import { StateCreator } from "zustand";
 
 export type LockedFields = Record<Id<"assets">, Record<Id<"fields">, string>>;
 export type AssetErrors = Record<Id<"assets">, Record<Id<"fields">, string>>;
 export type AssetsDict = Record<Id<"assets">, ExtendedAssetType>;
-export type FieldsDict = Record<Id<"fields">, FieldType>;
+export type FieldsDict = Record<Id<"fields">, ExtendedFieldType>;
 export type UsersDict = Record<Id<"users">, string>;
 export type SortingDict = Record<Id<"fields">, "asc" | "desc">;
 export type ViewsDict = Record<Id<"views">, ExtendedViewType>;
-export type Locker = {
+export type AssetsLocker = {
   acquire: (assetId: Id<"assets">, fieldId: Id<"fields">) => Promise<boolean>;
   release: (assetId: Id<"assets">, fieldId: Id<"fields">) => Promise<void>;
+};
+export type FieldsLocker = {
+  acquire: (fieldId: Id<"fields">) => Promise<boolean>;
+  release: (fieldId: Id<"fields">) => Promise<void>;
+};
+export type NetworkTopology = {
+  hosts: { hostname: string; id: string; neighbors: { id: string }[] }[];
 };
 
 export type State = {
@@ -24,6 +36,8 @@ export type State = {
   fieldIds: Id<"fields">[];
   fields: FieldsDict;
   lockedFields: LockedFields;
+  expandedFieldId: Id<"fields"> | null;
+  loadingFields: boolean;
 
   hiding: boolean;
   sorting: SortingDict;
@@ -35,7 +49,16 @@ export type State = {
 
   users: UsersDict;
   viewer: Id<"users"> | null | undefined;
-  locker: Locker;
+  assetsLocker: AssetsLocker;
+  fieldsLocker: FieldsLocker;
+
+  links: { from: string; to: string }[];
+  routers: Router[];
+  vms: VM[];
+  selectedVmNodesNetworkTopologyView: Record<string, boolean>;
+  topologyFetchTime: string | null;
+  folderTree: FolderTree;
+  rootMoid: string | null;
 };
 
 export type TableSlice = {
@@ -49,12 +72,14 @@ export type TableSlice = {
 export type AssetsSlice = {
   setAssets: (assets: AssetsDict) => void;
   revalidateLocks: () => void;
-  setLocker: (locker: Locker) => void;
+  setAssetsLocker: (locker: AssetsLocker) => void;
 };
 
 export type FieldsSlice = {
   setFields: (fields: FieldsDict) => void;
   revalidateErrors: () => void;
+  setExpandedFieldId: (fieldId: Id<"fields"> | null) => void;
+  setFieldsLocker: (locker: FieldsLocker) => void;
 };
 
 export type ViewsSlice = {
@@ -72,12 +97,25 @@ export type SharedSlice = {
   init: () => void;
 };
 
+export type SchemasSlice = {
+  updateTopology: (topology: {
+    routers: Router[];
+    vms: VM[];
+    fetchTime: string;
+  }) => void;
+  updateNetworkTopology: (network: NetworkTopology) => void;
+  toggleVmNodeNetworkTopologyView: (vmId: string, state?: boolean) => void;
+  setFolderTree: (tree: FolderTree) => void;
+  setRootMoid: (rootMoid: string) => void;
+};
+
 export type Actions = TableSlice &
   AssetsSlice &
   FieldsSlice &
   ViewsSlice &
   UsersSlice &
-  SharedSlice;
+  SharedSlice &
+  SchemasSlice;
 
 export type ImmerStateCreator<T> = StateCreator<
   Actions & State,

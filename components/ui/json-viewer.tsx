@@ -1,4 +1,3 @@
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
 "use client";
 
 import {
@@ -17,30 +16,6 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import * as React from "react";
-
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
-
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
-
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
-
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
-
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
-
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
-
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
-
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
-
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
-
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
-
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
-
-// https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
 
 // https://github.com/NicolasMontone/json-tree-viewer/blob/main/components/json-tree-viewer.tsx
 

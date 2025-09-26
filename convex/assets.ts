@@ -1,15 +1,9 @@
-import { api } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 import { FieldType, ValueType, assetSchema } from "./schema";
 import { validateField, validateFields } from "./utils";
 import { getAuthUserId } from "@convex-dev/auth/server";
-import { FunctionReturnType } from "convex/server";
 import { v } from "convex/values";
-
-export type ExtendedAssetType = FunctionReturnType<
-  typeof api.assets.get
->["assets"][number];
 
 export const get = query({
   handler: async ctx => {

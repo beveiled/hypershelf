@@ -1,0 +1,153 @@
+{
+  "id": "group-v000001",
+  "name": "root",
+  "children": [
+    {
+      "id": "group-v000002",
+      "name": "Event1",
+      "children": [
+        {
+          "id": "group-v000003",
+          "name": "Offices",
+          "children": [
+            {
+              "id": "group-v000004",
+              "name": "Bank",
+              "children": [
+                {
+                  "id": "group-v000005",
+                  "name": "Servers",
+                  "children": []
+                },
+                {
+                  "id": "group-v000006",
+                  "name": "Users",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "group-v000007",
+              "name": "City",
+              "children": [
+                {
+                  "id": "group-v000008",
+                  "name": "Servers",
+                  "children": []
+                },
+                {
+                  "id": "group-v000009",
+                  "name": "Users",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "group-v000010",
+              "name": "Education",
+              "children": [
+                {
+                  "id": "group-v000011",
+                  "name": "Servers",
+                  "children": []
+                },
+                {
+                  "id": "group-v000012",
+                  "name": "Users",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "group-v000013",
+      "name": "Event2",
+      "children": [
+        {
+          "id": "group-v000014",
+          "name": "Offices",
+          "children": [
+            {
+              "id": "group-v000015",
+              "name": "Bank",
+              "children": [
+                {
+                  "id": "group-v000016",
+                  "name": "Servers",
+                  "children": []
+                },
+                {
+                  "id": "group-v000017",
+                  "name": "Users",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "group-v000018",
+              "name": "City",
+              "children": [
+                {
+                  "id": "group-v000019",
+                  "name": "Servers",
+                  "children": []
+                },
+                {
+                  "id": "group-v000020",
+                  "name": "Users",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "group-v000021",
+              "name": "Education",
+              "children": [
+                {
+                  "id": "group-v000022",
+                  "name": "Servers",
+                  "children": []
+                },
+                {
+                  "id": "group-v000023",
+                  "name": "Users",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "group-v000024",
+      "name": "Testing",
+      "children": [
+        {
+          "id": "group-v000025",
+          "name": "Attackable",
+          "children": [
+            {
+              "id": "group-v000026",
+              "name": "iivanov",
+              "children": []
+            },
+            {
+              "id": "group-v000027",
+              "name": "ppetrov",
+              "children": []
+            },
+            {
+              "id": "group-v000028",
+              "name": "ggrigoryev",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

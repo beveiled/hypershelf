@@ -42,7 +42,7 @@ function InlineSelect({
   );
   const options = useStoreWithEqualityFn(
     useHypershelf,
-    state => state.fields?.[fieldId]?.extra?.options || [],
+    state => state.fields?.[fieldId]?.field?.extra?.options || [],
     shallowPositional,
   );
   const lockedBy = useHypershelf(
@@ -64,7 +64,7 @@ function InlineSelect({
           value,
         }).finally(() => {
           setUpdating(false);
-          const locker = useHypershelf.getState().locker;
+          const locker = useHypershelf.getState().assetsLocker;
           locker.release(assetId, fieldId);
         });
       }, 0);
@@ -75,7 +75,7 @@ function InlineSelect({
   const onOpenChange = useCallback(
     (o: boolean) => {
       setOpen(o);
-      const locker = useHypershelf.getState().locker;
+      const locker = useHypershelf.getState().assetsLocker;
       if (!o) {
         locker.release(assetId, fieldId);
       } else {
@@ -103,12 +103,7 @@ function InlineSelect({
 
   if (readonly) {
     return (
-      <div
-        className={cn(
-          "select-none",
-          !value && "text-muted-foreground/50 italic",
-        )}
-      >
+      <div className={cn(!value && "text-muted-foreground/50 italic")}>
         {value || "пусто"}
       </div>
     );

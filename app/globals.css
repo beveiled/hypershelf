@@ -55,6 +55,19 @@
   --animate-brand-once: brand-hover 300ms ease-in-out forwards;
 }
 
+@theme {
+  @keyframes dash-move {
+    0% {
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: 16;
+    }
+  }
+
+  --animate-dash: dash-move 1s linear infinite;
+}
+
 body {
   font-family: var(--font-sans);
 }
