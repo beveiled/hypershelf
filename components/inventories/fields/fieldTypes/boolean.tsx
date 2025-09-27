@@ -3,6 +3,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useHypershelf } from "@/stores";
 import { FieldPropConfig } from "./_abstractType";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useMutation } from "convex/react";
 import { CircleCheck, CirclePlus, Loader2 } from "lucide-react";
 import { useCallback, useState } from "react";
@@ -59,6 +60,7 @@ function InlineBoolean({
       ) : (
         <CirclePlus className="size-5 rotate-45 text-red-500" />
       )}
+      <VisuallyHidden>{value ? "Да" : "Нет"}</VisuallyHidden>
     </Button>
   );
 }

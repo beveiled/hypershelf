@@ -1,8 +1,8 @@
 import { previewModeFacet } from "./preview-facet";
 import { syntaxTree } from "@codemirror/language";
 import { RangeSet, StateField } from "@codemirror/state";
-import type { EditorState, Range } from "@codemirror/state";
-import { Decoration, EditorView, WidgetType } from "@codemirror/view";
+import type { EditorState, Extension, Range } from "@codemirror/state";
+import { Decoration, EditorView, WidgetType, keymap } from "@codemirror/view";
 import type { DecorationSet } from "@codemirror/view";
 import markdoc from "@markdoc/markdoc";
 import type { Config } from "@markdoc/markdoc";
@@ -45,7 +45,7 @@ class RenderBlockWidget extends WidgetType {
   }
 
   eq(widget: RenderBlockWidget): boolean {
-    return widget.source === widget.source;
+    return this.source === widget.source;
   }
 
   toDOM(): HTMLElement {
@@ -327,6 +327,7 @@ function replaceBlocks(
       const decoration = Decoration.replace({
         widget: new RenderBlockWidget(text, config),
         block: true,
+        inclusive: true,
       });
       decorations.push(decoration.range(node.from, node.to));
     },
@@ -338,6 +339,7 @@ function replaceBlocks(
     const decoration = Decoration.replace({
       widget: new RenderBlockWidget(text, config),
       block: true,
+      inclusive: true,
     });
     decorations.push(decoration.range(from, to));
   }
@@ -345,8 +347,49 @@ function replaceBlocks(
   return decorations;
 }
 
-export default function renderBlock(config: Config) {
-  return StateField.define<DecorationSet>({
+function nextBlockStartBelow(state: EditorState, pos: number): number | null {
+  const line = state.doc.lineAt(pos);
+  if (pos !== line.to) return null;
+  const at = line.to + 1;
+  if (at > state.doc.length) return null;
+  let target: number | null = null;
+  syntaxTree(state).iterate({
+    from: at,
+    to: at,
+    enter(node) {
+      if (target !== null) return;
+      if (node.from !== at) return;
+      if (node.name === "EmbedTagUrl") {
+        target = node.from - 3;
+        return;
+      }
+      if (
+        node.name === "Table" ||
+        node.name === "Blockquote" ||
+        node.name === "MarkdocTag"
+      ) {
+        target = node.from;
+        return;
+      }
+    },
+  });
+  return target;
+}
+
+const arrowDownIntoBlock = {
+  key: "ArrowDown",
+  run(view: EditorView) {
+    const sel = view.state.selection.main;
+    if (!sel.empty) return false;
+    const target = nextBlockStartBelow(view.state, sel.head);
+    if (target == null) return false;
+    view.dispatch({ selection: { anchor: target }, scrollIntoView: true });
+    return true;
+  },
+};
+
+export default function renderBlock(config: Config): Extension {
+  const field = StateField.define<DecorationSet>({
     create(state) {
       if (!listenersInitialized && typeof window !== "undefined") {
         initializeKeyListeners();
@@ -360,9 +403,9 @@ export default function renderBlock(config: Config) {
       }
       return RangeSet.of(replaceBlocks(transaction.state, config), true);
     },
-
-    provide(field) {
-      return EditorView.decorations.from(field);
+    provide(f) {
+      return EditorView.decorations.from(f);
     },
   });
+  return [field, keymap.of([arrowDownIntoBlock])];
 }

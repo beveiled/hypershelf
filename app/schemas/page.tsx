@@ -150,6 +150,7 @@ export default function SchemasPage() {
     state => state.updateNetworkTopology,
   );
   const setFolderTree = useHypershelf(state => state.setFolderTree);
+  const init = useHypershelf(state => state.init);
 
   useEffect(() => {
     if (!topology) return;
@@ -171,6 +172,8 @@ export default function SchemasPage() {
   useEffect(() => {
     setHeaderContent(<Header />);
   }, [setHeaderContent]);
+
+  useEffect(() => init(), [init]);
 
   if (!rootMoid) {
     return (

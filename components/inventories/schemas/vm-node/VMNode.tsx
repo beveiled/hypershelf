@@ -65,7 +65,7 @@ export function VMNode({ data }: NodeProps<Node<VM, NodeType>>) {
       <GuestIcon className="size-6 mb-1" />
       {data.hostname}
       <div className="text-xs text-muted-foreground">{data.ip}</div>
-      <div className="mt-2 flex items-center gap-2">
+      <div className="mt-2 flex items-center gap-1">
         <VMControlVsphere
           vmId={data.id}
           reactFlowViewportRef={reactFlowViewportRef}

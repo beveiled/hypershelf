@@ -1,3 +1,12 @@
+# Hypershelf 0.7.9
+
+- Accessibility improvements
+- Allow to move into Markdown blocks using keyboard
+- Rev. 2 of network connection labels (there will be more)
+- Some more reload-persistent state
+- Fixed some minor bugs
+- UI improvements
+
 # Hypershelf 0.7.8
 
 - Browser-specific warnings

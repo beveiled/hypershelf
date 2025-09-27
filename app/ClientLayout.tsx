@@ -17,7 +17,7 @@ import { useQuery } from "convex/react";
 import { Annoyed } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ClientLayout({
   children,
@@ -74,6 +74,11 @@ export default function ClientLayout({
   const browser = useBrowser();
   const [ignore, setIgnore] = useState(false);
 
+  const hasIgnored = useMemo(() => {
+    if (typeof window === "undefined") return undefined;
+    return localStorage.getItem("ignoreFirefoxWarning") === "1";
+  }, []);
+
   if (browser === "trident") {
     return (
       <div className="bg-background fixed top-0 right-0 bottom-0 left-0 m-auto flex h-fit w-md flex-col gap-4 rounded-md px-6 py-4 text-center shadow-[0_0_1rem_oklch(80%_0.188_70.08)]">
@@ -96,7 +101,12 @@ export default function ClientLayout({
     );
   }
 
-  if (browser === "gecko" && !ignore) {
+  if (
+    browser === "gecko" &&
+    !ignore &&
+    hasIgnored !== undefined &&
+    !hasIgnored
+  ) {
     return (
       <div className="bg-background fixed top-0 right-0 bottom-0 left-0 m-auto flex h-fit w-md flex-col gap-4 rounded-md px-6 py-4 text-center shadow-[0_0_1rem_oklch(80%_0.188_70.08)]">
         <Image
@@ -115,7 +125,10 @@ export default function ClientLayout({
           <Button
             size="sm"
             variant="outline"
-            onClick={() => setIgnore(true)}
+            onClick={() => {
+              setIgnore(true);
+              localStorage.setItem("ignoreFirefoxWarning", "1");
+            }}
             className="mt-4"
           >
             <Annoyed />

@@ -18,7 +18,7 @@ export function VisibilityButton({
       variant="ghost"
       size="sm"
       onClick={() => toggleVisibility(fieldId)}
-      className={cn("!size-auto !p-1")}
+      className="!size-auto !p-1"
     >
       <motion.div transition={{ type: "spring", bounce: 0.2, duration: 0.3 }}>
         <motion.svg
@@ -31,7 +31,7 @@ export function VisibilityButton({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className={!isHidden ? "opacity-50" : ""}
+          className={cn(!isHidden && "opacity-50")}
         >
           <motion.path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
           <motion.circle cx="12" cy="12" r="3" />

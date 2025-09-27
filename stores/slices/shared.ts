@@ -17,9 +17,11 @@ export const sharedSlice: ImmerStateCreator<SharedSlice> = (set, get) => ({
         state.hiding = true;
       }
 
-      const storedRootMoid = localStorage.getItem("rootMoid");
-      if (storedRootMoid) {
-        state.rootMoid = storedRootMoid;
+      const url = new URL(window.location.href);
+      const rootMoidFromUrl = url.searchParams.get("rootMoid");
+      if (rootMoidFromUrl) {
+        state.rootMoid = rootMoidFromUrl;
+        localStorage.setItem("rootMoid", rootMoidFromUrl);
       }
     });
   },

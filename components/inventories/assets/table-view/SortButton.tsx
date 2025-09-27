@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Id } from "@/convex/_generated/dataModel";
-import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -18,7 +17,7 @@ export function SortButton({
       variant="ghost"
       size="sm"
       onClick={() => toggleSorting(fieldId)}
-      className={cn("!size-auto !p-1")}
+      className="!size-auto !p-1"
     >
       <motion.svg
         xmlns="http://www.w3.org/2000/svg"

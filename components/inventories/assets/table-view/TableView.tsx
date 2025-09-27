@@ -79,7 +79,10 @@ export function TableView() {
   return (
     <>
       <div className="bg-background/70 border-border absolute z-[99] h-8 w-[calc(100vw-1rem)] rounded-tl-md rounded-tr-md border backdrop-blur-lg" />
-      <div className="relative h-[calc(100dvh-3.5rem)] overflow-auto overscroll-none rounded-md border">
+      <div
+        className="relative h-[calc(100dvh-3.5rem)] overflow-auto overscroll-none rounded-md border"
+        tabIndex={-1}
+      >
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}

@@ -6,24 +6,23 @@ import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { FieldPropConfig } from "./_abstractType";
+import * as Dialog from "@radix-ui/react-dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useMutation } from "convex/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleCheck, Download, Eye, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { createPortal } from "react-dom";
 
-function MarkdownEditorPortal({
+function MarkdownEditorDialogContent({
   fieldId,
   assetId,
   onClose,
   readonly,
-  open,
 }: {
   fieldId: Id<"fields">;
   assetId: Id<"assets">;
   onClose: () => void;
   readonly: boolean;
-  open: boolean;
 }) {
   const placeholder = useHypershelf(
     state => state.fields?.[fieldId]?.field?.extra?.placeholder || "",
@@ -79,9 +78,6 @@ function MarkdownEditorPortal({
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (!isDirty && e.key === "Escape") {
-        handleClose();
-      }
       if (
         isDirty &&
         (e.metaKey || e.ctrlKey) &&
@@ -95,14 +91,13 @@ function MarkdownEditorPortal({
     return () => {
       window.removeEventListener("keydown", handler);
     };
-  }, [isDirty, handleClose, onSave, val]);
+  }, [isDirty, onSave, val]);
 
   return (
-    <AnimatePresence>
-      {open && (
+    <>
+      <Dialog.Overlay asChild>
         <motion.div
-          key={`markdown-backdrop-${assetId}-${fieldId}`}
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          className="fixed inset-0 z-[9999]"
           initial={{ opacity: 0 }}
           animate={{
             opacity: 1,
@@ -113,65 +108,85 @@ function MarkdownEditorPortal({
           exit={{
             opacity: 0,
             backdropFilter: "blur(0px)",
-            background: "transparent",
+            background:
+              "color-mix(in oklab, var(--background) 0%, transparent)",
           }}
           transition={{ duration: 0.2 }}
+        />
+      </Dialog.Overlay>
+      <Dialog.Content
+        onEscapeKeyDown={e => {
+          e.preventDefault();
+          if (e.key === "Escape" && (e.metaKey || e.ctrlKey)) {
+            handleClose();
+          }
+        }}
+        onPointerDownOutside={e => e.preventDefault()}
+        className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+      >
+        <Dialog.Title>
+          <VisuallyHidden>Редактирование маркдаун-поля</VisuallyHidden>
+        </Dialog.Title>
+        <Dialog.Description>
+          <VisuallyHidden>
+            Нажмите Ctrl(Cmd)+Shift+Tab, чтобы редактировать, Ctrl(Cmd)+Esc
+            чтобы выйти и Ctrl(Cmd)+S чтобы сохранить.
+          </VisuallyHidden>
+        </Dialog.Description>
+        <motion.div
+          key={`markdown-editor-${assetId}-${fieldId}`}
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 1.1 }}
+          transition={{
+            opacity: { duration: 0.1 },
+            scale: { type: "spring", duration: 0.2, bounce: 0.1 },
+          }}
+          className="relative w-full max-w-3xl"
         >
-          <motion.div
-            key={`markdown-editor-${assetId}-${fieldId}`}
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
-            transition={{
-              opacity: { duration: 0.1 },
-              scale: { type: "spring", duration: 0.2, bounce: 0.1 },
-            }}
-            className="relative w-full max-w-3xl"
-          >
-            <MarkdownEditor
-              value={val}
-              placeholder={placeholder}
-              disabled={disabled || updating || readonly}
-              onChange={setVal}
-              className={cn(
-                "bg-background/60 max-h-[90vh] overflow-y-auto backdrop-blur-lg",
-                lazyError && "ring-2 ring-red-500",
-              )}
-              defaultExpanded={true}
-            />
-            {lazyError && isDirty && (
-              <div className="mt-1 text-right text-sm text-red-500">
-                {lazyError}
-              </div>
+          <MarkdownEditor
+            value={val}
+            placeholder={placeholder}
+            disabled={disabled || updating || readonly}
+            onChange={setVal}
+            className={cn(
+              "bg-background/60 max-h-[90vh] overflow-y-auto backdrop-blur-lg",
+              lazyError && "ring-2 ring-red-500",
             )}
-            <div className="mt-2 flex justify-end gap-2">
-              <ButtonWithKbd
-                variant="outline"
-                onClick={handleClose}
-                disabled={updating}
-                keys={["Esc"]}
-                showKbd={!isDirty}
-              >
-                Отмена
-              </ButtonWithKbd>
-              <ButtonWithKbd
-                onClick={() => onSave(val)}
-                disabled={disabled || updating || readonly || !isDirty}
-                keys={["Meta", "S"]}
-                showKbd={isDirty}
-              >
-                {updating ? (
-                  <Loader2 className="animate-spin" />
-                ) : (
-                  <CircleCheck />
-                )}
-                Сохранить
-              </ButtonWithKbd>
+            defaultExpanded={true}
+          />
+          {lazyError && isDirty && (
+            <div className="mt-1 text-right text-sm text-red-500">
+              {lazyError}
             </div>
-          </motion.div>
+          )}
+          <div className="mt-2 flex justify-end gap-2">
+            <ButtonWithKbd
+              variant="outline"
+              onClick={handleClose}
+              disabled={updating}
+              keys={["Meta", "Esc"]}
+              showKbd={!isDirty}
+            >
+              Отмена
+            </ButtonWithKbd>
+            <ButtonWithKbd
+              onClick={() => onSave(val)}
+              disabled={disabled || updating || readonly || !isDirty}
+              keys={["Meta", "S"]}
+              showKbd={isDirty}
+            >
+              {updating ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <CircleCheck />
+              )}
+              Сохранить
+            </ButtonWithKbd>
+          </div>
         </motion.div>
-      )}
-    </AnimatePresence>
+      </Dialog.Content>
+    </>
   );
 }
 
@@ -192,60 +207,74 @@ function InlineMarkdown({
     state => !state.assets?.[assetId]?.asset?.metadata?.[fieldId],
   );
 
+  const handleOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      const locker = useHypershelf.getState().assetsLocker;
+      locker.release(assetId, fieldId);
+    }
+    setOpen(isOpen);
+  };
+
   return (
-    <div className="flex flex-col gap-2">
-      {lockedBy && (
-        <span className="text-brand absolute -mt-0.5 -translate-y-full text-[10px] whitespace-pre">
-          {lockedBy}
-        </span>
-      )}
-      <div
-        className={cn(
-          "flex",
-          lockedBy && "text-foreground/70 ring-brand cursor-not-allowed ring-2",
+    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
+      <div className="flex flex-col gap-2">
+        {lockedBy && (
+          <span className="text-brand absolute -mt-0.5 -translate-y-full text-[10px] whitespace-pre">
+            {lockedBy}
+          </span>
         )}
-      >
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setOpen(true)}
-          disabled={!!lockedBy}
+        <div
           className={cn(
-            lockedBy && "!opacity-100 cursor-not-allowed",
-            readonly && "h-auto p-0.5",
+            "flex",
+            lockedBy &&
+              "text-foreground/70 ring-brand cursor-not-allowed ring-2",
           )}
         >
-          {!isEmpty ? (
-            <div className="flex items-center gap-1.5">
-              <Eye className={cn(readonly ? "size-3" : "size-4")} />
-              {!readonly && "Открыть"}
-            </div>
-          ) : (
-            <span className="text-muted-foreground/50 italic">пусто</span>
+          <Dialog.Trigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={!!lockedBy}
+              className={cn(
+                lockedBy && "!opacity-100 cursor-not-allowed",
+                readonly && "h-auto p-0.5",
+              )}
+            >
+              {!isEmpty ? (
+                <div className="flex items-center gap-1.5">
+                  <Eye className={cn(readonly ? "size-3" : "size-4")} />
+                  {!readonly && "Открыть"}
+                </div>
+              ) : (
+                <span className="text-muted-foreground/50 italic">пусто</span>
+              )}
+            </Button>
+          </Dialog.Trigger>
+          {!isEmpty && (
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={true}
+              className={cn(readonly && "h-auto p-0.5")}
+            >
+              <Download className={cn(readonly ? "size-3" : "size-4")} />
+            </Button>
           )}
-        </Button>
-        {!isEmpty && (
-          <Button
-            variant="ghost"
-            size="sm"
-            disabled={true}
-            className={cn(readonly && "h-auto p-0.5")}
-          >
-            <Download className={cn(readonly ? "size-3" : "size-4")} />
-          </Button>
-        )}
-        {createPortal(
-          <MarkdownEditorPortal
-            fieldId={fieldId}
-            assetId={assetId}
-            readonly={readonly}
-            onClose={() => setOpen(false)}
-            open={open}
-          />,
-          document.body,
-        )}
+          <AnimatePresence>
+            {open && (
+              <Dialog.Portal forceMount>
+                <MarkdownEditorDialogContent
+                  fieldId={fieldId}
+                  assetId={assetId}
+                  readonly={readonly}
+                  onClose={() => setOpen(false)}
+                />
+              </Dialog.Portal>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
-    </div>
+    </Dialog.Root>
   );
 }
 

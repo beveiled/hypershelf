@@ -107,7 +107,9 @@ export const schemasSlice: ImmerStateCreator<SchemasSlice> = (set, get) => ({
   setRootMoid: rootMoid => {
     set(state => {
       state.rootMoid = rootMoid;
-      localStorage.setItem("hiding", state.hiding ? "1" : "0");
+      const url = new URL(window.location.href);
+      url.searchParams.set("rootMoid", rootMoid);
+      window.history.replaceState({}, "", url);
     });
   },
 });

@@ -9,14 +9,15 @@ import { RFNodeInternal } from "@/lib/types/flow";
 import { cn } from "@/lib/utils";
 import { getEdgeParams } from "@/lib/utils/flow";
 import { useHypershelf } from "@/stores";
-import { PopoverPortal } from "@radix-ui/react-popover";
 import {
   Edge,
   EdgeLabelRenderer,
   getBezierPath,
   useInternalNode,
 } from "@xyflow/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { Ellipsis } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 export function FloatingEdge({
   id,
@@ -34,7 +35,6 @@ export function FloatingEdge({
       !state.selectedVmNodesNetworkTopologyView?.[target],
   );
   const [open, setOpen] = useState(false);
-  const hitboxRef = useRef<SVGPathElement | null>(null);
 
   const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(
     sourceNode as RFNodeInternal,
@@ -49,11 +49,6 @@ export function FloatingEdge({
     targetX: tx,
     targetY: ty,
   });
-
-  const baseStroke = useMemo(() => {
-    const sw = style?.strokeWidth;
-    return Number.isFinite(sw) ? Number(sw) : 1;
-  }, [style]);
 
   const reactFlowViewportRef = useRef<HTMLDivElement | null>(null);
 
@@ -71,31 +66,9 @@ export function FloatingEdge({
 
   if (!sourceNode || !targetNode) return null;
 
-  const dispatchSequence = (targetEl: Element, x: number, y: number) => {
-    const opts = { bubbles: true, cancelable: true, clientX: x, clientY: y };
-    targetEl.dispatchEvent(new PointerEvent("pointerdown", opts));
-    targetEl.dispatchEvent(new MouseEvent("mousedown", opts));
-    targetEl.dispatchEvent(new PointerEvent("pointerup", opts));
-    targetEl.dispatchEvent(new MouseEvent("mouseup", opts));
-    targetEl.dispatchEvent(new MouseEvent("click", opts));
-  };
-
-  const onEdgeClick = (e: React.MouseEvent<SVGPathElement>) => {
-    setOpen(true);
-    const el = hitboxRef.current;
-    if (!el) return;
-    const prev = el.style.pointerEvents;
-    el.style.pointerEvents = "none";
-    const under = document.elementFromPoint(e.clientX, e.clientY);
-    el.style.pointerEvents = prev || "stroke";
-    if (under && under !== el) dispatchSequence(under, e.clientX, e.clientY);
-  };
-
   const hasLabel =
     (Array.isArray(data?.label) && data.label.length > 0) ||
     (data?.label as string | undefined)?.trim?.();
-
-  // TODO: Good UX
 
   return (
     <>
@@ -110,19 +83,6 @@ export function FloatingEdge({
         style={{ ...style, pointerEvents: "none" }}
       />
       {hasLabel && !translucent && (
-        <path
-          ref={hitboxRef}
-          d={edgePath}
-          fill="none"
-          stroke="transparent"
-          className="cursor-pointer"
-          style={{ strokeDasharray: "0" }}
-          pointerEvents="stroke"
-          strokeWidth={baseStroke + 8}
-          onClick={onEdgeClick}
-        />
-      )}
-      {hasLabel && !translucent && (
         <EdgeLabelRenderer>
           <div
             style={{
@@ -132,28 +92,46 @@ export function FloatingEdge({
           >
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
-                <div className="h-0 w-0 p-0 m-0 absolute" />
-              </PopoverTrigger>
-              <PopoverPortal
-                container={reactFlowViewportRef.current}
-                forceMount
-              >
-                <PopoverContentNoPortal
-                  side="bottom"
-                  align="center"
-                  className="size-fit min-w-16 border-2 border-dashed border-[#55f]"
+                <motion.button
+                  className="pointer-events-auto relative size-4 rounded-md backdrop-blur-3xl flex items-center justify-center cursor-pointer"
+                  onClick={() => setOpen(!open)}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", bounce: 0.3, duration: 0.3 }}
+                  whileHover={{ scale: 1.05 }}
                 >
-                  {Array.isArray(data?.label) ? (
-                    data.label.map((l, i) => (
-                      <div key={i} className="text-xs">
-                        {l}
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-xs">{data?.label as string}</div>
-                  )}
-                </PopoverContentNoPortal>
-              </PopoverPortal>
+                  <svg
+                    className="absolute -inset-0.5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      className="stroke-[#55f]"
+                      style={{ strokeDasharray: 5 }}
+                      strokeWidth={1.5}
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  </svg>
+                  <Ellipsis className="size-3 text-muted-foreground" />
+                </motion.button>
+              </PopoverTrigger>
+              <PopoverContentNoPortal
+                side="bottom"
+                align="center"
+                className="size-fit min-w-16 border-2 border-dashed border-[#55f]"
+              >
+                {Array.isArray(data?.label) ? (
+                  data.label.map((l, i) => (
+                    <div key={i} className="text-xs">
+                      {l}
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-xs">{data?.label as string}</div>
+                )}
+              </PopoverContentNoPortal>
             </Popover>
           </div>
         </EdgeLabelRenderer>

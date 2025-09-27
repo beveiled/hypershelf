@@ -68,7 +68,7 @@ export function ViewSwitcher() {
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          className="!h-auto gap-1 py-0 text-xs !ring-0 hover:!bg-transparent"
+          className="!h-auto gap-1 py-0 text-xs hover:!bg-transparent"
         >
           {activeView?.name || "Выбери вид"}
           <ChevronDown className="size-4 opacity-60" />

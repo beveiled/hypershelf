@@ -79,7 +79,7 @@ function IconButton({
   return (
     <motion.button
       className={cn(
-        "group relative overflow-x-hidden cursor-pointer aspect-square transition-colors duration-200 ease-in-out text-muted-foreground hover:text-foreground",
+        "group relative overflow-x-hidden cursor-pointer aspect-square transition-colors duration-200 ease-in-out text-muted-foreground hover:text-foreground outline-0 focus-visible:ring-2 focus-visible:ring-ring/50 p-1 rounded-md",
         className,
       )}
       {...props}
@@ -91,7 +91,7 @@ function IconButton({
       {children}
       <div
         className={cn(
-          "bg-brand absolute bottom-0 left-0 h-[1px] w-full origin-left scale-x-0 transform transition-transform duration-100",
+          "bg-brand absolute bottom-0.5 left-0 h-[1px] w-full origin-left scale-x-0 transform transition-transform duration-100",
           !selected && "group-hover:scale-x-100",
         )}
       />

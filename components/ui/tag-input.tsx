@@ -5,7 +5,9 @@ import { Textarea } from "./textarea";
 import {
   DndContext,
   DragEndEvent,
+  KeyboardSensor,
   PointerSensor,
+  TouchSensor,
   closestCenter,
   useSensor,
   useSensors,
@@ -41,7 +43,7 @@ const SortableTag: React.FC<{
       ref={setNodeRef}
       style={style}
       className="m-0.5 inline-block align-bottom"
-      {...attributes}
+      tabIndex={-1}
     >
       <motion.div
         initial={{ scale: 1 }}
@@ -49,12 +51,17 @@ const SortableTag: React.FC<{
         transition={{
           scale: { type: "spring", bounce: 0.15, duration: 0.15 },
         }}
+        tabIndex={-1}
       >
         <Badge variant="outline" className="border-input" asChild>
-          <div className="flex items-center gap-1 select-none">
-            <span {...listeners} className="cursor-grab active:cursor-grabbing">
+          <div className="flex items-center gap-0.5 select-none">
+            <div
+              className="cursor-grab active:cursor-grabbing outline-0 focus-visible:ring-2 focus-visible:ring-ring/50 rounded-sm px-0.5"
+              {...attributes}
+              {...listeners}
+            >
               {tag}
-            </span>
+            </div>
 
             <Button
               type="button"
@@ -62,7 +69,7 @@ const SortableTag: React.FC<{
               variant="ghost"
               onPointerDown={e => e.stopPropagation()}
               onClick={onRemove}
-              className="size-4 p-0"
+              className="size-4 p-0 focus-visible:ring-2"
               disabled={disabled}
             >
               <X className="size-3" />
@@ -122,7 +129,11 @@ export function TagInput({
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
-  const sensors = useSensors(useSensor(PointerSensor));
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(TouchSensor),
+    useSensor(KeyboardSensor),
+  );
 
   const addTag = (raw: string) => {
     const text = raw.trim();

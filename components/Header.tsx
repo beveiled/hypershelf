@@ -15,9 +15,11 @@ import { useEffect, useState } from "react";
 function NavLink({
   href,
   children,
+  label,
 }: {
   href: string;
   children: React.ReactNode;
+  label: string;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -39,18 +41,21 @@ function NavLink({
       initial={{ scale: 1 }}
       whileTap={{ scale: 0.92 }}
       transition={{ type: "spring", bounce: 0.3, duration: 0.3 }}
+      tabIndex={-1}
     >
       <Link
         href={href}
         className={cn(
-          "group relative overflow-x-hidden block cursor-pointer",
+          "group relative overflow-x-hidden block cursor-pointer outline-0 focus-visible:ring-ring/50 focus-visible:ring-2 rounded-md p-1",
           href === pathname && "text-brand",
         )}
         onClick={handleClick}
+        aria-label={label}
+        role="button"
       >
         {children}
         <div
-          className={cn("bg-brand absolute bottom-0 left-0 h-[1px] w-full", {
+          className={cn("bg-brand absolute bottom-0.5 left-0 h-[1px] w-full", {
             "animate-load": isNavigating,
             "origin-left scale-x-0 transform transition-transform duration-100 group-hover:scale-x-100":
               !isNavigating,
@@ -133,12 +138,15 @@ export default function Header() {
     <header className="fixed z-[9999] w-screen">
       <div className="border-border text-foreground bg-background/60 m-2 flex h-8 items-center justify-between rounded-md border px-4 py-1.5 backdrop-blur-xl">
         <div className="flex items-center md:gap-8">
-          <Link href="/" className="font-title relative text-xs font-extrabold">
+          <Link
+            href="/"
+            className="font-title relative text-xs font-extrabold outline-0 focus-visible:ring-ring/50 focus-visible:ring-[3px] rounded-md p-1"
+          >
             <span className="hidden md:inline">Hypershelf</span>
             <span className="inline md:hidden">H</span>
             <div
               className={cn(
-                "bg-brand md:!bg-brand absolute bottom-0 left-0 h-0.5 w-4",
+                "bg-brand md:!bg-brand absolute bottom-1 left-1 h-0.5 w-4",
                 {
                   "bg-red-500": !isConnected,
                 },
@@ -162,15 +170,15 @@ export default function Header() {
           <div className="flex gap-x-6 text-xs font-medium">
             {pathname !== "/signin" && (
               <>
-                <NavLink href="/">
+                <NavLink href="/" label="Хосты">
                   <span className="hidden lg:inline">Хосты</span>
                   <Table2 className="inline size-4 lg:hidden" />
                 </NavLink>
-                <NavLink href="/fields">
+                <NavLink href="/fields" label="Поля">
                   <span className="hidden lg:inline">Поля</span>
                   <Settings2 className="inline size-4 lg:hidden" />
                 </NavLink>
-                <NavLink href="/schemas">
+                <NavLink href="/schemas" label="Схемы">
                   <span className="hidden lg:inline">Схемы</span>
                   <GitBranch className="inline size-4 lg:hidden" />
                 </NavLink>
@@ -179,7 +187,7 @@ export default function Header() {
             {pathname !== "/signin" &&
               (isAuthenticated ? (
                 <>
-                  <NavLink href="/signout">
+                  <NavLink href="/signout" label="Выйти">
                     <span className="hidden lg:inline">Выйти</span>
                     <LogOut className="text-destructive inline size-4 lg:hidden" />
                   </NavLink>
@@ -188,7 +196,7 @@ export default function Header() {
                   </div>
                 </>
               ) : (
-                <NavLink href="/signin">
+                <NavLink href="/signin" label="Войти">
                   <span className="hidden lg:inline">Войти</span>
                   <LogIn className="inline size-4 lg:hidden" />
                 </NavLink>

@@ -80,7 +80,6 @@ export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
                   animate={{ opacity: 1, x: 0, width: "auto" }}
                   exit={{ opacity: 0, x: 20, width: 0 }}
                   transition={TRANSITION}
-                  className="overflow-hidden"
                 >
                   <SortButton fieldId={fieldId} isSorted={isSorted} />
                 </motion.div>
@@ -93,7 +92,6 @@ export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
                   animate={{ opacity: 1, x: 0, width: "auto" }}
                   exit={{ opacity: 0, x: 20, width: 0 }}
                   transition={TRANSITION}
-                  className="overflow-hidden"
                 >
                   <VisibilityButton fieldId={fieldId} isHidden={isHidden} />
                 </motion.div>
@@ -106,7 +104,6 @@ export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
                   animate={{ opacity: 1, x: 0, width: "auto" }}
                   exit={{ opacity: 0, x: 20, width: 0 }}
                   transition={TRANSITION}
-                  className="overflow-hidden"
                 >
                   <Button
                     variant="ghost"
