@@ -1,3 +1,4 @@
+import { formatQuery } from "@/components/query-builder";
 import {
   Table,
   TableBody,
@@ -19,6 +20,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { apply as jlApply } from "json-logic-js";
 import { useCallback } from "react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 
@@ -31,7 +33,7 @@ export function TableView() {
   const assetIds = useStoreWithEqualityFn(
     useHypershelf,
     state => {
-      const { sorting, assets, assetIds } = state;
+      const { sorting, assets, assetIds, isFiltering, filters } = state;
       const sorted = [...assetIds];
 
       sorted.sort((a, b) => {
@@ -54,6 +56,13 @@ export function TableView() {
 
         return 0;
       });
+
+      if (isFiltering && filters && filters.rules.length > 0) {
+        const query = formatQuery(filters);
+        return sorted.filter(assetId => {
+          return jlApply(query, assets[assetId].asset.metadata || {});
+        });
+      }
 
       return sorted;
     },
@@ -99,8 +108,10 @@ export function TableView() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell className="h-24 text-center">
-                    Ничего не нашлось. Попробуй изменить фильтры
+                  <TableCell className="h-24 text-center" colSpan={100}>
+                    <div className="w-screen">
+                      Ничего не нашлось. Попробуй изменить фильтры
+                    </div>
                   </TableCell>
                 </TableRow>
               )}

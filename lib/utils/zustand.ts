@@ -1,15 +1,6 @@
 import { AssetType, ExtendedAssetType, FieldType } from "@/convex/schema";
-
-export const shallowPositional = (
-  a: (string | object)[],
-  b: (string | object)[],
-) => {
-  if (a.length !== b.length) return false;
-  for (let i = 0; i < a.length; i++) {
-    if (!Object.is(a[i], b[i])) return false;
-  }
-  return true;
-};
+import { isEqual } from "lodash";
+import { RuleGroupType } from "react-querybuilder";
 
 const compareMetadata = (
   a: AssetType["metadata"],
@@ -93,4 +84,25 @@ export const fieldsEqual = (a: FieldType, b: FieldType) => {
     return false;
   }
   return true;
+};
+
+const omitId = (obj: unknown): unknown => {
+  if (Array.isArray(obj)) {
+    return obj.map(omitId);
+  }
+  if (obj && typeof obj === "object") {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...rest } = obj as Record<string, unknown>;
+    return Object.fromEntries(
+      Object.entries(rest).map(([key, value]) => [key, omitId(value)]),
+    );
+  }
+  return obj;
+};
+
+export const filtersEqual = (
+  a: RuleGroupType | null,
+  b: RuleGroupType | null,
+) => {
+  return isEqual(omitId(a), omitId(b));
 };

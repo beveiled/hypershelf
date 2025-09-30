@@ -1,6 +1,6 @@
 import { Id } from "@/convex/_generated/dataModel";
-import { shallowPositional } from "@/lib/utils";
 import { ImmerStateCreator, TableSlice } from "../types";
+import { isEqual } from "lodash";
 
 export const tableSlice: ImmerStateCreator<TableSlice> = set => ({
   toggleHiding: () => {
@@ -62,8 +62,30 @@ export const tableSlice: ImmerStateCreator<TableSlice> = set => ({
       if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex) return;
       state.fieldOrder.splice(fromIndex, 1);
       state.fieldOrder.splice(toIndex, 0, from);
-      if (shallowPositional(state.fieldOrder, state.fieldIds)) {
+      if (isEqual(state.fieldOrder, state.fieldIds)) {
         state.fieldOrder = [];
       }
     }),
+  setFilters: filters => {
+    set(state => {
+      state.filters = filters;
+    });
+  },
+  setIsFiltering: isFiltering => {
+    set(state => {
+      state.isFiltering = isFiltering;
+    });
+  },
+  resetFilters: () => {
+    set(state => {
+      const view = state.activeViewId && state.views[state.activeViewId];
+      if (view) {
+        state.filters = view.filters ?? null;
+        state.isFiltering = view.enableFiltering ?? false;
+      } else {
+        state.filters = null;
+        state.isFiltering = false;
+      }
+    });
+  },
 });

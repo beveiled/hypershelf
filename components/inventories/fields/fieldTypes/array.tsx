@@ -3,13 +3,14 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { ValueType } from "@/convex/schema";
 import { validateField } from "@/convex/utils";
-import { cn, shallowPositional } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { FieldPropConfig } from "./_abstractType";
 import { ActionsRow } from "./_shared";
 import { useMutation } from "convex/react";
+import { isEqual } from "lodash";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useShallow } from "zustand/shallow";
+import { useStoreWithEqualityFn } from "zustand/traditional";
 
 export function InlineArray({
   assetId,
@@ -20,18 +21,20 @@ export function InlineArray({
   fieldId: Id<"fields">;
   readonly?: boolean;
 }) {
-  const fieldInfo = useHypershelf(
-    useShallow(state => ({
+  const fieldInfo = useStoreWithEqualityFn(
+    useHypershelf,
+    state => ({
       type: state.fields?.[fieldId]?.field?.type,
       extra: state.fields?.[fieldId]?.field?.extra,
       required: state.fields?.[fieldId]?.field?.required,
-    })),
+    }),
+    isEqual,
   );
   const { placeholder } = fieldInfo?.extra || {};
-  const value = useHypershelf(
-    useShallow(
-      state => state.assets?.[assetId]?.asset?.metadata?.[fieldId] ?? [],
-    ),
+  const value = useStoreWithEqualityFn(
+    useHypershelf,
+    state => state.assets?.[assetId]?.asset?.metadata?.[fieldId] ?? [],
+    isEqual,
   );
   const lockedBy = useHypershelf(
     state => state.lockedFields?.[assetId]?.[fieldId],
@@ -49,7 +52,7 @@ export function InlineArray({
 
   useEffect(() => {
     if (!isDirty) {
-      if (!shallowPositional(val, value)) {
+      if (!isEqual(val, value)) {
         setVal(value);
         setError(null);
       }
@@ -61,7 +64,7 @@ export function InlineArray({
 
   const handleSave = () => {
     if (!fieldInfo) return;
-    if (!shallowPositional(val, value)) {
+    if (!isEqual(val, value)) {
       const validationError = validateField(fieldInfo, val);
       if (validationError) {
         setError(validationError);
@@ -95,7 +98,7 @@ export function InlineArray({
   const onChange = useCallback(
     (incoming: string[]) => {
       setVal(incoming);
-      const dirty = !shallowPositional(incoming, value);
+      const dirty = !isEqual(incoming, value);
       setIsDirty(dirty);
       const locker = useHypershelf.getState().assetsLocker;
       if (dirty) {

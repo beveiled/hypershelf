@@ -1,6 +1,6 @@
-import { shallowPositional } from "@/lib/utils";
+import { filtersEqual } from "@/lib/utils/zustand";
 import { useHypershelf } from ".";
-import { shallow } from "zustand/shallow";
+import { isEqual } from "lodash";
 
 export const useIsViewDirty = () => {
   return useHypershelf(state => {
@@ -14,11 +14,19 @@ export const useIsViewDirty = () => {
       sorting: {},
       fieldOrder: [],
       hiddenFields: [],
+      enableFiltering: false,
+      filters: undefined,
     };
+
     return (
-      !shallow(view.sorting || {}, state.sorting) ||
-      !shallowPositional(view.fieldOrder || [], state.fieldOrder) ||
-      !shallowPositional(view.hiddenFields || [], state.hiddenFields)
+      !isEqual(view.sorting || {}, state.sorting) ||
+      !isEqual(view.fieldOrder || [], state.fieldOrder) ||
+      !isEqual(view.hiddenFields || [], state.hiddenFields) ||
+      (view.enableFiltering ?? false) !== state.isFiltering ||
+      !filtersEqual(
+        view.filters || { combinator: "and", rules: [] },
+        state.filters || { combinator: "and", rules: [] },
+      )
     );
   });
 };

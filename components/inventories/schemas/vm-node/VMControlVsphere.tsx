@@ -9,9 +9,11 @@ import {
 import VSphereIcon from "@/lib/icons/VSphereIcon";
 import { useHypershelf } from "@/stores";
 import { PopoverPortal } from "@radix-ui/react-popover";
+import { isEqual } from "lodash";
 import { Cpu, MemoryStick, MonitorCog } from "lucide-react";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useState } from "react";
+import { useStoreWithEqualityFn } from "zustand/traditional";
 
 export function VMControlVsphere({
   vmId,
@@ -21,7 +23,11 @@ export function VMControlVsphere({
   reactFlowViewportRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const [open, setOpen] = useState(false);
-  const vm = useHypershelf(state => state.vms.find(v => v.id === vmId));
+  const vm = useStoreWithEqualityFn(
+    useHypershelf,
+    state => state.vms.find(v => v.id === vmId),
+    isEqual,
+  );
 
   if (!vm) return null;
 

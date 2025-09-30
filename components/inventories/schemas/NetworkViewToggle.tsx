@@ -4,10 +4,11 @@ import {
   PopoverAnchor,
   PopoverContent,
 } from "@/components/ui/popover";
-import { cn, shallowPositional } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { api } from "@/trpc/react";
 import { motion } from "framer-motion";
+import { isEqual } from "lodash";
 import { Loader2, Network, UploadCloud } from "lucide-react";
 import { ChangeEvent, DragEvent, useCallback, useRef, useState } from "react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
@@ -144,9 +145,10 @@ export function NetworkViewToggle() {
   const vmIds = useStoreWithEqualityFn(
     useHypershelf,
     state => state.vms.map(v => v.id),
-    shallowPositional,
+    isEqual,
   );
   const linksAvailable = useHypershelf(state => state.links.length > 0);
+  const rootMoidSelected = useHypershelf(state => !!state.rootMoid);
   const networkView = useHypershelf(
     state =>
       Object.keys(state.selectedVmNodesNetworkTopologyView).length > 0 &&
@@ -170,6 +172,10 @@ export function NetworkViewToggle() {
     e.preventDefault();
     setPopoverOpen(true);
   }, []);
+
+  if (!rootMoidSelected) {
+    return null;
+  }
 
   return (
     <div className="flex">

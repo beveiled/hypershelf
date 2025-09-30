@@ -46,11 +46,11 @@ export function FieldForm({
   const updateField = useMutation(api.fields.update);
   const createField = useMutation(api.fields.create);
 
-  const locker = useHypershelf(state => state.fieldsLocker);
-  const stableLock = useCallback(
-    () => fieldId && locker.acquire(fieldId),
-    [locker, fieldId],
-  );
+  const stableLock = useCallback(() => {
+    if (!fieldId) return;
+    const locker = useHypershelf.getState().fieldsLocker;
+    locker.acquire(fieldId);
+  }, [fieldId]);
   const disabled = useHypershelf(
     state =>
       !!(

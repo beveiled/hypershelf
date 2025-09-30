@@ -19,8 +19,10 @@ import { useHypershelf } from "@/stores";
 import { FieldPropConfig } from "./_abstractType";
 import { AnimateTransition } from "./_shared";
 import { useMutation } from "convex/react";
+import { isEqual } from "lodash";
 import { Check, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useStoreWithEqualityFn } from "zustand/traditional";
 
 function InlineUser({
   assetId,
@@ -31,15 +33,20 @@ function InlineUser({
   fieldId: Id<"fields">;
   readonly?: boolean;
 }) {
-  const { placeholder } =
-    useHypershelf(state => state.fields?.[fieldId]?.field?.extra || {}) || {};
+  const placeholder = useHypershelf(
+    state => state.fields?.[fieldId]?.field?.extra?.placeholder,
+  );
   const value = useHypershelf(
     state => state.assets?.[assetId]?.asset?.metadata?.[fieldId],
   );
   const lockedBy = useHypershelf(
     state => state.lockedFields?.[assetId]?.[fieldId],
   );
-  const users = useHypershelf(state => state.users);
+  const users = useStoreWithEqualityFn(
+    useHypershelf,
+    state => state.users,
+    isEqual,
+  );
 
   const [updating, setUpdating] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);

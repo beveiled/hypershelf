@@ -8,9 +8,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { FolderTree } from "@/lib/integrations/vsphere";
-import { cn, shallowPositional } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { AnimatePresence, motion } from "framer-motion";
+import { isEqual } from "lodash";
 import { ChevronRight, Folder, FolderOpen, Search } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
@@ -81,8 +82,15 @@ function useRovingIndex(length: number) {
     (delta: number) => {
       if (length === 0) return;
       setIndex(i => (i + delta + length) % length);
+      setTimeout(() => {
+        const el = document.getElementById(
+          `folder-picker-item-${(index + delta + length) % length}`,
+        );
+        if (el) el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        else console.warn("No element to scroll into view");
+      }, 0);
     },
-    [length],
+    [length, index],
   );
   const set = useCallback(
     (i: number) => setIndex(Math.max(0, Math.min(i, Math.max(0, length - 1)))),
@@ -97,7 +105,7 @@ export function FolderPicker() {
   const folderTree = useStoreWithEqualityFn(
     useHypershelf,
     s => s.folderTree?.children ?? [],
-    shallowPositional,
+    isEqual,
   );
   const [isPopoverOpen, setPopoverOpenInternal] = useState(false);
   const [path, setPath] = useState<string[]>([]);
@@ -312,6 +320,7 @@ export function FolderPicker() {
                       return (
                         <motion.li
                           key={n.id}
+                          id={`folder-picker-item-${i}`}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
@@ -328,7 +337,10 @@ export function FolderPicker() {
                           <button
                             role="option"
                             aria-selected={active}
-                            onClick={() => (hasKids ? drill(n.id) : pick(n.id))}
+                            onClick={() => set(i)}
+                            onDoubleClick={() =>
+                              hasKids ? drill(n.id) : pick(n.id)
+                            }
                             className={cn(
                               "w-full flex items-center justify-between gap-2 px-3 py-2 text-sm transition-colors",
                               active ? "bg-muted" : "hover:bg-muted/70",
@@ -410,8 +422,8 @@ export function FolderPicker() {
 
             <div className="flex items-center justify-end p-2 border-t">
               <ButtonWithKbd
-                disabled={!currentId}
-                onClick={() => currentId && pick(currentId)}
+                disabled={!list[index]?.name}
+                onClick={() => list[index]?.id && pick(list[index].id)}
                 variant="outline"
                 size="sm"
                 keys={["Enter"]}
@@ -419,9 +431,7 @@ export function FolderPicker() {
               >
                 Choose{" "}
                 <span className="font-bold">
-                  {list[index]?.name ??
-                    tree.byId.get(currentId)?.name ??
-                    "this folder"}
+                  {list[index]?.name ?? "this folder"}
                 </span>
               </ButtonWithKbd>
             </div>

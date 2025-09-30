@@ -25,6 +25,8 @@ const initialState: State = {
 
   hiding: true,
   sorting: {},
+  filters: null,
+  isFiltering: false,
   hiddenFields: [],
   fieldOrder: [],
 
@@ -49,6 +51,7 @@ const initialState: State = {
   topologyFetchTime: null,
   folderTree: { id: "root", name: "Root", children: [] },
   rootMoid: null,
+  highlightLink: null,
 };
 
 export const useHypershelf = create<State & Actions>()(

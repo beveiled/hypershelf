@@ -74,7 +74,10 @@ export const ShadcnUiValueEditor = (allProps: ShadcnUiValueEditorProps) => {
             type={inputTypeCoerced}
             value={valueAsArray[i] ?? ""}
             disabled={disabled}
-            className={cn(standardClassnames.valueListItem, "text-sm")}
+            className={cn(
+              standardClassnames.valueListItem,
+              "!bg-transparent border-0 h-8 text-sm",
+            )}
             placeholder={placeHolderText}
             onChange={e => multiValueHandler(e.target.value, i)}
             {...extraProps}
@@ -200,7 +203,7 @@ export const ShadcnUiValueEditor = (allProps: ShadcnUiValueEditorProps) => {
       value={value}
       title={title}
       disabled={disabled}
-      className={cn(className, "h-8 text-sm")}
+      className={cn(className, "!bg-transparent border-0 h-8 text-sm")}
       placeholder={placeHolderText}
       onChange={e => handleOnChange(e.target.value)}
       {...extraProps}

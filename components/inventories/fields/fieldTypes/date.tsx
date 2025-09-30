@@ -26,8 +26,9 @@ function InlineDate({
   fieldId: Id<"fields">;
   readonly?: boolean;
 }) {
-  const { placeholder } =
-    useHypershelf(state => state.fields?.[fieldId]?.field?.extra || {}) || {};
+  const placeholder = useHypershelf(
+    state => state.fields?.[fieldId]?.field?.extra?.placeholder,
+  );
   const value = useHypershelf(
     state => state.assets?.[assetId]?.asset?.metadata?.[fieldId],
   );

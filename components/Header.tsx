@@ -191,7 +191,7 @@ export default function Header() {
                     <span className="hidden lg:inline">Выйти</span>
                     <LogOut className="text-destructive inline size-4 lg:hidden" />
                   </NavLink>
-                  <div className="text-muted-foreground hidden text-xs md:block">
+                  <div className="text-muted-foreground hidden text-xs md:block p-1">
                     {currentUser?.email ?? "..."}
                   </div>
                 </>

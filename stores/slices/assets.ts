@@ -2,7 +2,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { AssetType, ExtendedAssetType } from "@/convex/schema";
 import { assetsEqual } from "@/lib/utils";
 import { AssetsSlice, ImmerStateCreator } from "../types";
-import { shallow } from "zustand/shallow";
+import { isEqual } from "lodash";
 
 export const assetsSlice: ImmerStateCreator<AssetsSlice> = (set, get) => ({
   revalidateLocks: () =>
@@ -53,7 +53,7 @@ export const assetsSlice: ImmerStateCreator<AssetsSlice> = (set, get) => ({
         if (!state.assets[id]) {
           state.assets[id] = asset;
         } else {
-          if (!shallow(asset.locks, state.assets[id].locks)) {
+          if (!isEqual(asset.locks, state.assets[id].locks)) {
             state.assets[id].locks = asset.locks;
           }
           if (asset.asset.metadata) {
@@ -75,7 +75,7 @@ export const assetsSlice: ImmerStateCreator<AssetsSlice> = (set, get) => ({
                 state.assets[id].asset.metadata[key] =
                   asset.asset.metadata[key];
               } else if (
-                !shallow(
+                !isEqual(
                   state.assets[id].asset.metadata[key],
                   asset.asset.metadata[key],
                 )

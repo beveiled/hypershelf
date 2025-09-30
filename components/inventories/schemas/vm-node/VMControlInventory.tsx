@@ -8,12 +8,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import HypershelfIcon from "@/lib/icons/HypershelfIcon";
-import { cn, shallowPositional } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { PopoverPortal } from "@radix-ui/react-popover";
+import { isEqual } from "lodash";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useState } from "react";
-import { useShallow } from "zustand/shallow";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 
 export function VMControlInventory({
@@ -26,8 +26,10 @@ export function VMControlInventory({
   reactFlowViewportRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const [open, isOpen] = useState(false);
-  const invNode = useHypershelf(
-    useShallow(state => state.lookupAsset({ hostname, ip })),
+  const invNode = useStoreWithEqualityFn(
+    useHypershelf,
+    state => state.lookupAsset({ hostname, ip }),
+    isEqual,
   );
   const fields = useStoreWithEqualityFn(
     useHypershelf,
@@ -37,7 +39,7 @@ export function VMControlInventory({
         name: f.field.name,
         icon: f.field.extra?.icon ?? "circle",
       })),
-    shallowPositional,
+    isEqual,
   );
 
   return (

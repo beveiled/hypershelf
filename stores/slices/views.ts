@@ -1,22 +1,36 @@
 import { Id } from "@/convex/_generated/dataModel";
 import { ExtendedViewType } from "@/convex/schema";
 import { ImmerStateCreator, ViewsSlice } from "../types";
-import { shallow } from "zustand/shallow";
+import { isEqual } from "lodash";
 
 export const viewsSlice: ImmerStateCreator<ViewsSlice> = (set, get) => ({
   setActiveViewId: activeView => {
+    const state = get();
+    if (state.activeViewId === activeView) return false;
+    if (activeView && !state.views[activeView]) {
+      console.warn("Tried to set unknown view as active:", activeView);
+      return false;
+    }
     set(state => {
-      if (state.activeViewId === activeView) return;
-      if (activeView && !state.views[activeView]) {
-        console.warn("Tried to set unknown view as active:", activeView);
-        return;
-      }
       state.activeViewId = activeView;
+      if (activeView) localStorage.setItem("activeViewId", activeView);
+      else localStorage.removeItem("activeViewId");
     });
     if (activeView) get().applyView(activeView);
+    return true;
   },
   applyView: viewId => {
     const state = get();
+    if (viewId === "builtin:all") {
+      set(state => {
+        state.sorting = {};
+        state.filters = { combinator: "and", rules: [] };
+        state.isFiltering = false;
+        state.hiddenFields = [];
+        state.fieldOrder = [];
+      });
+      return;
+    }
     if (!state.views[viewId]) {
       console.warn("Tried to apply unknown view:", viewId);
       return;
@@ -24,6 +38,8 @@ export const viewsSlice: ImmerStateCreator<ViewsSlice> = (set, get) => ({
     const view = state.views[viewId];
     set(state => {
       state.sorting = { ...view.sorting };
+      state.filters = view.filters ?? null;
+      state.isFiltering = view.enableFiltering ?? false;
       state.hiddenFields = [...(view.hiddenFields || [])];
       state.fieldOrder = [...(view.fieldOrder || [])];
     });
@@ -34,7 +50,7 @@ export const viewsSlice: ImmerStateCreator<ViewsSlice> = (set, get) => ({
         Id<"views">,
         ExtendedViewType,
       ][]) {
-        if (state.views[id] && shallow(state.views[id], view)) continue;
+        if (state.views[id] && isEqual(state.views[id], view)) continue;
         state.views[id] = view;
       }
       for (const id of Object.keys(state.views)) {

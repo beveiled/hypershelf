@@ -4,8 +4,8 @@ import { FieldCard } from "@/components/inventories/fields/FieldCard";
 import { NewFieldForm } from "@/components/inventories/fields/FieldForm";
 import { useFieldLock } from "@/components/inventories/useLock";
 import { Skeleton } from "@/components/ui/skeleton";
-import { shallowPositional } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
+import { isEqual } from "lodash";
 import { useEffect } from "react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 
@@ -17,7 +17,7 @@ export default function FieldsInventory() {
   const fieldIds = useStoreWithEqualityFn(
     useHypershelf,
     state => state.fieldIds,
-    shallowPositional,
+    isEqual,
   );
 
   useEffect(

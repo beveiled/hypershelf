@@ -7,10 +7,10 @@ import { SortButton } from "./SortButton";
 import { VisibilityButton } from "./VisibilityButton";
 import { useSortable } from "@dnd-kit/sortable";
 import { AnimatePresence, Transition, motion } from "framer-motion";
+import { isEqual } from "lodash";
 import { Ellipsis, GripVertical, X } from "lucide-react";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import { useMemo, useState } from "react";
-import { shallow } from "zustand/shallow";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 
 const TRANSITION = { type: "spring", bounce: 0.2, duration: 0.3 } as Transition;
@@ -33,7 +33,7 @@ export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
         icon: field.field.extra?.icon,
       };
     },
-    shallow,
+    isEqual,
   );
   const canSort = useMemo(() => {
     return (
@@ -48,6 +48,8 @@ export function HeaderCell({ fieldId }: { fieldId: Id<"fields"> }) {
         "user",
         "date",
         "email",
+        "magic__hostname",
+        "magic__ip",
       ].includes(fieldInfo?.type)
     );
   }, [fieldInfo?.type]);

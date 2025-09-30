@@ -21,8 +21,10 @@ import {
   useNodesState,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { isEqual } from "lodash";
 import { useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
+import { useStoreWithEqualityFn } from "zustand/traditional";
 
 const nodeTypes = {
   vm: VMNode,
@@ -30,7 +32,11 @@ const nodeTypes = {
 };
 
 function Schemas({ topology }: { topology: { routers: Router[]; vms: VM[] } }) {
-  const links = useHypershelf(state => state.links);
+  const links = useStoreWithEqualityFn(
+    useHypershelf,
+    state => state.links,
+    isEqual,
+  );
   const { initialNodes, initialEdges } = useMemo(() => {
     const nodes: RFNode[] = [];
     const byParent: Record<string, VM[]> = {};
@@ -96,7 +102,7 @@ function Schemas({ topology }: { topology: { routers: Router[]; vms: VM[] } }) {
         source: link.from,
         target: link.to,
         type: "floating",
-        style: { stroke: "#55f", strokeWidth: 1.5 },
+        style: { stroke: "#55f", strokeWidth: 2 },
         markerEnd: { type: "arrow", color: "#55f" },
         animated: true,
         data: { label: link.label },

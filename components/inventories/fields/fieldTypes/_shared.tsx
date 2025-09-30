@@ -7,9 +7,10 @@ import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { useMutation } from "convex/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { isEqual } from "lodash";
 import { Loader2, Save, X } from "lucide-react";
 import { Ref, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useShallow } from "zustand/shallow";
+import { useStoreWithEqualityFn } from "zustand/traditional";
 
 export function ActionsRow({
   showButton,
@@ -171,12 +172,14 @@ export function InlineString({
   fieldId: Id<"fields">;
   readonly?: boolean;
 }) {
-  const fieldInfo = useHypershelf(
-    useShallow(state => ({
+  const fieldInfo = useStoreWithEqualityFn(
+    useHypershelf,
+    state => ({
       type: state.fields?.[fieldId]?.field?.type,
       extra: state.fields?.[fieldId]?.field?.extra,
       required: state.fields?.[fieldId]?.field?.required,
-    })),
+    }),
+    isEqual,
   );
   const { placeholder } = fieldInfo?.extra || {};
   const value = useHypershelf(

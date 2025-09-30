@@ -7,7 +7,7 @@ import { ExtendedFieldType, FieldType } from "@/convex/schema";
 import { validateFields } from "@/convex/utils";
 import { fieldsEqual } from "@/lib/utils";
 import { FieldsSlice, ImmerStateCreator } from "../types";
-import { shallow } from "zustand/shallow";
+import { isEqual } from "lodash";
 
 export const fieldsSlice: ImmerStateCreator<FieldsSlice> = (set, get) => ({
   revalidateErrors: () =>
@@ -86,7 +86,7 @@ export const fieldsSlice: ImmerStateCreator<FieldsSlice> = (set, get) => ({
             for (const key of Object.keys(field.field.extra)) {
               const typedKey = key as keyof FieldType["extra"];
               if (
-                !shallow(
+                !isEqual(
                   state.fields[id].field.extra![typedKey],
                   field.field.extra[typedKey],
                 )

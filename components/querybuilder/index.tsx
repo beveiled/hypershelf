@@ -26,7 +26,7 @@ export * from "./ShadcnUiActionElement";
 export * from "./ShadcnUiValueSelector";
 
 export const shadcnUiControlClassnames = {
-  ruleGroup: "rounded-md !border-0 bg-background !p-0",
+  ruleGroup: "rounded-md",
 } satisfies Partial<Classnames>;
 
 export const shadcnUiControlElements = {
@@ -43,14 +43,14 @@ export const shadcnUiTranslations = {
   addRule: {
     label: (
       <>
-        <Plus className="mr-2 size-4" /> Правило
+        <Plus className="size-4" /> Правило
       </>
     ),
   },
   addGroup: {
     label: (
       <>
-        <Plus className="mr-2 size-4" /> Группа
+        <Plus className="size-4" /> Группа
       </>
     ),
   },

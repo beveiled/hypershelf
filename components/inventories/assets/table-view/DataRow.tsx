@@ -1,8 +1,9 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Id } from "@/convex/_generated/dataModel";
-import { cn, shallowPositional } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { FieldRenderer } from "./FieldRenderer";
+import { isEqual } from "lodash";
 import { memo } from "react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 
@@ -45,7 +46,7 @@ function DataRow({ assetId }: { assetId: Id<"assets"> }) {
           return posA - posB;
         });
     },
-    shallowPositional,
+    isEqual,
   );
   const isError = useHypershelf(
     state => !!Object.keys(state.assetErrors[assetId] || {}).length,

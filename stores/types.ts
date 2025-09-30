@@ -8,6 +8,7 @@ import {
 import { Router, VM } from "@/lib/integrations/vsphere";
 import { FolderTree } from "@/lib/integrations/vsphere/types";
 import { Link } from "@/lib/types/flow";
+import { RuleGroupType } from "react-querybuilder";
 import { StateCreator } from "zustand";
 
 export type LockedFields = Record<Id<"assets">, Record<Id<"fields">, string>>;
@@ -48,6 +49,8 @@ export type State = {
 
   hiding: boolean;
   sorting: SortingDict;
+  filters: RuleGroupType | null;
+  isFiltering: boolean;
   hiddenFields: Id<"fields">[];
   fieldOrder: Id<"fields">[];
 
@@ -66,6 +69,7 @@ export type State = {
   topologyFetchTime: string | null;
   folderTree: FolderTree;
   rootMoid: string | null;
+  highlightLink: Link | null;
 };
 
 export type TableSlice = {
@@ -74,6 +78,9 @@ export type TableSlice = {
   toggleVisibility: (fieldId: Id<"fields">) => void;
   toggleHiding: () => void;
   reorderField: (from: Id<"fields">, to: Id<"fields">) => void;
+  setFilters: (filters: RuleGroupType | null) => void;
+  setIsFiltering: (isFiltering: boolean) => void;
+  resetFilters: () => void;
 };
 
 export type AssetsSlice = {
@@ -95,8 +102,8 @@ export type FieldsSlice = {
 
 export type ViewsSlice = {
   setViews: (views: ViewsDict) => void;
-  applyView: (viewId: Id<"views">) => void;
-  setActiveViewId: (activeView: Id<"views"> | null) => void;
+  applyView: (viewId: Id<"views"> | "builtin:all") => void;
+  setActiveViewId: (activeView: Id<"views"> | null) => boolean;
 };
 
 export type UsersSlice = {
@@ -118,6 +125,7 @@ export type SchemasSlice = {
   toggleVmNodeNetworkTopologyView: (vmId: string, state?: boolean) => void;
   setFolderTree: (tree: FolderTree) => void;
   setRootMoid: (rootMoid: string) => void;
+  setHighlightLink: (link: Link | null) => void;
 };
 
 export type Actions = TableSlice &

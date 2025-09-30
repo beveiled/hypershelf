@@ -112,4 +112,9 @@ export const schemasSlice: ImmerStateCreator<SchemasSlice> = (set, get) => ({
       window.history.replaceState({}, "", url);
     });
   },
+  setHighlightLink: link => {
+    set(state => {
+      state.highlightLink = link;
+    });
+  },
 });

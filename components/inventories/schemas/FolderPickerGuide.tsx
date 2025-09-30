@@ -3,8 +3,7 @@ export function FolderPickerGuide() {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 454.78 247.4"
-      className="absolute top-21 right-5"
-      width="64vw"
+      className="absolute top-21 right-5 w-full max-w-md"
     >
       <path
         vectorEffect="non-scaling-stroke"

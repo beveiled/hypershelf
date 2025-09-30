@@ -15,11 +15,12 @@ import {
 } from "@/components/ui/popover";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { cn, shallowPositional } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { FieldPropConfig } from "./_abstractType";
 import { AnimateTransition } from "./_shared";
 import { useMutation } from "convex/react";
+import { isEqual } from "lodash";
 import { Check, ChevronDown, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
@@ -43,7 +44,7 @@ function InlineSelect({
   const options = useStoreWithEqualityFn(
     useHypershelf,
     state => state.fields?.[fieldId]?.field?.extra?.options || [],
-    shallowPositional,
+    isEqual,
   );
   const lockedBy = useHypershelf(
     state => state.lockedFields[assetId]?.[fieldId],

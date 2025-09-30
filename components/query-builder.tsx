@@ -1,19 +1,22 @@
 import { QueryBuilderShadcnUi } from "@/components/querybuilder";
-import { api } from "@/convex/_generated/api";
-import { AssetType, FieldType } from "@/convex/schema";
-import { FunctionReturnType } from "convex/server";
-import { add_operation, apply as jlApply } from "json-logic-js";
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { FieldType } from "@/convex/schema";
+import { filtersEqual } from "@/lib/utils/zustand";
+import { useHypershelf } from "@/stores";
+import { QueryBuilderDnD } from "@react-querybuilder/dnd";
+import { add_operation } from "json-logic-js";
+import { isEqual } from "lodash";
+import { useMemo } from "react";
+import * as ReactDnD from "react-dnd";
+import * as ReactDndBackend from "react-dnd-html5-backend";
 import QueryBuilder, {
   Operator,
   Option as QueryOption,
   RuleGroupType,
   type ValueEditorType,
-  formatQuery,
   jsonLogicAdditionalOperators,
+  formatQuery as rqbFormatQuery,
 } from "react-querybuilder";
-
-export type RowData = { asset: AssetType };
+import { useStoreWithEqualityFn } from "zustand/traditional";
 
 const customFieldTypeToQueryBuilderMap: Record<
   Exclude<FieldType["type"], "array"> &
@@ -181,64 +184,77 @@ Object.entries(jsonLogicAdditionalOperators).forEach(([op, fn]) =>
   add_operation(op, fn),
 );
 
-export function useQueryPredicate(filters: RuleGroupType | undefined) {
-  return useMemo(() => {
-    if (!filters) return () => true;
-    return (row: RowData) =>
-      jlApply(formatQuery(filters, "jsonlogic"), row.asset.metadata);
-  }, [filters]);
+export function formatQuery(filters: RuleGroupType) {
+  return rqbFormatQuery(filters, "jsonlogic");
 }
 
-export function HyperQueryBuilder({
-  fields,
-  users,
-  filters,
-  setFilters,
-}: {
-  fields: { field: FieldType }[] | null;
-  users: FunctionReturnType<typeof api.users.get>["users"];
-  filters: RuleGroupType | undefined;
-  setFilters: Dispatch<SetStateAction<RuleGroupType | undefined>>;
-}) {
-  const queryBuilderFields = useMemo(() => {
-    if (!fields || !users) return [];
+export function HyperQueryBuilder() {
+  const fields = useStoreWithEqualityFn(
+    useHypershelf,
+    s =>
+      Object.values(s.fields)
+        .map(f => f.field)
+        .map(f => ({
+          id: f._id,
+          name: f.name,
+          type: f.type,
+          listObjectType: f.extra?.listObjectType,
+          options: f.extra?.options,
+        })),
+    isEqual,
+  );
 
+  const users = useStoreWithEqualityFn(
+    useHypershelf,
+    s => Object.entries(s.users).map(([id, email]) => ({ id, email })),
+    isEqual,
+  );
+
+  const filters = useStoreWithEqualityFn(
+    useHypershelf,
+    s => s.filters ?? { combinator: "and", rules: [] },
+    filtersEqual,
+  );
+  const setFilters = useHypershelf(s => s.setFilters);
+
+  const queryBuilderFields = useMemo(() => {
     return fields.map(f => ({
-      name: f.field._id,
-      value: f.field._id,
-      label: f.field.name,
-      operators: operatorOptions[f.field.type],
+      name: f.id,
+      value: f.id,
+      label: f.name,
+      operators: operatorOptions[f.type],
       valueEditorType:
-        f.field.type === "array"
+        f.type === "array"
           ? customFieldTypeToQueryBuilderMap[
-              (f.field.extra?.listObjectType ?? "string") as Exclude<
+              (f.listObjectType ?? "string") as Exclude<
                 FieldType["type"],
                 "array"
               > &
                 NonNullable<FieldType["extra"]>["listObjectType"]
             ]
-          : customFieldTypeToQueryBuilderMap[f.field.type],
-      ...(f.field.type === "user" && {
+          : customFieldTypeToQueryBuilderMap[f.type],
+      ...(f.type === "user" && {
         values: users.map(u => ({
           name: u.email,
           label: u.email,
+          value: u.id,
         })) as QueryOption[],
       }),
-      ...(f.field.type === "select" && {
-        values: f.field.extra?.options?.map(o => ({
+      ...(f.type === "select" && {
+        values: f.options?.map(o => ({
           label: o,
           name: o,
         })) as QueryOption[],
       }),
-      ...(f.field.type === "array" &&
-        f.field.extra?.listObjectType === "select" && {
-          values: f.field.extra?.options?.map(o => ({
+      ...(f.type === "array" &&
+        f.listObjectType === "select" && {
+          values: f.options?.map(o => ({
             label: o,
             name: o,
           })) as QueryOption[],
         }),
-      ...(f.field.type === "array" &&
-        f.field.extra?.listObjectType === "user" && {
+      ...(f.type === "array" &&
+        f.listObjectType === "user" && {
           values: users.map(u => ({
             name: u.email,
             label: u.email,
@@ -249,11 +265,13 @@ export function HyperQueryBuilder({
 
   return (
     <QueryBuilderShadcnUi>
-      <QueryBuilder
-        fields={queryBuilderFields}
-        query={filters}
-        onQueryChange={setFilters}
-      />
+      <QueryBuilderDnD dnd={{ ...ReactDnD, ...ReactDndBackend }}>
+        <QueryBuilder
+          fields={queryBuilderFields}
+          query={filters}
+          onQueryChange={setFilters}
+        />
+      </QueryBuilderDnD>
     </QueryBuilderShadcnUi>
   );
 }

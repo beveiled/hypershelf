@@ -23,9 +23,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { FieldType } from "@/convex/schema";
-import { cn, shallowPositional } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { AnimateTransition } from "./fieldTypes/_shared";
+import { isEqual } from "lodash";
 import { Check, ChevronDown, Star } from "lucide-react";
 import { DynamicIcon } from "lucide-react/dynamic";
 import { useCallback, useMemo, useState } from "react";
@@ -71,7 +72,7 @@ export function FieldTypeProp({
         .filter(ft => ft.magic && !usedFieldTypes.has(ft.key))
         .map(ft => ft.key);
     },
-    shallowPositional,
+    isEqual,
   );
   const renderedFieldTypes = useMemo(() => {
     return [

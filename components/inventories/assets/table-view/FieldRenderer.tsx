@@ -2,6 +2,8 @@ import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { fieldTypes } from "../../fields/fieldTypes";
+import { isEqual } from "lodash";
+import { useStoreWithEqualityFn } from "zustand/traditional";
 
 function Unset({ required }: { required?: boolean }) {
   return (
@@ -25,8 +27,10 @@ export function FieldRenderer({
   fieldId: Id<"fields">;
   readonly?: boolean;
 }) {
-  const value = useHypershelf(
+  const value = useStoreWithEqualityFn(
+    useHypershelf,
     state => state.assets?.[assetId]?.asset?.metadata?.[fieldId],
+    isEqual,
   );
   const fieldType = useHypershelf(
     state => state.fields?.[fieldId]?.field?.type,
@@ -34,7 +38,11 @@ export function FieldRenderer({
   const isRequired = useHypershelf(
     state => state.fields?.[fieldId]?.field?.required,
   );
-  const users = useHypershelf(state => state.users);
+  const users = useStoreWithEqualityFn(
+    useHypershelf,
+    state => state.users,
+    isEqual,
+  );
 
   if (!fieldType || !users) return null;
 

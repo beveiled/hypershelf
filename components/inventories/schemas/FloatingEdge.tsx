@@ -1,23 +1,19 @@
 "use client";
 
-import {
-  Popover,
-  PopoverContentNoPortal,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { RFNodeInternal } from "@/lib/types/flow";
 import { cn } from "@/lib/utils";
 import { getEdgeParams } from "@/lib/utils/flow";
 import { useHypershelf } from "@/stores";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
 import {
   Edge,
   EdgeLabelRenderer,
   getBezierPath,
   useInternalNode,
+  useReactFlow,
 } from "@xyflow/react";
-import { motion } from "framer-motion";
-import { Ellipsis } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export function FloatingEdge({
   id,
@@ -34,14 +30,29 @@ export function FloatingEdge({
       !state.selectedVmNodesNetworkTopologyView?.[source] &&
       !state.selectedVmNodesNetworkTopologyView?.[target],
   );
+  const dimmed = useHypershelf(
+    state =>
+      state.highlightLink &&
+      (state.highlightLink.from !== source ||
+        state.highlightLink.to !== target),
+  );
+  const highlighted = useHypershelf(
+    state =>
+      state.highlightLink &&
+      state.highlightLink.from === source &&
+      state.highlightLink.to === target,
+  );
   const [open, setOpen] = useState(false);
+  const [labelX, setLabelX] = useState(0);
+  const [labelY, setLabelY] = useState(0);
+  const hitboxRef = useRef<SVGPathElement | null>(null);
 
   const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(
     sourceNode as RFNodeInternal,
     targetNode as RFNodeInternal,
   );
 
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const [edgePath, flowLabelX, flowLabelY] = getBezierPath({
     sourceX: sx,
     sourceY: sy,
     sourcePosition: sourcePos,
@@ -50,7 +61,14 @@ export function FloatingEdge({
     targetY: ty,
   });
 
+  const baseStroke = useMemo(() => {
+    const sw = style?.strokeWidth;
+    return Number.isFinite(sw) ? Number(sw) : 1;
+  }, [style]);
+
   const reactFlowViewportRef = useRef<HTMLDivElement | null>(null);
+
+  const { screenToFlowPosition } = useReactFlow();
 
   useEffect(() => {
     const viewport = document.querySelector(
@@ -77,64 +95,138 @@ export function FloatingEdge({
         className={cn(
           "react-flow__edge-path transition-opacity duration-200",
           translucent && "opacity-0",
+          dimmed && "opacity-40",
         )}
         d={edgePath}
         markerEnd={markerEnd as string}
         style={{ ...style, pointerEvents: "none" }}
       />
       {hasLabel && !translucent && (
-        <EdgeLabelRenderer>
-          <div
-            style={{
-              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            }}
-            className="absolute z-50 nodrag nopan"
-          >
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <motion.button
-                  className="pointer-events-auto relative size-4 rounded-md backdrop-blur-3xl flex items-center justify-center cursor-pointer"
-                  onClick={() => setOpen(!open)}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: "spring", bounce: 0.3, duration: 0.3 }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <svg
-                    className="absolute -inset-0.5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      className="stroke-[#55f]"
-                      style={{ strokeDasharray: 5 }}
-                      strokeWidth={1.5}
-                      vectorEffect="non-scaling-stroke"
-                    />
-                  </svg>
-                  <Ellipsis className="size-3 text-muted-foreground" />
-                </motion.button>
-              </PopoverTrigger>
-              <PopoverContentNoPortal
+        <PopoverPrimitive.Root
+          open={open || highlighted || false}
+          onOpenChange={setOpen}
+        >
+          <PopoverPrimitive.Trigger asChild>
+            <path
+              ref={hitboxRef}
+              d={edgePath}
+              fill="none"
+              stroke="transparent"
+              className="cursor-pointer"
+              style={{ strokeDasharray: "0" }}
+              pointerEvents="stroke"
+              strokeWidth={baseStroke + 4}
+              onClick={e => {
+                if (!open) {
+                  const { x, y } = screenToFlowPosition({
+                    x: e.clientX,
+                    y: e.clientY,
+                  });
+                  setLabelX(x);
+                  setLabelY(y);
+                }
+                setOpen(o => !o);
+              }}
+            />
+          </PopoverPrimitive.Trigger>
+          <EdgeLabelRenderer>
+            <div className="[&>[data-radix-popper-content-wrapper]]:!transform-none z-50 absolute">
+              <PopoverPrimitive.Content
                 side="bottom"
                 align="center"
-                className="size-fit min-w-16 border-2 border-dashed border-[#55f]"
+                className="absolute size-fit translate-y-[calc(-100%+0.25rem)] -translate-x-1"
+                style={{
+                  left: labelX || flowLabelX,
+                  top: labelY || flowLabelY,
+                }}
+                forceMount={true}
               >
-                {Array.isArray(data?.label) ? (
-                  data.label.map((l, i) => (
-                    <div key={i} className="text-xs">
-                      {l}
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-xs">{data?.label as string}</div>
-                )}
-              </PopoverContentNoPortal>
-            </Popover>
-          </div>
-        </EdgeLabelRenderer>
+                <AnimatePresence>
+                  {(open || highlighted) && (
+                    <>
+                      <svg
+                        viewBox="0 0 43.71 43.71"
+                        className="w-10 absolute bottom-0 left-0"
+                      >
+                        <motion.circle
+                          cx="5"
+                          cy="38.71"
+                          r="4"
+                          fill="none"
+                          stroke="#f55"
+                          strokeMiterlimit="10"
+                          strokeWidth="2"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 0.16 }}
+                          exit={{ pathLength: 0 }}
+                        />
+                        <motion.line
+                          x1="7.83"
+                          y1="35.88"
+                          x2="43"
+                          y2=".71"
+                          fill="none"
+                          stroke="#f55"
+                          strokeMiterlimit="10"
+                          strokeWidth="2"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 0.16 }}
+                          exit={{ pathLength: 0 }}
+                        />
+                      </svg>
+                      <motion.div
+                        className="min-w-16 p-1.5 relative rounded-md bg-background/60 backdrop-blur-lg -translate-x-1 translate-y-1"
+                        initial={{ x: 0, y: 0, scale: 0.2, opacity: 0 }}
+                        animate={{
+                          x: "2.5rem",
+                          y: "-2.5rem",
+                          scale: 1,
+                          opacity: 1,
+                        }}
+                        exit={{ x: 0, y: 0, scale: 0.2, opacity: 0 }}
+                        transition={{
+                          type: "spring",
+                          duration: 0.3,
+                          bounce: 0.3,
+                        }}
+                      >
+                        {Array.isArray(data?.label) ? (
+                          data.label.map((l, i) => (
+                            <div key={i} className="text-xs">
+                              {l}
+                            </div>
+                          ))
+                        ) : (
+                          <div className="text-xs">{data?.label as string}</div>
+                        )}
+                        <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                          <motion.rect
+                            x="1"
+                            y="1"
+                            width="calc(100% - 2px)"
+                            height="calc(100% - 2px)"
+                            rx="4"
+                            ry="4"
+                            fill="none"
+                            stroke="#f55"
+                            strokeWidth="2"
+                            vectorEffect="non-scaling-stroke"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 0.16 }}
+                            exit={{ pathLength: 0 }}
+                          />
+                        </svg>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </PopoverPrimitive.Content>
+            </div>
+          </EdgeLabelRenderer>
+        </PopoverPrimitive.Root>
       )}
     </>
   );

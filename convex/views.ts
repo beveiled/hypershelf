@@ -24,22 +24,9 @@ export const get = query({
       .filter(q => q.eq(q.field("global"), true))
       .filter(q => q.neq(q.field("userId"), userId))
       .collect();
-    const builtin = [
-      {
-        _id: "builtin:all",
-        name: "Все",
-        userId: null,
-        global: true,
-        hiddenFields: [],
-        sorting: {},
-        filters: [],
-        enableFiltering: false,
-        builtin: true,
-      },
-    ];
 
     return {
-      views: [...builtin, ...views, ...globalViews]
+      views: [...views, ...globalViews]
         .filter(v => v !== null)
         .map(v => ({
           ...v,

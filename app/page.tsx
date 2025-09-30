@@ -1,6 +1,7 @@
 "use client";
 
 import { HeaderMenu } from "@/components/inventories/assets/HeaderMenu";
+import { QueryBuilder } from "@/components/inventories/assets/QueryBuilder";
 import { ViewSwitcher } from "@/components/inventories/assets/ViewSwitcher";
 import { TableView } from "@/components/inventories/assets/table-view";
 import { TableSkeleton } from "@/components/inventories/assets/table-view/TableSkeleton";
@@ -16,6 +17,7 @@ import { useEffect } from "react";
 function Header() {
   return (
     <div className="flex justify-between">
+      <QueryBuilder />
       <HeaderMenu />
       <ViewSwitcher />
     </div>

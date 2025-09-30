@@ -1,11 +1,11 @@
 import { TableRow } from "@/components/ui/table";
-import { shallowPositional } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { HeaderCell } from "./HeaderCell";
 import {
   SortableContext,
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { isEqual } from "lodash";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 
 export function SmartHeader() {
@@ -19,7 +19,7 @@ export function SmartHeader() {
           const posB = state.fieldOrder.indexOf(b);
           return posA - posB;
         }),
-    shallowPositional,
+    isEqual,
   );
 
   return (

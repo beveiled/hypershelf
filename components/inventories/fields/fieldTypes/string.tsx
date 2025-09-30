@@ -7,8 +7,9 @@ import { useHypershelf } from "@/stores";
 import { FieldPropConfig } from "./_abstractType";
 import { ActionsRow } from "./_shared";
 import { useMutation } from "convex/react";
+import { isEqual } from "lodash";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useShallow } from "zustand/shallow";
+import { useStoreWithEqualityFn } from "zustand/traditional";
 
 export function InlineString({
   assetId,
@@ -19,12 +20,14 @@ export function InlineString({
   fieldId: Id<"fields">;
   readonly?: boolean;
 }) {
-  const fieldInfo = useHypershelf(
-    useShallow(state => ({
+  const fieldInfo = useStoreWithEqualityFn(
+    useHypershelf,
+    state => ({
       type: state.fields?.[fieldId]?.field?.type,
       extra: state.fields?.[fieldId]?.field?.extra,
       required: state.fields?.[fieldId]?.field?.required,
-    })),
+    }),
+    isEqual,
   );
   const { placeholder } = fieldInfo?.extra || {};
   const value = useHypershelf(

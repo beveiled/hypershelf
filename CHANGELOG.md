@@ -1,3 +1,13 @@
+# Hypershelf 0.7.10
+
+- Create and delete views UI
+- Rev. 3 of network connection labels
+- New node distribution algorithm
+- Query builder
+- Reduce unnecessary re-renders (i.e optimize state management)
+- UI improvements
+- Minor bug fixes
+
 # Hypershelf 0.7.9
 
 - Accessibility improvements

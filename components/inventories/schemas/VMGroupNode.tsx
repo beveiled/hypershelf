@@ -27,7 +27,7 @@ export function VMGroupNode({ data }: NodeProps<Node<VMGroupData, NodeType>>) {
     <div className="flex w-full h-full p-2 pt-1 flex-col rounded-lg border border-border bg-card text-xs cursor-default">
       <div
         className={cn(
-          "mb-2 font-medium text-base text-center",
+          "mb-2 font-medium text-base text-center whitespace-pre",
           translucent && "opacity-50",
         )}
       >
