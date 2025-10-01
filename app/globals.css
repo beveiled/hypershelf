@@ -13,10 +13,10 @@
   --color-border: oklch(25% 0.003 285);
   --color-border-focus: oklch(50% 0.003 285 / 0.5);
   --color-shadow: oklch(50% 0.003 285 / 0.03);
-  --font-sans: var(--font-space-grotesk);
+  --font-sans: var(--font-geist);
   --font-title: var(--font-syne);
   --font-subtitle: var(--font-syne);
-  --font-mono: var(--font-space-mono);
+  --font-mono: var(--font-source-code-pro);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

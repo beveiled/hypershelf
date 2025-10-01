@@ -1,3 +1,8 @@
+# Hypershelf 0.7.13
+
+- Wayback
+- Xlsx export
+
 # Hypershelf 0.7.12
 
 - Create asset ui

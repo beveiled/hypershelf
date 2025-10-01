@@ -8,7 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { AnimatePresence, motion } from "framer-motion";
-import { Funnel, Power, RotateCcw } from "lucide-react";
+import { ListFilter, Power, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
 export function QueryBuilder() {
@@ -21,7 +21,7 @@ export function QueryBuilder() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="sm" className="!size-auto !p-1">
-          <Funnel className="size-3 opacity-50" />
+          <ListFilter className="size-4 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent

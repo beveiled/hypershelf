@@ -1,6 +1,6 @@
 "use client";
 
-import { Header } from "@/components/inventories/assets/Header";
+import { Header } from "@/components/inventories/assets/header";
 import { TableView } from "@/components/inventories/assets/table-view";
 import { TableSkeleton } from "@/components/inventories/assets/table-view/TableSkeleton";
 import { useAssetLock } from "@/components/inventories/useLock";
