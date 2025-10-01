@@ -8,8 +8,8 @@ import { SuspenseSkeleton } from "@/components/inventories/schemas/SuspenseSkele
 import { VMGroupNode } from "@/components/inventories/schemas/VMGroupNode";
 import { VMNode } from "@/components/inventories/schemas/vm-node";
 import { useHeaderContent } from "@/components/util/HeaderContext";
+import { Router, VM } from "@/convex/lib/integrations/vsphere";
 import { useLayoutedElements } from "@/lib/hooks/useLayoutedElements";
-import { Router, VM } from "@/lib/integrations/vsphere";
 import { RFEdge, RFNode } from "@/lib/types/flow";
 import { useHypershelf } from "@/stores";
 import { api } from "@/trpc/react";

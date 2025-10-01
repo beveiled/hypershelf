@@ -1,15 +1,6 @@
 import { FieldPropConfig } from "./_abstractType";
 import { InlineString } from "./string";
 
-const magicHostnameConfig = {
-  key: "magic__hostname",
-  label: "Хостнейм",
-  icon: "globe",
-  fieldProps: ["placeholder", "regex", "regexError"],
-  magic: true,
-  component: InlineString,
-} as const satisfies FieldPropConfig;
-
 const magicIPConfig = {
   key: "magic__ip",
   label: "IP",
@@ -25,7 +16,11 @@ const magicMoidConfig = {
   icon: "id-card",
   fieldProps: [],
   magic: true,
-  component: InlineString,
+  component: () => (
+    <div className="text-[10px] text-muted-foreground">
+      Добавьте в конфиге этого поля флаг {'"'}Невидимый{'"'}!
+    </div>
+  ),
 } as const satisfies FieldPropConfig;
 
-export { magicHostnameConfig, magicIPConfig, magicMoidConfig };
+export { magicIPConfig, magicMoidConfig };

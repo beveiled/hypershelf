@@ -74,6 +74,9 @@ const assetSchemaInternal = {
   editingBy: v.optional(v.id("users")),
   /** @deprecated Use `assetLocks` instead */
   editingLockExpires: v.optional(v.number()),
+  vsphereLastSync: v.optional(v.number()),
+  vsphereMoid: v.optional(v.string()),
+  vsphereMetadata: v.optional(v.record(v.string(), v.any())),
 };
 
 const assetLocks = {

@@ -1,4 +1,6 @@
-import { RedisClient } from "@/server/redis/types";
+"use node";
+
+import { getClient } from "../../redis";
 import { SoapClientConfig, SoapResponse } from "./types";
 import { elementsByLocalName, envelope, escapeXml, text } from "./utils";
 import { DOMParser } from "@xmldom/xmldom";
@@ -8,7 +10,7 @@ export class SoapClient {
   private readonly url: string;
   private readonly username?: string;
   private readonly password?: string;
-  private readonly redis: RedisClient | null;
+  private readonly redis: ReturnType<typeof getClient> | null;
 
   constructor(cfg: SoapClientConfig) {
     this.url = cfg.url;
@@ -269,6 +271,18 @@ export class SoapClient {
   private static containsNotAuthenticated(xml: string): boolean {
     const d = new DOMParser().parseFromString(xml, "text/xml");
     const faults = elementsByLocalName(d, "fault");
+    if (faults.length > 0) {
+      const t = text(faults[0]);
+      if (/The session is not authenticated/i.test(t)) {
+        return true;
+      }
+    }
+
+    const notAuthFaults = elementsByLocalName(d, "NotAuthenticatedFault");
+    if (notAuthFaults.length > 0) {
+      return true;
+    }
+
     for (const fault of faults) {
       const typeAttr = fault.getAttribute("xsi:type");
       if (typeAttr === "NotAuthenticated") {
@@ -285,5 +299,120 @@ export class SoapClient {
   private static containsFault(xml: string): boolean {
     const d = new DOMParser().parseFromString(xml, "text/xml");
     return elementsByLocalName(d, "Fault").length > 0;
+  }
+
+  private buildRetrieveVmCoreEnvelope(moid: string): string {
+    const propSets = this.propSet("VirtualMachine", [
+      "summary.guest.hostName",
+      "summary.guest.ipAddress",
+      "guest.guestFullName",
+    ]);
+    const objset = `
+      <objectSet>
+        <obj type="VirtualMachine">${escapeXml(moid)}</obj>
+      </objectSet>
+    `;
+    return envelope(`
+      <vim25:RetrievePropertiesEx>
+        <_this type="PropertyCollector">propertyCollector</_this>
+        <specSet>
+          ${propSets}
+          ${objset}
+        </specSet>
+        <options/>
+      </vim25:RetrievePropertiesEx>
+    `);
+  }
+
+  private buildFindByIpEnvelope(ip: string): string {
+    return envelope(`
+      <vim25:FindByIp>
+        <_this type="SearchIndex">SearchIndex</_this>
+        <datacenter type="Datacenter">datacenter-1001</datacenter>
+        <ip>${escapeXml(ip)}</ip>
+        <vmSearch>true</vmSearch>
+      </vim25:FindByIp>
+    `);
+  }
+
+  private buildFindByDnsNameEnvelope(hostname: string): string {
+    return envelope(`
+      <vim25:FindByDnsName>
+        <_this type="SearchIndex">SearchIndex</_this>
+        <datacenter type="Datacenter">datacenter-1001</datacenter>
+        <dnsName>${escapeXml(hostname)}</dnsName>
+        <vmSearch>true</vmSearch>
+      </vim25:FindByDnsName>
+    `);
+  }
+
+  private buildFindByInventoryPathEnvelope(vmName: string): string {
+    return envelope(`
+      <vim25:FindByInventoryPath>
+        <_this type="SearchIndex">SearchIndex</_this>
+        <inventoryPath>vm/${escapeXml(vmName)}</inventoryPath>
+      </vim25:FindByInventoryPath>
+    `);
+  }
+
+  async findCandidatesSingle(
+    ip?: string | null,
+    hostname?: string | null,
+  ): Promise<{ ipMoRef?: string | null; hostMoRef?: string | null }> {
+    if (ip) {
+      const xml = this.buildFindByIpEnvelope(ip);
+      const r = await this.post(xml);
+      const body = await this.handleAuthAndMaybeRetry(r, () => this.post(xml));
+      const d = new DOMParser().parseFromString(body.text, "text/xml");
+      const ipResp = elementsByLocalName(d, "FindByIpResponse");
+      if (ipResp.length) {
+        const rv = elementsByLocalName(ipResp[0], "returnval");
+        const ipMoRef = rv.length ? text(rv[0]).trim() || null : null;
+        if (ipMoRef) {
+          return { ipMoRef };
+        }
+      }
+    }
+
+    if (hostname) {
+      const xml = this.buildFindByDnsNameEnvelope(hostname);
+      const r = await this.post(xml);
+      const body = await this.handleAuthAndMaybeRetry(r, () => this.post(xml));
+      const d = new DOMParser().parseFromString(body.text, "text/xml");
+      const dnsResp = elementsByLocalName(d, "FindByDnsNameResponse");
+      if (dnsResp.length) {
+        const rv = elementsByLocalName(dnsResp[0], "returnval");
+        const hostMoRef = rv.length ? text(rv[0]).trim() || null : null;
+        if (hostMoRef) {
+          return { hostMoRef };
+        }
+      }
+    }
+
+    if (hostname) {
+      const xml = this.buildFindByInventoryPathEnvelope(hostname);
+      const r = await this.post(xml);
+      const body = await this.handleAuthAndMaybeRetry(r, () => this.post(xml));
+      const d = new DOMParser().parseFromString(body.text, "text/xml");
+      const vmResp = elementsByLocalName(d, "FindByInventoryPathResponse");
+      if (vmResp.length) {
+        const rv = elementsByLocalName(vmResp[0], "returnval");
+        const hostMoRef = rv.length ? text(rv[0]).trim() || null : null;
+        if (hostMoRef) {
+          return { hostMoRef };
+        }
+      }
+    }
+
+    return { ipMoRef: null, hostMoRef: null };
+  }
+
+  async retrieveVmCore(moid: string): Promise<SoapResponse> {
+    const xml = this.buildRetrieveVmCoreEnvelope(moid);
+    const r = await this.post(xml);
+    const body = await this.handleAuthAndMaybeRetry(r, () =>
+      this.post(this.buildRetrieveVmCoreEnvelope(moid)),
+    );
+    return body;
   }
 }

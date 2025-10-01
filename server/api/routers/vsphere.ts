@@ -3,8 +3,8 @@ import {
   VM,
   fetchTopology,
   fetchTopologyStructure,
-} from "@/lib/integrations/vsphere";
-import { FolderTree } from "@/lib/integrations/vsphere/types";
+} from "@/convex/lib/integrations/vsphere";
+import { FolderTree } from "@/convex/lib/integrations/vsphere/types";
 import { env } from "@/env";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { NetworkTopology } from "@/stores/types";

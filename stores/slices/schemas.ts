@@ -1,4 +1,4 @@
-import { FolderTree } from "@/lib/integrations/vsphere";
+import { FolderTree } from "@/convex/lib/integrations/vsphere";
 import { Link } from "@/lib/types/flow";
 import { ImmerStateCreator, SchemasSlice } from "../types";
 

@@ -1,4 +1,4 @@
-import { VM } from "@/lib/integrations/vsphere";
+import { VM } from "@/convex/lib/integrations/vsphere";
 import { NodeType, RFNode, VMGroupData } from "@/lib/types/flow";
 import { Node, useNodesInitialized, useReactFlow } from "@xyflow/react";
 import { useEffect, useRef } from "react";

@@ -13,7 +13,11 @@ export function SmartHeader() {
     useHypershelf,
     state =>
       state.fieldIds
-        .filter(f => !state.hiding || !state.hiddenFields.includes(f))
+        .filter(
+          f =>
+            !state.fields[f].field.hidden &&
+            (!state.hiding || !state.hiddenFields.includes(f)),
+        )
         .sort((a, b) => {
           const posA = state.fieldOrder.indexOf(a);
           const posB = state.fieldOrder.indexOf(b);

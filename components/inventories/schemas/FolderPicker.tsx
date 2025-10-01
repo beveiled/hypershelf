@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { FolderTree } from "@/lib/integrations/vsphere";
+import { FolderTree } from "@/convex/lib/integrations/vsphere";
 import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { AnimatePresence, motion } from "framer-motion";

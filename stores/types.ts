@@ -1,12 +1,12 @@
 import { MagicFieldTypes } from "@/components/inventories/fields/fieldTypes";
 import { Id } from "@/convex/_generated/dataModel";
+import { Router, VM } from "@/convex/lib/integrations/vsphere";
+import { FolderTree } from "@/convex/lib/integrations/vsphere/types";
 import {
   ExtendedAssetType,
   ExtendedFieldType,
   ExtendedViewType,
 } from "@/convex/schema";
-import { Router, VM } from "@/lib/integrations/vsphere";
-import { FolderTree } from "@/lib/integrations/vsphere/types";
 import { Link } from "@/lib/types/flow";
 import { RuleGroupType } from "react-querybuilder";
 import { StateCreator } from "zustand";

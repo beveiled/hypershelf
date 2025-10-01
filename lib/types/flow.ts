@@ -1,4 +1,4 @@
-import { VM } from "@/lib/integrations/vsphere";
+import { VM } from "@/convex/lib/integrations/vsphere";
 import { Edge, InternalNode, Node } from "@xyflow/react";
 
 export type VMGroupData = { id: string; label: string };

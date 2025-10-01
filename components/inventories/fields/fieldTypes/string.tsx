@@ -15,10 +15,12 @@ export function InlineString({
   assetId,
   fieldId,
   readonly = false,
+  maxRows = 10,
 }: {
   assetId: Id<"assets">;
   fieldId: Id<"fields">;
   readonly?: boolean;
+  maxRows?: number;
 }) {
   const fieldInfo = useStoreWithEqualityFn(
     useHypershelf,
@@ -158,7 +160,7 @@ export function InlineString({
           autosizeFrom={40}
           autosizeTo={384}
           minRows={1}
-          maxRows={10}
+          maxRows={maxRows}
         />
       </div>
       <ActionsRow

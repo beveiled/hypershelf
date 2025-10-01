@@ -9,4 +9,11 @@ crons.interval(
   internal.general.releaseExpiredLocks,
 );
 
+crons.interval(
+  "fetch vSphere data",
+  { minutes: 1 },
+  internal.vsphere.fetchHostMutation,
+  {},
+);
+
 export default crons;

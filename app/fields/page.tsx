@@ -4,6 +4,7 @@ import { FieldCard } from "@/components/inventories/fields/FieldCard";
 import { NewFieldForm } from "@/components/inventories/fields/FieldForm";
 import { useFieldLock } from "@/components/inventories/useLock";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useHeaderContent } from "@/components/util/HeaderContext";
 import { useHypershelf } from "@/stores";
 import { isEqual } from "lodash";
 import { useEffect } from "react";
@@ -19,6 +20,12 @@ export default function FieldsInventory() {
     state => state.fieldIds,
     isEqual,
   );
+
+  const { setContent: setHeaderContent } = useHeaderContent();
+
+  useEffect(() => {
+    setHeaderContent(null);
+  }, [setHeaderContent]);
 
   useEffect(
     () =>

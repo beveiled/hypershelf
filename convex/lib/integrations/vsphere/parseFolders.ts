@@ -1,3 +1,5 @@
+"use node";
+
 import { FolderRecord } from "./types";
 import { elementsByLocalName, firstChildByLocalName, text } from "./utils";
 import { DOMParser } from "@xmldom/xmldom";

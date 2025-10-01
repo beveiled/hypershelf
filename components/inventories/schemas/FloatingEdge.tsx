@@ -13,7 +13,7 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export function FloatingEdge({
   id,
@@ -42,7 +42,7 @@ export function FloatingEdge({
       state.highlightLink.from === source &&
       state.highlightLink.to === target,
   );
-  const [open, setOpen] = useState(false);
+  const setHighlightLink = useHypershelf(state => state.setHighlightLink);
   const [labelX, setLabelX] = useState(0);
   const [labelY, setLabelY] = useState(0);
   const hitboxRef = useRef<SVGPathElement | null>(null);
@@ -82,6 +82,21 @@ export function FloatingEdge({
     };
   }, []);
 
+  const setOpen = useCallback(
+    (open: boolean) => {
+      setHighlightLink(
+        open
+          ? {
+              from: source,
+              to: target,
+              label: data?.label as string | string[],
+            }
+          : null,
+      );
+    },
+    [setHighlightLink, source, target, data],
+  );
+
   if (!sourceNode || !targetNode) return null;
 
   const hasLabel =
@@ -94,8 +109,8 @@ export function FloatingEdge({
         id={id}
         className={cn(
           "react-flow__edge-path transition-opacity duration-200",
-          translucent && "opacity-0",
           dimmed && "opacity-40",
+          translucent && "opacity-0",
         )}
         d={edgePath}
         markerEnd={markerEnd as string}
@@ -103,7 +118,7 @@ export function FloatingEdge({
       />
       {hasLabel && !translucent && (
         <PopoverPrimitive.Root
-          open={open || highlighted || false}
+          open={highlighted ?? false}
           onOpenChange={setOpen}
         >
           <PopoverPrimitive.Trigger asChild>
@@ -117,7 +132,7 @@ export function FloatingEdge({
               pointerEvents="stroke"
               strokeWidth={baseStroke + 4}
               onClick={e => {
-                if (!open) {
+                if (!highlighted) {
                   const { x, y } = screenToFlowPosition({
                     x: e.clientX,
                     y: e.clientY,
@@ -125,7 +140,7 @@ export function FloatingEdge({
                   setLabelX(x);
                   setLabelY(y);
                 }
-                setOpen(o => !o);
+                setOpen(!highlighted);
               }}
             />
           </PopoverPrimitive.Trigger>
@@ -142,7 +157,7 @@ export function FloatingEdge({
                 forceMount={true}
               >
                 <AnimatePresence>
-                  {(open || highlighted) && (
+                  {highlighted && (
                     <>
                       <svg
                         viewBox="0 0 43.71 43.71"

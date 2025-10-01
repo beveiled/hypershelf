@@ -56,6 +56,16 @@ export const assetsSlice: ImmerStateCreator<AssetsSlice> = (set, get) => ({
           if (!isEqual(asset.locks, state.assets[id].locks)) {
             state.assets[id].locks = asset.locks;
           }
+          if (
+            asset.asset.vsphereLastSync !==
+            state.assets[id].asset.vsphereLastSync
+          ) {
+            state.assets[id].asset.vsphereLastSync =
+              asset.asset.vsphereLastSync;
+          }
+          if (asset.asset.vsphereMoid !== state.assets[id].asset.vsphereMoid) {
+            state.assets[id].asset.vsphereMoid = asset.asset.vsphereMoid;
+          }
           if (asset.asset.metadata) {
             const prevKeys = Object.keys(
               state.assets[id].asset.metadata || {},
@@ -82,6 +92,35 @@ export const assetsSlice: ImmerStateCreator<AssetsSlice> = (set, get) => ({
               ) {
                 state.assets[id].asset.metadata[key] =
                   asset.asset.metadata[key];
+              }
+            }
+          }
+          if (asset.asset.vsphereMetadata) {
+            const prevKeys = Object.keys(
+              state.assets[id].asset.vsphereMetadata || {},
+            ) as (keyof AssetType["vsphereMetadata"])[];
+            const newKeys = Object.keys(
+              asset.asset.vsphereMetadata || {},
+            ) as (keyof AssetType["vsphereMetadata"])[];
+            for (const key of prevKeys) {
+              if (!newKeys.includes(key)) {
+                delete state.assets[id].asset.vsphereMetadata?.[key];
+              }
+            }
+            if (!state.assets[id].asset.vsphereMetadata)
+              state.assets[id].asset.vsphereMetadata = {};
+            for (const key of newKeys) {
+              if (!prevKeys.includes(key)) {
+                state.assets[id].asset.vsphereMetadata[key] =
+                  asset.asset.vsphereMetadata[key];
+              } else if (
+                !isEqual(
+                  state.assets[id].asset.vsphereMetadata[key],
+                  asset.asset.vsphereMetadata[key],
+                )
+              ) {
+                state.assets[id].asset.vsphereMetadata[key] =
+                  asset.asset.vsphereMetadata[key];
               }
             }
           }

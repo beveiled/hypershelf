@@ -1,3 +1,5 @@
+"use node";
+
 export const DEVICE_MAPPING: Record<
   string,
   {

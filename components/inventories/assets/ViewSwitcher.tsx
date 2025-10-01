@@ -5,7 +5,6 @@ import {
   Popover,
   PopoverAnchor,
   PopoverContent,
-  PopoverContentNoPortal,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { api } from "@/convex/_generated/api";
@@ -154,6 +153,7 @@ export function ViewSwitcher() {
   const deleteViewWrapped = async (viewId: Id<"views">) => {
     if (activeViewId === viewId) {
       setActiveViewId(null);
+      applyView("builtin:all" as const);
     }
     await deleteView({ viewId });
   };
@@ -261,7 +261,7 @@ export function ViewSwitcher() {
                           <Trash2 />
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContentNoPortal className="mt-4 w-80">
+                      <PopoverContent className="mt-4 w-80 z-[99999]">
                         <div className="flex flex-col gap-4">
                           <div className="text-center text-sm">
                             Ты уверен, что хочешь удалить вид{" "}
@@ -290,7 +290,7 @@ export function ViewSwitcher() {
                             </PopoverClose>
                           </div>
                         </div>
-                      </PopoverContentNoPortal>
+                      </PopoverContent>
                     </Popover>
                   ) : view.global && !view.builtin ? (
                     <div className="size-8 flex items-center justify-center">

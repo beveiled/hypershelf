@@ -1,4 +1,6 @@
-import { RedisClient } from "@/server/redis/types";
+"use node";
+
+import { getClient } from "../../redis";
 
 type StrMap<V> = { readonly [k: string]: V };
 export type Vm = {
@@ -47,7 +49,7 @@ export type SoapClientConfig = {
   readonly url: string;
   readonly username: string;
   readonly password: string;
-  readonly redis: RedisClient | null;
+  readonly redis: ReturnType<typeof getClient> | null;
 };
 export type SoapResponse = {
   readonly text: string;

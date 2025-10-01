@@ -1,7 +1,7 @@
 "use client";
 
+import { VM } from "@/convex/lib/integrations/vsphere";
 import { pickIcon } from "@/lib/icons/oses/pick";
-import { VM } from "@/lib/integrations/vsphere";
 import { NodeType } from "@/lib/types/flow";
 import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";

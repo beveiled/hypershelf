@@ -1,3 +1,11 @@
+# Hypershelf 0.7.11
+
+- Create view from current state when there is no view
+- Reset header state when leaving schemas
+- Selecting an arrow should dim other arrows
+- Hovering over arrow in a list highlights even hidden arrows
+- Server-side vSphere integration
+
 # Hypershelf 0.7.10
 
 - Create and delete views UI

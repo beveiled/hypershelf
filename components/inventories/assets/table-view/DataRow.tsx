@@ -37,9 +37,12 @@ function DataRow({ assetId }: { assetId: Id<"assets"> }) {
   const visibleFieldIds = useStoreWithEqualityFn(
     useHypershelf,
     state => {
-      const { fieldIds, hiddenFields, hiding } = state;
+      const { fieldIds, hiddenFields, hiding, fields } = state;
       return fieldIds
-        .filter(f => !hiding || !hiddenFields.includes(f))
+        .filter(
+          f =>
+            !fields[f].field.hidden && (!hiding || !hiddenFields.includes(f)),
+        )
         .sort((a, b) => {
           const posA = state.fieldOrder.indexOf(a);
           const posB = state.fieldOrder.indexOf(b);

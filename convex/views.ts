@@ -42,7 +42,14 @@ export const get = query({
 
 export const create = mutation({
   args: {
-    name: viewSchema.name,
+    name: v.string(),
+    hiddenFields: v.optional(v.array(v.id("fields"))),
+    fieldOrder: v.optional(v.array(v.id("fields"))),
+    sorting: v.optional(
+      v.record(v.id("fields"), v.union(v.literal("asc"), v.literal("desc"))),
+    ),
+    filters: v.optional(v.any()),
+    enableFiltering: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -53,6 +60,13 @@ export const create = mutation({
     const view = await ctx.db.insert("views", {
       userId,
       name: args.name,
+      hiddenFields: args.hiddenFields ?? [],
+      fieldOrder: args.fieldOrder ?? [],
+      sorting: args.sorting ?? {},
+      filters: args.filters ?? null,
+      enableFiltering: args.enableFiltering ?? false,
+      global: false,
+      builtin: false,
     });
 
     return view;

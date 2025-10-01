@@ -1,3 +1,5 @@
+"use node";
+
 import { DEVICE_MAPPING } from "./consts";
 import { Device, Folder, Inventory, Vm } from "./types";
 import { elementsByLocalName, firstChildByLocalName, text } from "./utils";
