@@ -10,7 +10,11 @@ export const get = query({
       return { fields: [] };
     }
 
-    const fields = await ctx.db.query("fields").order("asc").collect();
+    const fields = await ctx.db
+      .query("fields")
+      .order("asc")
+      .filter(q => q.neq(q.field("deleted"), true))
+      .collect();
     const editors = await Promise.all(
       fields.map(async f => {
         if (!f.editingBy) return null;
@@ -42,6 +46,28 @@ export const create = mutation({
         _logs: ["Failed to add field: not authenticated"],
       };
     }
+
+    if (args.type.startsWith("magic__")) {
+      const existing = await ctx.db
+        .query("fields")
+        .filter(q =>
+          q.and(
+            q.neq(q.field("deleted"), true),
+            q.eq(q.field("type"), args.type),
+          ),
+        )
+        .first();
+      if (existing) {
+        return {
+          success: false,
+          error: `Magic field of type ${args.type} already exists`,
+          _logs: [
+            `Failed to add field: magic field of type ${args.type} already exists`,
+          ],
+        };
+      }
+    }
+
     const newField = {
       name: args.name,
       slug: args.name.toLowerCase().replace(/\s+/g, "-"),
@@ -51,6 +77,14 @@ export const create = mutation({
       extra: args.extra,
     };
     const fieldId = await ctx.db.insert("fields", newField);
+    await ctx.db.insert("wayback", {
+      actor: userId,
+      when: Date.now(),
+      action: {
+        type: "create_field",
+        fieldId,
+      },
+    });
     return { success: true, fieldId, _logs: [`Field ${args.name} added`] };
   },
 });
@@ -67,7 +101,7 @@ export const remove = mutation({
       };
     }
     const field = await ctx.db.get(args.fieldId);
-    if (!field) {
+    if (!field || field.deleted) {
       return {
         success: false,
         error: "Field not found",
@@ -83,7 +117,12 @@ export const remove = mutation({
         ],
       };
     }
-    await ctx.db.delete(args.fieldId);
+    await ctx.db.patch(args.fieldId, { deleted: true });
+    await ctx.db.insert("wayback", {
+      actor: userId,
+      when: Date.now(),
+      action: { type: "delete_field", fieldId: args.fieldId },
+    });
     return { success: true, _logs: [`Field ${field.name} deleted`] };
   },
 });
@@ -102,8 +141,37 @@ export const update = mutation({
       };
     }
 
+    if (args.type.startsWith("magic__")) {
+      const existing = await ctx.db
+        .query("fields")
+        .filter(q =>
+          q.and(
+            q.neq(q.field("deleted"), true),
+            q.eq(q.field("type"), args.type),
+            q.neq(q.field("_id"), args.fieldId),
+          ),
+        )
+        .first();
+      if (existing) {
+        return {
+          success: false,
+          error: `Magic field of type ${args.type} already exists`,
+          _logs: [
+            `Failed to update field: magic field of type ${args.type} already exists`,
+          ],
+        };
+      }
+    }
+
+    if (args.name.trim().length === 0) {
+      return {
+        success: false,
+        error: "Field name cannot be empty",
+      };
+    }
+
     const field = await ctx.db.get(args.fieldId);
-    if (!field) {
+    if (!field || field.deleted) {
       return {
         success: false,
         error: "Field not found",
@@ -120,6 +188,29 @@ export const update = mutation({
       };
     }
 
+    await ctx.db.insert("wayback", {
+      actor: userId,
+      when: Date.now(),
+      action: {
+        type: "update_field",
+        fieldId: args.fieldId,
+        oldProps: {
+          name: field.name,
+          type: field.type,
+          required: field.required,
+          hidden: field.hidden,
+          extra: field.extra,
+        },
+        newProps: {
+          name: args.name,
+          type: args.type,
+          required: args.required,
+          hidden: args.hidden || false,
+          extra: args.extra,
+        },
+      },
+    });
+
     await ctx.db.patch(args.fieldId, {
       name: args.name.trim(),
       type: args.type,
@@ -134,5 +225,43 @@ export const update = mutation({
         ...(!field.editingBy ? ["Warning: lock missing"] : []),
       ],
     };
+  },
+});
+
+export const restore = mutation({
+  args: { fieldId: v.id("fields") },
+  handler: async (ctx, { fieldId }) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return {
+        success: false,
+        error: "Not authenticated",
+        _logs: ["Failed to restore field: not authenticated"],
+      };
+    }
+
+    const field = await ctx.db.get(fieldId);
+    if (!field) {
+      return {
+        success: false,
+        error: "Field not found",
+        _logs: ["Failed to restore field: field not found"],
+      };
+    }
+    if (!field.deleted) {
+      return {
+        success: false,
+        error: "Field is not deleted",
+        _logs: ["Failed to restore field: field is not deleted"],
+      };
+    }
+
+    await ctx.db.patch(fieldId, { deleted: false });
+    await ctx.db.insert("wayback", {
+      actor: userId,
+      when: Date.now(),
+      action: { type: "restore_field", fieldId },
+    });
+    return { success: true, _logs: ["Field restored successfully"] };
   },
 });

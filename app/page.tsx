@@ -1,8 +1,6 @@
 "use client";
 
-import { HeaderMenu } from "@/components/inventories/assets/HeaderMenu";
-import { QueryBuilder } from "@/components/inventories/assets/QueryBuilder";
-import { ViewSwitcher } from "@/components/inventories/assets/ViewSwitcher";
+import { Header } from "@/components/inventories/assets/Header";
 import { TableView } from "@/components/inventories/assets/table-view";
 import { TableSkeleton } from "@/components/inventories/assets/table-view/TableSkeleton";
 import { useAssetLock } from "@/components/inventories/useLock";
@@ -13,16 +11,6 @@ import { ExtendedViewType } from "@/convex/schema";
 import { useHypershelf } from "@/stores";
 import { useQuery } from "convex/react";
 import { useEffect } from "react";
-
-function Header() {
-  return (
-    <div className="flex justify-between">
-      <QueryBuilder />
-      <HeaderMenu />
-      <ViewSwitcher />
-    </div>
-  );
-}
 
 export default function AssetsInventory() {
   const { users: unstableUsers } = useQuery(api.users.get) ?? {};
@@ -75,9 +63,6 @@ export default function AssetsInventory() {
   useEffect(() => init(), [init]);
 
   const { setContent: setHeaderContent } = useHeaderContent();
-
-  // TODO: add asset ui
-  // TODO: remove asset ui
 
   useEffect(() => {
     setHeaderContent(<Header />);

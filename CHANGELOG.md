@@ -1,3 +1,8 @@
+# Hypershelf 0.7.12
+
+- Create asset ui
+- Delete asset ui
+
 # Hypershelf 0.7.11
 
 - Create view from current state when there is no view

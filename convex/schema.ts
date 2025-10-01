@@ -52,6 +52,7 @@ const fieldSchemaInternal = {
   editingLockExpires: v.optional(v.number()),
   /** @deprecated Not used anymore */
   persistent: v.optional(v.boolean()),
+  deleted: v.optional(v.boolean()),
 };
 
 export const assetSchema = {
@@ -77,6 +78,7 @@ const assetSchemaInternal = {
   vsphereLastSync: v.optional(v.number()),
   vsphereMoid: v.optional(v.string()),
   vsphereMetadata: v.optional(v.record(v.string(), v.any())),
+  deleted: v.optional(v.boolean()),
 };
 
 const assetLocks = {
@@ -115,6 +117,50 @@ export const viewSchemaInternal = {
   userId: v.id("users"),
 };
 
+export const waybackSchema = {
+  actor: v.id("users"),
+  when: v.number(),
+  action: v.union(
+    v.object({
+      type: v.literal("create_asset"),
+      assetId: v.id("assets"),
+    }),
+    v.object({
+      type: v.literal("update_asset"),
+      assetId: v.id("assets"),
+      fieldId: v.id("fields"),
+      oldValue: v.any(),
+      newValue: v.any(),
+    }),
+    v.object({
+      type: v.literal("delete_asset"),
+      assetId: v.id("assets"),
+    }),
+    v.object({
+      type: v.literal("restore_asset"),
+      assetId: v.id("assets"),
+    }),
+    v.object({
+      type: v.literal("create_field"),
+      fieldId: v.id("fields"),
+    }),
+    v.object({
+      type: v.literal("update_field"),
+      fieldId: v.id("fields"),
+      oldProps: v.object(fieldSchema),
+      newProps: v.object(fieldSchema),
+    }),
+    v.object({
+      type: v.literal("delete_field"),
+      fieldId: v.id("fields"),
+    }),
+    v.object({
+      type: v.literal("restore_field"),
+      fieldId: v.id("fields"),
+    }),
+  ),
+};
+
 export default defineSchema({
   ...authTables,
   assets: defineTable(assetSchemaInternal),
@@ -126,6 +172,11 @@ export default defineSchema({
   files: defineTable(fileSchema),
   views: defineTable(viewSchemaInternal),
   system: defineTable({ version: v.string() }),
+  wayback: defineTable(waybackSchema)
+    .index("by_assetId", ["action.assetId"])
+    .index("by_fieldId", ["action.fieldId"])
+    .index("by_action_type", ["action.type"])
+    .index("by_userId", ["actor"]),
 });
 
 export type AssetType = Doc<"assets"> & {

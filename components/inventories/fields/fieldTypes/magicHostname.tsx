@@ -29,7 +29,6 @@ function InlineHostnameStatus({
     state => {
       const asset = state.assets?.[assetId]?.asset;
       if (!asset) return { status: "not_found" };
-      if (!asset.vsphereLastSync) return { status: "not_synced" };
       const vsphereHostname = asset.vsphereMetadata?.magic__hostname;
       const vsphereIp = asset.vsphereMetadata?.magic__ip;
       const assetHostname = asset.metadata?.[fieldId];
@@ -37,6 +36,8 @@ function InlineHostnameStatus({
         f => f.field.type === "magic__ip",
       )?.field?._id;
       const assetIp = ipFieldId ? asset.metadata?.[ipFieldId] : null;
+      if (!assetHostname || !assetIp) return { status: "none" };
+      if (!asset.vsphereLastSync) return { status: "not_synced" };
       if (!vsphereHostname) return { status: "not_found" };
       if (
         asset.vsphereMetadata?.system__cache_key !==
@@ -59,6 +60,8 @@ function InlineHostnameStatus({
     state => state.assets?.[assetId]?.asset?.vsphereLastSync,
   );
   const requestRefetch = useMutation(api.vsphere.requestRefetch);
+
+  if (vsphereStatus.status === "none") return null;
 
   return (
     <Tooltip>
@@ -175,7 +178,7 @@ function InlineHostname({
   );
 }
 
-const magicHostnameConfig = {
+const config = {
   key: "magic__hostname",
   label: "Хостнейм",
   icon: "globe",
@@ -184,4 +187,4 @@ const magicHostnameConfig = {
   component: InlineHostname,
 } as const satisfies FieldPropConfig;
 
-export { magicHostnameConfig };
+export default config;

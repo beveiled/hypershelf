@@ -21,12 +21,12 @@ export const fetchHostAction = internalAction({
     if (!data) return;
 
     const redis = getClient(env.REDIS_URL, env.REDIS_PASSWORD);
-    const { id, moid, hostname, ip } = data;
-    console.log(`Fetching vSphere data for asset ${id}...`);
+    const { id, hostname, ip } = data;
+    console.log(`Fetching vSphere data for ${hostname} (${ip})...`);
 
-    const incoming = await fetchHost({ hostname, ip, moid }, redis);
+    const incoming = await fetchHost({ hostname, ip }, redis);
     if (!incoming) {
-      console.log(`No vSphere data found for asset ${id}`);
+      console.log(`No vSphere data found for ${hostname} (${ip})`);
       await ctx.runMutation(internal.vsphere.applyVsphereData, {
         id,
         metadata: {
@@ -45,7 +45,7 @@ export const fetchHostAction = internalAction({
         system__cache_key: `${hostname}-${ip}`,
       },
       last_sync: Date.now(),
-      moid: moid ?? undefined,
+      moid: incoming.moid ?? undefined,
     });
     console.log(`Applied vSphere data for asset ${id}`);
   },

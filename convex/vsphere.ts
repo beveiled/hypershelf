@@ -11,13 +11,6 @@ export const getVsphereData = internalQuery({
       .query("assets")
       .filter(q => !args.id || q.eq(q.field("_id"), args.id))
       .collect();
-    const magicMoid = await ctx.db
-      .query("fields")
-      .filter(q => q.eq(q.field("type"), "magic__moid"))
-      .first();
-    if (!magicMoid) {
-      throw new Error("No magic__moid field found");
-    }
 
     const magicHostname = await ctx.db
       .query("fields")
@@ -48,13 +41,11 @@ export const getVsphereData = internalQuery({
       ) {
         continue;
       }
-      const moid = asset.metadata?.[magicMoid._id] as string | undefined;
-      if (!moid && !hostname && !ip) {
+      if (!hostname && !ip) {
         continue;
       }
       return {
         id: asset._id,
-        moid: moid || null,
         hostname: hostname || null,
         ip: ip || null,
       };

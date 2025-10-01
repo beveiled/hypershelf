@@ -5,8 +5,8 @@ import booleanTypeConfig from "./boolean";
 import dateTypeConfig from "./date";
 import emailTypeConfig from "./email";
 import ipTypeConfig from "./ip";
-import { magicIPConfig, magicMoidConfig } from "./magic";
-import { magicHostnameConfig } from "./magicHostname";
+import magicHostnameConfig from "./magicHostname";
+import magicIPConfig from "./magicIp";
 import markdownTypeConfig from "./markdown";
 import numberTypeConfig from "./number";
 import selectTypeConfig from "./select";
@@ -28,11 +28,7 @@ const plainFieldTypesRaw = [
   urlTypeConfig,
   userTypeConfig,
 ];
-export const magicFieldTypesRaw = [
-  magicHostnameConfig,
-  magicIPConfig,
-  magicMoidConfig,
-];
+export const magicFieldTypesRaw = [magicHostnameConfig, magicIPConfig];
 export const fieldTypes: FieldPropConfig[] = [
   ...plainFieldTypesRaw,
   ...magicFieldTypesRaw,

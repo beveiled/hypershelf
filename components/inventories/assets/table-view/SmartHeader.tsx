@@ -1,4 +1,4 @@
-import { TableRow } from "@/components/ui/table";
+import { TableHead, TableRow } from "@/components/ui/table";
 import { useHypershelf } from "@/stores";
 import { HeaderCell } from "./HeaderCell";
 import {
@@ -28,6 +28,7 @@ export function SmartHeader() {
 
   return (
     <TableRow className="relative h-8 !border-0 hover:bg-transparent">
+      <TableHead className="!h-auto !border-0" />
       <SortableContext
         items={visibleFieldIds}
         strategy={horizontalListSortingStrategy}

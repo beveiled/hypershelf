@@ -15,18 +15,18 @@ export const acquireField = mutation({
         _logs: ["Failed to acquire lock: not authenticated"],
       };
     }
-    const obj = await ctx.db.get(args.id);
-    if (!obj) {
+    const field = await ctx.db.get(args.id);
+    if (!field || field.deleted) {
       return {
         success: false,
-        error: "Object not found",
+        error: "Field not found",
         _logs: ["Failed to acquire lock: not found"],
       };
     }
-    if (obj.editingBy && obj.editingBy !== userId) {
+    if (field.editingBy && field.editingBy !== userId) {
       return {
         success: false,
-        error: "Object is already being edited by another user",
+        error: "Field is already being edited by another user",
         _logs: ["Failed to acquire lock: already being edited by another user"],
       };
     }
@@ -54,18 +54,18 @@ export const releaseField = mutation({
         _logs: ["Failed to release lock: not authenticated"],
       };
     }
-    const obj = await ctx.db.get(args.id);
-    if (!obj) {
+    const field = await ctx.db.get(args.id);
+    if (!field || field.deleted) {
       return {
         success: false,
-        error: "Object not found",
+        error: "Field not found",
         _logs: ["Failed to release lock: not found"],
       };
     }
-    if (!obj.editingBy || obj.editingBy !== userId) {
+    if (!field.editingBy || field.editingBy !== userId) {
       return {
         success: false,
-        error: "Object is not being edited by you",
+        error: "Field is not being edited by you",
         _logs: ["Failed to release lock: not being edited by you"],
       };
     }
@@ -90,18 +90,18 @@ export const renewField = mutation({
         _logs: ["Failed to renew lock: not authenticated"],
       };
     }
-    const obj = await ctx.db.get(args.id);
-    if (!obj) {
+    const field = await ctx.db.get(args.id);
+    if (!field || field.deleted) {
       return {
         success: false,
-        error: "Object not found",
+        error: "Field not found",
         _logs: ["Failed to renew lock: not found"],
       };
     }
-    if (!obj.editingBy || obj.editingBy !== userId) {
+    if (!field.editingBy || field.editingBy !== userId) {
       return {
         success: false,
-        error: "Event is not being edited by you",
+        error: "Field is not being edited by you",
         _logs: ["Failed to renew lock: not being edited by you"],
       };
     }
@@ -126,6 +126,24 @@ export const acquireAsset = mutation({
         success: false,
         error: "Not authenticated",
         _logs: ["Failed to acquire asset lock: not authenticated"],
+      };
+    }
+
+    const field = await ctx.db.get(args.fieldId);
+    if (!field || field.deleted) {
+      return {
+        success: false,
+        error: "Field not found",
+        _logs: ["Failed to acquire asset lock: field not found"],
+      };
+    }
+
+    const asset = await ctx.db.get(args.assetId);
+    if (!asset || asset.deleted) {
+      return {
+        success: false,
+        error: "Asset not found",
+        _logs: ["Failed to acquire asset lock: asset not found"],
       };
     }
 

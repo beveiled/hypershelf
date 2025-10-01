@@ -39,7 +39,9 @@ function InlineSelect({
   const [open, setOpen] = useState(false);
 
   const value = useHypershelf(state =>
-    String(state.assets?.[assetId]?.asset?.metadata?.[fieldId]),
+    state.assets?.[assetId]?.asset?.metadata?.[fieldId]
+      ? String(state.assets?.[assetId]?.asset?.metadata?.[fieldId])
+      : undefined,
   );
   const options = useStoreWithEqualityFn(
     useHypershelf,

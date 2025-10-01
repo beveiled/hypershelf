@@ -2,6 +2,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Id } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
+import { DeleteAsset } from "./DeleteAsset";
 import { FieldRenderer } from "./FieldRenderer";
 import { isEqual } from "lodash";
 import { memo } from "react";
@@ -10,19 +11,16 @@ import { useStoreWithEqualityFn } from "zustand/traditional";
 function DataCell({
   assetId,
   fieldId,
-  idx,
 }: {
   assetId: Id<"assets">;
   fieldId: Id<"fields">;
-  idx: number;
 }) {
   const isHidden = useHypershelf(state => state.hiddenFields.includes(fieldId));
   return (
     <TableCell
       key={`${assetId}-${fieldId}`}
       className={cn(
-        "relative px-2 py-1",
-        idx > 0 && "border-border border-l",
+        "relative px-2 py-1 border-border border-l",
         isHidden && "opacity-50",
       )}
     >
@@ -60,9 +58,11 @@ function DataRow({ assetId }: { assetId: Id<"assets"> }) {
       className={cn("relative", {
         "bg-red-500/10 hover:!bg-red-500/15": isError,
       })}
+      id={`asset-row-${assetId}`}
     >
-      {visibleFieldIds.map((fieldId, idx) => (
-        <DataCell key={fieldId} assetId={assetId} fieldId={fieldId} idx={idx} />
+      <DeleteAsset assetId={assetId} />
+      {visibleFieldIds.map(fieldId => (
+        <DataCell key={fieldId} assetId={assetId} fieldId={fieldId} />
       ))}
     </TableRow>
   );
