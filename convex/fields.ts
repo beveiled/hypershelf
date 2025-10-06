@@ -4,7 +4,10 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 
 export const get = query({
-  handler: async ctx => {
+  args: {
+    includeDeleted: v.optional(v.boolean()),
+  },
+  handler: async (ctx, { includeDeleted }) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
       return { fields: [] };
@@ -13,7 +16,9 @@ export const get = query({
     const fields = await ctx.db
       .query("fields")
       .order("asc")
-      .filter(q => q.neq(q.field("deleted"), true))
+      .filter(q =>
+        q.or(q.neq(q.field("deleted"), true), q.eq(includeDeleted, true)),
+      )
       .collect();
     const editors = await Promise.all(
       fields.map(async f => {

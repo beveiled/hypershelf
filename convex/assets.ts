@@ -4,7 +4,10 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 
 export const get = query({
-  handler: async ctx => {
+  args: {
+    includeDeleted: v.optional(v.boolean()),
+  },
+  handler: async (ctx, { includeDeleted }) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
       return { assets: [] };
@@ -13,7 +16,9 @@ export const get = query({
     const assets = await ctx.db
       .query("assets")
       .order("asc")
-      .filter(q => q.neq(q.field("deleted"), true))
+      .filter(q =>
+        q.or(q.neq(q.field("deleted"), true), q.eq(includeDeleted, true)),
+      )
       .collect();
     const locks = await Promise.all(
       assets.map(asset =>
@@ -141,7 +146,7 @@ export const update = mutation({
         type: "update_asset",
         assetId: args.assetId,
         fieldId: args.fieldId,
-        oldValue: metadata[args.fieldId],
+        oldValue: metadata[args.fieldId] ?? null,
         newValue: args.value,
       },
     });

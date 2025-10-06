@@ -33,6 +33,16 @@ export const fieldTypes: FieldPropConfig[] = [
   ...plainFieldTypesRaw,
   ...magicFieldTypesRaw,
 ];
+export const fieldTypesMap: Record<
+  PlainFieldTypes | MagicFieldTypes,
+  FieldPropConfig
+> = fieldTypes.reduce(
+  (acc, curr) => {
+    acc[curr.key as PlainFieldTypes | MagicFieldTypes] = curr;
+    return acc;
+  },
+  {} as Record<PlainFieldTypes | MagicFieldTypes, FieldPropConfig>,
+);
 
 export const getPropsForType = (type: string) =>
   fieldTypes.find(t => t.key === type)?.fieldProps ?? [];

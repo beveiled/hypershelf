@@ -1,6 +1,6 @@
 {
   "name": "hypershelf",
-  "version": "0.7.12",
+  "version": "0.7.13",
   "private": true,
   "scripts": {
     "dev": "npm-run-all --parallel dev:frontend dev:backend",
@@ -64,6 +64,7 @@
     "date-fns": "^4.1.0",
     "emblor": "^1.4.8",
     "eslint-plugin-import": "^2.32.0",
+    "exceljs": "^4.4.0",
     "framer-motion": "^12.23.12",
     "fuse.js": "^7.1.0",
     "hibp": "^15.0.1",
@@ -116,5 +117,10 @@
   "resolutions": {
     "@codemirror/language": "6.11.2",
     "@codemirror/view": "6.38.1"
-  }
+  },
+  "trustedDependencies": [
+    "@parcel/watcher",
+    "@tailwindcss/oxide",
+    "unrs-resolver"
+  ]
 }

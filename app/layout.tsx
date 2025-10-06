@@ -3,13 +3,7 @@ import ClientLayout from "./ClientLayout";
 import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import type { Metadata } from "next";
-import {
-  Inter,
-  Source_Code_Pro,
-  Space_Grotesk,
-  Space_Mono,
-  Syne,
-} from "next/font/google";
+import { Geist, Source_Code_Pro, Syne } from "next/font/google";
 
 const syne = Syne({
   variable: "--font-syne",
@@ -18,22 +12,8 @@ const syne = Syne({
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-});
-
-const spaceMono = Space_Mono({
-  variable: "--font-space-mono",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
@@ -88,7 +68,7 @@ export default function RootLayout({
     <ConvexAuthNextjsServerProvider>
       <html lang="en">
         <body
-          className={`${syne.variable} ${spaceGrotesk.variable} ${spaceMono.variable} ${inter.variable} ${sourceCodePro.variable} bg-background font-sans antialiased`}
+          className={`${syne.variable} ${geist.variable} ${sourceCodePro.variable} bg-background font-sans antialiased`}
         >
           <ConvexClientProvider>
             <ClientLayout>{children}</ClientLayout>

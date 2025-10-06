@@ -44,8 +44,8 @@ export default function ClientLayout({
   }, []);
 
   const { viewer: unstableViewer } = useQuery(api.users.me) ?? {};
-  const { fields: unstableFields } = useQuery(api.fields.get) ?? {};
-  const { assets: unstableAssets } = useQuery(api.assets.get) ?? {};
+  const { fields: unstableFields } = useQuery(api.fields.get, {}) ?? {};
+  const { assets: unstableAssets } = useQuery(api.assets.get, {}) ?? {};
 
   const setViewer = useHypershelf(state => state.setViewer);
   const setFields = useHypershelf(state => state.setFields);

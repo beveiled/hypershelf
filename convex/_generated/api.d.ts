@@ -38,6 +38,7 @@ import type * as utils from "../utils.js";
 import type * as views from "../views.js";
 import type * as vsphere from "../vsphere.js";
 import type * as vsphereNode from "../vsphereNode.js";
+import type * as wayback from "../wayback.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -73,6 +74,7 @@ declare const fullApi: ApiFromModules<{
   views: typeof views;
   vsphere: typeof vsphere;
   vsphereNode: typeof vsphereNode;
+  wayback: typeof wayback;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

@@ -14,8 +14,8 @@ export default function VSphereIntegrationPage() {
   const searchParams = useSearchParams();
   const dns = searchParams.get("dns");
 
-  const assets = useQuery(api.assets.get);
-  const fields = useQuery(api.fields.get);
+  const assets = useQuery(api.assets.get, {});
+  const fields = useQuery(api.fields.get, {});
   const users = useQuery(api.users.get);
 
   const [isPermissionDenied, setIsPermissionDenied] = useState(false);
