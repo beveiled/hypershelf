@@ -5,10 +5,8 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+const compat = new FlatCompat({ baseDirectory: __dirname });
+const rootPkgDir = __dirname;
 
 const eslintConfig = [
   {
@@ -23,16 +21,19 @@ const eslintConfig = [
   },
   ...compat.extends("next/core-web-vitals", "next/typescript", "prettier"),
   {
-    plugins: {
-      import: importPlugin,
-    },
+    plugins: { import: importPlugin },
     settings: {
       "import/resolver": {
         typescript: {
           alwaysTryTypes: true,
-          project: "./tsconfig.json",
+          project: ["./tsconfig.json", "plugins/*/tsconfig.json"],
+        },
+        alias: {
+          map: [["@", "./"]],
+          extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
         },
       },
+      "import/internal-regex": "^@/",
     },
     rules: {
       "import/no-extraneous-dependencies": [
@@ -45,6 +46,7 @@ const eslintConfig = [
             "**/tests/**",
             "**/storybook/**",
           ],
+          packageDir: [rootPkgDir],
         },
       ],
     },
@@ -53,7 +55,7 @@ const eslintConfig = [
     files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
       parserOptions: {
-        project: ["./tsconfig.json"],
+        project: ["./tsconfig.json", "plugins/*/tsconfig.json"],
         tsconfigRootDir: __dirname,
       },
     },

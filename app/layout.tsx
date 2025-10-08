@@ -68,6 +68,7 @@ export default function RootLayout({
     <ConvexAuthNextjsServerProvider>
       <html lang="en">
         <body
+          id="hypershelf-root"
           className={`${syne.variable} ${geist.variable} ${sourceCodePro.variable} bg-background font-sans antialiased`}
         >
           <ConvexClientProvider>

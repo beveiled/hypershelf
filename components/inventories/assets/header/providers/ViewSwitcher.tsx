@@ -17,6 +17,7 @@ import { useMutation } from "convex/react";
 import { isEqual } from "lodash";
 import {
   ChevronDown,
+  LoaderCircle,
   Lock,
   Plus,
   Save,
@@ -32,9 +33,11 @@ import { useStoreWithEqualityFn } from "zustand/traditional";
 function CreateNew({
   callback,
   onClose,
+  isLoading,
 }: {
   callback: (name: string) => void;
   onClose: () => void;
+  isLoading: boolean;
 }) {
   const [newViewName, setNewViewName] = useState("");
 
@@ -56,13 +59,13 @@ function CreateNew({
       />
       <div className="flex gap-2">
         <ButtonWithKbd
-          disabled={!newViewName}
+          disabled={!newViewName || isLoading}
           onClick={() => callback(newViewName)}
           className="flex-auto"
           keys={["Enter"]}
           showKbd={!!newViewName}
         >
-          <Plus />
+          {isLoading ? <LoaderCircle className="animate-spin" /> : <Plus />}
           Создать
         </ButtonWithKbd>
         <ButtonWithKbd
@@ -81,6 +84,10 @@ function CreateNew({
 }
 
 export function ViewSwitcher() {
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const updateView = useMutation(api.views.update);
   const createView = useMutation(api.views.create);
   const deleteView = useMutation(api.views.remove);
@@ -103,29 +110,32 @@ export function ViewSwitcher() {
   const [open, setOpen] = useState(false);
   const [creatingNewView, setCreatingNewView] = useState(false);
 
-  const updateViewWrapped = async () => {
+  const updateViewWrapped = () => {
     if (!activeViewId || activeView?.immutable) {
       setCreatingNewView(true);
       return;
     }
-    try {
-      const { hiddenFields, sorting, fieldOrder, isFiltering, filters } =
-        useHypershelf.getState();
-      await updateView({
-        viewId: activeViewId,
-        hiddenFields: hiddenFields,
-        sorting: sorting,
-        fieldOrder: fieldOrder,
-        enableFiltering: isFiltering,
-        filters: filters,
+    setIsUpdating(true);
+    const { hiddenFields, sorting, fieldOrder, isFiltering, filters } =
+      useHypershelf.getState();
+    updateView({
+      viewId: activeViewId,
+      hiddenFields: hiddenFields,
+      sorting: sorting,
+      fieldOrder: fieldOrder,
+      enableFiltering: isFiltering,
+      filters: filters,
+    })
+      .catch(e => {
+        console.error("Failed to update view", e);
+      })
+      .finally(() => {
+        setOpen(false);
+        setIsUpdating(false);
       });
-      setOpen(false);
-    } catch (e) {
-      console.error("Failed to save view", e);
-    }
   };
 
-  const createViewWrapped = async (name: string) => {
+  const createViewWrapped = (name: string) => {
     let data: (typeof createView)["arguments"] = { name: name };
     if (!activeView && isDirty) {
       const { hiddenFields, sorting, fieldOrder, isFiltering, filters } =
@@ -139,23 +149,40 @@ export function ViewSwitcher() {
         filters: filters,
       };
     }
-    const view = await createView(data);
-    let retries = 50;
-    const interval = setInterval(() => {
-      if (setActiveViewId(view)) clearInterval(interval);
-      retries--;
-      if (retries <= 0) clearInterval(interval);
-    }, 100);
-    setCreatingNewView(false);
-    setOpen(false);
+    setIsCreating(true);
+    createView(data)
+      .then(view => {
+        let retries = 50;
+        const interval = setInterval(() => {
+          if (setActiveViewId(view)) clearInterval(interval);
+          retries--;
+          if (retries <= 0) clearInterval(interval);
+        }, 100);
+      })
+      .catch(e => {
+        console.error("Failed to create view", e);
+      })
+      .finally(() => {
+        setIsCreating(false);
+        setCreatingNewView(false);
+        setOpen(false);
+      });
   };
 
-  const deleteViewWrapped = async (viewId: Id<"views">) => {
+  const deleteViewWrapped = (viewId: Id<"views">) => {
     if (activeViewId === viewId) {
       setActiveViewId(null);
       applyView("builtin:all" as const);
     }
-    await deleteView({ viewId });
+    setIsDeleting(true);
+    deleteView({ viewId })
+      .catch(e => {
+        console.error("Failed to delete view", e);
+      })
+      .finally(() => {
+        setIsDeleting(false);
+        setOpen(false);
+      });
   };
 
   const revertView = () => {
@@ -192,7 +219,7 @@ export function ViewSwitcher() {
             </div>
             {(!activeViewId || activeView?.immutable) && (
               <div className="px-4 text-xs text-muted-foreground">
-                Сохранение создаст новый вид из текущего состояния
+                Сохранение создаст <b>новый</b> вид из текущего состояния
               </div>
             )}
             <div className="flex flex-col justify-center gap-1">
@@ -202,8 +229,13 @@ export function ViewSwitcher() {
                     size="sm"
                     variant="outline"
                     onClick={updateViewWrapped}
+                    disabled={isUpdating || isCreating || isDeleting}
                   >
-                    <Save />
+                    {isUpdating ? (
+                      <LoaderCircle className="animate-spin" />
+                    ) : (
+                      <Save />
+                    )}
                     Сохранить
                   </Button>
                 </PopoverAnchor>
@@ -211,6 +243,7 @@ export function ViewSwitcher() {
                   <CreateNew
                     callback={createViewWrapped}
                     onClose={() => setCreatingNewView(false)}
+                    isLoading={isCreating}
                   />
                 </PopoverContent>
               </Popover>
@@ -257,8 +290,13 @@ export function ViewSwitcher() {
                           variant="ghost"
                           size="sm"
                           className="opacity-50 hover:opacity-80 aspect-square"
+                          disabled={isActive && isDeleting}
                         >
-                          <Trash2 />
+                          {isActive && isDeleting ? (
+                            <LoaderCircle className="animate-spin" />
+                          ) : (
+                            <Trash2 />
+                          )}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="mt-4 w-80 z-[99999]">
@@ -318,6 +356,7 @@ export function ViewSwitcher() {
                 <CreateNew
                   callback={createViewWrapped}
                   onClose={() => setCreatingNewView(false)}
+                  isLoading={isCreating}
                 />
               </PopoverContent>
             </Popover>

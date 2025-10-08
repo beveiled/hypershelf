@@ -166,7 +166,6 @@ function MarkdownEditorDialogContent({
               onClick={handleClose}
               disabled={updating}
               keys={["Meta", "Esc"]}
-              showKbd={!isDirty}
             >
               Отмена
             </ButtonWithKbd>

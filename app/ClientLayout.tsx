@@ -5,12 +5,10 @@ import Header from "@/components/Header";
 import { UpdateNotifier } from "@/components/UpdateNotifier";
 import { Button } from "@/components/ui/button";
 import { HeaderContentProvider } from "@/components/util/HeaderContext";
-import { LoadingProvider } from "@/components/util/LoadingContext";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { ExtendedFieldType } from "@/convex/schema";
+import { ExtendedAssetType, ExtendedFieldType } from "@/convex/schema";
 import { useBrowser } from "@/lib/hooks/useBrowser";
-import { cn } from "@/lib/utils";
 import { useHypershelf } from "@/stores";
 import { TRPCReactProvider } from "@/trpc/react";
 import { useQuery } from "convex/react";
@@ -65,7 +63,7 @@ export default function ClientLayout({
 
   useEffect(() => {
     if (unstableAssets) {
-      const newAssets: Record<Id<"assets">, (typeof unstableAssets)[0]> = {};
+      const newAssets: Record<Id<"assets">, ExtendedAssetType> = {};
       unstableAssets.forEach(asset => (newAssets[asset.asset._id] = asset));
       setAssets(newAssets);
     }
@@ -139,44 +137,33 @@ export default function ClientLayout({
     );
   }
 
+  if (insecure) {
+    return (
+      <div className="bg-background fixed top-0 right-0 bottom-0 left-0 m-auto flex h-fit w-md flex-col gap-4 rounded-md px-6 py-4 text-center shadow-[0_0_1rem_oklch(80%_0.188_70.08)]">
+        <Image
+          src="/images/ssl-warning.png"
+          alt="Галина"
+          width={150}
+          height={150}
+          className="mx-auto"
+        />
+        <h1 className="text-2xl font-bold">Небезопасное подключение</h1>
+        <p className="text-secondary-fg text-sm">
+          Приложение не будет работать.
+          <br />
+          Установи SSL-сертификат и перезагрузи страницу.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <TRPCReactProvider>
       <HeaderContentProvider>
-        <LoadingProvider>
-          <Header />
-          {insecure ? (
-            <div className="bg-background fixed top-0 right-0 bottom-0 left-0 m-auto flex h-fit w-md flex-col gap-4 rounded-md px-6 py-4 text-center shadow-[0_0_1rem_oklch(80%_0.188_70.08)]">
-              <Image
-                src="/images/ssl-warning.png"
-                alt="Галина"
-                width={150}
-                height={150}
-                className="mx-auto"
-              />
-              <h1 className="text-2xl font-bold">Небезопасное подключение</h1>
-              <p className="text-secondary-fg text-sm">
-                Приложение не будет работать.
-                <br />
-                Установи SSL-сертификат и перезагрузи страницу.
-              </p>
-            </div>
-          ) : (
-            <>
-              <main
-                className={cn(
-                  "px-2 min-h-screen",
-                  pathname.startsWith("/integrations") ? "py-8" : "pt-12",
-                )}
-              >
-                {children}
-              </main>
-              {!pathname.startsWith("/integrations") && pathname !== "/" && (
-                <Footer />
-              )}
-              <UpdateNotifier />
-            </>
-          )}
-        </LoadingProvider>
+        <Header />
+        <main className="px-2 min-h-screen pt-12">{children}</main>
+        {pathname !== "/" && <Footer />}
+        <UpdateNotifier />
       </HeaderContentProvider>
     </TRPCReactProvider>
   );

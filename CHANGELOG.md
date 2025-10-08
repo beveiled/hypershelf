@@ -1,3 +1,8 @@
+# Hypershelf 0.7.14
+
+- New custom PKCE auth flow for vSphere plugin
+- New vSphere plugin
+
 # Hypershelf 0.7.13
 
 - Wayback

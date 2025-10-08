@@ -24,6 +24,7 @@ export const fieldSchema = {
       maxValue: v.optional(v.number()),
       icon: v.optional(v.string()),
       options: v.optional(v.array(v.string())),
+      multiselect: v.optional(v.boolean()),
       hideFromSearch: v.optional(v.boolean()),
       subnet: v.optional(v.string()),
       listObjectType: v.optional(v.string()),

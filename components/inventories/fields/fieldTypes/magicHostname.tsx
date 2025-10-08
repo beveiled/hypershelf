@@ -12,7 +12,8 @@ import { useHypershelf } from "@/stores";
 import { FieldPropConfig } from "./_abstractType";
 import { InlineString } from "./string";
 import { useMutation } from "convex/react";
-import { formatDate } from "date-fns";
+import { formatDistanceToNowStrict } from "date-fns";
+import { ru } from "date-fns/locale";
 import { isEqual } from "lodash";
 import { Clock } from "lucide-react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
@@ -72,20 +73,23 @@ function InlineHostnameStatus({
           ) : vsphereStatus.status === "mismatched" ? (
             <VSphereIcon className="size-4 text-red-500" />
           ) : vsphereStatus.status === "not_found" ? (
-            <VSphereIcon className="size-4 text-muted-foreground" />
+            <VSphereIcon className="size-4 text-yellow-500" />
           ) : (
             <Clock className="size-3 text-muted-foreground" />
           )}
         </div>
       </TooltipTrigger>
       <TooltipContentNoPortal
-        className="z-[9999] px-3 py-2 rounded-md"
+        className="z-[9999] px-3 py-2 rounded-md whitespace-pre"
         side="right"
       >
         <div>
           Последняя проверка:{" "}
           {vsphereLastSync
-            ? formatDate(new Date(vsphereLastSync), "dd.MM.yyyy HH:mm")
+            ? formatDistanceToNowStrict(new Date(vsphereLastSync), {
+                addSuffix: true,
+                locale: ru,
+              })
             : "никогда"}
         </div>
         <div>
@@ -94,7 +98,7 @@ function InlineHostnameStatus({
           ) : vsphereStatus.status === "mismatched" ? (
             <span className="text-red-500">Данные не совпадают со сферой</span>
           ) : vsphereStatus.status === "not_found" ? (
-            "Не найден в сфере"
+            <span className="text-yellow-500">Не найден в сфере</span>
           ) : (
             "Ожидает перепроверки"
           )}

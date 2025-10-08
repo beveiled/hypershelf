@@ -14,3 +14,6 @@ process.stdout.write(
 process.stdout.write("\n");
 process.stdout.write(`JWKS=${jwks}`);
 process.stdout.write("\n");
+const randomHex = crypto.randomBytes(16).toString("hex");
+process.stdout.write(`SIGIL_SECRET="${randomHex}"`);
+process.stdout.write("\n");

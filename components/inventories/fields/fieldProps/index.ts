@@ -11,6 +11,7 @@ import MarkdownPresetProp from "./mdPreset";
 import MinItemsProp from "./minItems";
 import MinLengthProp from "./minLength";
 import MinValueProp from "./minValue";
+import MultiselectProp from "./multiselect";
 import NameProp from "./name";
 import OptionsProp from "./options";
 import PlaceholderProp from "./placeholder";
@@ -33,6 +34,7 @@ export const fieldProps = [
   RegexProp,
   RegexErrorProp,
   SubnetProp,
+  MultiselectProp,
 ];
 
 const allFieldProps = [

@@ -4,7 +4,6 @@ import { api } from "@/convex/_generated/api";
 import { cn } from "@/lib/utils";
 import { convex } from "./ConvexClientProvider";
 import { useHeaderContent } from "./util/HeaderContext";
-import { useLoading } from "./util/LoadingContext";
 import { useConvexAuth, useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { GitBranch, LogIn, LogOut, Settings2, Table2 } from "lucide-react";
@@ -70,7 +69,6 @@ export default function Header() {
   const [isConnected, setIsConnected] = useState(false);
   const currentUser = useQuery(api.auth.getCurrentUser);
   const pathname = usePathname();
-  const { isLoading } = useLoading();
 
   useEffect(() => {
     const checkConnection = () => {
@@ -86,53 +84,6 @@ export default function Header() {
 
   const { isAuthenticated } = useConvexAuth();
   const { content } = useHeaderContent();
-
-  if (pathname.startsWith("/integrations")) {
-    const overlayVariants = {
-      initial: {
-        top: "50%",
-        left: "50%",
-        x: "-50%",
-        y: "-50%",
-        scale: 1,
-      },
-      corner: {
-        top: "0.5rem",
-        left: "1rem",
-        x: 0,
-        y: 0,
-        scale: 0.3,
-        transition: { type: "spring", stiffness: 300, damping: 30 },
-      },
-    } as const;
-    return (
-      <motion.div
-        variants={overlayVariants}
-        initial="initial"
-        animate={isLoading ? "initial" : "corner"}
-        className="absolute z-50 flex origin-top-left flex-col items-start"
-      >
-        <Link
-          href="/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-title group relative text-4xl font-extrabold select-none"
-        >
-          Hypershelf
-          <div className="absolute bottom-0 left-0 h-1 w-11.5 overflow-hidden">
-            <div
-              className={cn(
-                "bg-brand h-full w-full",
-                isLoading
-                  ? "animate-brand-load"
-                  : "group-hover:animate-brand-once",
-              )}
-            />
-          </div>
-        </Link>
-      </motion.div>
-    );
-  }
 
   return (
     <header className="fixed z-[9999] w-screen">

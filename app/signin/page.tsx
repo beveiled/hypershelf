@@ -16,13 +16,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useLoading } from "@/components/util/LoadingContext";
 import { signinSchema } from "./schema";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { pwnedPassword } from "hibp";
 import { Cloud, KeyRound, Loader2Icon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function SignIn() {
   const { signIn } = useAuthActions();
@@ -42,12 +41,6 @@ export default function SignIn() {
     inviteCode?: string;
   }>({});
   const router = useRouter();
-
-  const { isLoading, setIsLoading } = useLoading();
-
-  useEffect(() => {
-    if (isLoading) setIsLoading(false);
-  }, [isLoading, setIsLoading]);
 
   const params = useSearchParams();
   const ergo = params.get("ergo") || "/";

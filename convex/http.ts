@@ -55,6 +55,33 @@ http.route({
   }),
 });
 
+http.route({
+  path: "/ingestSigil",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const sigil = request.headers.get("x-sigil");
+    if (!sigil) {
+      return new Response(JSON.stringify({ ok: false }), { status: 400 });
+    }
+    const token = await ctx.runAction(api.auth.signIn, {
+      provider: "sigil",
+      params: { sigil },
+    });
+    if (!token.tokens) {
+      return new Response(JSON.stringify({ ok: false }), { status: 401 });
+    }
+
+    return new Response(
+      JSON.stringify({
+        ok: true,
+        token: token.tokens.token,
+        refreshToken: token.tokens.refreshToken,
+      }),
+      { status: 200 },
+    );
+  }),
+});
+
 auth.addHttpRoutes(http);
 
 export default http;

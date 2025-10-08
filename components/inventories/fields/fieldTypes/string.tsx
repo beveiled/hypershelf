@@ -79,6 +79,7 @@ export function InlineString({
         value: val,
       })
         .then(() => setIsDirty(false))
+        .catch(() => setError("Не смогли сохранить! Смотри консоль!"))
         .finally(() => {
           setUpdating(false);
           const locker = useHypershelf.getState().assetsLocker;

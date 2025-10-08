@@ -124,7 +124,12 @@ const buildPrimitiveSchema = (
   extra: Extra,
 ): ZodTypeAny => {
   if (extra.options?.length)
-    return z.enum([...extra.options] as [string, ...string[]]);
+    if (extra.multiselect)
+      return z.union([
+        z.enum([...extra.options] as [string, ...string[]]),
+        z.array(z.enum([...extra.options] as [string, ...string[]])),
+      ]);
+    else return z.enum([...extra.options] as [string, ...string[]]);
 
   let schema: ZodTypeAny;
 

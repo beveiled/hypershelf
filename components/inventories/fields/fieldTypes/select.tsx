@@ -38,16 +38,27 @@ function InlineSelect({
   const [updating, setUpdating] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const value = useHypershelf(state =>
-    state.assets?.[assetId]?.asset?.metadata?.[fieldId]
-      ? String(state.assets?.[assetId]?.asset?.metadata?.[fieldId])
-      : undefined,
+  const value = useStoreWithEqualityFn(
+    useHypershelf,
+    state => {
+      const curr = state.assets?.[assetId]?.asset?.metadata?.[fieldId] as
+        | string
+        | string[];
+      if (Array.isArray(curr)) return curr;
+      if (curr) return [String(curr)];
+      return [];
+    },
+    isEqual,
   );
   const options = useStoreWithEqualityFn(
     useHypershelf,
     state => state.fields?.[fieldId]?.field?.extra?.options || [],
     isEqual,
   );
+  const multiselect = useHypershelf(
+    state => state.fields?.[fieldId]?.field?.extra?.multiselect || false,
+  );
+
   const lockedBy = useHypershelf(
     state => state.lockedFields[assetId]?.[fieldId],
   );
@@ -57,22 +68,41 @@ function InlineSelect({
   const disabled = useMemo(() => !!lockedBy || updating, [lockedBy, updating]);
 
   const onValueChange = useCallback(
-    (value: string) => {
+    (newValue: string) => {
       setUpdating(true);
-      setOpen(false);
+      if (!multiselect) {
+        setOpen(false);
+      }
+
+      const finalValue = multiselect
+        ? value.includes(newValue)
+          ? value.filter(v => v !== newValue)
+          : [...value, newValue]
+        : newValue;
+
       setTimeout(() => {
         updateAsset({
           assetId,
           fieldId,
-          value,
+          value: Array.isArray(finalValue)
+            ? finalValue.filter(v => options.includes(v))
+            : options.includes(finalValue)
+              ? finalValue
+              : null,
         }).finally(() => {
           setUpdating(false);
-          const locker = useHypershelf.getState().assetsLocker;
-          locker.release(assetId, fieldId);
+          if (multiselect) {
+            const locker = useHypershelf.getState().assetsLocker;
+            locker.release(assetId, fieldId);
+            locker.acquire(assetId, fieldId);
+          } else {
+            const locker = useHypershelf.getState().assetsLocker;
+            locker.release(assetId, fieldId);
+          }
         });
       }, 0);
     },
-    [assetId, fieldId, updateAsset],
+    [assetId, fieldId, updateAsset, multiselect, value, options],
   );
 
   const onOpenChange = useCallback(
@@ -104,10 +134,42 @@ function InlineSelect({
     return () => window.removeEventListener("keydown", handler);
   }, [open, assetId, fieldId, options, onValueChange, disabled]);
 
+  const displayValue = useMemo(() => {
+    if (value.length === 0) {
+      return <span className="text-muted-foreground/50 italic">{"пусто"}</span>;
+    }
+    if (multiselect) {
+      return (
+        <div className="flex flex-wrap items-center gap-1">
+          {value.map(v => (
+            <span
+              key={v}
+              className="bg-muted text-muted-foreground rounded-sm px-1.5 py-0.5 text-xs"
+            >
+              {v}
+            </span>
+          ))}
+        </div>
+      );
+    }
+    return (
+      <div className="flex items-center gap-1.5">
+        {value[0]}
+        <ChevronDown className="opacity-50" />
+      </div>
+    );
+  }, [value, multiselect]);
+
   if (readonly) {
     return (
-      <div className={cn(!value && "text-muted-foreground/50 italic")}>
-        {value || "пусто"}
+      <div
+        className={cn(value.length === 0 && "text-muted-foreground/50 italic")}
+      >
+        {value.length > 0
+          ? multiselect
+            ? value.join(", ")
+            : value[0]
+          : "пусто"}
       </div>
     );
   }
@@ -125,8 +187,9 @@ function InlineSelect({
             variant="ghost"
             role="combobox"
             aria-expanded={!!assetId}
-            disabled={!!lockedBy || updating}
+            disabled={!!lockedBy}
             className={cn(
+              "h-auto min-h-[2.25rem]",
               lockedBy &&
                 "text-foreground/70 ring-brand cursor-not-allowed !opacity-100 ring-2",
               lazyError &&
@@ -134,23 +197,18 @@ function InlineSelect({
                 "rounded-br-none rounded-bl-none !border-b-2 !border-red-500",
             )}
           >
-            {updating && <Loader2 className="animate-spin" />}
+            {updating && (
+              <Loader2 className="animate-spin absolute -translate-x-1/2 left-0 text-muted-foreground" />
+            )}
             <AnimateTransition assetId={assetId} fieldId={fieldId}>
-              {value ? (
-                <div className="flex items-center gap-1.5">
-                  {value}
-                  <ChevronDown className="opacity-50" />
-                </div>
-              ) : (
-                <span className="text-muted-foreground/50 italic">пусто</span>
-              )}
+              {displayValue}
             </AnimateTransition>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-fit p-0">
           <Command
             className="!bg-transparent !backdrop-blur-none"
-            value={value}
+            value={multiselect ? "" : value[0]}
           >
             <CommandInput
               placeholder="Поиск..."
@@ -174,7 +232,7 @@ function InlineSelect({
                     <Check
                       className={cn(
                         "ml-auto",
-                        value === option ? "opacity-100" : "opacity-0",
+                        value.includes(option) ? "opacity-100" : "opacity-0",
                       )}
                     />
                   </CommandItem>
@@ -192,7 +250,7 @@ const config = {
   key: "select",
   label: "Выбор",
   icon: "list-todo",
-  fieldProps: ["options"],
+  fieldProps: ["options", "multiselect"],
   component: InlineSelect,
 } as const satisfies FieldPropConfig;
 

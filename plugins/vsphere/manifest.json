@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Hypershelf",
+  "version": "0.0.1",
+  "description": "Hopefully will make your experience using vSphere and Portal slightly less miserable",
+  "background": {
+    "service_worker": "background/index.js",
+    "type": "module"
+  },
+  "permissions": ["identity", "storage", "scripting", "tabs", "webNavigation"],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/vsphere.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "oauth2": {
+    "client_id": "hypershelf-vsphere",
+    "scopes": []
+  }
+}

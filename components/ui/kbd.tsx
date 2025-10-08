@@ -16,7 +16,7 @@ import {
 import { useMemo } from "react";
 
 const kbdVariants = cva(
-  "inline-flex items-center rounded border font-mono font-medium shadow-[0_1px_2px_rgba(0,0,0,0.1)] text-muted-foreground",
+  "inline-flex items-center rounded border font-medium shadow-[0_1px_2px_rgba(0,0,0,0.1)] text-muted-foreground",
   {
     variants: {
       variant: {
