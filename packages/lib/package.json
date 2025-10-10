@@ -1,0 +1,37 @@
+{
+  "name": "@hypershelf/lib",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./hooks": "./src/hooks/index.ts",
+    "./stores": "./src/stores/index.ts",
+    "./stores/types": "./src/stores/types.ts",
+    "./stores/hooks": "./src/stores/hooks.ts",
+    "./types": "./src/types/index.ts",
+    "./utils": "./src/utils/index.ts"
+  },
+  "scripts": {
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@hypershelf/convex": "workspace:*",
+    "@xyflow/react": "^12.8.6",
+    "lodash": "^4.17.21",
+    "react-querybuilder": "catalog:",
+    "zod": "catalog:",
+    "zustand": "catalog:"
+  },
+  "devDependencies": {
+    "@hypershelf/eslint-config": "workspace:*",
+    "@hypershelf/prettier-config": "workspace:*",
+    "@hypershelf/tsconfig": "workspace:*",
+    "@types/lodash": "^4.17.20",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@hypershelf/prettier-config"
+}

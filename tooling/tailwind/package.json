@@ -1,0 +1,17 @@
+{
+  "name": "@hypershelf/tailwind-config",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./base": "./base.css"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore"
+  },
+  "devDependencies": {
+    "@hypershelf/prettier-config": "workspace:*",
+    "prettier": "catalog:"
+  },
+  "prettier": "@hypershelf/prettier-config"
+}

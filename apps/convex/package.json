@@ -1,0 +1,29 @@
+{
+  "name": "@hypershelf/convex",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm with-env convex dev",
+    "deploy": "pnpm with-env convex deploy",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "with-env": "dotenv -e ../../.env --"
+  },
+  "dependencies": {
+    "@convex-dev/auth": "catalog:",
+    "@xmldom/xmldom": "^0.8.11",
+    "convex": "catalog:",
+    "redis": "^5.8.3",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@hypershelf/eslint-config": "workspace:*",
+    "@hypershelf/prettier-config": "workspace:*",
+    "@hypershelf/tsconfig": "workspace:*",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@hypershelf/prettier-config"
+}

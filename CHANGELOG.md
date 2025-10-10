@@ -1,3 +1,12 @@
+# Hypershelf 0.7.15
+
+- _Slight_ refactor :D
+- Eradicate the need for Openresty
+- Eradicate tRPC in favor of Convex actions
+- Better lint rules + formatting
+- Updated vSphere plugin
+- Tuned architecture for future improvements and better DX
+
 # Hypershelf 0.7.14
 
 - New custom PKCE auth flow for vSphere plugin

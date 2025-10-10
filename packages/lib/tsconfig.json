@@ -1,0 +1,9 @@
+{
+  "extends": "@hypershelf/tsconfig/compiled-package.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "rootDir": "."
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

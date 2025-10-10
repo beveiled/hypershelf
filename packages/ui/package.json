@@ -1,0 +1,108 @@
+{
+  "name": "@hypershelf/ui",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./fieldProps": "./src/fieldProps/index.ts",
+    "./fieldTypes": "./src/fieldTypes/index.ts",
+    "./icons": "./src/icons/index.ts",
+    "./markdownEditor": "./src/markdownEditor/index.tsx",
+    "./primitives/alert-dialog": "./src/primitives/alert-dialog.tsx",
+    "./primitives/alert": "./src/primitives/alert.tsx",
+    "./primitives/badge": "./src/primitives/badge.tsx",
+    "./primitives/button": "./src/primitives/button.tsx",
+    "./primitives/calendar": "./src/primitives/calendar.tsx",
+    "./primitives/card": "./src/primitives/card.tsx",
+    "./primitives/checkbox": "./src/primitives/checkbox.tsx",
+    "./primitives/command": "./src/primitives/command.tsx",
+    "./primitives/dialog": "./src/primitives/dialog.tsx",
+    "./primitives/dropdown-menu": "./src/primitives/dropdown-menu.tsx",
+    "./primitives/icon-picker": "./src/primitives/icon-picker.tsx",
+    "./primitives/input": "./src/primitives/input.tsx",
+    "./primitives/kbd-button": "./src/primitives/kbd-button.tsx",
+    "./primitives/kbd": "./src/primitives/kbd.tsx",
+    "./primitives/label": "./src/primitives/label.tsx",
+    "./primitives/options-input": "./src/primitives/options-input.tsx",
+    "./primitives/popover": "./src/primitives/popover.tsx",
+    "./primitives/radio-group": "./src/primitives/radio-group.tsx",
+    "./primitives/select": "./src/primitives/select.tsx",
+    "./primitives/skeleton": "./src/primitives/skeleton.tsx",
+    "./primitives/sortable-item": "./src/primitives/sortable-item.tsx",
+    "./primitives/switch": "./src/primitives/switch.tsx",
+    "./primitives/table": "./src/primitives/table.tsx",
+    "./primitives/tag-input": "./src/primitives/tag-input.tsx",
+    "./primitives/textarea": "./src/primitives/textarea.tsx",
+    "./primitives/tooltip": "./src/primitives/tooltip.tsx"
+  },
+  "types": "src/index.ts",
+  "typesVersions": {
+    "*": {
+      "./fieldTypes": [
+        "src/fieldTypes/index.ts"
+      ],
+      "./fieldProps": [
+        "src/fieldProps/index.ts"
+      ],
+      "./*": [
+        "src/*"
+      ]
+    }
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@codemirror/commands": "6.8.1",
+    "@codemirror/lang-markdown": "6.3.4",
+    "@codemirror/language": "6.11.2",
+    "@codemirror/language-data": "6.5.1",
+    "@codemirror/state": "6.5.2",
+    "@codemirror/view": "6.38.1",
+    "@dnd-kit/core": "^6.3.1",
+    "@hookform/resolvers": "^5.2.1",
+    "@hypershelf/convex": "workspace:*",
+    "@hypershelf/lib": "workspace:*",
+    "@lezer/highlight": "^1.2.1",
+    "@lezer/markdown": "^1.4.3",
+    "@markdoc/markdoc": "^0.2.2",
+    "@maskito/core": "^3.10.3",
+    "@maskito/react": "^3.10.3",
+    "@radix-ui/react-icons": "^1.3.2",
+    "class-variance-authority": "^0.7.1",
+    "cmdk": "^1.1.1",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^12.23.12",
+    "fuse.js": "^7.1.0",
+    "lucide-react": "catalog:",
+    "mousetrap": "^1.6.5",
+    "next-themes": "^0.4.6",
+    "radix-ui": "^1.4.3",
+    "react-day-picker": "^9.11.1",
+    "react-hook-form": "^7.62.0",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.3.1",
+    "usehooks-ts": "^3.1.1"
+  },
+  "devDependencies": {
+    "@hypershelf/eslint-config": "workspace:*",
+    "@hypershelf/prettier-config": "workspace:*",
+    "@hypershelf/tailwind-config": "workspace:*",
+    "@hypershelf/tsconfig": "workspace:*",
+    "@types/mousetrap": "^1.6.15",
+    "@types/react": "catalog:react19",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "react": "catalog:react19",
+    "typescript": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:react19",
+    "zod": "catalog:"
+  },
+  "prettier": "@hypershelf/prettier-config"
+}

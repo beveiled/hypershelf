@@ -1,0 +1,35 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["@hypershelf/extension#build"],
+      "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts"],
+      "env": [
+        "NODE_ENV",
+        "PORT",
+        "VSPHERE_HOSTNAME",
+        "VSPHERE_LOGIN",
+        "VSPHERE_PASSWORD",
+        "NEXT_PUBLIC_CONVEX_URL",
+        "NEXT_PUBLIC_VERSION",
+        "NEXT_PUBLIC_VERSION_MOD",
+        "NEXT_PUBLIC_SITE_URL"
+      ]
+    },
+    "dev": {
+      "persistent": true,
+      "env": [
+        "NODE_ENV",
+        "PORT",
+        "VSPHERE_HOSTNAME",
+        "VSPHERE_LOGIN",
+        "VSPHERE_PASSWORD",
+        "NEXT_PUBLIC_CONVEX_URL",
+        "NEXT_PUBLIC_VERSION",
+        "NEXT_PUBLIC_VERSION_MOD",
+        "NEXT_PUBLIC_SITE_URL"
+      ]
+    }
+  }
+}

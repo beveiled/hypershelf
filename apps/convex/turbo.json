@@ -1,0 +1,25 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["_generated/**"],
+      "env": [
+        "SETUP_SCRIPT_RAN",
+        "NEXT_PUBLIC_CONVEX_URL",
+        "CONVEX_SELF_HOSTED_URL",
+        "CONVEX_SELF_HOSTED_ADMIN_KEY"
+      ]
+    },
+    "dev": {
+      "persistent": true,
+      "env": [
+        "SETUP_SCRIPT_RAN",
+        "NEXT_PUBLIC_CONVEX_URL",
+        "CONVEX_SELF_HOSTED_URL",
+        "CONVEX_SELF_HOSTED_ADMIN_KEY"
+      ]
+    }
+  }
+}

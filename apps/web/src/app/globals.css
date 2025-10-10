@@ -1,0 +1,30 @@
+@import "tailwindcss" source(none);
+@source "./**/*.{ts,tsx,jsx,js}";
+@source "../components/**/*.{ts,tsx,jsx,js}";
+@source "../../../../packages/ui/src/**/*.{ts,tsx,jsx,js}";
+@import "@hypershelf/tailwind-config/base";
+
+.slide-to-unlock {
+  background: linear-gradient(
+    to right,
+    #4d4d4d,
+    #4d4d4d 40%,
+    white 50%,
+    #4d4d4d 60%,
+    #4d4d4d
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  text-fill-color: transparent;
+  animation: slidetounlock 20s infinite linear;
+}
+
+@keyframes slidetounlock {
+  0% {
+    background-position: -720px 0;
+  }
+  100% {
+    background-position: 720px 0;
+  }
+}
