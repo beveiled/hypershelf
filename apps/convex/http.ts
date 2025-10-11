@@ -1,18 +1,20 @@
 import { httpRouter } from "convex/server";
 
 import type { Id } from "./_generated/dataModel";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 import { httpAction } from "./_generated/server";
 import { auth } from "./auth";
 
 const http = httpRouter();
 
 http.route({
-  path: "/getfile",
+  pathPrefix: "/getfile/",
   method: "GET",
   handler: httpAction(async (ctx, request) => {
-    const { searchParams } = new URL(request.url);
-    const fileId = searchParams.get("fileId") as Id<"files"> | undefined;
+    const parts = request.url.split("/");
+    const fileId = parts[parts.length - 1]?.split(".")[0] as
+      | Id<"files">
+      | undefined;
     if (!fileId) {
       return new Response("Bad request", {
         status: 400,
@@ -38,7 +40,7 @@ http.route({
 });
 
 http.route({
-  path: "/getfile",
+  pathPrefix: "/getfile/",
   method: "OPTIONS",
   // eslint-disable-next-line @typescript-eslint/require-await
   handler: httpAction(async (_, request) => {
@@ -87,6 +89,37 @@ http.route({
       }),
       { status: 200 },
     );
+  }),
+});
+
+http.route({
+  pathPrefix: "/markdown/",
+  method: "GET",
+  handler: httpAction(async (ctx, request) => {
+    const parts = request.url.split("/");
+    const assetId = parts[parts.length - 2] as Id<"assets"> | undefined;
+    const fieldId = parts[parts.length - 1] as Id<"fields"> | undefined;
+    if (!assetId || !fieldId) {
+      return new Response("Bad request", {
+        status: 400,
+      });
+    }
+
+    const value = await ctx.runQuery(internal.assets.getMarkdown, {
+      assetId,
+      fieldId,
+    });
+    if (!value.content) {
+      return new Response("Not found", {
+        status: 404,
+      });
+    }
+
+    return new Response(value.content, {
+      headers: {
+        "Content-Type": "text/markdown; charset=utf-8",
+      },
+    });
   }),
 });
 

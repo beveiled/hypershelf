@@ -75,7 +75,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         });
         urls.push(
           // eslint-disable-next-line turbo/no-undeclared-env-vars
-          `${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/getfile?fileId=${fileId}`,
+          `${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/getfile/${fileId}.${file.name.split(".").pop()}`,
         );
       }
       return urls;
@@ -277,5 +277,93 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
 MarkdownEditor.displayName = "MarkdownEditor";
 
-export { MarkdownEditor };
+const MarkdownViewer: React.FC<{ content: string; className?: string }> = ({
+  content,
+  className = "",
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const viewRef = useRef<EditorView | null>(null);
+
+  useEffect(() => {
+    if (viewRef.current || !containerRef.current) return;
+    const state = EditorState.create({
+      doc: content,
+      extensions: [
+        richEditor({
+          markdoc: config,
+          lezer: { codeLanguages: languages, extensions: [Table] },
+          // readonly: true,
+        }),
+        EditorView.lineWrapping,
+        EditorView.editable.of(false),
+        drawSelection(),
+        syntaxHighlighting(defaultHighlightStyle),
+      ],
+    });
+
+    viewRef.current = new EditorView({ state, parent: containerRef.current });
+
+    setTimeout(() => {
+      void (async () => {
+        if (!viewRef.current) return;
+        const imgs = Array.from(viewRef.current.dom.querySelectorAll("img"));
+        for (const img of imgs) {
+          if (img.src.startsWith("data:")) continue;
+          try {
+            const response = await fetch(img.src);
+            if (!response.ok) continue;
+            const blob = await response.blob();
+            if (!blob.type.startsWith("image/")) continue;
+
+            await new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                if (typeof reader.result === "string") {
+                  img.src = reader.result;
+                }
+                resolve(true);
+              };
+              reader.onerror = () => resolve(true);
+              reader.readAsDataURL(blob);
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        }
+        window.dispatchEvent(new Event("mdLoaded"));
+      })();
+    }, 500);
+
+    return () => {
+      viewRef.current?.destroy();
+      viewRef.current = null;
+    };
+  }, [content]);
+
+  useEffect(() => {
+    if (!viewRef.current) return;
+
+    if (content !== viewRef.current.state.doc.toString()) {
+      viewRef.current.dispatch({
+        changes: {
+          from: 0,
+          to: viewRef.current.state.doc.length,
+          insert: content,
+        },
+      });
+    }
+  }, [content]);
+
+  return (
+    <div
+      ref={containerRef}
+      className={cn(
+        "markdown-editor markdown-pdf mx-auto max-w-[700px]",
+        className,
+      )}
+    />
+  );
+};
+
+export { MarkdownEditor, MarkdownViewer };
 export default MarkdownEditor;

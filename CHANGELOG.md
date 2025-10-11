@@ -1,3 +1,7 @@
+# Hypershelf 0.7.17
+
+- Markdown export
+
 # Hypershelf 0.7.16
 
 - _Slight_ extension rework :D

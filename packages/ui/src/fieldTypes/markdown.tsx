@@ -1,9 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useMutation } from "convex/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CircleCheck, Download, Eye, Loader2 } from "lucide-react";
+import {
+  Check,
+  CircleCheck,
+  CodeXml,
+  Download,
+  Eye,
+  FileText,
+  Loader2,
+  Share,
+} from "lucide-react";
 
 import type { Id } from "@hypershelf/convex/_generated/dataModel";
 import { api } from "@hypershelf/convex/_generated/api";
@@ -11,9 +20,10 @@ import { useHypershelf } from "@hypershelf/lib/stores";
 import { cn } from "@hypershelf/lib/utils";
 
 import type { FieldPropConfig } from "./_abstractType";
-import { MarkdownEditor } from "../markdownEditor";
+import { MarkdownEditor, MarkdownViewer } from "../markdownEditor";
 import { Button } from "../primitives/button";
 import { ButtonWithKbd } from "../primitives/kbd-button";
+import { Popover, PopoverContent, PopoverTrigger } from "../primitives/popover";
 
 function MarkdownEditorDialogContent({
   fieldId,
@@ -191,6 +201,152 @@ function MarkdownEditorDialogContent({
   );
 }
 
+function DownloadButton({
+  assetId,
+  fieldId,
+  readonly,
+}: {
+  assetId: Id<"assets">;
+  fieldId: Id<"fields">;
+  readonly: boolean;
+}) {
+  const mdEditor = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [downloadPdfAvailable, setDownloadPdfAvailable] = useState(false);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [downloadingMd, setDownloadingMd] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setDownloadPdfAvailable(true);
+    window.addEventListener("mdLoaded", handler);
+    return () => window.removeEventListener("mdLoaded", handler);
+  }, []);
+
+  const value = useHypershelf(
+    (state) =>
+      state.assets[assetId]?.asset.metadata?.[fieldId] as string | null,
+  );
+  const hostname = useHypershelf((state) => {
+    const hostnameFieldId = Object.values(state.fields).find(
+      (f) => f.field.type === "magic__hostname",
+    )?.field._id;
+    if (!hostnameFieldId) return null;
+    return (state.assets[assetId]?.asset.metadata?.[hostnameFieldId] ??
+      null) as string | null;
+  });
+
+  const downloadMd = useCallback(() => {
+    if (!value) return;
+    setDownloadingMd(true);
+    try {
+      const element = document.createElement("a");
+      const file = new Blob([value.toString()], { type: "text/markdown" });
+      element.href = URL.createObjectURL(file);
+      element.download = `${hostname ?? "asset-" + assetId}.md`;
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    } finally {
+      setDownloadingMd(false);
+    }
+  }, [value, assetId, hostname]);
+
+  const downloadPdf = useCallback(async () => {
+    if (!value) return;
+    const el = mdEditor.current?.querySelector(
+      ".markdown-pdf",
+    ) as HTMLElement | null;
+    if (!el) return;
+    setDownloadingPdf(true);
+    try {
+      await (
+        await import("html2pdf.js")
+      ).default(el, {
+        margin: 0.33,
+        filename: `${hostname ?? "asset-" + assetId}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { dpi: 192, letterRendering: true },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+      });
+    } finally {
+      setDownloadingPdf(false);
+    }
+  }, [assetId, value, hostname]);
+
+  const copyMdLink = useCallback(() => {
+    if (!value) return;
+    void navigator.clipboard.writeText(
+      // eslint-disable-next-line turbo/no-undeclared-env-vars
+      `${process.env.NEXT_PUBLIC_CONVEX_SITE_URL}/markdown/${assetId}/${fieldId}`,
+    );
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [value, assetId, fieldId]);
+
+  if (!value) return null;
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(readonly && "p-0.5 h-auto")}
+          onClick={() => setOpen((o) => !o)}
+        >
+          <Download className={cn(readonly ? "size-3" : "size-4")} />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-fit">
+        <div
+          className="opacity-0"
+          ref={mdEditor}
+          style={{
+            width: "210mm",
+            height: "297mm",
+            boxSizing: "border-box",
+            position: "absolute",
+            top: "-10000px",
+            left: "-10000px",
+            overflow: "hidden",
+          }}
+        >
+          <MarkdownViewer content={value} />
+        </div>
+        <div className="gap-2 flex flex-col">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={downloadMd}
+            disabled={downloadingMd}
+          >
+            {downloadingMd ? <Loader2 className="animate-spin" /> : <CodeXml />}
+            Download .md
+          </Button>
+          <Button size="sm" variant="outline" onClick={copyMdLink}>
+            {copied ? <Check /> : <Share />}
+            Copy link to .md
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={downloadPdf}
+            disabled={!downloadPdfAvailable || downloadingPdf}
+          >
+            {downloadingPdf ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              <FileText />
+            )}
+            Download .pdf
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 function InlineMarkdown({
   assetId,
   fieldId,
@@ -251,15 +407,17 @@ function InlineMarkdown({
               )}
             </Button>
           </Dialog.Trigger>
-          {!isEmpty && (
-            <Button
-              variant="ghost"
-              size="sm"
-              disabled={true}
-              className={cn(readonly && "p-0.5 h-auto")}
-            >
-              <Download className={cn(readonly ? "size-3" : "size-4")} />
-            </Button>
+          {/* Download for readonly is not available in the plugin
+              context, since the plugins (including the overlay)
+              are rendered inside a shadow DOM and html2canvas
+              has a hard time transferring styles, thus the
+              resulting pdf is a white page */}
+          {!isEmpty && !readonly && (
+            <DownloadButton
+              assetId={assetId}
+              fieldId={fieldId}
+              readonly={readonly}
+            />
           )}
           <AnimatePresence>
             {open && (

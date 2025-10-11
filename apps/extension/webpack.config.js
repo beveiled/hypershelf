@@ -23,6 +23,9 @@ const resolveCfg = {
       configFile: join(__dirname_, "tsconfig.json"),
     }),
   ],
+  alias: {
+    html2canvas: "html2canvas-pro",
+  },
 };
 
 const rules = [

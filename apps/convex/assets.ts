@@ -1,7 +1,7 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 
-import { mutation, query } from "./_generated/server";
+import { internalQuery, mutation, query } from "./_generated/server";
 import { valueSchema } from "./schema";
 import { validateField } from "./utils";
 
@@ -233,5 +233,24 @@ export const restore = mutation({
       action: { type: "restore_asset", assetId: id },
     });
     return { success: true, _logs: ["Asset restored successfully"] };
+  },
+});
+
+export const getMarkdown = internalQuery({
+  args: { assetId: v.id("assets"), fieldId: v.id("fields") },
+  handler: async (ctx, { assetId, fieldId }) => {
+    const asset = await ctx.db.get(assetId);
+    if (!asset || asset.deleted) {
+      return { content: null };
+    }
+    const field = await ctx.db.get(fieldId);
+    if (!field || field.type !== "markdown") {
+      return { content: null };
+    }
+    const value = asset.metadata?.[fieldId];
+    if (typeof value !== "string") {
+      return { content: null };
+    }
+    return { content: value };
   },
 });

@@ -6,6 +6,10 @@
   border: none !important;
 }
 
+.markdown-pdf .cm-editor {
+  color: black !important;
+}
+
 .cm-content {
   caret-color: var(--foreground) !important;
 }
@@ -256,4 +260,8 @@
 .cm-markdoc-fileWidgetIcon {
   width: 18px;
   height: 18px;
+}
+
+.cm-editor * {
+  break-inside: avoid;
 }
