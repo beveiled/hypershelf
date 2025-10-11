@@ -139,7 +139,7 @@ function TooltipContentNoPortal({
             transition={transition}
             style={{ willChange: "transform, opacity" }}
             className={cn(
-              "w-72 p-4 shadow-md backdrop-blur-lg relative z-50 origin-(--radix-tooltip-content-transform-origin) rounded-md border bg-background/60 text-popover-foreground outline-hidden",
+              "w-72 p-4 shadow-md backdrop-blur-lg relative z-50 origin-(--radix-tooltip-content-transform-origin) rounded-md border bg-background/80 text-popover-foreground outline-hidden",
               className,
             )}
           >

@@ -103,7 +103,7 @@ export function ActionsRow({
             scale: { type: "spring", bounce: 0.3, duration: 0.4 },
           }}
           className={cn(
-            "p-2 backdrop-blur-lg absolute z-40 flex min-w-fit flex-col justify-end rounded-md border border-dashed border-border-focus bg-background/60",
+            "p-2 backdrop-blur-lg absolute z-40 flex min-w-fit flex-col justify-end rounded-md border border-dashed border-border-focus bg-background/80",
             side === "right" ? "origin-top-left" : "origin-top-right",
           )}
           style={{

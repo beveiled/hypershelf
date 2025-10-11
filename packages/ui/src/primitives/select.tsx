@@ -72,7 +72,7 @@ function SelectContent({
           exit={{ scale: 0.9 }}
           transition={{ type: "spring", bounce: 0.5, duration: 0.3 }}
           className={cn(
-            "shadow-md backdrop-blur-lg relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-popover-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border bg-background/60 text-foreground",
+            "shadow-md backdrop-blur-lg relative z-50 max-h-(--radix-select-content-available-height) min-w-[8rem] origin-(--radix-popover-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border bg-background/80 text-foreground",
             position === "popper" &&
               "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
             className,

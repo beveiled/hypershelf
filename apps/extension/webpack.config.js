@@ -3,10 +3,14 @@ import { fileURLToPath } from "url";
 import tailwindPlugin from "@tailwindcss/postcss";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
+import postcssImport from "postcss-import";
+import postcssRemToResponsivePixel from "postcss-rem-to-responsive-pixel";
 import TerserPlugin from "terser-webpack-plugin";
 import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
 import webpack from "webpack";
 import { merge } from "webpack-merge";
+
+import BabelPluginReactDomPortalShim from "./src/tools/babel-plugin-react-dom-portal-shim.cjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname_ = dirname(__filename);
@@ -24,24 +28,55 @@ const resolveCfg = {
 const rules = [
   {
     test: /\.[tj]sx?$/,
+    use: [{ loader: "ts-loader", options: { transpileOnly: true } }],
+    exclude: /node_modules/,
+  },
+  {
+    test: /\.[cm]?js$/,
+    type: "javascript/auto",
     use: [
       {
-        loader: "ts-loader",
-        options: { transpileOnly: true },
+        loader: "babel-loader",
+        options: {
+          babelrc: false,
+          configFile: false,
+          presets: [],
+          plugins: [
+            // ? Monkeypatches ReactDOM.createPortal to render into shadow DOM
+            // ? in order to isolate styles from parent page
+            BabelPluginReactDomPortalShim(),
+          ],
+          cacheDirectory: true,
+          sourceMaps: false,
+        },
       },
     ],
-    exclude: /node_modules/,
   },
   {
     test: /\.css$/,
     use: [
-      "style-loader",
-      "css-loader",
+      {
+        loader: "css-loader",
+        options: {
+          exportType: "css-style-sheet",
+          importLoaders: 1,
+          sourceMap: false,
+        },
+      },
       {
         loader: "postcss-loader",
         options: {
           postcssOptions: {
-            plugins: [tailwindPlugin()],
+            plugins: [
+              postcssImport(),
+              postcssRemToResponsivePixel({
+                rootValue: 16,
+                transformUnit: "px",
+                unitPrecision: 5,
+                propList: ["*"],
+              }),
+              tailwindPlugin(),
+            ],
           },
         },
       },
@@ -114,7 +149,7 @@ const content = merge(common, {
   entry: _resolve(__dirname_, "src/content/index.tsx"),
   output: {
     path: dist,
-    filename: "content/vsphere.js",
+    filename: "content/index.js",
     chunkFilename: "assets/[name].js",
     assetModuleFilename: "assets/[name][ext]",
   },

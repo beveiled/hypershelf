@@ -1,15 +1,19 @@
+import type { JSX } from "react";
+
+export type Widget = ({ hostname }: { hostname: string | null }) => JSX.Element;
+
 export interface AdapterContext {
   win: Window;
   doc: Document;
 }
 
-export interface SiteAdapter {
+export interface ConnectorAdapter {
   readonly id: string;
-  readonly component: React.ComponentType<{ hostname: string | null }>;
-  detect(ctx: AdapterContext): boolean;
-  mountTarget(ctx: AdapterContext): HTMLElement | null;
-  observe(
-    ctx: AdapterContext,
-    onChange: (hostname: string | null) => void,
-  ): () => void;
+  readonly widget: Widget;
+  readonly banner: string;
+  readonly anchorSelectors: string[];
+  readonly anchorPosition: "before" | "after" | "instead" | "start" | "end";
+  readonly observableSelectors: string[];
+  readonly mountStyles?: React.CSSProperties;
+  extractHostname(ctx: AdapterContext): string | null;
 }

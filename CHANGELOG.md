@@ -1,3 +1,8 @@
+# Hypershelf 0.7.16
+
+- _Slight_ extension rework :D
+- Refactoring
+
 # Hypershelf 0.7.15
 
 - _Slight_ refactor :D

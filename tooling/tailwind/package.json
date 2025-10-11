@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./base": "./base.css"
+    "./base.css": "./base.css",
+    "./markdownEditor.css": "./markdownEditor.css"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo node_modules",

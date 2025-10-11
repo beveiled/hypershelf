@@ -13,7 +13,6 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-
 import type * as assets from "../assets.js";
 import type * as auth from "../auth.js";
 import type * as authProviders_customPassword from "../authProviders/customPassword.js";
@@ -23,11 +22,11 @@ import type * as files from "../files.js";
 import type * as general from "../general.js";
 import type * as http from "../http.js";
 import type * as lib_env from "../lib/env.js";
+import type * as lib_integrations_vsphere_SoapClient from "../lib/integrations/vsphere/SoapClient.js";
 import type * as lib_integrations_vsphere_consts from "../lib/integrations/vsphere/consts.js";
 import type * as lib_integrations_vsphere_index from "../lib/integrations/vsphere/index.js";
 import type * as lib_integrations_vsphere_parseFolders from "../lib/integrations/vsphere/parseFolders.js";
 import type * as lib_integrations_vsphere_parseInventory from "../lib/integrations/vsphere/parseInventory.js";
-import type * as lib_integrations_vsphere_SoapClient from "../lib/integrations/vsphere/SoapClient.js";
 import type * as lib_integrations_vsphere_types from "../lib/integrations/vsphere/types.js";
 import type * as lib_integrations_vsphere_utils from "../lib/integrations/vsphere/utils.js";
 import type * as lib_redis_index from "../lib/redis/index.js";

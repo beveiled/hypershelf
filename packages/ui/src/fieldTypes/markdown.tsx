@@ -152,7 +152,7 @@ function MarkdownEditorDialogContent({
             disabled={disabled || updating || readonly}
             onChange={setVal}
             className={cn(
-              "backdrop-blur-lg max-h-[90vh] overflow-y-auto bg-background/60",
+              "backdrop-blur-lg max-h-[90vh] overflow-y-auto bg-background/80",
               lazyError && "ring-red-500 ring-2",
             )}
             defaultExpanded={true}

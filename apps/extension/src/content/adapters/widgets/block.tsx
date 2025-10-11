@@ -71,7 +71,7 @@ const Inner = ({ hostname }: { hostname: string | null }) => {
             >
               <DynamicIcon
                 name={(field.extra?.icon ?? "circle") as IconName}
-                className="size-3 text-muted-foreground"
+                className="size-3.5 text-muted-foreground"
               />
               <div className="font-medium text-muted-foreground">
                 {field.name}:
@@ -89,9 +89,9 @@ const Inner = ({ hostname }: { hostname: string | null }) => {
   );
 };
 
-export const VSphereWidget = ({ hostname }: { hostname: string | null }) => {
+export const BlockWidget = ({ hostname }: { hostname: string | null }) => {
   return (
-    <div className="h-38 mb-3 flex items-center justify-center rounded-md border-2 border-brand bg-background">
+    <div className="h-38 mb-3 flex items-center justify-center rounded-md border-2 border-brand bg-background font-sans">
       <Inner hostname={hostname} />
     </div>
   );

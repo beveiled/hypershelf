@@ -1,13 +1,3 @@
-import { api } from "@hypershelf/convex/_generated/api";
-import { cn } from "@hypershelf/lib/utils";
-
-import { MarkdownCommandPalette } from "./command-palette";
-import config from "./markdoc";
-import { previewModeFacet } from "./preview-facet";
-import richEditor from "./rich-editor";
-
-import "./style.css";
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   defaultKeymap,
@@ -34,6 +24,13 @@ import { motion } from "framer-motion";
 import { ArrowDownFromLine } from "lucide-react";
 
 import type { Id } from "@hypershelf/convex/_generated/dataModel";
+import { api } from "@hypershelf/convex/_generated/api";
+import { cn } from "@hypershelf/lib/utils";
+
+import { MarkdownCommandPalette } from "./command-palette";
+import config from "./markdoc";
+import { previewModeFacet } from "./preview-facet";
+import richEditor from "./rich-editor";
 
 export interface MarkdownEditorProps {
   value: string;

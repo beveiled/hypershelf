@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "pnpm with-env convex dev",
     "deploy": "pnpm with-env convex deploy",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "format": "prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
