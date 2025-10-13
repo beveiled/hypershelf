@@ -16,14 +16,15 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      - INSTANCE_NAME=${INSTANCE_NAME:-hypershelf}
-      - INSTANCE_SECRET=${INSTANCE_SECRET}
+      - INSTANCE_NAME=hypershelf
+      - INSTANCE_SECRET=0102030405060708090a0b0c0d0e0f100102030405060708090a0b0c0d0e0f10
       - DISABLE_BEACON=true
       - DO_NOT_REQUIRE_SSL=true
-      - CONVEX_CLOUD_ORIGIN=${PUBLIC_CONVEX_BACKEND_URL:-http://localhost:3210}
-      - CONVEX_SITE_ORIGIN=${PUBLIC_CONVEX_SITE_URL:-http://localhost:3211}
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@localhost:5432
-      - RUST_LOG=info
+      - CONVEX_CLOUD_ORIGIN=http://localhost:3210
+      - CONVEX_SITE_ORIGIN=http://localhost:3211
+      - DATABASE_URL=postgresql://postgres:donotdeploytoprod@localhost:5432
+      - RUST_BACKTRACE=1
+      - RUST_LOG=info,common::errors=debug
     network_mode: host
 
   dashboard:
@@ -34,7 +35,7 @@ services:
       backend:
         condition: service_healthy
     environment:
-      PUBLIC_CONVEX_BACKEND_URL: "${PUBLIC_CONVEX_BACKEND_URL:-http://localhost:3210}"
+      - PUBLIC_CONVEX_BACKEND_URL=http://localhost:3210
     network_mode: host
 
   postgres:
@@ -42,9 +43,9 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${INSTANCE_NAME:-hypershelf}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: donotdeploytoprod
+      POSTGRES_DB: hypershelf
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -62,12 +63,12 @@ services:
         "--loglevel",
         "warning",
         "--requirepass",
-        "${REDIS_PASSWORD}",
+        "donotdeploytoprod",
       ]
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli -a ${REDIS_PASSWORD} ping | grep PONG"]
+      test: ["CMD-SHELL", "redis-cli -a donotdeploytoprod ping | grep PONG"]
       interval: 5s
       start_period: 10s
     network_mode: host

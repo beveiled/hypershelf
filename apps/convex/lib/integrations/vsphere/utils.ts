@@ -91,3 +91,22 @@ export function text(n: Node): string {
   }
   return s;
 }
+
+export function childrenByLocalName(node: Element, local: string): Element[] {
+  const out: Element[] = [];
+  const kids = node.childNodes;
+  for (let i = 0; i < kids.length; i += 1) {
+    const k = kids.item(i);
+    if (k.nodeType === 1 && (k as Element).localName === local)
+      out.push(k as Element);
+  }
+  return out;
+}
+
+export function parseIsoToMillis(s: string): number {
+  if (!s) return 0;
+  const m = /^(.+\.\d{3})\d+Z$/.exec(s);
+  const t = m ? `${m[1]}Z` : s;
+  const n = Date.parse(t);
+  return Number.isNaN(n) ? 0 : n;
+}

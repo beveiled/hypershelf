@@ -1,7 +1,13 @@
 import { v } from "convex/values";
 
 import { internal } from "./_generated/api";
-import { internalMutation, internalQuery, mutation } from "./_generated/server";
+import {
+  internalAction,
+  internalMutation,
+  internalQuery,
+  mutation,
+} from "./_generated/server";
+import { vSphereSchema } from "./schema";
 
 export const getVsphereData = internalQuery({
   args: {
@@ -68,6 +74,50 @@ export const applyVsphereData = internalMutation({
       vsphereLastSync: last_sync,
       vsphereMoid: moid,
     });
+  },
+});
+
+export const applyIndexing = internalMutation({
+  args: {
+    incoming: v.array(v.object(vSphereSchema)),
+  },
+  handler: async (ctx, { incoming }) => {
+    for (const item of incoming) {
+      const existing = await ctx.db
+        .query("vsphere")
+        .filter((q) => q.eq(q.field("moid"), item.moid))
+        .first();
+      if (existing) {
+        await ctx.db.patch(existing._id, {
+          hostname: item.hostname,
+          ...(item.primaryIp && { primaryIp: item.primaryIp }),
+          ...(item.ips?.length && { ips: item.ips }),
+          cpuCores: item.cpuCores,
+          memoryMb: item.memoryMb,
+          ...(item.guestOs && { guestOs: item.guestOs }),
+          ...(item.portgroup && { portgroup: item.portgroup }),
+          cluster: item.cluster,
+          drives: item.drives,
+          snaps: item.snaps,
+          lastSync: Date.now(),
+        });
+      } else {
+        await ctx.db.insert("vsphere", {
+          ...item,
+          lastSync: Date.now(),
+        });
+      }
+    }
+  },
+});
+
+export const reindex = internalAction({
+  handler: async (ctx) => {
+    await ctx.scheduler.runAfter(
+      0,
+      internal.vsphereNode.indexVSphereAction,
+      {},
+    );
   },
 });
 

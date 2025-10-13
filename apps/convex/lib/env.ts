@@ -12,6 +12,7 @@ export const env = createEnv({
     VSPHERE_LOGIN: z.string(),
     VSPHERE_PASSWORD: z.string(),
     VSPHERE_TOPOLOGY_ROOT_MOID: z.string(),
+    VSPHERE_TOPOLOGY_ROOT_MOID_FOR_INDEXING: z.string().optional(),
   },
   client: {},
   runtimeEnv: {
@@ -22,6 +23,8 @@ export const env = createEnv({
     VSPHERE_LOGIN: process.env.VSPHERE_LOGIN,
     VSPHERE_PASSWORD: process.env.VSPHERE_PASSWORD,
     VSPHERE_TOPOLOGY_ROOT_MOID: process.env.VSPHERE_TOPOLOGY_ROOT_MOID,
+    VSPHERE_TOPOLOGY_ROOT_MOID_FOR_INDEXING:
+      process.env.VSPHERE_TOPOLOGY_ROOT_MOID_FOR_INDEXING,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { env } from "~/env";
+
 export const signinSchema = z
   .object({
     email: z.string().email({ message: "Нужна реальная почта" }),
@@ -19,13 +21,26 @@ export const signinSchema = z
       .optional(),
   })
   .superRefine((data, ctx) => {
-    if ("passwordConfirm" in data && data.passwordConfirm !== undefined) {
-      if (data.password !== data.passwordConfirm) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["passwordConfirm"],
-          message: "Пароли не совпадают",
-        });
-      }
+    if (
+      "passwordConfirm" in data &&
+      data.passwordConfirm !== undefined &&
+      data.password !== data.passwordConfirm
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["passwordConfirm"],
+        message: "Пароли не совпадают",
+      });
+    }
+
+    if (
+      env.NEXT_PUBLIC_EMAIL_DOMAIN &&
+      !data.email.endsWith(`@${env.NEXT_PUBLIC_EMAIL_DOMAIN}`)
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["email"],
+        message: "Недопустимый домен электронной почты",
+      });
     }
   });

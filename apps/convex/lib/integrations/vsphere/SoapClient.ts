@@ -18,6 +18,10 @@ export class SoapClient {
     this.username = cfg.username;
     this.password = cfg.password;
     this.redis = cfg.redis;
+
+    if (!cfg.redis) {
+      console.warn("Cold boot of vSphere client without Redis");
+    }
   }
 
   async retrieveAll(
@@ -95,6 +99,13 @@ export class SoapClient {
   }
 
   private async post(xml: string): Promise<SoapResponse> {
+    if (process.env.VSPHERE_JITTER_MS) {
+      const ms = Math.floor(
+        Math.random() * Number(process.env.VSPHERE_JITTER_MS),
+      );
+      console.log(`Jittering ${ms}ms before vSphere request`);
+      await new Promise((r) => setTimeout(r, ms));
+    }
     if (this.redis && !this.cookie) {
       try {
         const cached = await this.redis.get("vsphere:session");
@@ -116,6 +127,7 @@ export class SoapClient {
     const r = await fetch(this.url, { method: "POST", headers, body: xml });
     const setCookieHeader = r.headers.get("set-cookie");
     const text = await r.text();
+    console.log("Got", text.length, "bytes from vSphere with status", r.status);
     return { text, setCookieHeader, status: r.status };
   }
 
@@ -126,7 +138,7 @@ export class SoapClient {
     if (this.redis && this.cookie) {
       await this.redis
         .set("vsphere:session", this.cookie, {
-          EX: 15 * 60,
+          EX: 30 * 60,
         })
         .catch((err) => {
           console.error("Failed to cache vSphere session in Redis", err);
@@ -424,5 +436,104 @@ export class SoapClient {
       this.post(this.buildRetrieveVmCoreEnvelope(moid)),
     );
     return body;
+  }
+
+  private buildRetrieveVmDetailsUnderRootEnvelope(
+    rootType: "Folder" | "Datacenter",
+    rootMoid: string,
+  ): string {
+    const vmProps = [
+      "summary.guest.hostName",
+      "guest.ipAddress",
+      "guest.net",
+      "summary.config.numCpu",
+      "config.hardware.memoryMB",
+      "guest.guestFullName",
+      "config.hardware.device",
+      "runtime.host",
+      "layoutEx",
+      "snapshot.rootSnapshotList",
+    ];
+    const hostProps = ["parent"];
+    const compProps = ["name"];
+    const traversal = `
+      <selectSet xsi:type="TraversalSpec">
+        <name>dcToVmFolder</name>
+        <type>Datacenter</type>
+        <path>vmFolder</path>
+        <skip>false</skip>
+        <selectSet><name>folderTraversal</name></selectSet>
+      </selectSet>
+      <selectSet xsi:type="TraversalSpec">
+        <name>folderTraversal</name>
+        <type>Folder</type>
+        <path>childEntity</path>
+        <skip>false</skip>
+        <selectSet><name>folderTraversal</name></selectSet>
+        <selectSet><name>dcToVmFolder</name></selectSet>
+        <selectSet><name>vmToHost</name></selectSet>
+      </selectSet>
+      <selectSet xsi:type="TraversalSpec">
+        <name>vmToHost</name>
+        <type>VirtualMachine</type>
+        <path>runtime.host</path>
+        <skip>false</skip>
+        <selectSet><name>hostToParent</name></selectSet>
+      </selectSet>
+      <selectSet xsi:type="TraversalSpec">
+        <name>hostToParent</name>
+        <type>HostSystem</type>
+        <path>parent</path>
+        <skip>false</skip>
+      </selectSet>
+    `;
+    const objset = `
+      <objectSet>
+        <obj type="${rootType}">${escapeXml(rootMoid)}</obj>
+        <skip>false</skip>
+        ${traversal}
+      </objectSet>
+    `;
+    return envelope(`
+      <vim25:RetrievePropertiesEx>
+        <_this type="PropertyCollector">propertyCollector</_this>
+        <specSet>
+          <propSet><type>VirtualMachine</type>${vmProps.map((p) => `<pathSet>${p}</pathSet>`).join("")}</propSet>
+          <propSet><type>HostSystem</type>${hostProps.map((p) => `<pathSet>${p}</pathSet>`).join("")}</propSet>
+          <propSet><type>ComputeResource</type>${compProps.map((p) => `<pathSet>${p}</pathSet>`).join("")}</propSet>
+          <propSet><type>ClusterComputeResource</type>${compProps.map((p) => `<pathSet>${p}</pathSet>`).join("")}</propSet>
+          ${objset}
+        </specSet>
+        <options/>
+      </vim25:RetrievePropertiesEx>
+    `);
+  }
+
+  async retrieveVmDetailsUnderRoot(
+    rootType: "Folder" | "Datacenter",
+    rootMoid: string,
+  ): Promise<readonly string[]> {
+    const pages: string[] = [];
+    const first = await this.post(
+      this.buildRetrieveVmDetailsUnderRootEnvelope(rootType, rootMoid),
+    );
+    const body1 = await this.handleAuthAndMaybeRetry(first, () =>
+      this.post(
+        this.buildRetrieveVmDetailsUnderRootEnvelope(rootType, rootMoid),
+      ),
+    );
+    pages.push(body1.text);
+    let token = SoapClient.extractToken(body1.text);
+    let guards = 0;
+    while (token && guards < 200) {
+      const resp = await this.post(this.buildContinueEnvelope(token));
+      const body = await this.handleAuthAndMaybeRetry(resp, () =>
+        this.post(this.buildContinueEnvelope(token ?? "")),
+      );
+      pages.push(body.text);
+      token = SoapClient.extractToken(body.text);
+      guards += 1;
+    }
+    return pages;
   }
 }

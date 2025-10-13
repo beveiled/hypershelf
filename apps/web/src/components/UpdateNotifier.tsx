@@ -14,8 +14,48 @@ export function UpdateNotifier() {
   const [updateAvailable, setUpdateAvailable] = useState(false);
 
   useEffect(() => {
-    if (version && version.version !== currentVersion) {
-      setUpdateAvailable(true);
+    if (version && currentVersion) {
+      const parseSemver = (versionStr: string) => {
+        const [main, modifier] = versionStr.split("-");
+        if (!main) return null;
+        const [major, minor, patch] = main.split(".").map(Number);
+        if (major === undefined || minor === undefined || patch === undefined)
+          return null;
+        return { major, minor, patch, modifier };
+      };
+
+      const serverVersion = parseSemver(version.version);
+      const clientVersion = parseSemver(currentVersion);
+
+      if (!serverVersion || !clientVersion) return;
+
+      if (serverVersion.major > clientVersion.major) {
+        setUpdateAvailable(true);
+        return;
+      }
+      if (serverVersion.major < clientVersion.major) {
+        return;
+      }
+
+      if (serverVersion.minor > clientVersion.minor) {
+        setUpdateAvailable(true);
+        return;
+      }
+      if (serverVersion.minor < clientVersion.minor) {
+        return;
+      }
+
+      if (serverVersion.patch > clientVersion.patch) {
+        setUpdateAvailable(true);
+        return;
+      }
+      if (serverVersion.patch < clientVersion.patch) {
+        return;
+      }
+
+      if (!serverVersion.modifier && clientVersion.modifier) {
+        setUpdateAvailable(true);
+      }
     }
   }, [currentVersion, version]);
 

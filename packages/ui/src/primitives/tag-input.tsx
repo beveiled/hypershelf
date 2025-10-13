@@ -264,9 +264,7 @@ export function TagInput({
               size="sm"
               className={cn(
                 "h-fit w-fit",
-                tags.length === 0
-                  ? "px-2 py-1 text-sm text-muted-foreground/50 italic"
-                  : "!p-0.5 text-xs",
+                tags.length === 0 ? "px-2 py-1 text-sm" : "!p-0.5 text-xs",
               )}
               onClick={() => {
                 setIsEditing(true);
@@ -276,7 +274,11 @@ export function TagInput({
               }}
               disabled={disabled}
             >
-              {tags.length === 0 ? "пусто" : <Plus className="size-4" />}
+              {tags.length === 0 ? (
+                <span className="text-muted-foreground/50 italic">пусто</span>
+              ) : (
+                <Plus />
+              )}
             </Button>
           </motion.div>
         )}

@@ -71,11 +71,13 @@ export const tableSlice: ImmerStateCreator<TableSlice> = (set) => ({
   setFilters: (filters) => {
     set((state) => {
       state.filters = filters;
+      state.createdAssets = [];
     });
   },
   setIsFiltering: (isFiltering) => {
     set((state) => {
       state.isFiltering = isFiltering;
+      state.createdAssets = [];
     });
   },
   resetFilters: () => {

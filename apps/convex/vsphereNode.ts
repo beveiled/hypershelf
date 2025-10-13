@@ -15,6 +15,7 @@ import {
   fetchHost,
   fetchTopology,
   fetchTopologyStructure,
+  fetchVmDetailsForRoot,
 } from "./lib/integrations/vsphere";
 import { getClient } from "./lib/redis";
 
@@ -65,6 +66,19 @@ export const fetchHostAction = internalAction({
       moid: incoming.moid,
     });
     console.log(`Applied vSphere data for asset ${id}`);
+  },
+});
+
+export const indexVSphereAction = internalAction({
+  handler: async (ctx) => {
+    if (!env.VSPHERE_TOPOLOGY_ROOT_MOID_FOR_INDEXING) return -1;
+    const redis = getClient(env.REDIS_URL, env.REDIS_PASSWORD);
+    const incoming = await fetchVmDetailsForRoot(
+      env.VSPHERE_TOPOLOGY_ROOT_MOID_FOR_INDEXING,
+      redis,
+    );
+    await ctx.runMutation(internal.vsphere.applyIndexing, { incoming });
+    return incoming.length;
   },
 });
 

@@ -16,6 +16,7 @@ const initialState: State = {
   assets: {},
   assetErrors: {},
   loadingAssets: true,
+  createdAssets: [],
 
   fieldIds: [],
   fields: {},

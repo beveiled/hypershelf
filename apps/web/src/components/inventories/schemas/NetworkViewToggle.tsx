@@ -104,9 +104,9 @@ function JsonUploader({ onUploaded }: { onUploaded: () => void }) {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onClick={handleClick}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: "spring", bounce: 0.3, duration: 0.3 }}
+      whileHover={{ y: -1 }}
+      whileTap={{ y: 1 }}
+      transition={{ type: "spring", bounce: 0.2, duration: 0.2 }}
     >
       <svg
         className="inset-0 pointer-events-none absolute h-full w-full rounded-lg"

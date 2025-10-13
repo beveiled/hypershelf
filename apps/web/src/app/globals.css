@@ -4,6 +4,7 @@
 @source "../../../../packages/ui/src/**/*.{ts,tsx,jsx,js}";
 @import "@hypershelf/tailwind-config/base.css";
 @import "@hypershelf/tailwind-config/markdownEditor.css";
+@import "tw-animate-css";
 
 @layer utilities {
   .slide-to-unlock {

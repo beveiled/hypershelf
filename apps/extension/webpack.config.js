@@ -89,14 +89,14 @@ const rules = [
 
 const pluginsCommon = [
   new webpack.DefinePlugin({
-    "process.env.PUBLIC_FRONTEND_URL": JSON.stringify(
-      process.env.PUBLIC_FRONTEND_URL || "",
+    "process.env.NEXT_PUBLIC_SITE_URL": JSON.stringify(
+      process.env.NEXT_PUBLIC_SITE_URL || "",
     ),
-    "process.env.PUBLIC_CONVEX_BACKEND_URL": JSON.stringify(
-      process.env.PUBLIC_CONVEX_BACKEND_URL || "",
+    "process.env.NEXT_PUBLIC_CONVEX_URL": JSON.stringify(
+      process.env.NEXT_PUBLIC_CONVEX_URL || "",
     ),
-    "process.env.PUBLIC_CONVEX_SITE_URL": JSON.stringify(
-      process.env.PUBLIC_CONVEX_SITE_URL || "",
+    "process.env.NEXT_PUBLIC_CONVEX_SITE_URL": JSON.stringify(
+      process.env.NEXT_PUBLIC_CONVEX_SITE_URL || "",
     ),
     "process.env.VSPHERE_HOSTNAME": JSON.stringify(
       process.env.VSPHERE_HOSTNAME || "",

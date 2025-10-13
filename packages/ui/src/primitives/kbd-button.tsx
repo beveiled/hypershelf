@@ -32,15 +32,7 @@ export function ButtonWithKbd(
               <Kbd
                 keys={keys}
                 size={kbdSize}
-                variant={
-                  variant === "outline" ||
-                  variant === "ghost" ||
-                  variant === "secondary"
-                    ? "dark"
-                    : variant === "destructive"
-                      ? "white"
-                      : "light"
-                }
+                variant={variant === "link" ? "outline" : variant}
               />
             </motion.div>
           )}

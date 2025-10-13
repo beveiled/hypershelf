@@ -45,6 +45,7 @@ export const viewsSlice: ImmerStateCreator<ViewsSlice> = (set, get) => ({
       state.isFiltering = view.enableFiltering ?? false;
       state.hiddenFields = [...(view.hiddenFields ?? [])];
       state.fieldOrder = [...(view.fieldOrder ?? [])];
+      state.createdAssets = [];
     });
   },
   setViews: (views) =>

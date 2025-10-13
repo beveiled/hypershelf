@@ -162,4 +162,10 @@ export const assetsSlice: ImmerStateCreator<AssetsSlice> = (set, get) => ({
     }
     return undefined;
   },
+  markCreatedAsset: (assetId) =>
+    set((state) => {
+      if (!state.createdAssets.includes(assetId)) {
+        state.createdAssets.push(assetId);
+      }
+    }),
 });

@@ -3,6 +3,7 @@
 import { DOMParser } from "@xmldom/xmldom";
 
 import type { getClient } from "../../redis";
+import type { VSphereDetails } from "./parseDetails";
 import type {
   FolderTree,
   NetworkTopology,
@@ -11,6 +12,7 @@ import type {
   VMTopology,
 } from "./types";
 import { env } from "../../env";
+import { parseVmDetailsFromPages } from "./parseDetails";
 import { parseFolders } from "./parseFolders";
 import { parseInventory } from "./parseInventory";
 import { SoapClient } from "./SoapClient";
@@ -203,4 +205,19 @@ export async function fetchHost(
   return null;
 }
 
-export type { Router, VM, FolderTree, NetworkTopology, VMTopology };
+export async function fetchVmDetailsForRoot(
+  rootMoid: string,
+  redis: ReturnType<typeof getClient> | null = null,
+): Promise<VSphereDetails[]> {
+  const client = new SoapClient({
+    url: `https://${env.VSPHERE_HOSTNAME}/sdk`,
+    username: env.VSPHERE_LOGIN,
+    password: env.VSPHERE_PASSWORD,
+    redis,
+  });
+  const rootType = rootMoid.startsWith("datacenter-") ? "Datacenter" : "Folder";
+  const pages = await client.retrieveVmDetailsUnderRoot(rootType, rootMoid);
+  return parseVmDetailsFromPages(pages);
+}
+
+export type { FolderTree, NetworkTopology, Router, VM, VMTopology };

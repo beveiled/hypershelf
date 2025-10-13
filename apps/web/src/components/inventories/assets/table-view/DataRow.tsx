@@ -59,7 +59,7 @@ function DataRow({ assetId }: { assetId: Id<"assets"> }) {
 
   return (
     <TableRow
-      className={cn("relative", {
+      className={cn("animate-in fade-in relative", {
         "bg-red-500/10 hover:!bg-red-500/15": isError,
       })}
       id={`asset-row-${assetId}`}

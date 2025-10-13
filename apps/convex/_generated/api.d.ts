@@ -25,6 +25,7 @@ import type * as lib_env from "../lib/env.js";
 import type * as lib_integrations_vsphere_SoapClient from "../lib/integrations/vsphere/SoapClient.js";
 import type * as lib_integrations_vsphere_consts from "../lib/integrations/vsphere/consts.js";
 import type * as lib_integrations_vsphere_index from "../lib/integrations/vsphere/index.js";
+import type * as lib_integrations_vsphere_parseDetails from "../lib/integrations/vsphere/parseDetails.js";
 import type * as lib_integrations_vsphere_parseFolders from "../lib/integrations/vsphere/parseFolders.js";
 import type * as lib_integrations_vsphere_parseInventory from "../lib/integrations/vsphere/parseInventory.js";
 import type * as lib_integrations_vsphere_types from "../lib/integrations/vsphere/types.js";
@@ -60,6 +61,7 @@ declare const fullApi: ApiFromModules<{
   "lib/integrations/vsphere/SoapClient": typeof lib_integrations_vsphere_SoapClient;
   "lib/integrations/vsphere/consts": typeof lib_integrations_vsphere_consts;
   "lib/integrations/vsphere/index": typeof lib_integrations_vsphere_index;
+  "lib/integrations/vsphere/parseDetails": typeof lib_integrations_vsphere_parseDetails;
   "lib/integrations/vsphere/parseFolders": typeof lib_integrations_vsphere_parseFolders;
   "lib/integrations/vsphere/parseInventory": typeof lib_integrations_vsphere_parseInventory;
   "lib/integrations/vsphere/types": typeof lib_integrations_vsphere_types;

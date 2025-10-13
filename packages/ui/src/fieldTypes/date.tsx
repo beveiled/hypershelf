@@ -104,9 +104,9 @@ function InlineDate({
       <Popover open={popoverOpen} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <Button
-            variant={"outline"}
+            variant="ghost"
             className={cn(
-              "py-1 text-sm font-normal h-auto w-full justify-start !border-none !bg-transparent text-left",
+              "py-1 text-sm font-normal h-auto w-full justify-start text-left",
               !date && "text-muted-foreground",
               updating && "animate-pulse opacity-50",
               lockedBy &&

@@ -13,7 +13,6 @@
         "VSPHERE_PASSWORD",
         "NEXT_PUBLIC_CONVEX_URL",
         "NEXT_PUBLIC_VERSION",
-        "NEXT_PUBLIC_VERSION_MOD",
         "NEXT_PUBLIC_SITE_URL"
       ]
     },
@@ -27,7 +26,6 @@
         "VSPHERE_PASSWORD",
         "NEXT_PUBLIC_CONVEX_URL",
         "NEXT_PUBLIC_VERSION",
-        "NEXT_PUBLIC_VERSION_MOD",
         "NEXT_PUBLIC_SITE_URL"
       ]
     }

@@ -57,7 +57,7 @@ export function Footer() {
                 <div className="bottom-0 left-0 h-0.5 w-4 absolute bg-brand" />
               </div>
               <span className="text-xs text-muted-foreground">
-                v{env.NEXT_PUBLIC_VERSION} {env.NEXT_PUBLIC_VERSION_MOD}
+                v{env.NEXT_PUBLIC_VERSION}
               </span>
             </div>
           </div>

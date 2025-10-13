@@ -107,6 +107,7 @@ function InlineUser({
         <PopoverTrigger asChild>
           <Button
             variant="ghost"
+            size="sm"
             role="combobox"
             aria-expanded={!!assetId}
             disabled={!!lockedBy || updating}

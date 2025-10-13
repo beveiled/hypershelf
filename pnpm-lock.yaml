@@ -296,6 +296,9 @@ importers:
       sass:
         specifier: ^1.93.2
         version: 1.93.2
+      tw-animate-css:
+        specifier: ^1.4.0
+        version: 1.4.0
     devDependencies:
       '@hypershelf/eslint-config':
         specifier: workspace:*

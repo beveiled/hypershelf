@@ -39,6 +39,7 @@ export type State = {
   assets: AssetsDict;
   assetErrors: AssetErrors;
   loadingAssets: boolean;
+  createdAssets: Id<"assets">[];
 
   fieldIds: Id<"fields">[];
   fields: FieldsDict;
@@ -91,6 +92,7 @@ export type AssetsSlice = {
     hostname?: string;
     ip?: string;
   }) => ExtendedAssetType | undefined;
+  markCreatedAsset: (assetId: Id<"assets">) => void;
 };
 
 export type FieldsSlice = {

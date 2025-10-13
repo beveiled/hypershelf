@@ -26,7 +26,7 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 gap-1.5 px-3 has-[>svg]:px-2.5 rounded-md",
+        sm: "py-1 gap-1.5 px-3 has-[>svg]:px-2.5 rounded-md",
         lg: "h-10 px-6 has-[>svg]:px-4 rounded-md",
         icon: "size-9",
       },
@@ -61,9 +61,9 @@ function Button(props: ButtonProps) {
     <motion.button
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
-      initial={{ scale: 1 }}
-      whileTap={{ scale: 0.98 }}
-      whileHover={{ scale: 1.03 }}
+      initial={{ y: 0 }}
+      whileTap={{ y: 1 }}
+      whileHover={{ y: -1 }}
       transition={{ type: "spring", bounce: 0.2, duration: 0.2 }}
       {...(rest as unknown as HTMLMotionProps<"button">)}
     />

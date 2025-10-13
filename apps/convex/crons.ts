@@ -17,4 +17,6 @@ crons.interval(
   {},
 );
 
+crons.interval("index vSphere", { minutes: 30 }, internal.vsphere.reindex, {});
+
 export default crons;

@@ -93,6 +93,40 @@ const assetSchemaInternal = {
   deleted: v.optional(v.boolean()),
 };
 
+export const vSphereSchema = {
+  moid: v.string(),
+  hostname: v.optional(v.string()),
+  primaryIp: v.optional(v.string()),
+  ips: v.optional(v.array(v.string())),
+  cpuCores: v.number(),
+  memoryMb: v.number(),
+  guestOs: v.optional(v.string()),
+  portgroup: v.optional(v.string()),
+  cluster: v.string(),
+  drives: v.array(
+    v.object({
+      sizeGb: v.number(),
+      thin: v.boolean(),
+      datastore: v.string(),
+    }),
+  ),
+  snaps: v.optional(
+    v.array(
+      v.object({
+        name: v.string(),
+        description: v.string(),
+        createTime: v.number(),
+        withMemory: v.boolean(),
+      }),
+    ),
+  ),
+};
+
+const vSphereSchemaInternal = {
+  ...vSphereSchema,
+  lastSync: v.number(),
+};
+
 const assetLocks = {
   assetId: v.id("assets"),
   fieldId: v.id("fields"),
@@ -189,6 +223,10 @@ export default defineSchema({
     .index("by_fieldId", ["action.fieldId"])
     .index("by_action_type", ["action.type"])
     .index("by_userId", ["actor"]),
+  vsphere: defineTable(vSphereSchemaInternal)
+    .index("by_hostname", ["hostname"])
+    .index("by_ip", ["primaryIp"])
+    .index("by_ips", ["ips"]),
 });
 
 export type AssetType = Doc<"assets"> & {

@@ -21,10 +21,8 @@ import { useStoreWithEqualityFn } from "zustand/traditional";
 
 import type { Id } from "@hypershelf/convex/_generated/dataModel";
 import type { AssetType, FieldType } from "@hypershelf/convex/schema";
-import type {
-  MagicFieldTypes,
-  PlainFieldTypes,
-} from "@hypershelf/ui/fieldTypes";
+import type { MagicFieldTypes } from "@hypershelf/lib/stores/types";
+import type { PlainFieldTypes } from "@hypershelf/ui/fieldTypes";
 import { api } from "@hypershelf/convex/_generated/api";
 import { useHypershelf } from "@hypershelf/lib/stores";
 import { fieldProps } from "@hypershelf/ui/fieldProps";

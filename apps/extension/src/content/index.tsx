@@ -8,14 +8,14 @@ import { useConvex } from "@hypershelf/lib/hooks";
 
 import type { Tokens } from "../shared/types";
 import type { ConnectorAdapter } from "./adapters/types";
-import { PUBLIC_CONVEX_BACKEND_URL } from "~/shared/env";
+import { NEXT_PUBLIC_CONVEX_URL } from "~/shared/env";
 import { ensureTokens, resetAuth } from "../shared/auth";
 import { connectors } from "./adapters";
 import { ShadowPortalProvider } from "./shadow-portal/PortalProvider";
 import sheet from "./shared.css" with { type: "css" };
 import { log } from "./ui/banner";
 
-const convex = new ConvexReactClient(PUBLIC_CONVEX_BACKEND_URL);
+const convex = new ConvexReactClient(NEXT_PUBLIC_CONVEX_URL);
 
 const selectAdapter = (doc: Document): ConnectorAdapter | null => {
   for (const c of connectors) {

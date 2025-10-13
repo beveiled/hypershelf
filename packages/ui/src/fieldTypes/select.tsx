@@ -220,7 +220,9 @@ function InlineSelect({
                     disabled={disabled}
                   >
                     <div className="gap-1.5 flex items-center">
-                      {idx <= 9 && <Kbd keys={["Meta", String(idx + 1)]} />}
+                      {idx <= 9 && (
+                        <Kbd keys={["Meta", String(idx + 1)]} variant="ghost" />
+                      )}
                       {option}
                     </div>
                     <Check

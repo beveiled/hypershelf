@@ -1,3 +1,10 @@
+# Hypershelf 0.7.18
+
+- vSphere indexing
+- Slight env interface rework
+- UI tweaks
+- Bug fixes
+
 # Hypershelf 0.7.17
 
 - Markdown export

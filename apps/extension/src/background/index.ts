@@ -1,5 +1,8 @@
 import type { BgReq, BgRes, Tokens } from "../shared/types";
-import { PUBLIC_CONVEX_SITE_URL, PUBLIC_FRONTEND_URL } from "~/shared/env";
+import {
+  NEXT_PUBLIC_CONVEX_SITE_URL,
+  NEXT_PUBLIC_SITE_URL,
+} from "~/shared/env";
 
 interface Stored {
   token?: string;
@@ -46,7 +49,7 @@ class Auth {
       };
     }
     const redirectUrl = chrome.identity.getRedirectURL("provider_cb");
-    const authUrl = new URL(`${PUBLIC_FRONTEND_URL}/integrations/auth`);
+    const authUrl = new URL(`${NEXT_PUBLIC_SITE_URL}/integrations/auth`);
     authUrl.searchParams.set("redirect_uri", redirectUrl);
     authUrl.searchParams.set("state", "hypershelf");
     if (this.authInProgress)
@@ -68,7 +71,7 @@ class Auth {
     );
     const sigil = params.get("sigil");
     if (!sigil) return { type: "ERROR", message: "No sigil in response" };
-    const tokenRes = await fetch(`${PUBLIC_CONVEX_SITE_URL}/ingestSigil`, {
+    const tokenRes = await fetch(`${NEXT_PUBLIC_CONVEX_SITE_URL}/ingestSigil`, {
       method: "POST",
       headers: { "x-sigil": sigil },
     });
