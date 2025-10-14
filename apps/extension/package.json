@@ -5,7 +5,7 @@
   "scripts": {
     "build": "pnpm with-env webpack --config ./webpack.config.js --mode production && cd dist && zip -r ../../web/public/plugins/hypershelf-vsphere.zip .",
     "dev": "nodemon --watch src --watch webpack.config.js --ext ts,tsx,js,cjs,mjs --exec \"rm -rf dist ; pnpm with-env webpack --config ./webpack.config.js --mode development\"",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "format": "prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"

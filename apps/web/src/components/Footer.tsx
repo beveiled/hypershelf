@@ -41,14 +41,14 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <SiGithub className="size-4 text-white" />
+                <SiGithub className="size-4 text-foreground" />
               </a>
               <a
                 href="https://t.me/dgazizullin"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <SiTelegram className="size-4 bg-white rounded-full text-[#26A5E4]" />
+                <SiTelegram className="size-4 rounded-full bg-foreground text-[#26A5E4]" />
               </a>
             </div>
             <div className="gap-2 flex items-center">

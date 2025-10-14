@@ -29,20 +29,14 @@ export class SoapClient {
     rootMoid: string,
   ): Promise<readonly string[]> {
     const pages: string[] = [];
-    const first = await this.post(
+    const body1 = await this.post(
       this.buildRetrieveEnvelope(rootType, rootMoid),
-    );
-    const body1 = await this.handleAuthAndMaybeRetry(first, () =>
-      this.post(this.buildRetrieveEnvelope(rootType, rootMoid)),
     );
     pages.push(body1.text);
     let token = SoapClient.extractToken(body1.text);
     let guards = 0;
     while (token && guards < 200) {
-      const resp = await this.post(this.buildContinueEnvelope(token));
-      const body = await this.handleAuthAndMaybeRetry(resp, () =>
-        this.post(this.buildContinueEnvelope(token ?? "")),
-      );
+      const body = await this.post(this.buildContinueEnvelope(token));
       pages.push(body.text);
       token = SoapClient.extractToken(body.text);
       guards += 1;
@@ -55,20 +49,14 @@ export class SoapClient {
     rootMoid: string,
   ): Promise<readonly string[]> {
     const pages: string[] = [];
-    const first = await this.post(
+    const body1 = await this.post(
       this.buildRetrieveFoldersEnvelope(rootType, rootMoid),
-    );
-    const body1 = await this.handleAuthAndMaybeRetry(first, () =>
-      this.post(this.buildRetrieveFoldersEnvelope(rootType, rootMoid)),
     );
     pages.push(body1.text);
     let token = SoapClient.extractToken(body1.text);
     let guards = 0;
     while (token && guards < 200) {
-      const resp = await this.post(this.buildContinueEnvelope(token));
-      const body = await this.handleAuthAndMaybeRetry(resp, () =>
-        this.post(this.buildContinueEnvelope(token ?? "")),
-      );
+      const body = await this.post(this.buildContinueEnvelope(token));
       pages.push(body.text);
       token = SoapClient.extractToken(body.text);
       guards += 1;
@@ -76,32 +64,35 @@ export class SoapClient {
     return pages;
   }
 
-  private async handleAuthAndMaybeRetry(
-    resp: SoapResponse,
-    retry: () => Promise<SoapResponse>,
-  ): Promise<SoapResponse> {
-    await this.captureCookie(resp.setCookieHeader);
-    if (resp.status === 401 || SoapClient.containsNotAuthenticated(resp.text)) {
-      if (!this.username || !this.password)
-        throw new Error("Not authenticated and no credentials provided");
-      console.log("Session expired, re-authenticating");
-      const loginResp = await this.post(
-        this.buildLoginEnvelope(this.username, this.password),
-      );
-      await this.captureCookie(loginResp.setCookieHeader);
-      if (loginResp.status >= 400 || SoapClient.containsFault(loginResp.text))
-        throw new Error("Login failed");
-      const again = await retry();
-      await this.captureCookie(again.setCookieHeader);
-      return again;
+  private async authenticate(): Promise<void> {
+    if (!this.username || !this.password) {
+      throw new Error("No vSphere credentials provided");
     }
-    return resp;
+    const loginHeaders: Record<string, string> = {
+      "Content-Type": "text/xml",
+      SOAPAction: "urn:vim25",
+    };
+    if (this.cookie) loginHeaders.Cookie = `vmware_soap_session=${this.cookie}`;
+    const loginResp = await fetch(this.url, {
+      method: "POST",
+      headers: loginHeaders,
+      body: this.buildLoginEnvelope(this.username, this.password),
+    });
+    const loginSetCookie = loginResp.headers.get("set-cookie");
+    const loginText = await loginResp.text();
+    await this.captureCookie(loginSetCookie);
+    if (loginResp.status >= 400 || SoapClient.containsFault(loginText))
+      throw new Error("Login failed");
+    console.log("Authenticated to vSphere as", this.username);
   }
 
   private async post(xml: string): Promise<SoapResponse> {
-    if (process.env.VSPHERE_JITTER_MS) {
+    const jitter_from = process.env.VSPHERE_JITTER_MS_FROM ?? 500;
+    const jitter_to = process.env.VSPHERE_JITTER_MS_TO ?? 1500;
+    if (jitter_from && jitter_to) {
       const ms = Math.floor(
-        Math.random() * Number(process.env.VSPHERE_JITTER_MS),
+        Math.random() * (Number(jitter_to) - Number(jitter_from) + 1) +
+          Number(jitter_from),
       );
       console.log(`Jittering ${ms}ms before vSphere request`);
       await new Promise((r) => setTimeout(r, ms));
@@ -126,9 +117,41 @@ export class SoapClient {
     if (this.cookie) headers.Cookie = `vmware_soap_session=${this.cookie}`;
     const r = await fetch(this.url, { method: "POST", headers, body: xml });
     const setCookieHeader = r.headers.get("set-cookie");
-    const text = await r.text();
-    console.log("Got", text.length, "bytes from vSphere with status", r.status);
-    return { text, setCookieHeader, status: r.status };
+    const txt = await r.text();
+    console.log("Got", txt.length, "bytes from vSphere with status", r.status);
+    await this.captureCookie(setCookieHeader);
+    if (r.status === 401 || SoapClient.containsNotAuthenticated(txt)) {
+      if (!this.username || !this.password)
+        throw new Error("Not authenticated and no credentials provided");
+      console.log("Session expired, re-authenticating");
+      await this.authenticate();
+      const againHeaders: Record<string, string> = {
+        "Content-Type": "text/xml",
+        SOAPAction: "urn:vim25",
+      };
+      if (this.cookie)
+        againHeaders.Cookie = `vmware_soap_session=${this.cookie}`;
+      const again = await fetch(this.url, {
+        method: "POST",
+        headers: againHeaders,
+        body: xml,
+      });
+      const againSetCookie = again.headers.get("set-cookie");
+      const againText = await again.text();
+      console.log(
+        "Got",
+        againText.length,
+        "bytes from vSphere with status",
+        again.status,
+      );
+      await this.captureCookie(againSetCookie);
+      return {
+        text: againText,
+        setCookieHeader: againSetCookie,
+        status: again.status,
+      };
+    }
+    return { text: txt, setCookieHeader, status: r.status };
   }
 
   private async captureCookie(setCookieHeader: string | null): Promise<void> {
@@ -374,8 +397,7 @@ export class SoapClient {
   ): Promise<{ ipMoRef?: string | null; hostMoRef?: string | null }> {
     if (ip) {
       const xml = this.buildFindByIpEnvelope(ip);
-      const r = await this.post(xml);
-      const body = await this.handleAuthAndMaybeRetry(r, () => this.post(xml));
+      const body = await this.post(xml);
       const d = new DOMParser().parseFromString(body.text, "text/xml");
       const ipResp = elementsByLocalName(d, "FindByIpResponse");
       if (ipResp.length > 0 && ipResp[0]) {
@@ -392,8 +414,7 @@ export class SoapClient {
 
     if (hostname) {
       const xml = this.buildFindByDnsNameEnvelope(hostname);
-      const r = await this.post(xml);
-      const body = await this.handleAuthAndMaybeRetry(r, () => this.post(xml));
+      const body = await this.post(xml);
       const d = new DOMParser().parseFromString(body.text, "text/xml");
       const dnsResp = elementsByLocalName(d, "FindByDnsNameResponse");
       if (dnsResp.length > 0 && dnsResp[0]) {
@@ -410,8 +431,7 @@ export class SoapClient {
 
     if (hostname) {
       const xml = this.buildFindByInventoryPathEnvelope(hostname);
-      const r = await this.post(xml);
-      const body = await this.handleAuthAndMaybeRetry(r, () => this.post(xml));
+      const body = await this.post(xml);
       const d = new DOMParser().parseFromString(body.text, "text/xml");
       const vmResp = elementsByLocalName(d, "FindByInventoryPathResponse");
       if (vmResp.length > 0 && vmResp[0]) {
@@ -431,10 +451,7 @@ export class SoapClient {
 
   async retrieveVmCore(moid: string): Promise<SoapResponse> {
     const xml = this.buildRetrieveVmCoreEnvelope(moid);
-    const r = await this.post(xml);
-    const body = await this.handleAuthAndMaybeRetry(r, () =>
-      this.post(this.buildRetrieveVmCoreEnvelope(moid)),
-    );
+    const body = await this.post(xml);
     return body;
   }
 
@@ -514,26 +531,58 @@ export class SoapClient {
     rootMoid: string,
   ): Promise<readonly string[]> {
     const pages: string[] = [];
-    const first = await this.post(
+    const body1 = await this.post(
       this.buildRetrieveVmDetailsUnderRootEnvelope(rootType, rootMoid),
-    );
-    const body1 = await this.handleAuthAndMaybeRetry(first, () =>
-      this.post(
-        this.buildRetrieveVmDetailsUnderRootEnvelope(rootType, rootMoid),
-      ),
     );
     pages.push(body1.text);
     let token = SoapClient.extractToken(body1.text);
     let guards = 0;
     while (token && guards < 200) {
-      const resp = await this.post(this.buildContinueEnvelope(token));
-      const body = await this.handleAuthAndMaybeRetry(resp, () =>
-        this.post(this.buildContinueEnvelope(token ?? "")),
-      );
+      const body = await this.post(this.buildContinueEnvelope(token));
       pages.push(body.text);
       token = SoapClient.extractToken(body.text);
       guards += 1;
     }
     return pages;
+  }
+
+  private buildPreheatEnvelope(): string {
+    return envelope(`
+      <vim25:RetrievePropertiesEx>
+        <_this type="PropertyCollector">propertyCollector</_this>
+        <specSet>
+          <propSet>
+            <type>SessionManager</type>
+            <pathSet>currentSession</pathSet>
+          </propSet>
+          <objectSet>
+            <obj type="SessionManager">SessionManager</obj>
+          </objectSet>
+        </specSet>
+        <options/>
+      </vim25:RetrievePropertiesEx>
+    `);
+  }
+
+  // ? Should be called for methods that might return 200 without fault if
+  // ? auth session is invalid
+  async preheat(retry = true): Promise<{ ok: boolean; user: string | null }> {
+    const body = await this.post(this.buildPreheatEnvelope());
+    const d = new DOMParser().parseFromString(body.text, "text/xml");
+    let ok = true;
+    if (SoapClient.containsNotAuthenticated(body.text)) {
+      ok = false;
+    }
+    if (SoapClient.containsFault(body.text)) {
+      ok = false;
+    }
+    const u = elementsByLocalName(d, "userName");
+    const user = u.length && u[0] ? text(u[0]).trim() : null;
+    if ((!ok || !user) && retry) {
+      await this.authenticate();
+      return this.preheat(false);
+    }
+
+    return { ok: !!user, user };
   }
 }

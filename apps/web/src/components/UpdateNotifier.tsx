@@ -62,7 +62,7 @@ export function UpdateNotifier() {
   if (!updateAvailable) return null;
   return (
     <motion.div
-      className="right-0 bottom-0 p-4 text-white backdrop-blur-lg md:right-4 md:bottom-4 md:w-auto md:rounded-xl pointer-events-none fixed z-50 w-full bg-background/50 shadow-[0_0_0.5rem_var(--color-brand)] shadow-brand"
+      className="right-0 bottom-0 p-4 backdrop-blur-lg md:right-4 md:bottom-4 md:w-auto md:rounded-xl pointer-events-none fixed z-50 w-full bg-background/50 text-foreground shadow-[0_0_0.5rem_var(--color-brand)] shadow-brand"
       initial={{ opacity: 0, y: -10, scale: 0.7 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ type: "spring", bounce: 0.5 }}

@@ -33,7 +33,8 @@
     "./primitives/table": "./src/primitives/table.tsx",
     "./primitives/tag-input": "./src/primitives/tag-input.tsx",
     "./primitives/textarea": "./src/primitives/textarea.tsx",
-    "./primitives/tooltip": "./src/primitives/tooltip.tsx"
+    "./primitives/tooltip": "./src/primitives/tooltip.tsx",
+    "./primitives/input-group": "./src/primitives/input-group.tsx"
   },
   "types": "src/index.ts",
   "typesVersions": {

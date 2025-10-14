@@ -216,6 +216,7 @@ export async function fetchVmDetailsForRoot(
     redis,
   });
   const rootType = rootMoid.startsWith("datacenter-") ? "Datacenter" : "Folder";
+  await client.preheat();
   const pages = await client.retrieveVmDetailsUnderRoot(rootType, rootMoid);
   return parseVmDetailsFromPages(pages);
 }

@@ -14,18 +14,6 @@ export function NewAsset() {
     if (!newAsset.assetId) return;
 
     markCreatedAsset(newAsset.assetId);
-    let retries = 30;
-    const interval = setInterval(() => {
-      const el = document.getElementById(`asset-row-${newAsset.assetId}`);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-        clearInterval(interval);
-      }
-      retries -= 1;
-      if (retries <= 0) {
-        clearInterval(interval);
-      }
-    }, 100);
   };
 
   return (

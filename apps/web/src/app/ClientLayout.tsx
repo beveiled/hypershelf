@@ -4,9 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useQuery } from "convex/react";
 import { Annoyed } from "lucide-react";
 
+import { api } from "@hypershelf/convex/_generated/api";
 import { useBrowser, useConvex } from "@hypershelf/lib/hooks";
+import { useHypershelf } from "@hypershelf/lib/stores";
 import { Button } from "@hypershelf/ui/primitives/button";
 
 import { Footer } from "~/components/Footer";
@@ -23,6 +26,15 @@ export default function ClientLayout({
   children: React.ReactNode;
 }) {
   useConvex();
+
+  const indexedVMs = useQuery(api.vsphere.getIndexedVMs);
+  const setIndexedVMs = useHypershelf((state) => state.setIndexedVMs);
+
+  useEffect(() => {
+    if (indexedVMs) {
+      setIndexedVMs(indexedVMs);
+    }
+  }, [indexedVMs, setIndexedVMs]);
 
   const pathname = usePathname();
   const [insecure, setInsecure] = useState(false);

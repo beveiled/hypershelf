@@ -97,20 +97,23 @@ export function MultiSelect({
           size="sm"
           role="combobox"
           aria-expanded={open}
-          className={cn("gap-x-1 px-2 py-1 flex h-auto", className)}
+          className={cn(
+            "gap-x-1 px-2 py-1 max-w-64 block h-auto whitespace-normal",
+            className,
+          )}
         >
           {value.length > 0 ? (
             <>
               {value.slice(0, 5).map((it) => (
                 <div
                   key={it}
-                  className="px-3 py-0.5 text-sm rounded-sm bg-accent"
+                  className="px-3 py-0.5 text-sm m-0.5 inline-block rounded-sm bg-accent"
                 >
                   {it}
                 </div>
               ))}
               {value.length > 5 && (
-                <div className="px-3 py-0.5 text-sm rounded-sm bg-accent">
+                <div className="px-3 py-0.5 text-sm m-0.5 inline-block rounded-sm bg-accent">
                   +{value.length - 5}
                 </div>
               )}

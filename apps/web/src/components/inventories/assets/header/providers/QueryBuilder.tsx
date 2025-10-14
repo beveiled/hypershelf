@@ -23,11 +23,13 @@ export function QueryBuilder() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="sm" className="!p-1 !size-auto">
-          <ListFilter className="size-4 opacity-50" />
+          <ListFilter
+            className={cn("size-4", isFiltering ? "text-brand" : "opacity-50")}
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="max-w-xl gap-1 p-2 backdrop-blur-lg z-[9999] flex max-h-[80vh] w-fit flex-col items-start overflow-y-scroll text-center"
+        className="gap-1 p-2 backdrop-blur-lg z-[9999] flex max-h-[80vh] w-fit max-w-[90vw] flex-col items-start overflow-scroll text-center"
         side="bottom"
         collisionPadding={8}
         sideOffset={8}

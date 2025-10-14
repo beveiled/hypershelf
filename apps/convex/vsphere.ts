@@ -1,3 +1,4 @@
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 
 import { internal } from "./_generated/api";
@@ -6,6 +7,7 @@ import {
   internalMutation,
   internalQuery,
   mutation,
+  query,
 } from "./_generated/server";
 import { vSphereSchema } from "./schema";
 
@@ -126,6 +128,9 @@ export const requestRefetch = mutation({
     id: v.id("assets"),
   },
   handler: async (ctx, { id }) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) return null;
+
     await ctx.db.patch(id, { vsphereLastSync: 0 });
     await ctx.scheduler.runAfter(
       Math.random() * 25000 + 5000,
@@ -138,5 +143,14 @@ export const requestRefetch = mutation({
 export const fetchHostMutation = internalMutation({
   handler: async (ctx) => {
     await ctx.scheduler.runAfter(0, internal.vsphereNode.fetchHostAction, {});
+  },
+});
+
+export const getIndexedVMs = query({
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) return null;
+
+    return await ctx.db.query("vsphere").collect();
   },
 });

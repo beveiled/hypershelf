@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { DynamicIcon } from "lucide-react/dynamic";
 import mousetrap from "mousetrap";
 
+import { useOS } from "@hypershelf/lib/hooks";
+
 import {
   CommandDialog,
   CommandEmpty,
@@ -187,10 +189,7 @@ export function MarkdownCommandPalette({
     return () => document.removeEventListener("keydown", down);
   }, [open, enabled]);
 
-  const [isMac, setIsMac] = useState(false);
-  useEffect(() => {
-    setIsMac(/Mac|iPod|iPhone|iPad/.test(navigator.userAgent));
-  }, []);
+  const os = useOS();
 
   const handleSelect = (
     template: (typeof TEMPLATES)[keyof typeof TEMPLATES],
@@ -293,27 +292,32 @@ export function MarkdownCommandPalette({
   }, [applyFormatting, isInFocus, open, viewRef]);
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
+    <CommandDialog open={open} onOpenChange={setOpen} className="z-[9999999]">
       <CommandInput placeholder="Search commands..." />
-      <CommandList>
+      <CommandList className="w-full">
         <CommandEmpty>Ничего не нашли</CommandEmpty>
-        <CommandGroup heading="Templates">
+        <CommandGroup heading="Шаблоны" className="w-full">
           {Object.entries(TEMPLATES).map(([key, template]) => (
-            <CommandItem key={key} onSelect={() => handleSelect(template)}>
+            <CommandItem
+              key={key}
+              onSelect={() => handleSelect(template)}
+              className="transition-colors duration-75 [&[data-selected=true]]:bg-accent [&[data-selected=true]]:text-accent-foreground"
+            >
               <DynamicIcon name={template.icon} />
               {template.title}
             </CommandItem>
           ))}
         </CommandGroup>
-        <CommandGroup heading="Formatting">
+        <CommandGroup heading="Форматирование" className="w-full">
           {Object.entries(formattingOptions).map(([key, option]) => (
             <CommandItem
               key={key}
               onSelect={() => applyFormatting(option.format)}
+              className="transition-colors duration-75 [&[data-selected=true]]:bg-accent [&[data-selected=true]]:text-accent-foreground"
             >
               <span className="gap-2 flex items-center">{option.title}</span>
               <CommandShortcut>
-                {isMac ? option.keybindMac : option.keybind}
+                {os === "macos" ? option.keybindMac : option.keybind}
               </CommandShortcut>
             </CommandItem>
           ))}

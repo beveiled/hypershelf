@@ -31,6 +31,10 @@ const initialState: State = {
   isFiltering: false,
   hiddenFields: [],
   fieldOrder: [],
+  search: "",
+  searchResults: [],
+  indexedVMs: [],
+  searchResultsVSphere: [],
 
   views: {},
   activeViewId: null,

@@ -1,3 +1,10 @@
+# Hypershelf 0.7.19
+
+- vSphere indexing bug fixes
+- Search Hypershelf + vSphere
+- Add vSphere options to query builder
+- Bug fixes
+
 # Hypershelf 0.7.18
 
 - vSphere indexing

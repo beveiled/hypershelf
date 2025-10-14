@@ -19,6 +19,7 @@ import { useStoreWithEqualityFn } from "zustand/traditional";
 import type { FieldType } from "@hypershelf/convex/schema";
 import { useHypershelf } from "@hypershelf/lib/stores";
 import { filtersEqual } from "@hypershelf/lib/utils";
+import { HypershelfIcon, VSphereIcon } from "@hypershelf/ui/icons";
 
 import { QueryBuilderShadcnUi } from "~/components/querybuilder";
 
@@ -219,47 +220,137 @@ export function HyperQueryBuilder() {
     (s) => s.filters ?? { combinator: "and", rules: [] },
     filtersEqual,
   );
+
+  const portgroups = useStoreWithEqualityFn(
+    useHypershelf,
+    (s) =>
+      [
+        ...new Set(
+          s.indexedVMs.map((v) => v.portgroup).filter(Boolean) as string[],
+        ),
+      ].sort(),
+    isEqual,
+  );
+
   const setFilters = useHypershelf((s) => s.setFilters);
 
   const queryBuilderFields = useMemo(() => {
-    return fields.map((f) => ({
-      name: f.id,
-      value: f.id,
-      label: f.name,
-      operators: operatorOptions[f.type],
-      valueEditorType:
-        f.type === "array"
-          ? customFieldTypeToQueryBuilderMap[f.listObjectType ?? "string"]
-          : customFieldTypeToQueryBuilderMap[f.type],
-      ...(f.type === "user" && {
-        values: users.map((u) => ({
-          name: u.email,
-          label: u.email,
-          value: u.id,
+    return [
+      ...fields
+        .filter((f) => f.type !== "markdown")
+        .map((f) => ({
+          name: f.id,
+          value: f.id,
+          label: f.name,
+          operators: operatorOptions[f.type],
+          icon: (
+            <div className="relative flex">
+              <HypershelfIcon className="text-foreground" />
+              <div className="bottom-0 left-0 rounded absolute h-px w-full bg-brand" />
+            </div>
+          ),
+          valueEditorType:
+            f.type === "array"
+              ? customFieldTypeToQueryBuilderMap[f.listObjectType ?? "string"]
+              : customFieldTypeToQueryBuilderMap[f.type],
+          ...(f.type === "user" && {
+            values: users.map((u) => ({
+              name: u.email,
+              label: u.email,
+              value: u.id,
+            })) as QueryOption[],
+          }),
+          ...(f.type === "select" && {
+            values: f.options?.map((o) => ({
+              label: o,
+              name: o,
+            })) as QueryOption[],
+          }),
+          ...(f.type === "array" &&
+            f.listObjectType === "select" && {
+              values: f.options?.map((o) => ({
+                label: o,
+                name: o,
+              })) as QueryOption[],
+            }),
+          ...(f.type === "array" &&
+            f.listObjectType === "user" && {
+              values: users.map((u) => ({
+                name: u.email,
+                label: u.email,
+              })) as QueryOption[],
+            }),
+        })),
+      {
+        name: "vsphere__hostname",
+        value: "vsphere__hostname",
+        label: "FQDN",
+        operators: operatorOptions.string,
+        valueEditorType: "text",
+        icon: <VSphereIcon colored={true} />,
+      } as const,
+      {
+        name: "vsphere__cluster",
+        value: "vsphere__cluster",
+        label: "Кластер",
+        operators: operatorOptions.string,
+        valueEditorType: "text",
+        icon: <VSphereIcon colored={true} />,
+      } as const,
+      {
+        name: "vsphere__guestOs",
+        value: "vsphere__guestOs",
+        label: "Гостевая ОС",
+        operators: operatorOptions.string,
+        valueEditorType: "text",
+        icon: <VSphereIcon colored={true} />,
+      } as const,
+      {
+        name: "vsphere__cpuCores",
+        value: "vsphere__cpuCores",
+        label: "Ядра CPU",
+        operators: operatorOptions.number,
+        valueEditorType: "text",
+        icon: <VSphereIcon colored={true} />,
+      } as const,
+      {
+        name: "vsphere__memoryMb",
+        value: "vsphere__memoryMb",
+        label: "RAM (MB)",
+        operators: operatorOptions.number,
+        valueEditorType: "text",
+        icon: <VSphereIcon colored={true} />,
+      } as const,
+      {
+        name: "vsphere__ips",
+        value: "vsphere__ips",
+        label: "IP-адреса",
+        operators: operatorOptions.array,
+        valueEditorType: "text",
+        icon: <VSphereIcon colored={true} />,
+      } as const,
+      {
+        name: "vsphere__primaryIp",
+        value: "vsphere__primaryIp",
+        label: "Основной IP",
+        operators: operatorOptions.string,
+        valueEditorType: "text",
+        icon: <VSphereIcon colored={true} />,
+      } as const,
+      {
+        name: "vsphere__portgroup",
+        value: "vsphere__portgroup",
+        label: "Портгруппа",
+        operators: operatorOptions.select,
+        valueEditorType: "multiselect",
+        values: portgroups.map((pg) => ({
+          label: pg,
+          name: pg,
         })) as QueryOption[],
-      }),
-      ...(f.type === "select" && {
-        values: f.options?.map((o) => ({
-          label: o,
-          name: o,
-        })) as QueryOption[],
-      }),
-      ...(f.type === "array" &&
-        f.listObjectType === "select" && {
-          values: f.options?.map((o) => ({
-            label: o,
-            name: o,
-          })) as QueryOption[],
-        }),
-      ...(f.type === "array" &&
-        f.listObjectType === "user" && {
-          values: users.map((u) => ({
-            name: u.email,
-            label: u.email,
-          })) as QueryOption[],
-        }),
-    }));
-  }, [fields, users]);
+        icon: <VSphereIcon colored={true} />,
+      } as const,
+    ];
+  }, [fields, users, portgroups]);
 
   return (
     <QueryBuilderShadcnUi>

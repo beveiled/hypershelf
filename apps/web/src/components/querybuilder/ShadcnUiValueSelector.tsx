@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithoutRef, JSX } from "react";
 import type { VersatileSelectorProps } from "react-querybuilder";
 import { useMemo, useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
@@ -31,6 +31,7 @@ export const ShadcnUiValueSelector = (props: ShadcnUiValueSelectorProps) => {
     value,
     title,
     disabled,
+    className,
     // Props that should not be in extraProps
     testID: _testID,
     rule: _rule,
@@ -66,6 +67,25 @@ export const ShadcnUiValueSelector = (props: ShadcnUiValueSelectorProps) => {
     return value ?? "";
   }, [options, value]);
 
+  const currentIcon = useMemo(() => {
+    if (Array.isArray(options)) {
+      const match = (
+        options as {
+          icon?: JSX.Element;
+          name: string;
+          value?: string;
+          label: string;
+          disabled?: boolean;
+        }[]
+      ).find(
+        (opt) =>
+          (typeof opt === "string" ? opt : (opt.value ?? opt.name)) === value,
+      );
+      return match?.icon;
+    }
+    return undefined;
+  }, [options, value]);
+
   return _multiple ? (
     <MultiSelect
       options={options}
@@ -82,6 +102,7 @@ export const ShadcnUiValueSelector = (props: ShadcnUiValueSelectorProps) => {
           size="sm"
           className="px-2 py-1 h-auto"
         >
+          {currentIcon}
           {value ? (
             <div className="gap-1.5 flex items-center">
               {label || value}
@@ -94,7 +115,7 @@ export const ShadcnUiValueSelector = (props: ShadcnUiValueSelectorProps) => {
       </PopoverTrigger>
       <PopoverContent className="p-2 z-[99999] w-fit">
         <Command
-          className="!bg-transparent !backdrop-blur-none"
+          className={cn("!bg-transparent !backdrop-blur-none", className)}
           value={value}
           {...extraProps}
         >
@@ -109,6 +130,7 @@ export const ShadcnUiValueSelector = (props: ShadcnUiValueSelectorProps) => {
             <CommandEmpty>Не нашли ничего</CommandEmpty>
             {(
               options as {
+                icon?: JSX.Element;
                 name: string;
                 value?: string;
                 label: string;
@@ -126,6 +148,7 @@ export const ShadcnUiValueSelector = (props: ShadcnUiValueSelectorProps) => {
                   setOpen(false);
                 }}
               >
+                {opt.icon}
                 {opt.label}
                 <Check
                   className={cn(

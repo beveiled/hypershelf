@@ -255,6 +255,7 @@ export type ViewType = Doc<"views"> & {
   /** @deprecated Use `sorting` instead */
   sortBy?: Doc<"views">["sortBy"];
 };
+export type IndexedVM = Doc<"vsphere">;
 export type ExtendedViewType = ViewType & {
   immutable: boolean;
   global: boolean;

@@ -12,6 +12,7 @@ import type {
   ExtendedAssetType,
   ExtendedFieldType,
   ExtendedViewType,
+  IndexedVM,
 } from "@hypershelf/convex/schema";
 
 import type { Link } from "../types";
@@ -54,6 +55,10 @@ export type State = {
   isFiltering: boolean;
   hiddenFields: Id<"fields">[];
   fieldOrder: Id<"fields">[];
+  search: string;
+  searchResults: Id<"assets">[];
+  indexedVMs: IndexedVM[];
+  searchResultsVSphere: IndexedVM[];
 
   views: ViewsDict;
   activeViewId: Id<"views"> | null;
@@ -82,6 +87,8 @@ export type TableSlice = {
   setFilters: (filters: RuleGroupType | null) => void;
   setIsFiltering: (isFiltering: boolean) => void;
   resetFilters: () => void;
+  setSearch: (search: string) => void;
+  setIndexedVMs: (vms: IndexedVM[]) => void;
 };
 
 export type AssetsSlice = {
