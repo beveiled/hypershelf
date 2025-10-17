@@ -26,6 +26,7 @@ import {
   AlertDialogTitle,
 } from "@hypershelf/ui/primitives/alert-dialog";
 import { Button } from "@hypershelf/ui/primitives/button";
+import { toast } from "@hypershelf/ui/toast";
 
 import { ActionsRow } from "./ActionsRow";
 import { FieldTypeProp } from "./FieldTypeProp";
@@ -159,6 +160,9 @@ export function FieldForm({
             onComplete?.();
           }
         }
+      } catch (e) {
+        console.error("Failed to save field:", e);
+        toast.error("Не смогли сохранить поле!");
       } finally {
         setIsSaving(false);
       }

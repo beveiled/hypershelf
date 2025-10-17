@@ -74,6 +74,7 @@ export type State = {
   selectedVmNodesNetworkTopologyView: Record<string, boolean>;
   topologyFetchTime: string | null;
   folderTree: FolderTree;
+  folderTreeLoaded: boolean;
   rootMoid: string | null;
   highlightLink: Link | null;
 };
@@ -129,6 +130,7 @@ export type SchemasSlice = {
   updateNetworkTopology: (network: NetworkTopology) => void;
   toggleVmNodeNetworkTopologyView: (vmId: string, state?: boolean) => void;
   setFolderTree: (tree: FolderTree) => void;
+  setFolderTreeLoaded: (loaded: boolean) => void;
   setRootMoid: (rootMoid: string) => void;
   setHighlightLink: (link: Link | null) => void;
 };

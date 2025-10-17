@@ -100,6 +100,11 @@ export const schemasSlice: ImmerStateCreator<SchemasSlice> = (set, get) => ({
       }
     });
   },
+  setFolderTreeLoaded: (loaded) => {
+    set((state) => {
+      state.folderTreeLoaded = loaded;
+    });
+  },
   setRootMoid: (rootMoid) => {
     set((state) => {
       state.rootMoid = rootMoid;

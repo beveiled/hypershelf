@@ -20,6 +20,7 @@ import {
   CommandList,
 } from "../primitives/command";
 import { Popover, PopoverContent, PopoverTrigger } from "../primitives/popover";
+import { toast } from "../Toast";
 import { AnimateTransition } from "./_shared";
 
 function InlineUser({
@@ -74,15 +75,20 @@ function InlineUser({
     if (isSame) return;
 
     setUpdating(true);
-    void updateAsset({
+    updateAsset({
       assetId,
       fieldId,
       value: selectedUser,
-    }).finally(() => {
-      setUpdating(false);
-      const locker = useHypershelf.getState().assetsLocker;
-      void locker.release(assetId, fieldId);
-    });
+    })
+      .catch((e) => {
+        console.error("Failed to update asset:", e);
+        toast.error("Не смогли сохранить поле!");
+      })
+      .finally(() => {
+        setUpdating(false);
+        const locker = useHypershelf.getState().assetsLocker;
+        void locker.release(assetId, fieldId);
+      });
   };
 
   const handleOpenChange = (open: boolean) => {

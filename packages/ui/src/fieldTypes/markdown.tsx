@@ -24,6 +24,7 @@ import { MarkdownEditor, MarkdownViewer } from "../markdownEditor";
 import { Button } from "../primitives/button";
 import { ButtonWithKbd } from "../primitives/kbd-button";
 import { Popover, PopoverContent, PopoverTrigger } from "../primitives/popover";
+import { toast } from "../Toast";
 
 function MarkdownEditorDialogContent({
   fieldId,
@@ -60,16 +61,21 @@ function MarkdownEditorDialogContent({
     (newValue: string) => {
       setUpdating(true);
       setTimeout(() => {
-        void updateAsset({
+        updateAsset({
           assetId,
           fieldId,
           value: newValue,
-        }).finally(() => {
-          setUpdating(false);
-          const locker = useHypershelf.getState().assetsLocker;
-          void locker.release(assetId, fieldId);
-          onClose();
-        });
+        })
+          .catch((e) => {
+            console.error("Failed to update asset:", e);
+            toast.error("Не смогли сохранить поле!");
+          })
+          .finally(() => {
+            setUpdating(false);
+            const locker = useHypershelf.getState().assetsLocker;
+            void locker.release(assetId, fieldId);
+            onClose();
+          });
       }, 0);
     },
     [assetId, fieldId, updateAsset, onClose],

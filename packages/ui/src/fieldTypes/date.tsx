@@ -13,6 +13,7 @@ import type { FieldPropConfig } from "./_abstractType";
 import { Button } from "../primitives/button";
 import { Calendar } from "../primitives/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../primitives/popover";
+import { toast } from "../Toast";
 import { AnimateTransition } from "./_shared";
 
 function InlineDate({
@@ -71,15 +72,20 @@ function InlineDate({
 
     setDate(selectedDate);
     setUpdating(true);
-    void updateAsset({
+    updateAsset({
       assetId,
       fieldId,
       value: selectedDate.toISOString(),
-    }).finally(() => {
-      setUpdating(false);
-      const locker = useHypershelf.getState().assetsLocker;
-      void locker.release(assetId, fieldId);
-    });
+    })
+      .catch((e) => {
+        console.error("Failed to update asset:", e);
+        toast.error("Не смогли сохранить поле!");
+      })
+      .finally(() => {
+        setUpdating(false);
+        const locker = useHypershelf.getState().assetsLocker;
+        void locker.release(assetId, fieldId);
+      });
   };
 
   const handleOpenChange = (open: boolean) => {

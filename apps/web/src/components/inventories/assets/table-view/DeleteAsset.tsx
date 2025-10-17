@@ -13,6 +13,7 @@ import {
   PopoverTrigger,
 } from "@hypershelf/ui/primitives/popover";
 import { TableCell } from "@hypershelf/ui/primitives/table";
+import { toast } from "@hypershelf/ui/toast";
 
 export function DeleteAsset({ assetId }: { assetId: Id<"assets"> }) {
   const deleteAsset = useMutation(api.assets.remove);
@@ -47,6 +48,9 @@ export function DeleteAsset({ assetId }: { assetId: Id<"assets"> }) {
                   setIsDeleting(true);
                   try {
                     await deleteAsset({ id: assetId });
+                  } catch (e) {
+                    console.error("Failed to delete asset", e);
+                    toast.error("Не смогли удалить хост!");
                   } finally {
                     setIsDeleting(false);
                   }

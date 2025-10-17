@@ -372,8 +372,10 @@ function WaybackInner() {
               </div>
             )}
             {[
-              ...Object.keys(entry.action.oldProps.extra ?? {}),
-              ...Object.keys(entry.action.newProps.extra ?? {}),
+              ...new Set([
+                ...Object.keys(entry.action.oldProps.extra ?? {}),
+                ...Object.keys(entry.action.newProps.extra ?? {}),
+              ]),
             ]
               .filter(
                 (key) =>

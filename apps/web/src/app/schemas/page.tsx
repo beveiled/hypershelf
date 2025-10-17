@@ -22,6 +22,7 @@ import { createPortal } from "react-dom";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 
 import { api } from "@hypershelf/convex/_generated/api";
+import { toast } from "@hypershelf/ui/toast";
 
 import { FloatingEdge } from "~/components/inventories/schemas/FloatingEdge";
 import { FolderPickerGuide } from "~/components/inventories/schemas/FolderPickerGuide";
@@ -145,6 +146,9 @@ function Schemas({ topology }: { topology: { routers: Router[]; vms: VM[] } }) {
 
 export default function SchemasPage() {
   const rootMoid = useHypershelf((state) => state.rootMoid);
+  const setFolderTreeLoaded = useHypershelf(
+    (state) => state.setFolderTreeLoaded,
+  );
 
   const fetchTopology = useAction(api.vsphereNode.fetchTopologyAction);
   const fetchNetworkTopology = useAction(
@@ -156,7 +160,15 @@ export default function SchemasPage() {
 
   const { data: topology, error } = useQuery({
     queryKey: ["vsphere-topology", rootMoid],
-    queryFn: () => fetchTopology({ rootMoid: rootMoid ?? "", force: false }),
+    queryFn: async () => {
+      try {
+        return await fetchTopology({ rootMoid: rootMoid ?? "", force: false });
+      } catch (e) {
+        console.error("Failed to fetch topology:", e);
+        toast.error("Не смогли загрузить топологию!");
+        throw e;
+      }
+    },
     enabled: !!rootMoid,
     refetchOnWindowFocus: false,
     retry: false,
@@ -164,7 +176,15 @@ export default function SchemasPage() {
 
   const { data: networkTopology, error: networkError } = useQuery({
     queryKey: ["vsphere-network-topology", rootMoid],
-    queryFn: () => fetchNetworkTopology(),
+    queryFn: async () => {
+      try {
+        return await fetchNetworkTopology();
+      } catch (e) {
+        console.error("Failed to fetch network topology:", e);
+        toast.error("Не смогли загрузить сетевую топологию!");
+        throw e;
+      }
+    },
     enabled: !!rootMoid && !!topology,
     refetchOnWindowFocus: false,
     retry: false,
@@ -172,7 +192,17 @@ export default function SchemasPage() {
 
   const { data: folderTree } = useQuery({
     queryKey: ["vsphere-folder-tree"],
-    queryFn: () => fetchFolderTree(),
+    queryFn: async () => {
+      try {
+        return await fetchFolderTree();
+      } catch (e) {
+        console.error("Failed to fetch folder tree:", e);
+        toast.error("Не смогли загрузить дерево папок сферы!");
+        throw e;
+      } finally {
+        setFolderTreeLoaded(true);
+      }
+    },
     refetchOnWindowFocus: false,
     retry: false,
   });

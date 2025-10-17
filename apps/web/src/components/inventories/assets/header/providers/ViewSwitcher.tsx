@@ -30,6 +30,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@hypershelf/ui/primitives/popover";
+import { toast } from "@hypershelf/ui/toast";
 
 function CreateNew({
   callback,
@@ -129,6 +130,7 @@ export function ViewSwitcher() {
     })
       .catch((e) => {
         console.error("Failed to update view", e);
+        toast.error("Не смогли сохранить вид!");
       })
       .finally(() => {
         setOpen(false);
@@ -164,6 +166,7 @@ export function ViewSwitcher() {
       })
       .catch((e) => {
         console.error("Failed to create view", e);
+        toast.error("Не смогли создать вид!");
       })
       .finally(() => {
         setIsCreating(false);
@@ -181,6 +184,7 @@ export function ViewSwitcher() {
     deleteView({ viewId })
       .catch((e) => {
         console.error("Failed to delete view", e);
+        toast.error("Не смогли удалить вид!");
       })
       .finally(() => {
         setIsDeleting(false);

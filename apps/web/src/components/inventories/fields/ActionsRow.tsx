@@ -25,6 +25,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@hypershelf/ui/primitives/tooltip";
+import { toast } from "@hypershelf/ui/toast";
 
 export function ActionsRow({
   onSave,
@@ -50,7 +51,10 @@ export function ActionsRow({
 
   const onDelete = useCallback(() => {
     if (fieldId) {
-      void deleteField({ fieldId });
+      deleteField({ fieldId }).catch((e) => {
+        console.error("Failed to delete field", e);
+        toast.error("Не смогли удалить поле!");
+      });
     }
   }, [deleteField, fieldId]);
 

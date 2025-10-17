@@ -28,6 +28,7 @@ export const fieldsSlice: ImmerStateCreator<FieldsSlice> = (set, get) => ({
               delete assetErrors[fieldId as Id<"fields">];
             }
           }
+          state.assetErrors[asset.asset._id] = assetErrors;
         } else {
           delete state.assetErrors[asset.asset._id];
         }

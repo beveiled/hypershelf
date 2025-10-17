@@ -4,6 +4,7 @@ import { LoaderCircle, Table2 } from "lucide-react";
 import type { Id } from "@hypershelf/convex/_generated/dataModel";
 import { useHypershelf } from "@hypershelf/lib/stores";
 import { Button } from "@hypershelf/ui/primitives/button";
+import { toast } from "@hypershelf/ui/toast";
 
 import { buildXlsx } from "~/lib/exporter";
 
@@ -47,6 +48,9 @@ export function Export() {
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error("Failed to export XLSX", e);
+      toast.error("Не смогли экспортировать XLSX!");
     } finally {
       setDownloading(false);
     }

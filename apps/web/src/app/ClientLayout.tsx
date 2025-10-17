@@ -11,6 +11,7 @@ import { api } from "@hypershelf/convex/_generated/api";
 import { useBrowser, useConvex } from "@hypershelf/lib/hooks";
 import { useHypershelf } from "@hypershelf/lib/stores";
 import { Button } from "@hypershelf/ui/primitives/button";
+import { toast, Toaster } from "@hypershelf/ui/toast";
 
 import { Footer } from "~/components/Footer";
 import Header from "~/components/Header";
@@ -35,6 +36,25 @@ export default function ClientLayout({
       setIndexedVMs(indexedVMs);
     }
   }, [indexedVMs, setIndexedVMs]);
+
+  useEffect(() => {
+    const loading = toast.loading("Загружаем...");
+    const unsubscribe = useHypershelf.subscribe((state) => {
+      if (
+        !Object.keys(state.assets).length ||
+        !Object.keys(state.fields).length ||
+        !Object.keys(state.users).length
+      ) {
+        loading.dismiss();
+        unsubscribe();
+      }
+    });
+
+    return () => {
+      unsubscribe();
+      loading.dismiss();
+    };
+  }, []);
 
   const pathname = usePathname();
   const [insecure, setInsecure] = useState(false);
@@ -152,6 +172,7 @@ export default function ClientLayout({
         <main className="px-2 pt-12 min-h-screen">{children}</main>
         {pathname !== "/" && <Footer />}
         <UpdateNotifier />
+        <Toaster />
       </HeaderContentProvider>
     </QueryClientProvider>
   );

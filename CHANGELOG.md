@@ -1,3 +1,9 @@
+# Hypershelf 0.7.20
+
+- Toasts with errors
+- Bug fixes
+- Fix in-flight field validation
+
 # Hypershelf 0.7.19
 
 - vSphere indexing bug fixes

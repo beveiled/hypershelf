@@ -21,6 +21,7 @@ import {
 } from "../primitives/command";
 import { Kbd } from "../primitives/kbd";
 import { Popover, PopoverContent, PopoverTrigger } from "../primitives/popover";
+import { toast } from "../Toast";
 import { AnimateTransition } from "./_shared";
 
 function InlineSelect({
@@ -79,7 +80,7 @@ function InlineSelect({
         : newValue;
 
       setTimeout(() => {
-        void updateAsset({
+        updateAsset({
           assetId,
           fieldId,
           value: Array.isArray(finalValue)
@@ -87,13 +88,18 @@ function InlineSelect({
             : options.includes(finalValue)
               ? finalValue
               : null,
-        }).finally(() => {
-          setUpdating(false);
-          if (!multiselect) {
-            const locker = useHypershelf.getState().assetsLocker;
-            void locker.release(assetId, fieldId);
-          }
-        });
+        })
+          .catch((e) => {
+            console.error("Failed to update asset:", e);
+            toast.error("Не смогли сохранить поле!");
+          })
+          .finally(() => {
+            setUpdating(false);
+            if (!multiselect) {
+              const locker = useHypershelf.getState().assetsLocker;
+              void locker.release(assetId, fieldId);
+            }
+          });
       }, 0);
     },
     [assetId, fieldId, updateAsset, multiselect, value, options],

@@ -155,22 +155,22 @@ export function TableView() {
         tabIndex={-1}
       >
         {sortedAssetIds.length ? (
-          <Table className="table-auto">
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-            >
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <Table className="table-auto">
               <TableHeader className="top-0 sticky z-[100] !border-0">
                 <SmartHeader />
               </TableHeader>
-            </DndContext>
-            <TableBody className="relative">
-              {sortedAssetIds.map((assetId) => (
-                <DataRowStable key={assetId} assetId={assetId} />
-              ))}
-            </TableBody>
-          </Table>
+              <TableBody className="relative">
+                {sortedAssetIds.map((assetId) => (
+                  <DataRowStable key={assetId} assetId={assetId} />
+                ))}
+              </TableBody>
+            </Table>
+          </DndContext>
         ) : (
           <div className="p-12 gap-2 mt-4 max-w-lg mx-auto flex flex-col items-center rounded-xl border border-border text-center">
             <div className="size-10 mb-2 flex items-center justify-center rounded-md bg-muted">

@@ -3,7 +3,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { isEqual } from "lodash";
-import { ChevronRight, Folder, FolderOpen, Search } from "lucide-react";
+import {
+  ChevronRight,
+  Folder,
+  FolderOpen,
+  Loader2,
+  Search,
+} from "lucide-react";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 
 import type { FolderTree } from "@hypershelf/convex/lib/integrations/vsphere";
@@ -105,6 +111,7 @@ function useRovingIndex(length: number) {
 export function FolderPicker() {
   const rootMoid = useHypershelf((s) => s.rootMoid);
   const setRootMoid = useHypershelf((s) => s.setRootMoid);
+  const folderTreeLoaded = useHypershelf((s) => s.folderTreeLoaded);
   const folderTree = useStoreWithEqualityFn(
     useHypershelf,
     (s) => s.folderTree.children,
@@ -155,7 +162,7 @@ export function FolderPicker() {
   const crumbs = useMemo(() => {
     const nodes = path.map((id) => tree.byId.get(id)).filter(Boolean);
     return [
-      { id: "", name: "All" },
+      { id: "", name: "/" },
       ...nodes.map((n) => ({ id: n?.id, name: n?.name })),
     ];
   }, [path, tree.byId]);
@@ -262,14 +269,14 @@ export function FolderPicker() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleKey}
-                  placeholder="Search or navigate…"
+                  placeholder="Поиск папок..."
                   className="py-1.5 pr-3 pl-8 text-sm w-full bg-transparent outline-none"
                 />
               </div>
             </div>
             <div className="gap-1 px-3 pt-2 flex flex-wrap items-center">
               {query ? (
-                <div className="text-xs opacity-70">Search results</div>
+                <div className="text-xs opacity-70">Результаты поиска</div>
               ) : (
                 crumbs.map((c, i) => {
                   const isLast = i === crumbs.length - 1;
@@ -311,11 +318,17 @@ export function FolderPicker() {
                   role="listbox"
                   aria-label="Folders"
                 >
-                  {list.length === 0 && (
-                    <li className="px-3 py-8 text-sm text-center opacity-60">
-                      No results
-                    </li>
-                  )}
+                  {list.length === 0 &&
+                    (folderTreeLoaded ? (
+                      <li className="px-3 py-8 text-sm text-center opacity-60">
+                        Нет результатов
+                      </li>
+                    ) : (
+                      <li className="px-3 py-8 text-sm gap-1.5 flex items-center justify-center text-center opacity-60">
+                        <Loader2 className="size-4 animate-spin" />
+                        Загружаем дерево папок...
+                      </li>
+                    ))}
                   <AnimatePresence>
                     {list.map((n, i) => {
                       const active = i === index;
@@ -404,7 +417,7 @@ export function FolderPicker() {
                     size="sm"
                     keys={["ArrowLeft"]}
                   >
-                    Go back
+                    Назад
                   </ButtonWithKbd>
                 )}
                 <ButtonWithKbd
@@ -412,13 +425,13 @@ export function FolderPicker() {
                     const item = list[index];
                     if (item?.children.length) drill(item.id);
                   }}
-                  disabled={list[index]?.children.length === 0}
+                  disabled={!list[index]?.children.length}
                   className="py-0.5 pr-0.5 text-xs h-auto"
                   variant="outline"
                   size="sm"
                   keys={["ArrowRight"]}
                 >
-                  Go inside
+                  Провалиться внутрь
                 </ButtonWithKbd>
               </div>
             </div>
@@ -432,10 +445,12 @@ export function FolderPicker() {
                 keys={["Enter"]}
                 className="py-0.5 pr-0.5 text-xs h-auto"
               >
-                Choose{" "}
-                <span className="font-bold">
-                  {list[index]?.name ?? "this folder"}
-                </span>
+                <div className="gap-1 flex items-center">
+                  Выбрать
+                  <span className="font-bold">
+                    {list[index]?.name ?? "текущую папку"}
+                  </span>
+                </div>
               </ButtonWithKbd>
             </div>
           </div>

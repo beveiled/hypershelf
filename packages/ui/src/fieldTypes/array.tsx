@@ -12,6 +12,7 @@ import { cn } from "@hypershelf/lib/utils";
 
 import type { FieldPropConfig } from "./_abstractType";
 import { TagInput } from "../primitives/tag-input";
+import { toast } from "../Toast";
 import { ActionsRow } from "./_shared";
 
 export function InlineArray({
@@ -80,7 +81,10 @@ export function InlineArray({
         value: val,
       })
         .then(() => setIsDirty(false))
-        .catch(() => setError("Не смогли сохранить! Смотри консоль!"))
+        .catch((e) => {
+          console.error("Failed to update asset:", e);
+          toast.error("Не смогли сохранить поле!");
+        })
         .finally(() => {
           setUpdating(false);
           const locker = useHypershelf.getState().assetsLocker;

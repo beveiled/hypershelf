@@ -18,6 +18,7 @@ import {
   TooltipContentNoPortal,
   TooltipTrigger,
 } from "../primitives/tooltip";
+import { toast } from "../Toast";
 import { InlineString } from "./_shared";
 
 function InlineHostnameStatus({
@@ -139,7 +140,12 @@ function InlineHostnameStatus({
                 className="py-1 text-xs h-auto"
                 size="sm"
                 variant="outline"
-                onClick={() => requestRefetch({ id: assetId })}
+                onClick={() => {
+                  requestRefetch({ id: assetId }).catch((e) => {
+                    console.error("Failed to request vsphere refetch", e);
+                    toast.error("Не смогли запросить повторную проверку!");
+                  });
+                }}
               >
                 Запросить повторную проверку
               </Button>

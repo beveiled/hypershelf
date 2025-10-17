@@ -9,6 +9,7 @@ import { useHypershelf } from "@hypershelf/lib/stores";
 
 import type { FieldPropConfig } from "./_abstractType";
 import { Button } from "../primitives/button";
+import { toast } from "../Toast";
 
 function InlineBoolean({
   assetId,
@@ -27,15 +28,20 @@ function InlineBoolean({
   const onClick = useCallback(() => {
     setUpdating(true);
     setTimeout(() => {
-      void updateAsset({
+      updateAsset({
         assetId,
         fieldId,
         value: !value,
-      }).finally(() => {
-        setUpdating(false);
-        const locker = useHypershelf.getState().assetsLocker;
-        void locker.release(assetId, fieldId);
-      });
+      })
+        .catch((e) => {
+          console.error("Failed to update asset:", e);
+          toast.error("Не смогли сохранить поле!");
+        })
+        .finally(() => {
+          setUpdating(false);
+          const locker = useHypershelf.getState().assetsLocker;
+          void locker.release(assetId, fieldId);
+        });
     }, 0);
   }, [assetId, fieldId, updateAsset, value]);
 

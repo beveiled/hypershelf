@@ -56,6 +56,7 @@ const initialState: State = {
   selectedVmNodesNetworkTopologyView: {},
   topologyFetchTime: null,
   folderTree: { id: "root", name: "Root", children: [] },
+  folderTreeLoaded: false,
   rootMoid: null,
   highlightLink: null,
 };

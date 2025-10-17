@@ -14,6 +14,7 @@ import { cn } from "@hypershelf/lib/utils";
 
 import { ButtonWithKbd } from "../primitives/kbd-button";
 import { Textarea } from "../primitives/textarea";
+import { toast } from "../Toast";
 
 export function ActionsRow({
   showButton,
@@ -231,7 +232,10 @@ export function InlineString({
         value: val,
       })
         .then(() => setIsDirty(false))
-        .catch(() => setError("Не смогли сохранить! Смотри консоль!"))
+        .catch((e) => {
+          console.error("Failed to update asset:", e);
+          toast.error("Не смогли сохранить поле!");
+        })
         .finally(() => {
           setUpdating(false);
           const locker = useHypershelf.getState().assetsLocker;

@@ -16,6 +16,7 @@ import {
   PopoverAnchor,
   PopoverContent,
 } from "@hypershelf/ui/primitives/popover";
+import { toast } from "@hypershelf/ui/toast";
 
 function JsonUploader({ onUploaded }: { onUploaded: () => void }) {
   const [isDragging, setIsDragging] = useState(false);
@@ -44,6 +45,7 @@ function JsonUploader({ onUploaded }: { onUploaded: () => void }) {
                 },
                 onError: () => {
                   console.error("Failed to upload network topology");
+                  toast.error("Не смогли загрузить топологию сети!");
                 },
                 onSettled: () => {
                   setIsLoading(false);
