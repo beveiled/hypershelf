@@ -2,6 +2,21 @@
   "name": "@hypershelf/convex",
   "private": true,
   "type": "module",
+  "exports": {
+    "./_generated/dataModel": "./src/_generated/dataModel.d.ts",
+    "./_generated/api": "./src/_generated/api.js",
+    "./lib/integrations/vsphere": "./src/lib/integrations/vsphere/index.ts",
+    "./schema": "./src/schema.ts",
+    "./utils": "./src/utils.ts"
+  },
+  "types": "src/index.ts",
+  "typesVersions": {
+    "*": {
+      "./*": [
+        "src/*"
+      ]
+    }
+  },
   "scripts": {
     "dev": "pnpm with-env convex dev",
     "deploy": "pnpm with-env convex deploy",
@@ -12,6 +27,7 @@
   },
   "dependencies": {
     "@convex-dev/auth": "catalog:",
+    "@convex-dev/migrations": "^0.2.9",
     "@xmldom/xmldom": "^0.8.11",
     "convex": "catalog:",
     "redis": "^5.8.3",

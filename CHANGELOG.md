@@ -1,3 +1,10 @@
+# Hypershelf 0.7.21
+
+- vSphere indexing improvements
+- Search improvements
+- UI fixes
+- Bug fixes
+
 # Hypershelf 0.7.20
 
 - Toasts with errors

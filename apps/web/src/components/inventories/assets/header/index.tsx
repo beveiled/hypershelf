@@ -8,8 +8,10 @@ export function Header() {
   return (
     <div className="flex justify-between">
       <NewAsset />
-      <Search />
-      <QueryBuilder />
+      <div className="md:contents hidden">
+        <Search />
+        <QueryBuilder />
+      </div>
       <ExtraActions />
       <ViewSwitcher />
     </div>

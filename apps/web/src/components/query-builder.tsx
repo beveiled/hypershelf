@@ -19,7 +19,7 @@ import { useStoreWithEqualityFn } from "zustand/traditional";
 import type { FieldType } from "@hypershelf/convex/schema";
 import { useHypershelf } from "@hypershelf/lib/stores";
 import { filtersEqual } from "@hypershelf/lib/utils";
-import { HypershelfIcon, VSphereIcon } from "@hypershelf/ui/icons";
+import { HypershelfIcon, pickIcon, VSphereIcon } from "@hypershelf/ui/icons";
 
 import { QueryBuilderShadcnUi } from "~/components/querybuilder";
 
@@ -232,6 +232,81 @@ export function HyperQueryBuilder() {
     isEqual,
   );
 
+  const oses = useStoreWithEqualityFn(
+    useHypershelf,
+    (s) => {
+      const prettifyOsName = (os: string): string => {
+        if (!os) return "";
+        const lowerOs = os.toLowerCase();
+
+        if (lowerOs.includes("windows server 2022"))
+          return "Windows Server 2022";
+        if (lowerOs.includes("windows server 2019"))
+          return "Windows Server 2019";
+        if (lowerOs.includes("windows server 2016"))
+          return "Windows Server 2016";
+        if (lowerOs.includes("windows server 2012"))
+          return "Windows Server 2012";
+        if (lowerOs.includes("windows server 2008"))
+          return "Windows Server 2008";
+
+        if (lowerOs.includes("windows")) {
+          return os
+            .replace("Microsoft ", "")
+            .replace(/ \(\d{2}-bit\)$/, "")
+            .trim();
+        }
+
+        if (lowerOs.includes("ubuntu")) return "Ubuntu";
+        if (lowerOs.includes("kali")) return "Kali Linux";
+        if (lowerOs.includes("alpine")) return "Alpine Linux";
+        if (lowerOs.includes("arch")) return "Arch Linux";
+        if (lowerOs.includes("astra")) return "Astra Linux";
+        if (lowerOs.includes("mint")) return "Linux Mint";
+        if (lowerOs.includes("redhat") || lowerOs.includes("rhel"))
+          return "Red Hat Enterprise Linux";
+        if (lowerOs.includes("debian")) {
+          const match = /Debian(?: GNU\/Linux)? (\d+(\.\d+)*)/.exec(os);
+          return match ? `Debian ${match[1]}` : "Debian";
+        }
+        if (lowerOs.includes("centos")) {
+          const match = /CentOS(?: Linux)? (\d+)/.exec(os);
+          return match ? `CentOS ${match[1]}` : "CentOS";
+        }
+        if (lowerOs.includes("linux")) {
+          return os
+            .replace("Other ", "")
+            .replace(/ \(\d{2}-bit\)$/, "")
+            .trim();
+        }
+
+        if (lowerOs.includes("mac") || lowerOs.includes("darwin")) {
+          const match = /(\d+\.\d+(\.\d+)?)/.exec(os);
+          return match ? `macOS ${match[1]}` : "macOS";
+        }
+
+        return os.replace(/ \(\d{2}-bit\)$/, "").trim();
+      };
+
+      return [...new Set(s.indexedVMs.map((v) => v.guestOs))]
+        .sort()
+        .filter(Boolean)
+        .map((raw) => {
+          if (!raw) throw new Error("Unexpected empty OS string");
+          return {
+            raw: raw,
+            pretty: prettifyOsName(raw),
+            icon: pickIcon(raw),
+          };
+        });
+    },
+    (a, b) =>
+      isEqual(
+        a.map((o) => o.raw),
+        b.map((o) => o.raw),
+      ),
+  );
+
   const setFilters = useHypershelf((s) => s.setFilters);
 
   const queryBuilderFields = useMemo(() => {
@@ -301,8 +376,13 @@ export function HyperQueryBuilder() {
         name: "vsphere__guestOs",
         value: "vsphere__guestOs",
         label: "Гостевая ОС",
-        operators: operatorOptions.string,
-        valueEditorType: "text",
+        operators: operatorOptions.select,
+        valueEditorType: "multiselect",
+        values: oses.map((os) => ({
+          label: os.pretty,
+          name: os.raw,
+          icon: os.icon,
+        })) as QueryOption[],
         icon: <VSphereIcon colored={true} />,
       } as const,
       {
@@ -350,7 +430,7 @@ export function HyperQueryBuilder() {
         icon: <VSphereIcon colored={true} />,
       } as const,
     ];
-  }, [fields, users, portgroups]);
+  }, [fields, users, portgroups, oses]);
 
   return (
     <QueryBuilderShadcnUi>

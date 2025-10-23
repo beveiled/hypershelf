@@ -497,7 +497,7 @@ export function Wayback() {
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <Button variant="ghost" size="sm">
-          <History />
+          <History className="opacity-50" />
           Открыть летопись
         </Button>
       </Dialog.Trigger>

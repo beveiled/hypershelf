@@ -45,7 +45,7 @@ export const getVsphereData = internalQuery({
       if (
         asset.vsphereLastSync &&
         Date.now() - asset.vsphereLastSync < 12 * 60 * 60 * 1000 &&
-        asset.vsphereMetadata?.system__cache_key === `${hostname}-${ip}` &&
+        asset.vsphereCacheKey === `${hostname}-${ip}` &&
         !args.id
       ) {
         continue;
@@ -63,18 +63,12 @@ export const getVsphereData = internalQuery({
   },
 });
 
-export const applyVsphereData = internalMutation({
-  args: {
-    id: v.id("assets"),
-    metadata: v.record(v.string(), v.any()),
-    moid: v.optional(v.string()),
-    last_sync: v.number(),
-  },
-  handler: async (ctx, { id, metadata, moid, last_sync }) => {
+export const markAsIndexed = internalMutation({
+  args: { id: v.id("assets"), cache_key: v.string() },
+  handler: async (ctx, { id, cache_key }) => {
     await ctx.db.patch(id, {
-      vsphereMetadata: metadata,
-      vsphereLastSync: last_sync,
-      vsphereMoid: moid,
+      vsphereCacheKey: cache_key,
+      vsphereLastSync: Date.now(),
     });
   },
 });

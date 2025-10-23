@@ -61,9 +61,9 @@ function Button(props: ButtonProps) {
     <motion.button
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
-      initial={{ y: 0 }}
-      whileTap={{ y: 1 }}
-      whileHover={{ y: -1 }}
+      initial={{ translateZ: 0, transformPerspective: 1500 }}
+      whileTap={{ translateZ: -50, transformPerspective: 1500 }}
+      whileHover={{ translateZ: 50, transformPerspective: 1500 }}
       transition={{ type: "spring", bounce: 0.2, duration: 0.2 }}
       {...(rest as unknown as HTMLMotionProps<"button">)}
     />

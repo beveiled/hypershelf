@@ -109,21 +109,13 @@ export function TableView() {
             createdAssets.includes(assetId) ||
             jlApply(query, {
               ...assets[assetId]?.asset.metadata,
-              vsphere__hostname:
-                linkedVSphereAsset?.hostname ??
-                assets[assetId]?.asset.vsphereMetadata?.magic__hostname,
+              vsphere__hostname: linkedVSphereAsset?.hostname,
               vsphere__cluster: linkedVSphereAsset?.cluster,
               vsphere__guestOs: linkedVSphereAsset?.guestOs,
               vsphere__cpuCores: linkedVSphereAsset?.cpuCores,
               vsphere__memoryMb: linkedVSphereAsset?.memoryMb,
-              vsphere__ips:
-                (linkedVSphereAsset?.ips ??
-                assets[assetId]?.asset.vsphereMetadata?.magic__ip)
-                  ? [String(assets[assetId]?.asset.vsphereMetadata?.magic__ip)]
-                  : [],
-              vsphere__primaryIp:
-                linkedVSphereAsset?.primaryIp ??
-                assets[assetId]?.asset.vsphereMetadata?.magic__ip,
+              vsphere__ips: linkedVSphereAsset?.ips ?? [],
+              vsphere__primaryIp: linkedVSphereAsset?.primaryIp,
               vsphere__portgroup: linkedVSphereAsset?.portgroup,
             })
           );

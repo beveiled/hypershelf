@@ -1,2 +1,2 @@
-apps/convex/_generated/**/*
+apps/convex/src/_generated/**/*
 apps/extension/dist/**/*

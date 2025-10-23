@@ -191,7 +191,7 @@ function VSphereVM({ vm }: { vm: IndexedVM }) {
   );
 }
 
-export function Search() {
+export function Search({ expanded }: { expanded?: boolean }) {
   const [open, setOpen] = useState(false);
   const [debounced, setDebounced] = useState(false);
   const [displayVSphere, setDisplayVSphere] = useState(true);
@@ -266,14 +266,23 @@ export function Search() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="sm" className="!p-1 !size-auto">
-          <SearchIcon
-            className={cn(
-              "size-4",
-              search.trim().length ? "text-brand" : "opacity-50",
-            )}
-          />
-        </Button>
+        {expanded ? (
+          <Button variant="ghost" size="sm">
+            <SearchIcon
+              className={cn(search.trim().length ? "text-brand" : "opacity-50")}
+            />
+            Поиск
+          </Button>
+        ) : (
+          <Button variant="ghost" size="sm" className="!p-1 !size-auto">
+            <SearchIcon
+              className={cn(
+                "size-4",
+                search.trim().length ? "text-brand" : "opacity-50",
+              )}
+            />
+          </Button>
+        )}
       </PopoverTrigger>
       <PopoverContent
         className="max-w-xl gap-1 z-[9999] flex w-fit flex-col items-center"

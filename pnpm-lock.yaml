@@ -81,6 +81,9 @@ importers:
       '@convex-dev/auth':
         specifier: 'catalog:'
         version: 0.0.81(@auth/core@0.37.4)(convex@1.27.4(react@19.2.0))(react@19.2.0)
+      '@convex-dev/migrations':
+        specifier: ^0.2.9
+        version: 0.2.9(convex@1.27.4(react@19.2.0))
       '@xmldom/xmldom':
         specifier: ^0.8.11
         version: 0.8.11
@@ -784,6 +787,11 @@ packages:
     peerDependenciesMeta:
       react:
         optional: true
+
+  '@convex-dev/migrations@0.2.9':
+    resolution: {integrity: sha512-HfIv6/F8VbtJ1NVT2bQRTumJGdaqROl/+s5IOnubHm7vvgie0RjcfO6YiB7JoLFWwS19vjDQDKl63ihoA08zOA==}
+    peerDependencies:
+      convex: ~1.16.5 || >=1.17.0 <1.35.0
 
   '@cspell/cspell-bundled-dicts@8.19.4':
     resolution: {integrity: sha512-2ZRcZP/ncJ5q953o8i+R0fb8+14PDt5UefUNMrFZZHvfTI0jukAASOQeLY+WT6ASZv6CgbPrApAdbppy9FaXYQ==}
@@ -6690,6 +6698,10 @@ snapshots:
       server-only: 0.0.1
     optionalDependencies:
       react: 19.2.0
+
+  '@convex-dev/migrations@0.2.9(convex@1.27.4(react@19.2.0))':
+    dependencies:
+      convex: 1.27.4(react@19.2.0)
 
   '@cspell/cspell-bundled-dicts@8.19.4':
     dependencies:

@@ -33,29 +33,33 @@ function InlineHostnameStatus({
     (state) => {
       const asset = state.assets[assetId]?.asset;
       if (!asset) return { status: "not_found" };
-      const vsphereHostname = asset.vsphereMetadata?.magic__hostname;
-      const vsphereIp = asset.vsphereMetadata?.magic__ip;
-      const assetHostname = asset.metadata?.[fieldId];
-      const ipFieldId = Object.values(state.fields).find(
-        (f) => f.field.type === "magic__ip",
-      )?.field._id;
-      const assetIp = ipFieldId ? asset.metadata?.[ipFieldId] : null;
+      const magicIP = state.magicFields.magic__ip;
+      const assetHostname = asset.metadata?.[fieldId] as string | null;
+      const assetIp = (magicIP ? asset.metadata?.[magicIP] : null) as
+        | string
+        | null;
+      const linkedVM = state.indexedVMs.find(
+        (vm) =>
+          vm.hostname === assetHostname ||
+          (magicIP && assetIp && vm.ips?.includes(assetIp)),
+      );
+      if (!linkedVM) return { status: "not_found" };
       if (!assetHostname || !assetIp) return { status: "none" };
       if (!asset.vsphereLastSync) return { status: "not_synced" };
-      if (!vsphereHostname) return { status: "not_found" };
-      if (
-        asset.vsphereMetadata?.system__cache_key !==
-        `${assetHostname as string}-${assetIp as string}`
-      )
+      if (asset.vsphereCacheKey !== `${assetHostname}-${assetIp}`)
         return { status: "not_synced" };
-      if (vsphereHostname === assetHostname && vsphereIp === assetIp)
+      if (
+        linkedVM.hostname === assetHostname &&
+        linkedVM.ips?.includes(assetIp)
+      )
         return { status: "matched" };
       return {
         status: "mismatched",
-        vsphereHostname,
-        vsphereIp,
-        hostnameMatched: vsphereHostname === assetHostname,
-        ipMatched: vsphereIp === assetIp,
+        vsphereHostname: linkedVM.hostname,
+        vsphereIp: linkedVM.primaryIp,
+        vsphereIps: linkedVM.ips,
+        hostnameMatched: linkedVM.hostname === assetHostname,
+        assetIp: assetIp,
       };
     },
     isEqual,
@@ -121,15 +125,37 @@ function InlineHostnameStatus({
                 </div>
               </div>
               <div className="gap-1 flex items-center">
-                <div className="font-semibold">IP:</div>
+                <div className="font-semibold">Основной IP:</div>
                 <div
                   className={cn(
-                    vsphereStatus.ipMatched
+                    vsphereStatus.vsphereIp === vsphereStatus.assetIp
                       ? "text-green-500"
                       : "font-bold text-red-500",
                   )}
                 >
                   {vsphereStatus.vsphereIp ?? "Неизвестен"}
+                </div>
+              </div>
+              <div className="gap-0.5 flex flex-col">
+                <div className="font-semibold">Все IP:</div>
+                <div className="gap-x-3 gap-y-1 pl-4 flex flex-wrap">
+                  {vsphereStatus.vsphereIps &&
+                  vsphereStatus.vsphereIps.length > 0 ? (
+                    vsphereStatus.vsphereIps.map((ip) => (
+                      <div
+                        key={ip}
+                        className={cn(
+                          ip === vsphereStatus.assetIp
+                            ? "text-green-500"
+                            : "text-muted-foreground",
+                        )}
+                      >
+                        {ip}
+                      </div>
+                    ))
+                  ) : (
+                    <div>Неизвестны</div>
+                  )}
                 </div>
               </div>
             </div>

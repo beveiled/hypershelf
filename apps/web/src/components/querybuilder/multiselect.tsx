@@ -1,6 +1,6 @@
 "use client";
 
-import type { OptionList } from "react-querybuilder";
+import type { Option, OptionList } from "react-querybuilder";
 import * as React from "react";
 import { Check } from "lucide-react";
 import { isOptionGroupArray } from "react-querybuilder";
@@ -22,7 +22,11 @@ import {
 } from "@hypershelf/ui/primitives/popover";
 
 export interface MultiSelectProps {
-  options?: OptionList;
+  options?: OptionList<
+    Option & {
+      icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+    }
+  >;
   value: string[];
   onValueChange: (value: string[]) => void;
   className?: string;
@@ -44,7 +48,7 @@ export function MultiSelect({
     );
   };
 
-  const renderOptions = (list: OptionList) => {
+  const renderOptions = (list: NonNullable<MultiSelectProps["options"]>) => {
     if (isOptionGroupArray(list)) {
       return list.map((og) => (
         <CommandGroup key={og.label} heading={og.label}>
@@ -55,13 +59,14 @@ export function MultiSelect({
               disabled={!!opt.disabled}
               onSelect={() => handleSelect(opt.name)}
             >
+              {opt.icon && <opt.icon className="h-4 w-4" />}
+              {opt.label}
               <Check
                 className={cn(
-                  "mr-2 h-4 w-4",
+                  "h-4 w-4",
                   value.includes(opt.name) ? "opacity-100" : "opacity-0",
                 )}
               />
-              {opt.label}
             </CommandItem>
           ))}
         </CommandGroup>
@@ -76,13 +81,14 @@ export function MultiSelect({
             disabled={!!opt.disabled}
             onSelect={() => handleSelect(opt.name)}
           >
+            {opt.icon && <opt.icon className="h-4 w-4" />}
+            {opt.label}
             <Check
               className={cn(
-                "mr-2 h-4 w-4",
+                "h-4 w-4",
                 value.includes(opt.name) ? "opacity-100" : "opacity-0",
               )}
             />
-            {opt.label}
           </CommandItem>
         ))}
       </CommandGroup>

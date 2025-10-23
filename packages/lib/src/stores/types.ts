@@ -2,12 +2,13 @@ import type { RuleGroupType } from "react-querybuilder";
 import type { StateCreator } from "zustand";
 
 import type { Id } from "@hypershelf/convex/_generated/dataModel";
-import type { Router, VM } from "@hypershelf/convex/lib/integrations/vsphere";
 import type {
   FolderTree,
   NetworkTopology,
+  Router,
+  VM,
   VMTopology,
-} from "@hypershelf/convex/lib/integrations/vsphere/types";
+} from "@hypershelf/convex/lib/integrations/vsphere";
 import type {
   ExtendedAssetType,
   ExtendedFieldType,

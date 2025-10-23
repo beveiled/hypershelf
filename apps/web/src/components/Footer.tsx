@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { SiGithub, SiTelegram } from "@icons-pack/react-simple-icons";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
+import { HypershelfIcon } from "@hypershelf/ui/icons";
 import { Button } from "@hypershelf/ui/primitives/button";
 import {
   Dialog,
@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@hypershelf/ui/primitives/dialog";
+import { ButtonWithKbd } from "@hypershelf/ui/primitives/kbd-button";
 
 import { env } from "~/env";
 
@@ -68,31 +69,28 @@ export function Footer() {
             className="md:flex hidden"
             onClick={handleDownload}
           >
-            <Image
-              src="/images/vsphere.png"
-              alt="vSphere Icon"
-              width={16}
-              height={16}
-            />
-            Плагин для vSphere
+            <div className="relative flex">
+              <HypershelfIcon className="text-foreground" />
+              <div className="bottom-0 left-0 rounded absolute h-px w-full bg-brand" />
+            </div>
+            Плагин Hypershelf
           </Button>
 
           <Dialog open={showInstallGuide} onOpenChange={setShowInstallGuide}>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>
-                  <Image
-                    src="/images/vsphere.png"
-                    alt="vSphere Icon"
-                    width={24}
-                    height={24}
-                    className="mr-2 inline-block"
-                  />
-                  Гайд по установке плагина
+                  <div className="gap-2 flex items-center">
+                    <div className="relative inline-block">
+                      <HypershelfIcon className="size-5 text-foreground" />
+                      <div className="bottom-0 left-0 rounded absolute h-px w-full bg-brand" />
+                    </div>
+                    Гайд по установке плагина
+                  </div>
                 </DialogTitle>
                 <VisuallyHidden>
                   <DialogDescription>
-                    Следуй этим шагам, чтобы установить плагин для vSphere
+                    Следуй этим шагам, чтобы установить плагин
                   </DialogDescription>
                 </VisuallyHidden>
               </DialogHeader>
@@ -122,16 +120,29 @@ export function Footer() {
                   <h4 className="font-medium">Шаг 4: Загрузи расширение</h4>
                   <p className="text-muted-foreground">
                     Нажми &quot;Загрузить распакованное расширение&quot; и
-                    выбери папку с содержимым распакованного ZIP файла (должно
-                    быть 3 файла).
+                    выбери папку с содержимым распакованного ZIP-архива (должен
+                    быть 1 файл и 2 папки).
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="font-medium">Шаг 5: Пользуйся!</h4>
+                  <p className="text-muted-foreground">
+                    Внутри отчетов на портале ты увидишь кнопку для получения
+                    информации, а на vSphere - окошко с ней. Для авторизации
+                    нужно будет провести слайдер во всплывающем окне.
                   </p>
                 </div>
               </div>
 
               <DialogFooter>
-                <Button onClick={() => setShowInstallGuide(false)}>
+                <ButtonWithKbd
+                  onClick={() => setShowInstallGuide(false)}
+                  size="sm"
+                  keys={["Esc"]}
+                >
                   Окей, спасибо!
-                </Button>
+                </ButtonWithKbd>
               </DialogFooter>
             </DialogContent>
           </Dialog>

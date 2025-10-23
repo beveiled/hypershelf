@@ -103,7 +103,27 @@ export const tableSlice: ImmerStateCreator<TableSlice> = (set) => ({
         return;
       }
 
-      const lower = search.toLowerCase();
+      const lower = search.toLowerCase().trim();
+      const qLen = lower.length;
+      const threshold =
+        qLen <= 1
+          ? 0.6
+          : qLen === 2
+            ? 0.62
+            : qLen <= 4
+              ? 0.58
+              : qLen <= 7
+                ? 0.5
+                : 0.45;
+
+      const split = (x: string) =>
+        x
+          .toLowerCase()
+          .trim()
+          .split(/[\s._\-:/\\]+/)
+          .filter(Boolean);
+      const leftBias = (tokens: string[], idx: number) =>
+        Math.max(0.8, 1 - idx * 0.06);
 
       const damerauLevenshtein = (a: string, b: string): number => {
         const n = a.length;
@@ -139,9 +159,27 @@ export const tableSlice: ImmerStateCreator<TableSlice> = (set) => ({
         return dp[n]?.[m] ?? 0;
       };
 
+      const trigrams = (s: string): Set<string> => {
+        const x = `  ${s} `;
+        const g = new Set<string>();
+        for (let i = 0; i < x.length - 2; i++) g.add(x.slice(i, i + 3));
+        return g;
+      };
+
+      const jaccard = (a: Set<string>, b: Set<string>): number => {
+        let inter = 0;
+        for (const t of a) if (b.has(t)) inter++;
+        const denom = a.size + b.size - inter;
+        return denom === 0 ? 0 : inter / denom;
+      };
+
+      const qTokens = split(lower);
+      const qTri = trigrams(lower);
+
       const baseSim = (s: string): number => {
         if (!s) return 0;
         if (s === lower) return 1;
+        let score = 0;
         if (s.includes(lower)) {
           const pos = s.indexOf(lower);
 
@@ -149,22 +187,95 @@ export const tableSlice: ImmerStateCreator<TableSlice> = (set) => ({
             Math.abs(s.length - lower.length) /
             Math.max(s.length, lower.length);
           const posBonus = 1 - Math.min(pos / Math.max(1, s.length), 0.9);
-          return Math.max(
-            0.6,
-            0.9 * (1 - 0.4 * lenPenalty) * (0.7 + 0.3 * posBonus),
-          );
+          score = Math.max(score, 0.75 + 0.25 * (1 - lenPenalty) * posBonus);
         }
         const dist = damerauLevenshtein(s, lower);
-        const sim = 1 - dist / Math.max(s.length, lower.length);
-        return Math.max(0, sim);
+        score = Math.max(
+          score,
+          Math.max(0, 1 - dist / Math.max(s.length, lower.length)) * 0.7,
+        );
+        score = Math.max(score, jaccard(trigrams(s), qTri) * 0.85);
+        return Math.min(1, score);
+      };
+
+      const tokenGate = (vTokens: string[]): boolean => {
+        if (qTokens.length === 0) {
+          if (qLen <= 2) return vTokens.some((t) => t.startsWith(lower));
+          return vTokens.some(
+            (t) =>
+              t.includes(lower) ||
+              1 -
+                damerauLevenshtein(t, lower) /
+                  Math.max(t.length, lower.length) >=
+                0.7,
+          );
+        }
+        let passes = 0;
+        for (const q of qTokens) {
+          let ok = false;
+          for (const t of vTokens) {
+            const ed =
+              1 - damerauLevenshtein(t, q) / Math.max(t.length, q.length);
+            if (t.startsWith(q)) {
+              ok = true;
+              break;
+            }
+            if (t.includes(q) && q.length >= 2) {
+              ok = true;
+              break;
+            }
+            if (ed >= 0.72) {
+              ok = true;
+              break;
+            }
+            if (jaccard(trigrams(t), trigrams(q)) >= 0.38) {
+              ok = true;
+              break;
+            }
+          }
+          if (ok) passes++;
+        }
+        return passes === qTokens.length;
       };
 
       const textScore = (val: string): number => {
         const s = String(val).toLowerCase().trim();
         if (!s) return 0;
-        const tokens = s.split(/[\s._\-:/\\]+/).filter(Boolean);
-        const tokenBest = tokens.length ? Math.max(...tokens.map(baseSim)) : 0;
-        return Math.max(baseSim(s), tokenBest);
+        const vTokens = split(s);
+        if (!tokenGate(vTokens)) return 0;
+        let bestToken = 0;
+        for (let i = 0; i < vTokens.length; i++) {
+          const vt = vTokens[i];
+          if (!vt) continue;
+          const bias = leftBias(vTokens, i);
+          if (qTokens.length === 0) {
+            const pfx = vt.startsWith(lower)
+              ? Math.max(0.7, lower.length / Math.max(1, vt.length))
+              : 0;
+            bestToken = Math.max(bestToken, pfx * bias);
+          } else {
+            for (const qt of qTokens) {
+              let s1 = 0;
+              if (vt === qt) s1 = 1;
+              else if (vt.startsWith(qt) || qt.startsWith(vt))
+                s1 =
+                  0.9 *
+                  (Math.min(vt.length, qt.length) /
+                    Math.max(vt.length, qt.length));
+              else if (vt.includes(qt) || qt.includes(vt))
+                s1 =
+                  0.7 *
+                  (Math.min(vt.length, qt.length) /
+                    Math.max(vt.length, qt.length));
+              const ed =
+                1 - damerauLevenshtein(vt, qt) / Math.max(vt.length, qt.length);
+              const tri = jaccard(trigrams(vt), trigrams(qt));
+              const local = Math.max(s1, ed * 0.9, tri * 0.85);
+              bestToken = Math.max(bestToken, local * bias);
+            }
+          }
+        }
+        return Math.max(bestToken, baseSim(s));
       };
 
       const upsertBest = <T extends string>(
@@ -179,6 +290,8 @@ export const tableSlice: ImmerStateCreator<TableSlice> = (set) => ({
 
       const assetCandidates: { id: Id<"assets">; score: number }[] = [];
       const vmCandidates: { vm: IndexedVM; score: number }[] = [];
+      const magicHostname = state.magicFields.magic__hostname;
+      const magicIP = state.magicFields.magic__ip;
 
       for (const asset of Object.values(state.assets)) {
         let bestScore = 0;
@@ -187,54 +300,70 @@ export const tableSlice: ImmerStateCreator<TableSlice> = (set) => ({
           Math.min(1, score * weight);
 
         for (const [key, v] of Object.entries(asset.asset.metadata ?? {})) {
-          const base = textScore(String(v));
+          const s = String(v ?? "").toLowerCase();
+          if (!s) continue;
           let weight = 1;
-
-          if (key === state.magicFields.magic__hostname) {
-            weight = 1.1;
-          } else if (key === state.magicFields.magic__ip) {
-            weight = 1.1;
-          } else {
+          if (key === state.magicFields.magic__hostname) weight = 1.3;
+          else if (key === state.magicFields.magic__ip) weight = 1.22;
+          else {
             const field = Object.values(state.fields).find(
               (f) => f.field._id === key,
             );
-            if (field && field.field.type === "markdown") {
-              weight = 0.8;
-            }
+            if (field && field.field.type === "markdown") weight = 0.5;
           }
-
+          const base = textScore(s);
           bestScore = Math.max(bestScore, boost(base, weight));
           if (bestScore >= 1) break;
         }
 
-        if (bestScore < 1) {
-          for (const [key, v] of Object.entries(
-            asset.asset.vsphereMetadata ?? {},
-          )) {
-            const base = textScore(String(v));
-            const k = key.toLowerCase();
-            let weight = 1;
-
-            if (k.includes("hostname") || k === "host" || k === "name") {
-              weight = 1.1;
-            } else if (k.includes("ip")) {
-              weight = 1.1;
-            } else if (
-              k.includes("writeup") ||
-              k.includes("note") ||
-              k.includes("desc")
-            ) {
-              weight = 0.8;
+        if (bestScore < 1 && magicHostname && magicIP) {
+          const linkedVSphereAsset = state.indexedVMs.find(
+            (vm) =>
+              vm.hostname === asset.asset.metadata?.[magicHostname] ||
+              vm.ips?.includes(String(asset.asset.metadata?.[magicIP])),
+          );
+          const searchKeys = {
+            hostname: 1.18,
+            primaryIp: 1.12,
+            ips: 1.1,
+            guestOs: 1.0,
+            portgroup: 1.0,
+            snaps: 0.8,
+            moid: 0.8,
+            cluster: 1.0,
+            drives: 0.7,
+          } as const satisfies Partial<Record<keyof IndexedVM, number>>;
+          for (const [key, weight] of Object.entries(searchKeys) as [
+            keyof IndexedVM,
+            number,
+          ][]) {
+            const value = linkedVSphereAsset?.[key];
+            let s: string[] = [];
+            if (typeof value === "object") {
+              if (key === "snaps" && Array.isArray(value)) {
+                for (const snap of value as NonNullable<IndexedVM["snaps"]>) {
+                  if (snap.name) s.push(String(snap.name).toLowerCase());
+                  if (snap.description)
+                    s.push(String(snap.description).toLowerCase());
+                }
+              } else if (key === "drives" && Array.isArray(value)) {
+                for (const drive of value as NonNullable<IndexedVM["drives"]>) {
+                  if (drive.datastore)
+                    s.push(String(drive.datastore).toLowerCase());
+                }
+              }
+            } else s = [String(value).toLowerCase()];
+            if (s.length === 0) continue;
+            for (const str of s) {
+              const base = textScore(str);
+              bestScore = Math.max(bestScore, boost(base, weight));
+              if (bestScore >= 1) break;
             }
-
-            bestScore = Math.max(bestScore, boost(base, weight));
-            if (bestScore >= 1) break;
           }
         }
 
-        if (bestScore >= 0.05) {
-          upsertBest(assetCandidates, asset.asset._id, bestScore);
-        }
+        if (bestScore >= threshold)
+          upsertBest(assetCandidates, asset.asset._id, Math.min(1, bestScore));
       }
 
       for (const vm of state.indexedVMs) {
@@ -254,14 +383,13 @@ export const tableSlice: ImmerStateCreator<TableSlice> = (set) => ({
 
         const score = Math.max(
           hostnameScore * 1.0,
-          ipScore * 0.9,
-          guestScore * 0.7,
-          bestSnapsScore * 0.7,
+          ipScore * 0.96,
+          guestScore * 0.68,
+          bestSnapsScore * 0.65,
         );
 
         const hostnameField = state.magicFields.magic__hostname;
         const ipField = state.magicFields.magic__ip;
-
         if (hostnameField && ipField) {
           const asset = Object.values(state.assets).find(
             (a) =>
@@ -278,18 +406,17 @@ export const tableSlice: ImmerStateCreator<TableSlice> = (set) => ({
             );
           }
         }
-
-        vmCandidates.push({ vm, score });
+        if (score >= threshold) vmCandidates.push({ vm, score });
       }
 
       assetCandidates.sort((a, b) => b.score - a.score);
       vmCandidates.sort((a, b) => b.score - a.score);
 
       const filteredAssetCandidates = assetCandidates.filter(
-        (x) => x.score >= 0.5 || assetCandidates.indexOf(x) < 20,
+        (x, i) => x.score >= threshold || i < 200,
       );
       const filteredVMCandidates = vmCandidates.filter(
-        (x) => x.score >= 0.5 || vmCandidates.indexOf(x) < 20,
+        (x, i) => x.score >= threshold || i < 200,
       );
 
       state.searchResults = filteredAssetCandidates.map((x) => x.id);

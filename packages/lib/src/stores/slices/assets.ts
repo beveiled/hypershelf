@@ -60,9 +60,6 @@ export const assetsSlice: ImmerStateCreator<AssetsSlice> = (set, get) => ({
             state.assets[id].asset.vsphereLastSync =
               asset.asset.vsphereLastSync;
           }
-          if (asset.asset.vsphereMoid !== state.assets[id].asset.vsphereMoid) {
-            state.assets[id].asset.vsphereMoid = asset.asset.vsphereMoid;
-          }
           if (asset.asset.metadata) {
             const prevKeys = Object.keys(
               state.assets[id].asset.metadata ?? {},
@@ -91,33 +88,16 @@ export const assetsSlice: ImmerStateCreator<AssetsSlice> = (set, get) => ({
               }
             }
           }
-          if (asset.asset.vsphereMetadata) {
-            const prevKeys = Object.keys(
-              state.assets[id].asset.vsphereMetadata ?? {},
-            ) as (keyof AssetType["vsphereMetadata"])[];
-            const newKeys = Object.keys(
-              asset.asset.vsphereMetadata,
-            ) as (keyof AssetType["vsphereMetadata"])[];
-            for (const key of prevKeys) {
-              if (!newKeys.includes(key)) {
-                delete state.assets[id].asset.vsphereMetadata?.[key];
-              }
-            }
-            state.assets[id].asset.vsphereMetadata ??= {};
-            for (const key of newKeys) {
-              if (!prevKeys.includes(key)) {
-                state.assets[id].asset.vsphereMetadata[key] =
-                  asset.asset.vsphereMetadata[key] ?? null;
-              } else if (
-                !isEqual(
-                  state.assets[id].asset.vsphereMetadata[key],
-                  asset.asset.vsphereMetadata[key],
-                )
-              ) {
-                state.assets[id].asset.vsphereMetadata[key] =
-                  asset.asset.vsphereMetadata[key] ?? null;
-              }
-            }
+          if (
+            asset.asset.vsphereCacheKey !==
+              state.assets[id].asset.vsphereCacheKey ||
+            asset.asset.vsphereLastSync !==
+              state.assets[id].asset.vsphereLastSync
+          ) {
+            state.assets[id].asset.vsphereCacheKey =
+              asset.asset.vsphereCacheKey;
+            state.assets[id].asset.vsphereLastSync =
+              asset.asset.vsphereLastSync;
           }
         }
       }

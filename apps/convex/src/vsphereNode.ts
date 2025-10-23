@@ -43,28 +43,21 @@ export const fetchHostAction = internalAction({
     console.log(`Fetching vSphere data for ${hostname} (${ip})...`);
 
     const incoming = await fetchHost({ hostname, ip }, redis);
-    if (!incoming) {
+    await ctx.runMutation(internal.vsphere.markAsIndexed, {
+      id,
+      cache_key: `${hostname}-${ip}`,
+    });
+    if (incoming.length === 0) {
       console.log(`No vSphere data found for ${hostname} (${ip})`);
-      await ctx.runMutation(internal.vsphere.applyVsphereData, {
-        id,
-        metadata: {
-          system__cache_key: `${hostname}-${ip}`,
-        },
-        last_sync: Date.now(),
-      });
       return;
     }
-    await ctx.runMutation(internal.vsphere.applyVsphereData, {
-      id,
-      metadata: {
-        magic__ip: incoming.ip,
-        magic__hostname: incoming.hostname,
-        magic__os: incoming.os,
-        system__cache_key: `${hostname}-${ip}`,
-      },
-      last_sync: Date.now(),
-      moid: incoming.moid,
-    });
+    const batchSize = 50;
+    for (let i = 0; i < incoming.length; i += batchSize) {
+      const batch = incoming.slice(i, i + batchSize);
+      await ctx.runMutation(internal.vsphere.applyIndexing, {
+        incoming: batch,
+      });
+    }
     console.log(`Applied vSphere data for asset ${id}`);
   },
 });
@@ -77,7 +70,13 @@ export const indexVSphereAction = internalAction({
       env.VSPHERE_TOPOLOGY_ROOT_MOID_FOR_INDEXING,
       redis,
     );
-    await ctx.runMutation(internal.vsphere.applyIndexing, { incoming });
+    const batchSize = 50;
+    for (let i = 0; i < incoming.length; i += batchSize) {
+      const batch = incoming.slice(i, i + batchSize);
+      await ctx.runMutation(internal.vsphere.applyIndexing, {
+        incoming: batch,
+      });
+    }
     return incoming.length;
   },
 });

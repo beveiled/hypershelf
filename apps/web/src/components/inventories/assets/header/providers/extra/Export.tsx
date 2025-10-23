@@ -58,7 +58,11 @@ export function Export() {
 
   return (
     <Button size="sm" variant="ghost" onClick={download} disabled={downloading}>
-      {downloading ? <LoaderCircle className="animate-spin" /> : <Table2 />}
+      {downloading ? (
+        <LoaderCircle className="animate-spin opacity-50" />
+      ) : (
+        <Table2 className="opacity-50" />
+      )}
       Экспортировать .xlsx
     </Button>
   );

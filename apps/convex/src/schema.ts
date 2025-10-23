@@ -50,13 +50,13 @@ export const fieldSchema = {
 const fieldSchemaInternal = {
   ...fieldSchema,
   slug: v.string(),
-  /** @deprecated Use `editingBy` instead */
-  editing: v.optional(v.boolean()),
   editingBy: v.optional(v.id("users")),
   editingLockExpires: v.optional(v.number()),
-  /** @deprecated Not used anymore */
-  persistent: v.optional(v.boolean()),
   deleted: v.optional(v.boolean()),
+  /** @deprecated */
+  editing: v.optional(v.any()),
+  /** @deprecated */
+  persistent: v.optional(v.any()),
 };
 
 export const valueSchema = v.union(
@@ -73,24 +73,27 @@ export const assetSchema = {
 
 const assetSchemaInternal = {
   ...assetSchema,
-  /** @deprecated Use `assetLocks` instead */
-  mutex: v.optional(v.boolean()),
-  /** @deprecated Use `assetLocks` instead */
-  mutexHolderId: v.optional(v.id("users")),
-  /** @deprecated Use `assetLocks` instead */
-  mutexExpiresAt: v.optional(v.number()),
   createdAt: v.optional(v.number()),
   updatedAt: v.optional(v.number()),
-  /** @deprecated Use `assetLocks` instead */
-  editing: v.optional(v.boolean()),
-  /** @deprecated Use `assetLocks` instead */
-  editingBy: v.optional(v.id("users")),
-  /** @deprecated Use `assetLocks` instead */
-  editingLockExpires: v.optional(v.number()),
+  vsphereCacheKey: v.optional(v.string()),
   vsphereLastSync: v.optional(v.number()),
-  vsphereMoid: v.optional(v.string()),
-  vsphereMetadata: v.optional(v.record(v.string(), valueSchema)),
   deleted: v.optional(v.boolean()),
+  /** @deprecated */
+  mutex: v.optional(v.any()),
+  /** @deprecated */
+  mutexHolderId: v.optional(v.any()),
+  /** @deprecated */
+  mutexExpiresAt: v.optional(v.any()),
+  /** @deprecated */
+  editing: v.optional(v.any()),
+  /** @deprecated */
+  editingBy: v.optional(v.any()),
+  /** @deprecated */
+  editingLockExpires: v.optional(v.any()),
+  /** @deprecated */
+  vsphereMoid: v.optional(v.any()),
+  /** @deprecated */
+  vsphereMetadata: v.optional(v.any()),
 };
 
 export const vSphereSchema = {
@@ -141,14 +144,8 @@ export const fileSchema = {
 
 export const viewSchema = {
   name: v.optional(v.string()),
-  /** @deprecated Use `hiddenFields` and `fieldOrder instead */
-  fields: v.optional(v.array(v.id("fields"))),
   hiddenFields: v.optional(v.array(v.id("fields"))),
   fieldOrder: v.optional(v.array(v.id("fields"))),
-  /** @deprecated Use `sorting` instead */
-  sortBy: v.optional(
-    v.record(v.id("fields"), v.union(v.literal("asc"), v.literal("desc"))),
-  ),
   sorting: v.optional(
     v.record(v.id("fields"), v.union(v.literal("asc"), v.literal("desc"))),
   ),
@@ -161,6 +158,10 @@ export const viewSchema = {
 export const viewSchemaInternal = {
   ...viewSchema,
   userId: v.id("users"),
+  /** @deprecated Use `hiddenFields` and `fieldOrder instead */
+  fields: v.optional(v.any()),
+  /** @deprecated Use `sorting` instead */
+  sortBy: v.optional(v.any()),
 };
 
 export const waybackSchema = {
@@ -229,32 +230,11 @@ export default defineSchema({
     .index("by_ips", ["ips"]),
 });
 
-export type AssetType = Doc<"assets"> & {
-  /** @deprecated Use `assetLocks` instead */
-  mutex?: Doc<"assets">["mutex"];
-  /** @deprecated Use `assetLocks` instead */
-  mutexHolderId?: Doc<"assets">["mutexHolderId"];
-  /** @deprecated Use `assetLocks` instead */
-  mutexExpiresAt?: Doc<"assets">["mutexExpiresAt"];
-  /** @deprecated Use `assetLocks` instead */
-  editing?: Doc<"assets">["editing"];
-  /** @deprecated Use `assetLocks` instead */
-  editingBy?: Doc<"assets">["editingBy"];
-  /** @deprecated Use `assetLocks` instead */
-  editingLockExpires?: Doc<"assets">["editingLockExpires"];
-};
+export type AssetType = Doc<"assets">;
 export type AssetLocksType = Doc<"assetLocks">;
-export type FieldType = Doc<"fields"> & {
-  /** @deprecated Use `editingBy` instead */
-  editing?: Doc<"fields">["editing"];
-};
+export type FieldType = Doc<"fields">;
 export type UserType = Doc<"users">;
-export type ViewType = Doc<"views"> & {
-  /** @deprecated Use `hiddenFields` and `fieldOrder instead */
-  fields?: Doc<"views">["fields"];
-  /** @deprecated Use `sorting` instead */
-  sortBy?: Doc<"views">["sortBy"];
-};
+export type ViewType = Doc<"views">;
 export type IndexedVM = Doc<"vsphere">;
 export type ExtendedViewType = ViewType & {
   immutable: boolean;

@@ -120,7 +120,7 @@ export default function Header() {
         </div>
         {content}
         <nav>
-          <div className="gap-x-6 text-xs font-medium flex">
+          <div className="gap-x-2 md:gap-x-6 text-xs font-medium flex">
             {pathname !== "/signin" && (
               <>
                 <NavLink href="/" label="Хосты">

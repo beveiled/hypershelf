@@ -13,7 +13,7 @@ import {
 
 import { HyperQueryBuilder } from "~/components/query-builder";
 
-export function QueryBuilder() {
+export function QueryBuilder({ expanded }: { expanded?: boolean }) {
   const [open, setOpen] = useState(false);
   const isFiltering = useHypershelf((s) => s.isFiltering);
   const setIsFiltering = useHypershelf((s) => s.setIsFiltering);
@@ -22,11 +22,23 @@ export function QueryBuilder() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="sm" className="!p-1 !size-auto">
-          <ListFilter
-            className={cn("size-4", isFiltering ? "text-brand" : "opacity-50")}
-          />
-        </Button>
+        {expanded ? (
+          <Button variant="ghost" size="sm">
+            <ListFilter
+              className={cn(isFiltering ? "text-brand" : "opacity-50")}
+            />
+            Фильтры
+          </Button>
+        ) : (
+          <Button variant="ghost" size="sm" className="!p-1 !size-auto">
+            <ListFilter
+              className={cn(
+                "size-4",
+                isFiltering ? "text-brand" : "opacity-50",
+              )}
+            />
+          </Button>
+        )}
       </PopoverTrigger>
       <PopoverContent
         className="gap-1 p-2 backdrop-blur-lg z-[9999] flex max-h-[80vh] w-fit max-w-[90vw] flex-col items-start overflow-scroll text-center"

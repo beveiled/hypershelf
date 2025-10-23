@@ -29,6 +29,12 @@ export type VSphereDetails = {
   snaps?: VSphereSnap[];
 };
 
+function readMor(el: Element | null): string {
+  if (!el) return "";
+  const mor = firstChildByLocalName(el, "ManagedObjectReference");
+  return text(mor ?? el).trim();
+}
+
 export function parseVmDetailsFromPages(
   pages: readonly string[],
 ): VSphereDetails[] {
@@ -219,7 +225,8 @@ export function parseVmDetailsFromPages(
               }
             }
           } else if (pname === "runtime.host" && valEl) {
-            hostRefByVm[vmId] = text(valEl).trim();
+            const hostRef = readMor(valEl);
+            if (hostRef) hostRefByVm[vmId] = hostRef;
           }
         }
 

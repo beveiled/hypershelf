@@ -125,84 +125,33 @@ export async function fetchTopologyStructure(
 export async function fetchHost(
   args: { hostname?: string | null; ip?: string | null; moid?: string | null },
   redis: ReturnType<typeof getClient> | null = null,
-): Promise<{
-  moid: string;
-  hostname: string;
-  ip: string;
-  os: string;
-} | null> {
+): Promise<VSphereDetails[]> {
   const client = new SoapClient({
     url: `https://${env.VSPHERE_HOSTNAME}/sdk`,
     username: env.VSPHERE_LOGIN,
     password: env.VSPHERE_PASSWORD,
     redis,
   });
-  const m = args.moid?.trim() ? args.moid.trim() : null;
-  if (m) {
-    const resp = await client.retrieveVmCore(m);
-    const d = new DOMParser().parseFromString(resp.text, "text/xml");
-    const objs = elementsByLocalName(d, "objects");
-    for (const obj of objs) {
-      const objEl = firstChildByLocalName(obj, "obj");
-      if (!objEl) continue;
-      const t = objEl.getAttribute("type") ?? "";
-      if (t !== "VirtualMachine") continue;
-      const moid = text(objEl).trim();
-      let hostname = "";
-      let ip = "";
-      let os = "";
-      const propSets = elementsByLocalName(obj, "propSet");
-      for (const ps of propSets) {
-        const nameEl = firstChildByLocalName(ps, "name");
-        if (!nameEl) continue;
-        const pname = text(nameEl).trim();
-        const valEl = firstChildByLocalName(ps, "val");
-        const v = valEl ? text(valEl).trim() : "";
-        if (pname === "summary.guest.hostName") hostname = v;
-        else if (pname === "summary.guest.ipAddress") ip = v;
-        else if (pname === "guest.guestFullName") os = v;
-      }
-      return { moid, hostname, ip, os };
-    }
-    return null;
+
+  const moidInput = args.moid?.trim() ? args.moid.trim() : null;
+  if (moidInput) {
+    const resp = await client.retrieveVmCore(moidInput);
+    const details = parseVmDetailsFromPages([resp.text]);
+    return details;
   }
 
   const ip = args.ip?.trim() ? args.ip.trim() : null;
   const hostname = args.hostname?.trim() ? args.hostname.trim() : null;
-
   const found = await client.findCandidatesSingle(ip, hostname);
   const pool: { moid: string; score: number }[] = [];
   if (found.ipMoRef) pool.push({ moid: found.ipMoRef, score: 2 });
   if (found.hostMoRef) pool.push({ moid: found.hostMoRef, score: 1 });
   const chosen = pool.sort((a, b) => b.score - a.score).find(Boolean);
-  if (!chosen) return null;
+  if (!chosen) return [];
 
   const resp = await client.retrieveVmCore(chosen.moid);
-  const d = new DOMParser().parseFromString(resp.text, "text/xml");
-  const objs = elementsByLocalName(d, "objects");
-  for (const obj of objs) {
-    const objEl = firstChildByLocalName(obj, "obj");
-    if (!objEl) continue;
-    const t = objEl.getAttribute("type") ?? "";
-    if (t !== "VirtualMachine") continue;
-    const moid = text(objEl).trim();
-    let h = "";
-    let i = "";
-    let os = "";
-    const propSets = elementsByLocalName(obj, "propSet");
-    for (const ps of propSets) {
-      const nameEl = firstChildByLocalName(ps, "name");
-      if (!nameEl) continue;
-      const pname = text(nameEl).trim();
-      const valEl = firstChildByLocalName(ps, "val");
-      const v = valEl ? text(valEl).trim() : "";
-      if (pname === "summary.guest.hostName") h = v;
-      else if (pname === "summary.guest.ipAddress") i = v;
-      else if (pname === "guest.guestFullName") os = v;
-    }
-    return { moid, hostname: h, ip: i, os };
-  }
-  return null;
+  const details = parseVmDetailsFromPages([resp.text]);
+  return details;
 }
 
 export async function fetchVmDetailsForRoot(

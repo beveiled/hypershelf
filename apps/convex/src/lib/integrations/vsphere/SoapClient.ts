@@ -12,6 +12,18 @@ export class SoapClient {
   private readonly username?: string;
   private readonly password?: string;
   private readonly redis: ReturnType<typeof getClient> | null;
+  private static readonly VM_DETAIL_PROPS = [
+    "summary.guest.hostName",
+    "guest.ipAddress",
+    "guest.net",
+    "summary.config.numCpu",
+    "config.hardware.memoryMB",
+    "guest.guestFullName",
+    "config.hardware.device",
+    "runtime.host",
+    "layoutEx",
+    "snapshot.rootSnapshotList",
+  ] as const;
 
   constructor(cfg: SoapClientConfig) {
     this.url = cfg.url;
@@ -28,30 +40,25 @@ export class SoapClient {
     rootType: "Folder" | "Datacenter",
     rootMoid: string,
   ): Promise<readonly string[]> {
-    const pages: string[] = [];
-    const body1 = await this.post(
+    return this.retrievePaginated(
       this.buildRetrieveEnvelope(rootType, rootMoid),
     );
-    pages.push(body1.text);
-    let token = SoapClient.extractToken(body1.text);
-    let guards = 0;
-    while (token && guards < 200) {
-      const body = await this.post(this.buildContinueEnvelope(token));
-      pages.push(body.text);
-      token = SoapClient.extractToken(body.text);
-      guards += 1;
-    }
-    return pages;
   }
 
   async retrieveFolders(
     rootType: "Folder" | "Datacenter",
     rootMoid: string,
   ): Promise<readonly string[]> {
-    const pages: string[] = [];
-    const body1 = await this.post(
+    return this.retrievePaginated(
       this.buildRetrieveFoldersEnvelope(rootType, rootMoid),
     );
+  }
+
+  private async retrievePaginated(
+    initialXml: string,
+  ): Promise<readonly string[]> {
+    const pages: string[] = [];
+    const body1 = await this.post(initialXml);
     pages.push(body1.text);
     let token = SoapClient.extractToken(body1.text);
     let guards = 0;
@@ -119,6 +126,9 @@ export class SoapClient {
     const setCookieHeader = r.headers.get("set-cookie");
     const txt = await r.text();
     console.log("Got", txt.length, "bytes from vSphere with status", r.status);
+    if (r.status === 500) {
+      console.error("vSphere returned a 500 error:", txt);
+    }
     await this.captureCookie(setCookieHeader);
     if (r.status === 401 || SoapClient.containsNotAuthenticated(txt)) {
       if (!this.username || !this.password)
@@ -227,10 +237,19 @@ export class SoapClient {
     `);
   }
 
-  private propSet(
-    vtype: "Folder" | "VirtualMachine" | "Datacenter" | "ServiceInstance",
+  private propSet<
+    T extends
+      | "Folder"
+      | "VirtualMachine"
+      | "Datacenter"
+      | "ServiceInstance"
+      | "ClusterComputeResource"
+      | "ComputeResource"
+      | "HostSystem",
+  >(
+    vtype: T,
     paths: readonly string[],
-  ): string {
+  ): `<propSet><type>${T}</type>${string}</propSet>` {
     const pathXml = paths.map((p) => `<pathSet>${p}</pathSet>`).join("");
     return `<propSet><type>${vtype}</type>${pathXml}</propSet>`;
   }
@@ -338,14 +357,32 @@ export class SoapClient {
   }
 
   private buildRetrieveVmCoreEnvelope(moid: string): string {
-    const propSets = this.propSet("VirtualMachine", [
-      "summary.guest.hostName",
-      "summary.guest.ipAddress",
-      "guest.guestFullName",
-    ]);
+    const propSets = [
+      this.propSet("VirtualMachine", [...SoapClient.VM_DETAIL_PROPS]),
+      this.propSet("HostSystem", ["parent"]),
+      this.propSet("ComputeResource", ["name"]),
+      this.propSet("ClusterComputeResource", ["name"]),
+    ].join("");
+    const traversal = `
+      <selectSet xsi:type="TraversalSpec">
+        <name>vmToHost</name>
+        <type>VirtualMachine</type>
+        <path>runtime.host</path>
+        <skip>false</skip>
+        <selectSet><name>hostToParent</name></selectSet>
+      </selectSet>
+      <selectSet xsi:type="TraversalSpec">
+        <name>hostToParent</name>
+        <type>HostSystem</type>
+        <path>parent</path>
+        <skip>false</skip>
+      </selectSet>
+    `;
     const objset = `
       <objectSet>
         <obj type="VirtualMachine">${escapeXml(moid)}</obj>
+        <skip>false</skip>
+        ${traversal}
       </objectSet>
     `;
     return envelope(`
@@ -402,12 +439,11 @@ export class SoapClient {
       const ipResp = elementsByLocalName(d, "FindByIpResponse");
       if (ipResp.length > 0 && ipResp[0]) {
         const rv = elementsByLocalName(ipResp[0], "returnval");
-        if (rv.length === 0 || !rv[0]) {
-          return { ipMoRef: null };
-        }
-        const ipMoRef = rv.length ? text(rv[0]).trim() || null : null;
-        if (ipMoRef) {
-          return { ipMoRef };
+        if (rv.length > 0 && rv[0]) {
+          const ipMoRef = rv.length ? text(rv[0]).trim() || null : null;
+          if (ipMoRef) {
+            return { ipMoRef };
+          }
         }
       }
     }
@@ -459,20 +495,12 @@ export class SoapClient {
     rootType: "Folder" | "Datacenter",
     rootMoid: string,
   ): string {
-    const vmProps = [
-      "summary.guest.hostName",
-      "guest.ipAddress",
-      "guest.net",
-      "summary.config.numCpu",
-      "config.hardware.memoryMB",
-      "guest.guestFullName",
-      "config.hardware.device",
-      "runtime.host",
-      "layoutEx",
-      "snapshot.rootSnapshotList",
-    ];
-    const hostProps = ["parent"];
-    const compProps = ["name"];
+    const propSets = [
+      this.propSet("VirtualMachine", [...SoapClient.VM_DETAIL_PROPS]),
+      this.propSet("HostSystem", ["parent"]),
+      this.propSet("ComputeResource", ["name"]),
+      this.propSet("ClusterComputeResource", ["name"]),
+    ].join("");
     const traversal = `
       <selectSet xsi:type="TraversalSpec">
         <name>dcToVmFolder</name>
@@ -515,10 +543,7 @@ export class SoapClient {
       <vim25:RetrievePropertiesEx>
         <_this type="PropertyCollector">propertyCollector</_this>
         <specSet>
-          <propSet><type>VirtualMachine</type>${vmProps.map((p) => `<pathSet>${p}</pathSet>`).join("")}</propSet>
-          <propSet><type>HostSystem</type>${hostProps.map((p) => `<pathSet>${p}</pathSet>`).join("")}</propSet>
-          <propSet><type>ComputeResource</type>${compProps.map((p) => `<pathSet>${p}</pathSet>`).join("")}</propSet>
-          <propSet><type>ClusterComputeResource</type>${compProps.map((p) => `<pathSet>${p}</pathSet>`).join("")}</propSet>
+          ${propSets}
           ${objset}
         </specSet>
         <options/>
@@ -530,20 +555,9 @@ export class SoapClient {
     rootType: "Folder" | "Datacenter",
     rootMoid: string,
   ): Promise<readonly string[]> {
-    const pages: string[] = [];
-    const body1 = await this.post(
+    return this.retrievePaginated(
       this.buildRetrieveVmDetailsUnderRootEnvelope(rootType, rootMoid),
     );
-    pages.push(body1.text);
-    let token = SoapClient.extractToken(body1.text);
-    let guards = 0;
-    while (token && guards < 200) {
-      const body = await this.post(this.buildContinueEnvelope(token));
-      pages.push(body.text);
-      token = SoapClient.extractToken(body.text);
-      guards += 1;
-    }
-    return pages;
   }
 
   private buildPreheatEnvelope(): string {

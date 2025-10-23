@@ -1,16 +1,52 @@
 import { ConvexCredentials } from "@convex-dev/auth/providers/ConvexCredentials";
+import { Password } from "@convex-dev/auth/providers/Password";
 import { convexAuth, getAuthUserId } from "@convex-dev/auth/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { jwtVerify, SignJWT } from "jose";
+import { z } from "zod";
 
 import type { Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
 import { internalQuery, mutation, query } from "./_generated/server";
-import Password from "./authProviders/customPassword";
+
+const ParamsSchema = z.object({
+  email: z.string().email(),
+  password: z
+    .string()
+    .min(10)
+    .regex(/[a-z]/)
+    .regex(/[A-Z]/)
+    .regex(/[0-9]/)
+    .regex(/[^A-Za-z0-9]/),
+  inviteCode: z.string().uuid().optional(),
+});
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [
-    Password,
+    Password({
+      profile(params) {
+        const { error, data } = ParamsSchema.safeParse(params);
+        if (error) {
+          throw new ConvexError(error.format());
+        }
+
+        if (
+          params.flow === "signUp" &&
+          data.inviteCode?.trim() !== process.env.INVITE_CODE?.trim()
+        ) {
+          throw new ConvexError("Invalid invite code");
+        }
+
+        if (
+          process.env.NEXT_PUBLIC_EMAIL_DOMAIN &&
+          !data.email.endsWith(`@${process.env.NEXT_PUBLIC_EMAIL_DOMAIN}`)
+        ) {
+          throw new ConvexError("Forbidden email domain");
+        }
+
+        return { email: data.email };
+      },
+    }),
     ConvexCredentials({
       id: "sigil",
       authorize: async (credentials, ctx) => {
